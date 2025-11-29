@@ -9,9 +9,14 @@ import SwiftUI
 
 @main
 struct SmallChallengeApp: App {
+    
+    private let di = AppDI.shared
+    
     var body: some Scene {
         WindowGroup {
             ContentView()
         }
     }
 }
+
+
