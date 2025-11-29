@@ -6,6 +6,15 @@
 	objectVersion = 77;
 	objects = {
 
+/* Begin PBXBuildFile section */
+		D04039492ED81B9E0043E7AF /* RxCocoa in Frameworks */ = {isa = PBXBuildFile; productRef = D04039482ED81B9E0043E7AF /* RxCocoa */; };
+		D040394B2ED81B9E0043E7AF /* RxSwift in Frameworks */ = {isa = PBXBuildFile; productRef = D040394A2ED81B9E0043E7AF /* RxSwift */; };
+		D040394E2ED81BB00043E7AF /* Alamofire in Frameworks */ = {isa = PBXBuildFile; productRef = D040394D2ED81BB00043E7AF /* Alamofire */; };
+		D04039512ED81BC60043E7AF /* Kingfisher in Frameworks */ = {isa = PBXBuildFile; productRef = D04039502ED81BC60043E7AF /* Kingfisher */; };
+		D04039542ED81BDA0043E7AF /* Then in Frameworks */ = {isa = PBXBuildFile; productRef = D04039532ED81BDA0043E7AF /* Then */; };
+		D04039572ED81BF50043E7AF /* Factory in Frameworks */ = {isa = PBXBuildFile; productRef = D04039562ED81BF50043E7AF /* Factory */; };
+/* End PBXBuildFile section */
+
 /* Begin PBXContainerItemProxy section */
 		D04039162ED814530043E7AF /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
@@ -52,6 +61,12 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				D04039542ED81BDA0043E7AF /* Then in Frameworks */,
+				D04039512ED81BC60043E7AF /* Kingfisher in Frameworks */,
+				D040394E2ED81BB00043E7AF /* Alamofire in Frameworks */,
+				D04039572ED81BF50043E7AF /* Factory in Frameworks */,
+				D040394B2ED81B9E0043E7AF /* RxSwift in Frameworks */,
+				D04039492ED81B9E0043E7AF /* RxCocoa in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -112,6 +127,12 @@
 			);
 			name = SmallChallenge;
 			packageProductDependencies = (
+				D04039482ED81B9E0043E7AF /* RxCocoa */,
+				D040394A2ED81B9E0043E7AF /* RxSwift */,
+				D040394D2ED81BB00043E7AF /* Alamofire */,
+				D04039502ED81BC60043E7AF /* Kingfisher */,
+				D04039532ED81BDA0043E7AF /* Then */,
+				D04039562ED81BF50043E7AF /* Factory */,
 			);
 			productName = SmallChallenge;
 			productReference = D04039052ED814510043E7AF /* SmallChallenge.app */;
@@ -195,6 +216,13 @@
 			);
 			mainGroup = D04038FC2ED814510043E7AF;
 			minimizedProjectReferenceProxies = 1;
+			packageReferences = (
+				D04039472ED81B9E0043E7AF /* XCRemoteSwiftPackageReference "RxSwift" */,
+				D040394C2ED81BB00043E7AF /* XCRemoteSwiftPackageReference "Alamofire" */,
+				D040394F2ED81BC60043E7AF /* XCRemoteSwiftPackageReference "Kingfisher" */,
+				D04039522ED81BDA0043E7AF /* XCRemoteSwiftPackageReference "Then" */,
+				D04039552ED81BF50043E7AF /* XCRemoteSwiftPackageReference "Factory" */,
+			);
 			preferredProjectObjectVersion = 77;
 			productRefGroup = D04039062ED814510043E7AF /* Products */;
 			projectDirPath = "";
@@ -404,6 +432,7 @@
 				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
 				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
 				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPhone = "UIInterfaceOrientationPortrait UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
+				IPHONEOS_DEPLOYMENT_TARGET = 15.6;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
@@ -433,6 +462,7 @@
 				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
 				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
 				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPhone = "UIInterfaceOrientationPortrait UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
+				IPHONEOS_DEPLOYMENT_TARGET = 15.6;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
@@ -558,6 +588,82 @@
 			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
+
+/* Begin XCRemoteSwiftPackageReference section */
+		D04039472ED81B9E0043E7AF /* XCRemoteSwiftPackageReference "RxSwift" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/ReactiveX/RxSwift";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 6.9.1;
+			};
+		};
+		D040394C2ED81BB00043E7AF /* XCRemoteSwiftPackageReference "Alamofire" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/Alamofire/Alamofire";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 5.10.2;
+			};
+		};
+		D040394F2ED81BC60043E7AF /* XCRemoteSwiftPackageReference "Kingfisher" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/onevcat/Kingfisher";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 8.6.2;
+			};
+		};
+		D04039522ED81BDA0043E7AF /* XCRemoteSwiftPackageReference "Then" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/devxoul/Then";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 3.0.0;
+			};
+		};
+		D04039552ED81BF50043E7AF /* XCRemoteSwiftPackageReference "Factory" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/hmlongco/Factory";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 2.5.3;
+			};
+		};
+/* End XCRemoteSwiftPackageReference section */
+
+/* Begin XCSwiftPackageProductDependency section */
+		D04039482ED81B9E0043E7AF /* RxCocoa */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = D04039472ED81B9E0043E7AF /* XCRemoteSwiftPackageReference "RxSwift" */;
+			productName = RxCocoa;
+		};
+		D040394A2ED81B9E0043E7AF /* RxSwift */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = D04039472ED81B9E0043E7AF /* XCRemoteSwiftPackageReference "RxSwift" */;
+			productName = RxSwift;
+		};
+		D040394D2ED81BB00043E7AF /* Alamofire */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = D040394C2ED81BB00043E7AF /* XCRemoteSwiftPackageReference "Alamofire" */;
+			productName = Alamofire;
+		};
+		D04039502ED81BC60043E7AF /* Kingfisher */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = D040394F2ED81BC60043E7AF /* XCRemoteSwiftPackageReference "Kingfisher" */;
+			productName = Kingfisher;
+		};
+		D04039532ED81BDA0043E7AF /* Then */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = D04039522ED81BDA0043E7AF /* XCRemoteSwiftPackageReference "Then" */;
+			productName = Then;
+		};
+		D04039562ED81BF50043E7AF /* Factory */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = D04039552ED81BF50043E7AF /* XCRemoteSwiftPackageReference "Factory" */;
+			productName = Factory;
+		};
+/* End XCSwiftPackageProductDependency section */
 	};
 	rootObject = D04038FD2ED814510043E7AF /* Project object */;
 }
