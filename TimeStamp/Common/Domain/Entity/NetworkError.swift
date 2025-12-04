@@ -17,7 +17,12 @@ public enum NetworkError: Error {
     case requestFailed(String)
     case noInternet
     case cancelled
-    
+
+    case unauthorized // 401
+    case forbidden // 403
+    case notFound // 404
+    case timeout // 408
+
     public var description: String {
         switch self {
         case .urlError:
@@ -31,12 +36,29 @@ public enum NetworkError: Error {
         case .serverError(let statusCode):
             "서버 에러: \(statusCode)"
         case .requestFailed(let message):
-            "서버 요청 실패:  \(message)"
-            
+            "서버 요청 실패: \(message)"
         case .noInternet:
             "인터넷 연결이 없습니다."
         case .cancelled:
             "사용자가 요청을 취소하였습니다."
+        case .unauthorized:
+            "인증이 필요합니다."
+        case .forbidden:
+            "접근 권한이 없습니다."
+        case .notFound:
+            "요청한 리소스를 찾을 수 없습니다."
+        case .timeout:
+            "요청 시간이 초과되었습니다."
+        }
+    }
+
+    // 사용자에게 보여줄지 여부
+    public var isUserFacing: Bool {
+        switch self {
+        case .noInternet, .serverError, .timeout, .unauthorized, .forbidden, .notFound:
+            return true
+        default:
+            return false
         }
     }
 }

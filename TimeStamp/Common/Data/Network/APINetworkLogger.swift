@@ -17,7 +17,12 @@ public final class APINetworkLogger: EventMonitor {
     // Event called when any type of Request is resumed.
     public func requestDidResume(_ request: Request) {
         #if DEBUG
-        print("➡️ [REQUEST] \(request)\nHeaders: \(request.request?.allHTTPHeaderFields ?? [:])")
+        let bodyString = request.request.flatMap { req in
+            req.httpBody.flatMap { String(data: $0, encoding: .utf8) }
+        } ?? "No Body"
+        print("➡️ [REQUEST] \(request)")
+        print("   Headers: \(request.request?.allHTTPHeaderFields ?? [:])")
+        print("   Body: \(bodyString)")
         #endif
     }
 
@@ -29,7 +34,10 @@ public final class APINetworkLogger: EventMonitor {
         if let data = response.data, let str = String(data: data, encoding: .utf8) {
             bodyString = str
         }
-        print("⬅️ [RESPONSE] status: \(status) for: \(request)\nBody: \(bodyString)")
+        // 상태 코드에 따라 이모지 구분
+        let emoji = (200..<300).contains(status) ? "✅" : "❌"
+        print("\(emoji) [RESPONSE] status: \(status) for: \(request)")
+        print("   Body: \(bodyString)")
         #endif
     }
 }

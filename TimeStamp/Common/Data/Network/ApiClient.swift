@@ -30,9 +30,15 @@ public class ApiClient<R: Router> {
     }
 
     public func request<T: Decodable>(_ router: R) async -> Result<T, NetworkError> {
-        let request = router.asURLRequest()
-        let result = await session.request(request).serializingData().response
+        let request: URLRequest
+        do {
+            request = try router.asURLRequest()
+        } catch {
+            return .failure(.urlError)
+        }
         
+        let result = await session.request(request).serializingData().response
+
         // 에러 처리
         if let error = result.error {
             if let afError = error.asAFError {
@@ -47,17 +53,16 @@ public class ApiClient<R: Router> {
             }
             return .failure(.requestFailed(error.localizedDescription))
         }
-        
-        
-        guard let data = result.data
-        else { return .failure(.dataNil)}
-        
+
+        guard let data = result.data else {
+            return .failure(.dataNil)
+        }
+
         guard let response = result.response else {
             return .failure(.invalidResponse)
         }
-        
-        // 성공한 경우
-        if 200..<400 ~= response.statusCode {
+
+        if 200..<300 ~= response.statusCode {
             // 1) ResponseBody<T> 시도
             if let wrapped = try? decoder.decode(ResponseBody<T>.self, from: data) {
                 if let payload = wrapped.data {
@@ -70,12 +75,18 @@ public class ApiClient<R: Router> {
             if let direct = try? decoder.decode(T.self, from: data) {
                 return .success(direct)
             }
-            
+
+            // 디코딩 실패 시 raw data 출력 (디버깅용)
+            #if DEBUG
+            if let jsonString = String(data: data, encoding: .utf8) {
+                print(">>>>>❌ Decoding failed for: \(jsonString)")
+            }
+            #endif
+
             return .failure(.failToDecode("Unable to decode as ResponseBody or direct T"))
-            
+
         } else { // 실패
             return .failure(.serverError(response.statusCode))
-            
         }
     }
     
