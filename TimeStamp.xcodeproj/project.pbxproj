@@ -6,6 +6,12 @@
 	objectVersion = 77;
 	objects = {
 
+/* Begin PBXBuildFile section */
+		D0DAF8BE2EE150D20040F646 /* Kingfisher in Frameworks */ = {isa = PBXBuildFile; productRef = D0DAF8BD2EE150D20040F646 /* Kingfisher */; };
+		D0DAF8C12EE150E20040F646 /* Alamofire in Frameworks */ = {isa = PBXBuildFile; productRef = D0DAF8C02EE150E20040F646 /* Alamofire */; };
+		D0DAF8C42EE150EE0040F646 /* Then in Frameworks */ = {isa = PBXBuildFile; productRef = D0DAF8C32EE150EE0040F646 /* Then */; };
+/* End PBXBuildFile section */
+
 /* Begin PBXContainerItemProxy section */
 		D0DAF8862EE149E80040F646 /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
@@ -52,6 +58,9 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				D0DAF8BE2EE150D20040F646 /* Kingfisher in Frameworks */,
+				D0DAF8C42EE150EE0040F646 /* Then in Frameworks */,
+				D0DAF8C12EE150E20040F646 /* Alamofire in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -112,6 +121,9 @@
 			);
 			name = TimeStamp;
 			packageProductDependencies = (
+				D0DAF8BD2EE150D20040F646 /* Kingfisher */,
+				D0DAF8C02EE150E20040F646 /* Alamofire */,
+				D0DAF8C32EE150EE0040F646 /* Then */,
 			);
 			productName = TimeStamp;
 			productReference = D0DAF8782EE149E70040F646 /* TimeStamp.app */;
@@ -195,6 +207,11 @@
 			);
 			mainGroup = D0DAF86F2EE149E70040F646;
 			minimizedProjectReferenceProxies = 1;
+			packageReferences = (
+				D0DAF8BC2EE150D20040F646 /* XCRemoteSwiftPackageReference "Kingfisher" */,
+				D0DAF8BF2EE150E20040F646 /* XCRemoteSwiftPackageReference "Alamofire" */,
+				D0DAF8C22EE150EE0040F646 /* XCRemoteSwiftPackageReference "Then" */,
+			);
 			preferredProjectObjectVersion = 77;
 			productRefGroup = D0DAF8792EE149E70040F646 /* Products */;
 			projectDirPath = "";
@@ -588,6 +605,51 @@
 			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
+
+/* Begin XCRemoteSwiftPackageReference section */
+		D0DAF8BC2EE150D20040F646 /* XCRemoteSwiftPackageReference "Kingfisher" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/onevcat/Kingfisher";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 8.6.2;
+			};
+		};
+		D0DAF8BF2EE150E20040F646 /* XCRemoteSwiftPackageReference "Alamofire" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/Alamofire/Alamofire";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 5.10.2;
+			};
+		};
+		D0DAF8C22EE150EE0040F646 /* XCRemoteSwiftPackageReference "Then" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/devxoul/Then";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 3.0.0;
+			};
+		};
+/* End XCRemoteSwiftPackageReference section */
+
+/* Begin XCSwiftPackageProductDependency section */
+		D0DAF8BD2EE150D20040F646 /* Kingfisher */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = D0DAF8BC2EE150D20040F646 /* XCRemoteSwiftPackageReference "Kingfisher" */;
+			productName = Kingfisher;
+		};
+		D0DAF8C02EE150E20040F646 /* Alamofire */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = D0DAF8BF2EE150E20040F646 /* XCRemoteSwiftPackageReference "Alamofire" */;
+			productName = Alamofire;
+		};
+		D0DAF8C32EE150EE0040F646 /* Then */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = D0DAF8C22EE150EE0040F646 /* XCRemoteSwiftPackageReference "Then" */;
+			productName = Then;
+		};
+/* End XCSwiftPackageProductDependency section */
 	};
 	rootObject = D0DAF8702EE149E70040F646 /* Project object */;
 }
