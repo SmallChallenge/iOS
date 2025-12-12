@@ -21,9 +21,9 @@ public enum NetworkConfig {
     public static var baseURL: String {
         switch environment {
         case .dev:
-            "https://dev.example.com"
+            "https://api.stampy.kr"
         case .prod:
-            "https://api.example.com"
+            "https://api.stampy.kr/"
         }
     }
 }
