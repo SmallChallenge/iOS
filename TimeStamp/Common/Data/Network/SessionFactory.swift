@@ -10,7 +10,7 @@ import Alamofire
 
 /// SessionFactoryProtocol의 기본 구현체
 /// Alamofire Session을 환경에 맞게 생성
-public final class SessionFactory: SessionFactoryProtocol {
+public final class SessionFactory {
 
     public init() {}
 
