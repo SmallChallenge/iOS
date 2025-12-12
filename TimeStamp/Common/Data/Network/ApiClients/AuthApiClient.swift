@@ -72,9 +72,22 @@ extension AuthRouter: Router {
     
 }
 
+// MARK: - API Client Protocol
+
+public protocol AuthApiClientProtocol {
+    func kakaoLogin(accessToken token: String) async -> Result<LoginResponseDto, NetworkError>
+    func appleLogin(accessToken token: String) async -> Result<LoginResponseDto, NetworkError>
+    func googleLogin(accessToken token: String) async -> Result<LoginResponseDto, NetworkError>
+    // 토큰 재발급
+    // 로그아웃
+    // 회원탈퇴
+    // 닉네임 설정
+    
+}
+
 // MARK: - API Client
 
-public class AuthApiClient: ApiClient<AuthRouter> {
+public class AuthApiClient: ApiClient<AuthRouter>, AuthApiClientProtocol {
     public func kakaoLogin(accessToken token: String) async -> Result<LoginResponseDto, NetworkError> {
         await request(AuthRouter.kakaoLogin(accessToken: token))
     }
