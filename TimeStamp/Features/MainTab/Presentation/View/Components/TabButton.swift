@@ -8,23 +8,27 @@
 import SwiftUI
 
 struct TabButton: View {
-    let type: MainTabViewIcon
+    let type: MainTabButtonType
     let isSelected: Bool
     let action: () -> Void
     
     var body: some View {
         Button(action: action) {
-            if isSelected {
-                Image(type.iconName)
+            VStack(spacing: 6) {
+                // 아이콘
+                Image(isSelected ? type.selectedIconName : type.iconName)
+                    .renderingMode(.template)
+                    .foregroundStyle(isSelected ? .gray50 : .gray600)
                     .frame(width: 24, height: 24)
-                    
-            } else {
-                Image(type.selectedIconName)
-                    .font(.system(size: 22))
-                    .frame(width: 24, height: 24)
-                    
+                
+                
+                // 이름
+                Text(type.buttonName)
+                    .font(.Label)
+                    .foregroundStyle(isSelected ? .gray50 : .gray600)
             }
         }
         .frame(maxWidth: .infinity, maxHeight: .infinity)
     }
 }
+

@@ -15,14 +15,16 @@ struct MainTabView: View {
             TabView (selection: $selectedTab){
                 MyLogView()
                     .tag(0)
+                
                 CameraView()
                     .tag(1)
+                
                 CommunityView()
                     .tag(2)
             } //~TabView
             .hideTabBar()
             
-            CustomTabBar(selectedTab: $selectedTab)
+            MainTabBar(selectedTab: $selectedTab)
             
         } // ~ZStack
         .ignoresSafeArea()
