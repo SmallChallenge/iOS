@@ -21,7 +21,7 @@ public struct Keychain {
             read(key: key)
         }
         set {
-            if let newValue, !(newValue.isEmpty) {
+            if let newValue, newValue.isNotEmpty {
                 save(key: key, value: newValue)
             } else {
               delete(key: key)

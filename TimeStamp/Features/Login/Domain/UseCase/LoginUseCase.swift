@@ -8,27 +8,27 @@
 import Foundation
 
 protocol LoginUseCaseProtocol {
-    func kakaoLogin(accessToken token: String) async -> Result<LoginResponseDto, NetworkError>
-    func appleLogin(accessToken token: String) async -> Result<LoginResponseDto, NetworkError>
-    func googleLogin(accessToken token: String) async -> Result<LoginResponseDto, NetworkError>
+    func kakaoLogin(accessToken: String) async -> Result<LoginResponseDto, NetworkError>
+    func appleLogin(accessToken: String) async -> Result<LoginResponseDto, NetworkError>
+    func googleLogin(accessToken: String) async -> Result<LoginResponseDto, NetworkError>
 }
 
 public struct LoginUseCase: LoginUseCaseProtocol {
     private let repository: LoginRepositoryProtocol
+
     public init(repository: LoginRepositoryProtocol) {
         self.repository = repository
     }
-    
-    func kakaoLogin(accessToken token: String) async -> Result<LoginResponseDto, NetworkError> {
-        await repository.kakaoLogin(accessToken: token)
+
+    func kakaoLogin(accessToken: String) async -> Result<LoginResponseDto, NetworkError> {
+        await repository.kakaoLogin(accessToken: accessToken)
     }
-    
-    func appleLogin(accessToken token: String) async -> Result<LoginResponseDto, NetworkError> {
-        await repository.appleLogin(accessToken: token)
+
+    func appleLogin(accessToken: String) async -> Result<LoginResponseDto, NetworkError> {
+        await repository.appleLogin(accessToken: accessToken)
     }
-    
-    func googleLogin(accessToken token: String) async -> Result<LoginResponseDto, NetworkError> {
-        await repository.googleLogin(accessToken: token)
+
+    func googleLogin(accessToken: String) async -> Result<LoginResponseDto, NetworkError> {
+        await repository.googleLogin(accessToken: accessToken)
     }
-    
 }
