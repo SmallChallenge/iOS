@@ -27,7 +27,7 @@ struct MainTabView: View {
             MainTabBar(selectedTab: $selectedTab)
             
         } // ~ZStack
-        .ignoresSafeArea()
+//        .ignoresSafeArea()
     }
 }
 

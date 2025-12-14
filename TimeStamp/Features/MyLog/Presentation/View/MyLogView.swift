@@ -9,7 +9,14 @@ import SwiftUI
 
 struct MyLogView: View {
     var body: some View {
-        Text("MyLogView")
+        VStack {
+            
+            
+            Text("MyLogView")
+            
+            
+        }.mainBackgourndColor()
+        
     }
 }
 
