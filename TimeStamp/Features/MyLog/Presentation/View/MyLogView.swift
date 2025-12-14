@@ -8,16 +8,17 @@
 import SwiftUI
 
 struct MyLogView: View {
+    @State private var selectedCategory: Category = .all
     var body: some View {
         VStack {
             HeaderView()
-            Spacer()
-            
-            Text("MyLogView")
-            
-            
+            ScrollView {
+                CategoryView(selectedCategory: $selectedCategory)
+                Spacer()
+                
+                Text("MyLogView")
+            }
         }.mainBackgourndColor()
-        
     }
 }
 
