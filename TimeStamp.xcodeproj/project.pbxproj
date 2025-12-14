@@ -35,9 +35,22 @@
 		D0DAF88F2EE149E80040F646 /* TimeStampUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = TimeStampUITests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 /* End PBXFileReference section */
 
+/* Begin PBXFileSystemSynchronizedBuildFileExceptionSet section */
+		D0D4FFE02EEED82900C9C425 /* Exceptions for "TimeStamp" folder in "TimeStamp" target */ = {
+			isa = PBXFileSystemSynchronizedBuildFileExceptionSet;
+			membershipExceptions = (
+				Info.plist,
+			);
+			target = D0DAF8772EE149E70040F646 /* TimeStamp */;
+		};
+/* End PBXFileSystemSynchronizedBuildFileExceptionSet section */
+
 /* Begin PBXFileSystemSynchronizedRootGroup section */
 		D0DAF87A2EE149E70040F646 /* TimeStamp */ = {
 			isa = PBXFileSystemSynchronizedRootGroup;
+			exceptions = (
+				D0D4FFE02EEED82900C9C425 /* Exceptions for "TimeStamp" folder in "TimeStamp" target */,
+			);
 			path = TimeStamp;
 			sourceTree = "<group>";
 		};
@@ -418,6 +431,7 @@
 				DEVELOPMENT_TEAM = 3PVV8DQPL6;
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_FILE = TimeStamp/Info.plist;
 				INFOPLIST_KEY_CFBundleDisplayName = Stampy;
 				INFOPLIST_KEY_LSApplicationCategoryType = "public.app-category.lifestyle";
 				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
@@ -458,6 +472,7 @@
 				DEVELOPMENT_TEAM = 3PVV8DQPL6;
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_FILE = TimeStamp/Info.plist;
 				INFOPLIST_KEY_CFBundleDisplayName = Stampy;
 				INFOPLIST_KEY_LSApplicationCategoryType = "public.app-category.lifestyle";
 				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
