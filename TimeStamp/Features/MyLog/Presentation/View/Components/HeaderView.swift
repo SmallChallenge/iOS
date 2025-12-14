@@ -9,7 +9,22 @@ import SwiftUI
 
 struct HeaderView: View {
     var body: some View {
-        Text(/*@START_MENU_TOKEN@*/"Hello, World!"/*@END_MENU_TOKEN@*/)
+        HStack (alignment: .center){
+            Image("MainAppName")
+                .resizable()
+                .frame(width: 108, height: 40)
+                .padding(.vertical, 10)
+                .padding(.leading, 20)
+            
+            Spacer()
+            
+            Image("iconUser_line")
+                .resizable()
+                .frame(width: 24, height: 24)
+                .padding(.trailing, 20)
+        }
+        .frame(height: 60)
+        
     }
 }
 

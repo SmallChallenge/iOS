@@ -10,7 +10,8 @@ import SwiftUI
 struct MyLogView: View {
     var body: some View {
         VStack {
-            
+            HeaderView()
+            Spacer()
             
             Text("MyLogView")
             
