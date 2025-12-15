@@ -12,16 +12,18 @@ struct MainTabView: View {
     @State private var selectedTab: Int = 0
     @State private var showCamera: Bool = false
 
+    private let container = AppDIContainer.shared
+
     var body: some View {
         ZStack(alignment: .bottom) {
             TabView (selection: $selectedTab){
-                MyLogView()
+                container.makeMyLogView()
                     .tag(0)
 
                 EmptyView()
                     .tag(1)
 
-                CommunityView()
+                container.makeCommunityView()
                     .tag(2)
             } //~TabView
             .hideTabBar()
@@ -30,7 +32,7 @@ struct MainTabView: View {
 
         } // ~ZStack
         .fullScreenCover(isPresented: $showCamera) {
-            CameraView()
+            container.makeCameraView()
         }
     }
 }
