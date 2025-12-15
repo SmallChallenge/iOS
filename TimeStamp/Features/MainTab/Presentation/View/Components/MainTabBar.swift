@@ -10,9 +10,11 @@ import SwiftUI
 
 struct MainTabBar: View {
     @Binding var selectedTab: Int
-    
+    @Binding var showCamera: Bool
+
     var body: some View {
         HStack(spacing: 0) {
+            
             // MARK: 내 기록
             TabButton(
                 type: .myLog,
@@ -20,11 +22,9 @@ struct MainTabBar: View {
                 selectedTab = 0
             }
             
-           
-            
             // MARK: 카메라
             Button {
-                selectedTab = 1
+                showCamera = true
             } label: {
                 AddButtonView()
             }
@@ -50,5 +50,5 @@ struct MainTabBar: View {
 
 
 #Preview {
-    MainTabBar(selectedTab: .constant(1))
+    MainTabBar(selectedTab: .constant(1), showCamera: .constant(false))
 }

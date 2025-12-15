@@ -10,24 +10,28 @@ import SwiftUI
 
 struct MainTabView: View {
     @State private var selectedTab: Int = 0
+    @State private var showCamera: Bool = false
+
     var body: some View {
         ZStack(alignment: .bottom) {
             TabView (selection: $selectedTab){
                 MyLogView()
                     .tag(0)
-                
-                CameraView()
+
+                EmptyView()
                     .tag(1)
-                
+
                 CommunityView()
                     .tag(2)
             } //~TabView
             .hideTabBar()
-            
-            MainTabBar(selectedTab: $selectedTab)
-            
+
+            MainTabBar(selectedTab: $selectedTab, showCamera: $showCamera)
+
         } // ~ZStack
-//        .ignoresSafeArea()
+        .fullScreenCover(isPresented: $showCamera) {
+            CameraView()
+        }
     }
 }
 
