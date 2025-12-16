@@ -57,7 +57,8 @@ final class AppDIContainer {
 
     func makeMyLogView() -> MyLogView {
         // TODO: ViewModel이 필요하면 여기서 주입
-        return MyLogView()
+        let viewModel = MyLogViewModel()
+        return MyLogView(viewModel: viewModel)
     }
 
     // MARK: - Community Feature

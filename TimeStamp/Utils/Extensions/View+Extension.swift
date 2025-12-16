@@ -8,6 +8,9 @@
 import Foundation
 import SwiftUI
 
+
+// MARK: - 화면 배경 검게하는거
+
 public struct MainBackgroundColorModified: ViewModifier {
     private var color: Color
     
@@ -27,5 +30,29 @@ public struct MainBackgroundColorModified: ViewModifier {
  extension View {
     func mainBackgourndColor(_ color: Color = .gray900) -> ModifiedContent<Self, MainBackgroundColorModified> {
         modifier(MainBackgroundColorModified(color: color))
+    }
+}
+
+// MARK: - 로딩 뷰 코드 간소화
+
+struct LoadingModifier: ViewModifier {
+    let isLoading: Bool
+    
+    func body(content: Content) -> some View {
+        ZStack {
+            content
+            
+            if isLoading {
+                ProgressView()
+                    .tint(.neon300)
+                    .scaleEffect(1.5)
+            }
+        }
+    }
+}
+
+extension View {
+    func loading(_ isLoading: Bool) -> some View {
+        modifier(LoadingModifier(isLoading: isLoading))
     }
 }
