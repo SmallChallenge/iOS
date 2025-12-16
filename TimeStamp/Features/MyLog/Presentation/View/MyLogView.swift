@@ -9,14 +9,23 @@ import SwiftUI
 
 struct MyLogView: View {
     @State private var selectedCategory: Category = .all
+    
+    private let isEmpty: Bool = true
+    
     var body: some View {
         VStack {
             HeaderView()
-            ScrollView {
-                CategoryView(selectedCategory: $selectedCategory)
-                Spacer()
+            if isEmpty { // 내기록 없음
+                MyLogEmptyView()
                 
-                Text("MyLogView")
+            } else { // 내 기록 있음.
+                ScrollView {
+                    CategoryView(selectedCategory: $selectedCategory)
+                    
+                    // 사진 목록
+                    Spacer()
+                    Text("MyLogView")
+                }
             }
         }.mainBackgourndColor()
     }
