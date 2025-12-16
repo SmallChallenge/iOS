@@ -27,5 +27,4 @@ struct MyLogEmptyView: View {
 #Preview {
     MyLogEmptyView()
         .background(Color.black)
-//        .mainBackgourndColor()
 }

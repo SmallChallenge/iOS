@@ -7,14 +7,14 @@
 
 import Foundation
 
-struct TimeStampLog {
+struct TimeStampLog: Identifiable {
     /// id in local
     let id: UUID
     let category: Category
     let timeStamp: Date
     let caption: String?
     
-    var imageSource: ImageSource
+    let imageSource: ImageSource
     
     /// 공개여부
     let visibility: VisibilityType
@@ -29,12 +29,14 @@ struct TimeStampLog {
         case publicVisible
         case privateVisible
     }
+    
+    struct LocalTimeStampImage {
+        let assetIdentifier: String
+    }
+    struct RemoteTimeStampImage {
+        /// id in server
+        let id: Int
+        let imageUrl: String
+    }
 }
-struct LocalTimeStampImage {
-    let assetIdentifier: String
-}
-struct RemoteTimeStampImage {
-    /// id in server
-    let id: Int
-    let imageUrl: String
-}
+
