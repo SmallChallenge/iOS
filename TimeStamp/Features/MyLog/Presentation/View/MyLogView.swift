@@ -8,7 +8,7 @@
 import SwiftUI
 
 struct MyLogView: View {
-    @State private var selectedCategory: Category = .all
+    @State private var selectedCategory: CategoryViewData = .all
     
     private let isEmpty: Bool = true
     

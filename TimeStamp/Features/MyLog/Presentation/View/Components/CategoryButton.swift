@@ -8,7 +8,7 @@
 import SwiftUI
 
 struct CategoryButton: View {
-    let type: Category
+    let type: CategoryViewData
     let isSelected: Bool
     let action: () -> Void
     

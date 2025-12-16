@@ -8,12 +8,12 @@
 import SwiftUI
 
 struct CategoryView: View {
-    @Binding var selectedCategory: Category
+    @Binding var selectedCategory: CategoryViewData
     
     var body: some View {
         ScrollView(.horizontal, showsIndicators: false) {
             HStack(spacing: 16) {
-                ForEach(Category.allCases, id: \.self) { category in
+                ForEach(CategoryViewData.allCases, id: \.self) { category in
                     CategoryButton(
                         type: category,
                         isSelected: selectedCategory == category
