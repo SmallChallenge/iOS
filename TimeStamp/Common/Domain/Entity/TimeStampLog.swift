@@ -25,13 +25,9 @@ struct TimeStampLog {
         case remote(RemoteTimeStampImage) 
     }
     
-    enum VisibilityType: String {
-        case publicVisible = "전체공개"
-        case privateVisible = "비공개"
-        
-        var displayName: String {
-            self.rawValue
-        }
+    enum VisibilityType {
+        case publicVisible
+        case privateVisible
     }
 }
 struct LocalTimeStampImage {
