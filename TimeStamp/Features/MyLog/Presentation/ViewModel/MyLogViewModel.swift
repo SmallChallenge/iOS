@@ -19,35 +19,30 @@ final class MyLogViewModel: ObservableObject {
         .init(id: UUID(),
               category: .food,
               timeStamp: Date.now,
-              caption: "test",
               imageSource: .remote(TimeStampLog.RemoteTimeStampImage(id: 0, imageUrl: "https://picsum.photos/600/400")),
               visibility: .privateVisible
              ),
         .init(id: UUID(),
               category: .food,
               timeStamp: Date.now,
-              caption: "test2",
               imageSource: .remote(TimeStampLog.RemoteTimeStampImage(id: 2, imageUrl: "https://picsum.photos/600/400")),
               visibility: .privateVisible
              ),
         .init(id: UUID(),
               category: .food,
               timeStamp: Date.now,
-              caption: "test3",
               imageSource: .remote(TimeStampLog.RemoteTimeStampImage(id: 3, imageUrl: "https://picsum.photos/600/400")),
               visibility: .privateVisible
              ),
         .init(id: UUID(),
               category: .food,
               timeStamp: Date.now,
-              caption: "test2",
               imageSource: .remote(TimeStampLog.RemoteTimeStampImage(id: 2, imageUrl: "https://picsum.photos/600/400")),
               visibility: .privateVisible
              ),
         .init(id: UUID(),
               category: .food,
               timeStamp: Date.now,
-              caption: "test3",
               imageSource: .remote(TimeStampLog.RemoteTimeStampImage(id: 3, imageUrl: "https://picsum.photos/600/400")),
               visibility: .privateVisible
              )
@@ -68,7 +63,6 @@ final class MyLogViewModel: ObservableObject {
                     id: UUID(),
                     category: [.food, .study, .health].randomElement()!,
                     timeStamp: Date.now,
-                    caption: "Log \(self.myLogs.count + index + 1)",
                     imageSource: .remote(TimeStampLog.RemoteTimeStampImage(
                         id: self.myLogs.count + index,
                         imageUrl: "https://picsum.photos/400/400?random=\(self.myLogs.count + index)"

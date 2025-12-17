@@ -12,10 +12,10 @@ struct TimeStampLogViewData {
     let id: UUID
     let category: Category
     let timeStamp: Date
-    let caption: String?
+
     
     var imageSource: TimeStampLog.ImageSource
     
     /// 공개여부
-    let visibility: TimeStampLog.VisibilityType
+    let visibility: VisibilityType
 }

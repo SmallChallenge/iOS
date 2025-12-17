@@ -56,7 +56,6 @@ struct PhotoCell: View {
             id: UUID(),
             category: .food,
             timeStamp: Date.now,
-            caption: "test",
             imageSource: .remote(TimeStampLog.RemoteTimeStampImage(
                 id: 0,
                 imageUrl: "https://picsum.photos/400/400"

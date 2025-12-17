@@ -12,23 +12,17 @@ struct TimeStampLog: Identifiable {
     let id: UUID
     let category: Category
     let timeStamp: Date
-    let caption: String?
     
     let imageSource: ImageSource
     
     /// 공개여부
     let visibility: VisibilityType
     
-    
     enum ImageSource {
         case local(LocalTimeStampImage)
         case remote(RemoteTimeStampImage) 
     }
     
-    enum VisibilityType {
-        case publicVisible
-        case privateVisible
-    }
     
     struct LocalTimeStampImage {
         let assetIdentifier: String
@@ -40,3 +34,8 @@ struct TimeStampLog: Identifiable {
     }
 }
 
+/// 공개여부
+enum VisibilityType:  Codable{
+    case publicVisible
+    case privateVisible
+}
