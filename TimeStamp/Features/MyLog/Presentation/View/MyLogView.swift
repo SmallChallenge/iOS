@@ -13,9 +13,9 @@ struct MyLogView: View {
 
     // 사진 간격
     private let columns = [
-        GridItem(.flexible(), spacing: 0),
-        GridItem(.flexible(), spacing: 0),
-        GridItem(.flexible(), spacing: 0)
+        GridItem(.flexible(), spacing: 1),
+        GridItem(.flexible(), spacing: 1),
+        GridItem(.flexible(), spacing: 1)
     ]
 
     init(viewModel: MyLogViewModel){
