@@ -42,7 +42,7 @@ struct MyLogView: View {
                                     .aspectRatio(1, contentMode: .fill)
                                     .onAppear {
                                         if index == viewModel.myLogs.count - 1 {
-                                            viewModel.loadMore()
+                                            //viewModel.loadMore()
                                         }
                                     }
                             }
