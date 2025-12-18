@@ -62,7 +62,6 @@ final class CameraViewModel: ObservableObject {
 
     /// 플래시 토글
     func toggleFlash() {
-        print(">>>>> toggleFlash")
         cameraManager.toggleFlash()
     }
 

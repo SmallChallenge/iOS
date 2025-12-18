@@ -7,6 +7,7 @@
 
 import SwiftUI
 
+/// 사진 촬영 화면에서 카메라탭뷰 화면
 struct InnerCameraView: View {
     @StateObject private var viewModel = CameraViewModel()
 
@@ -41,7 +42,7 @@ struct InnerCameraView: View {
         }
     }
     
-    // 카메라 전환, 촬영, 플래시 버튼
+    /// 카메라 전환, 촬영, 플래시 버튼
     var controller: some View {
         HStack (alignment: .center, spacing: 48){
             // 카메라 전환 버튼 (전면 ↔ 후면)
@@ -69,7 +70,6 @@ struct InnerCameraView: View {
 
             // 플래시 버튼 (off -> auto -> on)
             Button {
-                print(">>>>> 플래시 버튼 클릭")
                 viewModel.toggleFlash()
             } label: {
                 flashIcon
@@ -94,18 +94,6 @@ struct InnerCameraView: View {
             return Image("IconFlash_Fill")       // 자동 플래시
         case .on:
             return Image("IconFlash_circle_line") // 항상 켜짐
-        }
-    }
-
-    /// 플래시 모드에 따른 색상
-    private var flashColor: Color {
-        switch viewModel.flashMode {
-        case .off:
-            return Color.gray300                 // 회색
-        case .auto:
-            return .yellow                       // 노란색
-        case .on:
-            return .yellow                       // 노란색
         }
     }
 }

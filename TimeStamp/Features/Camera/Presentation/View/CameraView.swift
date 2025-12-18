@@ -10,20 +10,26 @@ import SwiftUI
 struct CameraView: View {
     @Environment(\.dismiss) var dismiss
     @State var selectedTab: CameraViewTab = .camera
+    
+    // 카메라 탭
     enum CameraViewTab: String, CaseIterable, Identifiable {
         case gallery = "갤러리"
         case camera = "카메라"
-        
         var id: String { self.rawValue }
     }
     
-
     var body: some View {
         NavigationView {
             VStack(spacing: 0) {
+                
                 if selectedTab == .camera {
+                    
+                    // 카메라 화면
                     InnerCameraView()
+                    
                 } else {
+                    
+                    // 갤러리 화면
                     Spacer()
                 }
                 
@@ -74,17 +80,3 @@ struct CameraView: View {
 
 
 
-struct CameraTabButton: View {
-    let title: String
-    let isSelected: Bool
-    let action: () -> Void
-    
-    var body: some View {
-        Button(action: action) {
-            Text(title)
-                .font(.Btn1)
-                .foregroundStyle(isSelected ? .gray50 : .gray500)
-                .frame(maxWidth: .infinity)
-        }
-    }
-}
