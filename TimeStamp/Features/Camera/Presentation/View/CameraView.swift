@@ -8,31 +8,33 @@
 import SwiftUI
 
 struct CameraView: View {
-    @Environment(\.dismiss) var dismiss
+    /// 뒤로가기 액션 클로저 (Environment 대신 클로저로 성능 최적화)
+    let onDismiss: () -> Void
+
     @State var selectedTab: CameraViewTab = .camera
-    
+
     // 카메라 탭
     enum CameraViewTab: String, CaseIterable, Identifiable {
         case gallery = "갤러리"
         case camera = "카메라"
         var id: String { self.rawValue }
     }
-    
+
     var body: some View {
         NavigationView {
             VStack(spacing: 0) {
-                
+
                 if selectedTab == .camera {
-                    
+
                     // 카메라 화면
                     InnerCameraView()
-                    
+
                 } else {
-                    
+
                     // 갤러리 화면
                     Spacer()
                 }
-                
+
                 //갤러리, 카메라 버튼
                 HStack(spacing: .zero) {
                     ForEach(CameraViewTab.allCases) { tab in
@@ -44,17 +46,14 @@ struct CameraView: View {
                         }
                     }
                 }
-                
-                
+
+
             } // ~VStack
             .navigationBarTitleDisplayMode(.inline)
             .toolbar {
                 ToolbarItem(placement: .navigationBarLeading) {
-                    Button {
-                        dismiss()
-                    } label: {
-                        Image(systemName: "chevron.left")
-                            .foregroundStyle(.gray50)
+                    DismissButton {
+                        onDismiss()
                     }
                 }
             }
@@ -75,7 +74,9 @@ struct CameraView: View {
 }
 
 #Preview {
-    CameraView()
+    CameraView {
+        // dismiss()
+    }
 }
 
 

@@ -32,7 +32,9 @@ struct MainTabView: View {
 
         } // ~ZStack
         .fullScreenCover(isPresented: $showCamera) {
-            container.makeCameraView()
+            container.makeCameraView {
+                showCamera = false
+            }
         }
     }
 }

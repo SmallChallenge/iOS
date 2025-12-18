@@ -48,9 +48,8 @@ final class AppDIContainer {
 
     // MARK: - Camera Feature
 
-    func makeCameraView() -> CameraView {
-        // TODO: ViewModel이 필요하면 여기서 주입
-        return CameraView()
+    func makeCameraView(onDismiss: @escaping () -> Void) -> CameraView {
+        return CameraView(onDismiss: onDismiss)
     }
 
     // MARK: - MyLog Feature
