@@ -16,8 +16,10 @@ struct PhotoCell: View {
         GeometryReader { geometry in
             Group {
                 switch log.imageSource {
-                    // 서버이미지
+
+                    // MARK: 서버이미지
                 case let .remote(remoteImage):
+                    
                     KFImage(URL(string: remoteImage.imageUrl))
                         .placeholder {
                             //Image("placeholder")
@@ -35,14 +37,17 @@ struct PhotoCell: View {
                         .resizable()
                         .scaledToFill()
 
-                    // 로컬 이미지
+                    // MARK: 로컬 이미지
                 case let .local(localImage):
-                    PHAssetImageView(
-                        assetIdentifier: localImage.assetIdentifier,
-                        targetSize: CGSize(width: geometry.size.width * 2, height: geometry.size.width * 2)
-                    )
-                }
-            }
+                    // TODO: localImage.imageFileName으로 앱내에 저장된 이미지 가져오기
+                    Text(localImage.imageFileName)
+//                    PHAssetImageView(
+//                        assetIdentifier: localImage.assetIdentifier,
+//                        targetSize: CGSize(width: geometry.size.width * 2, height: geometry.size.width * 2)
+//                    )
+                    
+                } //~switch
+            } //~Group
             .frame(width: geometry.size.width, height: geometry.size.width)
             .clipped()
         }

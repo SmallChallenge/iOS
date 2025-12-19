@@ -7,7 +7,7 @@
 
 import Foundation
 
-struct TimeStampLogViewData {
+struct TimeStampLogViewData: Identifiable {
     /// id in local
     let id: UUID
     let category: Category

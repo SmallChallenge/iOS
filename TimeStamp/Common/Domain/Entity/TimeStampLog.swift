@@ -25,7 +25,7 @@ struct TimeStampLog: Identifiable {
     
     
     struct LocalTimeStampImage {
-        let assetIdentifier: String
+        let imageFileName: String
     }
     struct RemoteTimeStampImage {
         /// id in server
