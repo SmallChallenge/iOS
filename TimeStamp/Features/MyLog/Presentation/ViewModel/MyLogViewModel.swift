@@ -13,31 +13,33 @@ final class MyLogViewModel: ObservableObject {
 
     // MARK: - Properties
 
-    /// 로컬 타임스탬프 로그 저장소
-    private let repository: LocalTimeStampLogRepositoryProtocol
+    /// MyLog UseCase
+    private let useCase: MyLogUseCaseProtocol
 
     // MARK: - Output Properties
 
     @Published var isLoading = false
     @Published var errorMessage: String?
+
+    /// 전체 로그 (필터링은 View에서 수행)
     @Published var myLogs: [TimeStampLogViewData] = []
 
     // MARK: - Init
 
-    init(repository: LocalTimeStampLogRepositoryProtocol) {
-        self.repository = repository
+    init(useCase: MyLogUseCaseProtocol) {
+        self.useCase = useCase
         loadLogs()
     }
 
     // MARK: - Methods
 
-    /// Core Data에서 모든 로그를 불러오기
+    /// 모든 로그를 불러오기
     func loadLogs() {
         isLoading = true
 
         do {
-            let dtos = try repository.readAll()
-            myLogs = dtos.map { toViewData($0) }
+            let entities = try useCase.fetchAllLogs()
+            myLogs = entities.map { toViewData($0) }
             isLoading = false
             print("✅ 로그 불러오기 성공: \(myLogs.count)개")
         } catch {
@@ -47,61 +49,16 @@ final class MyLogViewModel: ObservableObject {
         }
     }
 
-    /// 카테고리별로 필터링된 로그 불러오기
-    func loadLogs(category: String) {
-        isLoading = true
-
-        do {
-            let dtos = try repository.readByCategory(category)
-            myLogs = dtos.map { toViewData($0) }
-            isLoading = false
-        } catch {
-            errorMessage = "로그를 불러오는데 실패했습니다: \(error.localizedDescription)"
-            isLoading = false
-        }
-    }
-
     // MARK: - Private Helpers
 
-    /// DTO를 ViewData로 변환
-    private func toViewData(_ dto: LocalTimeStampLogDto) -> TimeStampLogViewData {
-        // Category 문자열을 enum으로 변환
-        let category: Category
-        switch dto.category {
-        case "공부":
-            category = .study
-        case "운동":
-            category = .health
-        case "음식":
-            category = .food
-        case "기타":
-            category = .etc
-        default:
-            category = .etc
-        }
-
-        // Visibility 문자열을 enum으로 변환
-        let visibility: VisibilityType
-        switch dto.visibility {
-        case "publicVisible":
-            visibility = .publicVisible
-        case "privateVisible":
-            visibility = .privateVisible
-        default:
-            visibility = .privateVisible
-        }
-
-        // ImageSource 생성 (로컬 이미지)
-        let imageSource = TimeStampLog.ImageSource.local(
-            TimeStampLog.LocalTimeStampImage(imageFileName: dto.imageFileName)
-        )
-
+    /// Entity를 ViewData로 변환
+    private func toViewData(_ entity: TimeStampLog) -> TimeStampLogViewData {
         return TimeStampLogViewData(
-            id: dto.id,
-            category: category,
-            timeStamp: dto.timeStamp,
-            imageSource: imageSource,
-            visibility: visibility
+            id: entity.id,
+            category: entity.category,
+            timeStamp: entity.timeStamp,
+            imageSource: entity.imageSource,
+            visibility: entity.visibility
         )
     }
 }

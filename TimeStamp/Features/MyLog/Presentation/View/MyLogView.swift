@@ -22,14 +22,31 @@ struct MyLogView: View {
         _viewModel = StateObject(wrappedValue: viewModel)
     }
 
+    /// 선택된 카테고리로 필터링된 로그
+    private var filteredLogs: [TimeStampLogViewData] {
+        if selectedCategory == .all {
+            return viewModel.myLogs
+        } else {
+            return viewModel.myLogs.filter { log in
+                switch selectedCategory {
+                case .all: return true
+                case .study: return log.category == .study
+                case .health: return log.category == .health
+                case .food: return log.category == .food
+                case .etc: return log.category == .etc
+                }
+            }
+        }
+    }
+
     var body: some View {
         VStack {
             HeaderView()
             if viewModel.myLogs.isEmpty { // 내기록 없음
                 MyLogEmptyView()
-                
+
             } else { // 내 기록 있음.
-                
+
                 ScrollView {
                     VStack (spacing: .zero){
                         // 카테고리
@@ -37,21 +54,21 @@ struct MyLogView: View {
 
                         // 사진 목록
                         LazyVGrid(columns: columns, spacing: 0) {
-                            ForEach(Array(viewModel.myLogs.enumerated()), id: \.element.id) { index, log in
+                            ForEach(Array(filteredLogs.enumerated()), id: \.element.id) { index, log in
                                 PhotoCell(log: log)
                                     .aspectRatio(1, contentMode: .fill)
                                     .onAppear {
-                                        if index == viewModel.myLogs.count - 1 {
+                                        if index == filteredLogs.count - 1 {
                                             //viewModel.loadMore()
                                         }
                                     }
                             }
                         }
-                        
+
                     }
                 }
             }
-            
+
         }
         .mainBackgourndColor()
         .loading(viewModel.isLoading)
@@ -66,8 +83,10 @@ struct MyLogView: View {
 }
 
 #Preview {
-    let repository = LocalTimeStampLogRepository()
-    let viewModel = MyLogViewModel(repository: repository)
+    let localRepository = LocalTimeStampLogRepository()
+    let repository = MyLogRepository(localRepository: localRepository)
+    let useCase = MyLogUseCase(repository: repository)
+    let viewModel = MyLogViewModel(useCase: useCase)
     return MyLogView(viewModel: viewModel)
 }
 

@@ -6,7 +6,7 @@
 //
 
 
-enum Category: Codable {
+enum Category: String, Codable {
     case food
     case study
     case health

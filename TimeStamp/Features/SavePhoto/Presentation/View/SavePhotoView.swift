@@ -91,7 +91,7 @@ struct SavePhotoView: View {
         // ViewModel을 통해 저장
         viewModel.savePhoto(
             image: capturedImage,
-            category: category.title,
+            category: category.rawValue,
             visibility: visibility
         )
     }
@@ -143,8 +143,10 @@ struct SavePhotoView: View {
 }
 
 #Preview {
-    let repository = LocalTimeStampLogRepository()
-    let viewModel = SavePhotoViewModel(repository: repository)
+    let localRepository = LocalTimeStampLogRepository()
+    let repository = SavePhotoRepository(localRepository: localRepository)
+    let useCase = SavePhotoUseCase(repository: repository)
+    let viewModel = SavePhotoViewModel(useCase: useCase)
     return SavePhotoView(
         capturedImage: UIImage(systemName: "photo")!,
         viewModel: viewModel,
