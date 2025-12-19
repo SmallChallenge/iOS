@@ -14,10 +14,16 @@ struct InnerCameraView: View {
     var body: some View {
         VStack(spacing: 0)
         {
-            // 카메라 프리뷰
-            CameraPreviewView(session: viewModel.cameraManager.session)
-                .aspectRatio(1, contentMode: .fit)
-                .padding(.top, 40)
+            // 카메라 프리뷰 + 오버레이
+            ZStack {
+                // 카메라 프리뷰
+                CameraPreviewView(session: viewModel.cameraManager.session)
+
+                // 오버레이 뷰 (타임스탬프, 로고)
+                DefaultTemplateView()
+            }
+            .aspectRatio(1, contentMode: .fit)
+            .padding(.top, 40)
 
 
             Spacer()
@@ -42,6 +48,8 @@ struct InnerCameraView: View {
         }
     }
     
+    // MARK: - Controller
+
     /// 카메라 전환, 촬영, 플래시 버튼
     var controller: some View {
         HStack (alignment: .center, spacing: 48){
@@ -91,9 +99,9 @@ struct InnerCameraView: View {
         case .off:
             return Image("IconFlash_Line")       // 플래시 끔
         case .auto:
-            return Image("IconFlash_Fill")       // 자동 플래시
+            return Image("IconFlash_Auto")       // 자동 플래시
         case .on:
-            return Image("IconFlash_circle_line") // 항상 켜짐
+            return Image("IconFlash_Fill")      // 항상 켜짐
         }
     }
 }
