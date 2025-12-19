@@ -10,41 +10,60 @@ import SwiftUI
 /// 사진 촬영 화면에서 카메라탭뷰 화면
 struct InnerCameraView: View {
     @StateObject private var viewModel = CameraViewModel()
+    @State private var navigateToSavePhoto = false
 
     var body: some View {
-        VStack(spacing: 0)
-        {
-            // 카메라 프리뷰 + 오버레이
-            ZStack {
-                // 카메라 프리뷰
-                CameraPreviewView(session: viewModel.cameraManager.session)
+        ZStack {
+            VStack(spacing: 0)
+            {
+                // 카메라 프리뷰 + 오버레이
+                ZStack {
+                    // 카메라 프리뷰
+                    CameraPreviewView(session: viewModel.cameraManager.session)
 
-                // 오버레이 뷰 (타임스탬프, 로고)
-                DefaultTemplateView()
+                    // 오버레이 뷰 (타임스탬프, 로고)
+                    DefaultTemplateView()
+                }
+                .aspectRatio(1, contentMode: .fit)
+                .padding(.top, 40)
+
+
+                Spacer()
+                controller
+                Spacer()
             }
-            .aspectRatio(1, contentMode: .fit)
-            .padding(.top, 40)
-
-
-            Spacer()
-            controller
-            Spacer()
-        }
-        .onAppear {
-            viewModel.onAppear()
-        }
-        .onDisappear {
-            viewModel.onDisappear()
-        }
-        .alert("카메라 권한 필요", isPresented: $viewModel.showPermissionAlert) {
-            Button("확인", role: .cancel) { }
-            Button("설정으로 이동") {
-                if let url = URL(string: UIApplication.openSettingsURLString) {
-                    UIApplication.shared.open(url)
+            .onAppear {
+                viewModel.onAppear()
+            }
+            .onDisappear {
+                viewModel.onDisappear()
+            }
+            .alert("카메라 권한 필요", isPresented: $viewModel.showPermissionAlert) {
+                Button("확인", role: .cancel) { }
+                Button("설정으로 이동") {
+                    if let url = URL(string: UIApplication.openSettingsURLString) {
+                        UIApplication.shared.open(url)
+                    }
+                }
+            } message: {
+                Text("카메라를 사용하려면 설정에서 권한을 허용해주세요.")
+            }
+            .onChange(of: viewModel.capturedImage) { newImage in
+                if newImage != nil {
+                    navigateToSavePhoto = true
                 }
             }
-        } message: {
-            Text("카메라를 사용하려면 설정에서 권한을 허용해주세요.")
+
+            // NavigationLink (hidden)
+            if let image = viewModel.capturedImage {
+                NavigationLink(
+                    destination: AppDIContainer.shared.makeSavePhotoView(capturedImage: image)
+                        .navigationBarBackButtonHidden(false),
+                    isActive: $navigateToSavePhoto
+                ) {
+                    EmptyView()
+                }
+            }
         }
     }
     

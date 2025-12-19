@@ -1,5 +1,5 @@
 //
-//  CategoryButton.swift
+//  CategoryFilterButton.swift
 //  TimeStamp
 //
 //  Created by 임주희 on 12/14/25.
@@ -7,8 +7,8 @@
 
 import SwiftUI
 
-struct CategoryButton: View {
-    let type: CategoryViewData
+struct CategoryFilterButton: View {
+    let type: CategoryFilterViewData
     let isSelected: Bool
     let action: () -> Void
     

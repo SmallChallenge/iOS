@@ -1,12 +1,12 @@
 //
-//  CategoryViewData.swift
+//  CategoryFilterViewData.swift
 //  TimeStamp
 //
 //  Created by 임주희 on 12/16/25.
 //
 
 // 순서: 공부/운동/음식/기타
-enum CategoryViewData: CaseIterable {
+enum CategoryFilterViewData: CaseIterable {
     case all
     case study
     case health

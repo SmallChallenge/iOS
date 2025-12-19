@@ -9,6 +9,18 @@ import Foundation
 import SwiftUI
 
 
+
+extension View {
+    
+    func roundedBorder(color: Color, radius: CGFloat, lineWidth: CGFloat = 1) -> some View {
+        self.overlay(
+            RoundedRectangle(cornerRadius: radius)
+                .stroke(color, lineWidth: lineWidth)
+        )
+    }
+}
+
+
 // MARK: - 화면 배경 검게하는거
 
 public struct MainBackgroundColorModified: ViewModifier {
@@ -56,3 +68,5 @@ extension View {
         modifier(LoadingModifier(isLoading: isLoading))
     }
 }
+
+

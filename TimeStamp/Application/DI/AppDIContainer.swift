@@ -52,6 +52,12 @@ final class AppDIContainer {
         return CameraView(onDismiss: onDismiss)
     }
 
+    // MARK: - SavePhoto Feature
+
+    func makeSavePhotoView(capturedImage: UIImage) -> SavePhotoView {
+        return SavePhotoView(capturedImage: capturedImage)
+    }
+
     // MARK: - MyLog Feature
 
     func makeMyLogView() -> MyLogView {

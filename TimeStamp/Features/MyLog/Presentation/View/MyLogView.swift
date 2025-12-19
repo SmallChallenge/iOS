@@ -8,7 +8,7 @@
 import SwiftUI
 
 struct MyLogView: View {
-    @State private var selectedCategory: CategoryViewData = .all
+    @State private var selectedCategory: CategoryFilterViewData = .all
     @StateObject var viewModel: MyLogViewModel
 
     // 사진 간격
