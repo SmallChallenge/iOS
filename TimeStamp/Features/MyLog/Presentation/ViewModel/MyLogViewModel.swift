@@ -24,6 +24,27 @@ final class MyLogViewModel: ObservableObject {
     /// 전체 로그 (필터링은 View에서 수행)
     @Published var myLogs: [TimeStampLogViewData] = []
 
+    /// 사진이 있는 카테고리만 필터링
+    var availableCategories: [CategoryFilterViewData] {
+        var categories: [CategoryFilterViewData] = [.all] // 전체는 항상 표시
+
+        // 각 카테고리별로 사진이 있는지 확인
+        if myLogs.contains(where: { $0.category == .study }) {
+            categories.append(.study)
+        }
+        if myLogs.contains(where: { $0.category == .health }) {
+            categories.append(.health)
+        }
+        if myLogs.contains(where: { $0.category == .food }) {
+            categories.append(.food)
+        }
+        if myLogs.contains(where: { $0.category == .etc }) {
+            categories.append(.etc)
+        }
+
+        return categories
+    }
+
     // MARK: - Init
 
     init(useCase: MyLogUseCaseProtocol) {

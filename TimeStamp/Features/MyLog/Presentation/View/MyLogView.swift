@@ -50,7 +50,10 @@ struct MyLogView: View {
                 ScrollView {
                     VStack (spacing: .zero){
                         // 카테고리
-                        CategoryView(selectedCategory: $selectedCategory)
+                        CategoryView(
+                            selectedCategory: $selectedCategory,
+                            availableCategories: viewModel.availableCategories
+                        )
 
                         // 사진 목록
                         LazyVGrid(columns: columns, spacing: 0) {

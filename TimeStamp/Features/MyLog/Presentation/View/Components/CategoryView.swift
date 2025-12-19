@@ -9,11 +9,12 @@ import SwiftUI
 
 struct CategoryView: View {
     @Binding var selectedCategory: CategoryFilterViewData
-    
+    let availableCategories: [CategoryFilterViewData]
+
     var body: some View {
         ScrollView(.horizontal, showsIndicators: false) {
             HStack(spacing: 16) {
-                ForEach(CategoryFilterViewData.allCases, id: \.self) { category in
+                ForEach(availableCategories, id: \.self) { category in
                     CategoryFilterButton(
                         type: category,
                         isSelected: selectedCategory == category
@@ -29,8 +30,11 @@ struct CategoryView: View {
 }
 
 #Preview {
-    CategoryView(selectedCategory: .constant(.all))
-        .background(Color.gray900)
+    CategoryView(
+        selectedCategory: .constant(.all),
+        availableCategories: [.all, .study, .food]
+    )
+    .background(Color.gray900)
 }
 
 
