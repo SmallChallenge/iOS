@@ -27,7 +27,7 @@ struct CameraView: View {
                 if selectedTab == .camera {
 
                     // 카메라 화면
-                    InnerCameraView()
+                    InnerCameraView(onDismiss: onDismiss)
 
                 } else {
 

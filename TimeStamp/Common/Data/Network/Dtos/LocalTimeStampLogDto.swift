@@ -16,3 +16,5 @@ struct LocalTimeStampLogDto: Identifiable, Codable {
     let imageFileName: String
     var visibility: String
 }
+
+

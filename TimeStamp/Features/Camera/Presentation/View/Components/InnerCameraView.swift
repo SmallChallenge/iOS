@@ -10,6 +10,7 @@ import SwiftUI
 /// 사진 촬영 화면에서 카메라탭뷰 화면
 struct InnerCameraView: View {
     @StateObject private var viewModel = CameraViewModel()
+    let onDismiss: () -> Void
     @State private var navigateToSavePhoto = false
 
     var body: some View {
@@ -57,8 +58,11 @@ struct InnerCameraView: View {
             // NavigationLink (hidden)
             if let image = viewModel.capturedImage {
                 NavigationLink(
-                    destination: AppDIContainer.shared.makeSavePhotoView(capturedImage: image)
-                        .navigationBarBackButtonHidden(false),
+                    destination: AppDIContainer.shared.makeSavePhotoView(
+                        capturedImage: image,
+                        onDismiss: onDismiss
+                    )
+                    .navigationBarBackButtonHidden(false),
                     isActive: $navigateToSavePhoto
                 ) {
                     EmptyView()
@@ -126,6 +130,6 @@ struct InnerCameraView: View {
 }
 
 #Preview {
-    InnerCameraView()
+    InnerCameraView(onDismiss: {})
         .background(Color.black)
 }

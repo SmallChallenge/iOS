@@ -54,8 +54,10 @@ final class AppDIContainer {
 
     // MARK: - SavePhoto Feature
 
-    func makeSavePhotoView(capturedImage: UIImage) -> SavePhotoView {
-        return SavePhotoView(capturedImage: capturedImage)
+    func makeSavePhotoView(capturedImage: UIImage, onDismiss: @escaping () -> Void) -> SavePhotoView {
+        let repository = LocalTimeStampLogRepository()
+        let viewModel = SavePhotoViewModel(repository: repository)
+        return SavePhotoView(capturedImage: capturedImage, viewModel: viewModel, onDismiss: onDismiss)
     }
 
     // MARK: - MyLog Feature

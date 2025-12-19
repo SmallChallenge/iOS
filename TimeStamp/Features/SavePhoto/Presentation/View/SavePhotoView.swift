@@ -13,7 +13,10 @@ import SwiftUI
 // 사진 저장
 struct SavePhotoView: View {
     let capturedImage: UIImage
+    @StateObject var viewModel: SavePhotoViewModel
+    let onDismiss: () -> Void
     @State var selectedCategory: CategoryViewData? = nil
+    @Environment(\.presentationMode) var presentationMode
 
     var body: some View {
         ScrollView {
@@ -56,13 +59,41 @@ struct SavePhotoView: View {
             }
         }
         .mainBackgourndColor()
+        .onChange(of: viewModel.isSaved) { isSaved in
+            if isSaved {
+                // 저장 성공 시 CameraView까지 닫기 (MainTabView로 돌아가기)
+                onDismiss()
+            }
+        }
+        .alert("오류", isPresented: .constant(viewModel.errorMessage != nil)) {
+            Button("확인") {
+                viewModel.errorMessage = nil
+            }
+        } message: {
+            if let errorMessage = viewModel.errorMessage {
+                Text(errorMessage)
+            }
+        }
     }
 
     // MARK: - Actions
 
     private func savePhoto() {
-        // TODO: 사진 저장 로직 구현
-        print("사진 저장")
+        // 카테고리가 선택되지 않았으면 경고
+        guard let category = selectedCategory else {
+            viewModel.errorMessage = "카테고리를 선택해주세요."
+            return
+        }
+
+        // TODO: visibility도 선택하도록 수정 필요 (현재는 임시로 privateVisible)
+        let visibility = "privateVisible"
+
+        // ViewModel을 통해 저장
+        viewModel.savePhoto(
+            image: capturedImage,
+            category: category.title,
+            visibility: visibility
+        )
     }
     
    
@@ -112,6 +143,11 @@ struct SavePhotoView: View {
 }
 
 #Preview {
-    SavePhotoView(capturedImage: UIImage(systemName: "photo")!)
-        
+    let repository = LocalTimeStampLogRepository()
+    let viewModel = SavePhotoViewModel(repository: repository)
+    return SavePhotoView(
+        capturedImage: UIImage(systemName: "photo")!,
+        viewModel: viewModel,
+        onDismiss: {}
+    )
 }
