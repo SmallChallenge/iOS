@@ -39,12 +39,7 @@ struct PhotoCell: View {
 
                     // MARK: 로컬 이미지
                 case let .local(localImage):
-                    // TODO: localImage.imageFileName으로 앱내에 저장된 이미지 가져오기
-                    Text(localImage.imageFileName)
-//                    PHAssetImageView(
-//                        assetIdentifier: localImage.assetIdentifier,
-//                        targetSize: CGSize(width: geometry.size.width * 2, height: geometry.size.width * 2)
-//                    )
+                    LocalImageView(imageFileName: localImage.imageFileName)
                     
                 } //~switch
             } //~Group

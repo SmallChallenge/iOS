@@ -63,8 +63,8 @@ final class AppDIContainer {
     // MARK: - MyLog Feature
 
     func makeMyLogView() -> MyLogView {
-        // TODO: ViewModel이 필요하면 여기서 주입
-        let viewModel = MyLogViewModel()
+        let repository = LocalTimeStampLogRepository()
+        let viewModel = MyLogViewModel(repository: repository)
         return MyLogView(viewModel: viewModel)
     }
 

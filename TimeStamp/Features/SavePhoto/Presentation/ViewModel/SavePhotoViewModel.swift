@@ -9,6 +9,12 @@ import Foundation
 import UIKit
 import Combine
 
+// MARK: - Notification Names
+
+extension Notification.Name {
+    static let didSavePhoto = Notification.Name("didSavePhoto")
+}
+
 /// 사진 저장 화면의 비즈니스 로직을 관리하는 ViewModel
 @MainActor
 final class SavePhotoViewModel: ObservableObject {
@@ -56,6 +62,9 @@ final class SavePhotoViewModel: ObservableObject {
             // 저장 성공
             isSaved = true
             print("✅ 사진 저장 성공: \(fileName)")
+
+            // MyLogView에 새로고침 알림
+            NotificationCenter.default.post(name: .didSavePhoto, object: nil)
 
         } catch {
             // 저장 실패

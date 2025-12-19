@@ -55,11 +55,20 @@ struct MyLogView: View {
         }
         .mainBackgourndColor()
         .loading(viewModel.isLoading)
+        .onAppear {
+            viewModel.loadLogs()
+        }
+        .onReceive(NotificationCenter.default.publisher(for: .didSavePhoto)) { _ in
+            // 사진 저장 후 목록 새로고침
+            viewModel.loadLogs()
+        }
     }
 }
 
 #Preview {
-    MyLogView(viewModel: MyLogViewModel())
+    let repository = LocalTimeStampLogRepository()
+    let viewModel = MyLogViewModel(repository: repository)
+    return MyLogView(viewModel: viewModel)
 }
 
 

@@ -8,71 +8,100 @@
 import Foundation
 import Combine
 
+@MainActor
 final class MyLogViewModel: ObservableObject {
-    
-    
-    // MARK: Output Properties...
-    
+
+    // MARK: - Properties
+
+    /// 로컬 타임스탬프 로그 저장소
+    private let repository: LocalTimeStampLogRepositoryProtocol
+
+    // MARK: - Output Properties
+
     @Published var isLoading = false
     @Published var errorMessage: String?
-    @Published var myLogs: [TimeStampLogViewData] = [
-        .init(id: UUID(),
-              category: .food,
-              timeStamp: Date.now,
-              imageSource: .remote(TimeStampLog.RemoteTimeStampImage(id: 0, imageUrl: "https://picsum.photos/600/400")),
-              visibility: .privateVisible
-             ),
-        .init(id: UUID(),
-              category: .food,
-              timeStamp: Date.now,
-              imageSource: .remote(TimeStampLog.RemoteTimeStampImage(id: 2, imageUrl: "https://picsum.photos/600/400")),
-              visibility: .privateVisible
-             ),
-        .init(id: UUID(),
-              category: .food,
-              timeStamp: Date.now,
-              imageSource: .remote(TimeStampLog.RemoteTimeStampImage(id: 3, imageUrl: "https://picsum.photos/600/400")),
-              visibility: .privateVisible
-             ),
-        .init(id: UUID(),
-              category: .food,
-              timeStamp: Date.now,
-              imageSource: .remote(TimeStampLog.RemoteTimeStampImage(id: 2, imageUrl: "https://picsum.photos/600/400")),
-              visibility: .privateVisible
-             ),
-        .init(id: UUID(),
-              category: .food,
-              timeStamp: Date.now,
-              imageSource: .remote(TimeStampLog.RemoteTimeStampImage(id: 3, imageUrl: "https://picsum.photos/600/400")),
-              visibility: .privateVisible
-             )
-    ]
-    
-    // MARK: Input Methods...
-    func loadMore() {
-        guard !isLoading else { return }
+    @Published var myLogs: [TimeStampLogViewData] = []
 
+    // MARK: - Init
+
+    init(repository: LocalTimeStampLogRepositoryProtocol) {
+        self.repository = repository
+        loadLogs()
+    }
+
+    // MARK: - Methods
+
+    /// Core Data에서 모든 로그를 불러오기
+    func loadLogs() {
         isLoading = true
 
-        // TODO: 실제 API 호출로 교체
-        DispatchQueue.main.asyncAfter(deadline: .now() + 1) { [weak self] in
-            guard let self = self else { return }
-
-            let newLogs = (0..<9).map { index in
-                TimeStampLogViewData(
-                    id: UUID(),
-                    category: [.food, .study, .health].randomElement()!,
-                    timeStamp: Date.now,
-                    imageSource: .remote(TimeStampLog.RemoteTimeStampImage(
-                        id: self.myLogs.count + index,
-                        imageUrl: "https://picsum.photos/400/400?random=\(self.myLogs.count + index)"
-                    )),
-                    visibility: [.publicVisible, .privateVisible].randomElement()!
-                )
-            }
-
-            self.myLogs.append(contentsOf: newLogs)
-            self.isLoading = false
+        do {
+            let dtos = try repository.readAll()
+            myLogs = dtos.map { toViewData($0) }
+            isLoading = false
+            print("✅ 로그 불러오기 성공: \(myLogs.count)개")
+        } catch {
+            errorMessage = "로그를 불러오는데 실패했습니다: \(error.localizedDescription)"
+            isLoading = false
+            print("❌ 로그 불러오기 실패: \(error)")
         }
+    }
+
+    /// 카테고리별로 필터링된 로그 불러오기
+    func loadLogs(category: String) {
+        isLoading = true
+
+        do {
+            let dtos = try repository.readByCategory(category)
+            myLogs = dtos.map { toViewData($0) }
+            isLoading = false
+        } catch {
+            errorMessage = "로그를 불러오는데 실패했습니다: \(error.localizedDescription)"
+            isLoading = false
+        }
+    }
+
+    // MARK: - Private Helpers
+
+    /// DTO를 ViewData로 변환
+    private func toViewData(_ dto: LocalTimeStampLogDto) -> TimeStampLogViewData {
+        // Category 문자열을 enum으로 변환
+        let category: Category
+        switch dto.category {
+        case "공부":
+            category = .study
+        case "운동":
+            category = .health
+        case "음식":
+            category = .food
+        case "기타":
+            category = .etc
+        default:
+            category = .etc
+        }
+
+        // Visibility 문자열을 enum으로 변환
+        let visibility: VisibilityType
+        switch dto.visibility {
+        case "publicVisible":
+            visibility = .publicVisible
+        case "privateVisible":
+            visibility = .privateVisible
+        default:
+            visibility = .privateVisible
+        }
+
+        // ImageSource 생성 (로컬 이미지)
+        let imageSource = TimeStampLog.ImageSource.local(
+            TimeStampLog.LocalTimeStampImage(imageFileName: dto.imageFileName)
+        )
+
+        return TimeStampLogViewData(
+            id: dto.id,
+            category: category,
+            timeStamp: dto.timeStamp,
+            imageSource: imageSource,
+            visibility: visibility
+        )
     }
 }
