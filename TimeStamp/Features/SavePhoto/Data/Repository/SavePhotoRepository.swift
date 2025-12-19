@@ -12,9 +12,13 @@ import UIKit
 /// - LocalTimeStampLogRepository를 사용하여 로컬 데이터 저장
 /// - 이미지 파일 저장 기능 포함
 final class SavePhotoRepository: SavePhotoRepositoryProtocol {
-
+    
+    
     // MARK: - Properties
 
+    /// 이미지 압축율
+    private let imageCompressionQuality: CGFloat = 0.8
+    
     /// 로컬 저장소 (CoreData)
     private let localRepository: LocalTimeStampLogRepositoryProtocol
 
@@ -67,7 +71,7 @@ final class SavePhotoRepository: SavePhotoRepositoryProtocol {
         let fileURL = documentsDirectory.appendingPathComponent(fileName)
 
         // 이미지를 JPEG 데이터로 변환 (압축률 0.8)
-        guard let imageData = image.jpegData(compressionQuality: 0.8) else {
+        guard let imageData = image.jpegData(compressionQuality: imageCompressionQuality) else {
             throw SavePhotoError.imageConversionFailed
         }
 
