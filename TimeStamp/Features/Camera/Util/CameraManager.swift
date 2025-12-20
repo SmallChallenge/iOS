@@ -80,11 +80,14 @@ final class CameraManager: NSObject, ObservableObject {
     }
 
     /// 카메라 권한 확인 및 요청
-    private func checkAuthorization() {
+    func checkAuthorization() {
         switch AVCaptureDevice.authorizationStatus(for: .video) {
         case .authorized:
             isAuthorized = true
-            setupCamera()
+            // 카메라 설정되었는지 확인
+            if session.inputs.isEmpty {
+                setupCamera()
+            }
         case .notDetermined:
             AVCaptureDevice.requestAccess(for: .video) { [weak self] granted in
                 DispatchQueue.main.async {

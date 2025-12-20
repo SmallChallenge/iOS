@@ -7,6 +7,7 @@
 
 import Foundation
 import SwiftUI
+import AVFoundation
 
 struct MainTabView: View {
     @State private var selectedTab: Int = 0
@@ -34,6 +35,20 @@ struct MainTabView: View {
         .fullScreenCover(isPresented: $showCamera) {
             container.makeCameraTapView  {
                 showCamera = false
+            }
+        }
+        .onAppear {
+            requestCameraPermission()
+        }
+    }
+
+    /// 앱 시작 시 카메라 권한 요청
+    private func requestCameraPermission() {
+        AVCaptureDevice.requestAccess(for: .video) { granted in
+            if granted {
+                print("✅ 카메라 권한 허용됨")
+            } else {
+                print("❌ 카메라 권한 거부됨")
             }
         }
     }

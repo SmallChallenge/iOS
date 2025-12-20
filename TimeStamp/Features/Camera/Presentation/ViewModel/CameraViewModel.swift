@@ -41,6 +41,9 @@ final class CameraViewModel: ObservableObject {
 
     /// 뷰가 나타날 때 카메라 시작
     func onAppear() {
+        // 권한 상태 확인 (설정에서 돌아왔을 때 반영)
+        cameraManager.checkAuthorization()
+
         if cameraManager.isAuthorized {
             cameraManager.startSession()
         } else {
