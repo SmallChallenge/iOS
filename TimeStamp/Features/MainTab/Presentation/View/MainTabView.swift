@@ -17,27 +17,40 @@ struct MainTabView: View {
 
     var body: some View {
         ZStack(alignment: .bottom) {
-            TabView (selection: $selectedTab){
-                container.makeMyLogView()
-                    .tag(0)
-
-                EmptyView()
-                    .tag(1)
-
-                container.makeCommunityView()
-                    .tag(2)
-            } //~TabView
-            .hideTabBar()
-
+            VStack (spacing: .zero) {
+                
+                HeaderView {
+                    // 프로필버튼 클릭
+                }
+                
+                TabView (selection: $selectedTab){
+                    container.makeMyLogView()
+                        .tag(0)
+                    
+                    EmptyView()
+                        .tag(1)
+                    
+                    container.makeCommunityView()
+                        .tag(2)
+                } //~TabView
+                .hideTabBar()
+                
+               
+            } // ~ VStack
+            
+            // 커스텀 탭바 [내 기록 | 촬영버튼 | 커뮤니티]
             MainTabBar(selectedTab: $selectedTab, showCamera: $showCamera)
-
+            
         } // ~ZStack
+        .mainBackgourndColor()
         .fullScreenCover(isPresented: $showCamera) {
+            // 카메라 촬영화면 띄우기
             container.makeCameraTapView  {
                 showCamera = false
             }
         }
         .onAppear {
+            // 카메라 권한 받기
             requestCameraPermission()
         }
     }

@@ -41,7 +41,6 @@ struct MyLogView: View {
 
     var body: some View {
         VStack {
-            HeaderView()
             if viewModel.myLogs.isEmpty { // 내기록 없음
                 MyLogEmptyView()
 
@@ -71,7 +70,6 @@ struct MyLogView: View {
                     }
                 }
             }
-
         }
         .mainBackgourndColor()
         .loading(viewModel.isLoading)

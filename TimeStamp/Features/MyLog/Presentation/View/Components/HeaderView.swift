@@ -8,6 +8,8 @@
 import SwiftUI
 
 struct HeaderView: View {
+    let onProfileTap: () -> Void
+    
     var body: some View {
         HStack (alignment: .center){
             Image("MainAppName")
@@ -18,10 +20,15 @@ struct HeaderView: View {
             
             Spacer()
             
-            Image("iconUser_line")
-                .resizable()
-                .frame(width: 24, height: 24)
-                .padding(.trailing, 20)
+            // 프로필 버튼
+            Button {
+                onProfileTap()
+            } label: {
+                Image("iconUser_line")
+                    .resizable()
+                    .frame(width: 24, height: 24)
+                    .padding(.trailing, 20)
+            }
         }
         .frame(height: 60)
         
@@ -29,5 +36,5 @@ struct HeaderView: View {
 }
 
 #Preview {
-    HeaderView()
+    HeaderView(onProfileTap: {})
 }
