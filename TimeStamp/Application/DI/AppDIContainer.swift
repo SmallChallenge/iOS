@@ -48,8 +48,8 @@ final class AppDIContainer {
 
     // MARK: - Camera Feature
 
-    func makeCameraView(onDismiss: @escaping () -> Void) -> CameraView {
-        return CameraView(onDismiss: onDismiss)
+    func makeCameraTapView(onDismiss: @escaping () -> Void) -> CameraTabView {
+        return CameraTabView(onDismiss: onDismiss)
     }
 
     // MARK: - SavePhoto Feature
