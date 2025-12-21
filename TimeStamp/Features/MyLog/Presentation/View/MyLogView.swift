@@ -85,10 +85,8 @@ struct MyLogView: View {
 
 #Preview {
     let localRepository = LocalTimeStampLogRepository()
-    let repository = MyLogRepository(localRepository: localRepository)
-    let useCase = MyLogUseCase(repository: repository)
-    let viewModel = MyLogViewModel(useCase: useCase)
-    return MyLogView(viewModel: viewModel)
+    let diContainer = MyLogDIContainer(localRepository: localRepository)
+    return diContainer.makeMyLogView()
 }
 
 

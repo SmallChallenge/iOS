@@ -64,12 +64,13 @@ final class AppDIContainer {
 
     // MARK: - MyLog Feature
 
-    func makeMyLogView() -> MyLogView {
+    private lazy var myLogDIContainer: MyLogDIContainer = {
         let localRepository = LocalTimeStampLogRepository()
-        let repository = MyLogRepository(localRepository: localRepository)
-        let useCase = MyLogUseCase(repository: repository)
-        let viewModel = MyLogViewModel(useCase: useCase)
-        return MyLogView(viewModel: viewModel)
+        return MyLogDIContainer(localRepository: localRepository)
+    }()
+
+    func makeMyLogView() -> MyLogView {
+        return myLogDIContainer.makeMyLogView()
     }
 
     // MARK: - Community Feature
