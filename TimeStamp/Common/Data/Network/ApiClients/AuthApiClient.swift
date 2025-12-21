@@ -41,21 +41,21 @@ extension AuthRouter: Router {
         switch self {
         case let .kakaoLogin(token):
             let params: Parameters = [
-                "socialType" : "Kakao",
+                "socialType" : "KAKAO",
                 "accessToken" : token,
             ]
             return params
            
         case let .appleLogin(token):
             let params: Parameters = [
-                "socialType" : "Apple",
+                "socialType" : "APPLE",
                 "accessToken" : token,
             ]
             return params
             
         case let .googleLogin(token):
             let params: Parameters = [
-                "socialType" : "Google",
+                "socialType" : "GOOGLE",
                 "accessToken" : token,
             ]
             return params

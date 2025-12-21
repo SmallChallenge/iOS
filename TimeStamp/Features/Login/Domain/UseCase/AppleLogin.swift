@@ -9,6 +9,10 @@ import Foundation
 import AuthenticationServices
 import UIKit
 
+/*
+ 서버에게 주는 client Id: bundle id 였음..
+ */
+
 final class AppleLogin: NSObject, SocialLoginProtocol {
     var delegate: SocialLoginDelegate?
 
@@ -37,8 +41,8 @@ extension AppleLogin: ASAuthorizationControllerDelegate {
     ) {
         switch authorization.credential {
         case let appleIdCredential as ASAuthorizationAppleIDCredential:
-            if let code = appleIdCredential.authorizationCode,
-               let token = String(data: code, encoding: .utf8) {
+            if let identityToken = appleIdCredential.identityToken,
+               let token = String(data: identityToken, encoding: .utf8) {
 
                 // 최초에만 주는 값 (이메일, 이름) 저장
                 if let email = appleIdCredential.email {
