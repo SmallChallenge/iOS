@@ -13,15 +13,15 @@ struct LoginRepository: LoginRepositoryProtocol {
         self.authApiClient = authApiClient
     }
     
-    func kakaoLogin(accessToken token: String) async -> Result<LoginResponseDto, NetworkError> {
+    func kakaoLogin(accessToken token: String) async -> Result<ResponseBody<LoginResponseDto>, NetworkError> {
         await authApiClient.kakaoLogin(accessToken: token)
     }
     
-    func appleLogin(accessToken token: String) async -> Result<LoginResponseDto, NetworkError> {
+    func appleLogin(accessToken token: String) async -> Result<ResponseBody<LoginResponseDto>, NetworkError> {
         await authApiClient.appleLogin(accessToken: token)
     }
     
-    func googleLogin(accessToken token: String) async -> Result<LoginResponseDto, NetworkError> {
+    func googleLogin(accessToken token: String) async -> Result<ResponseBody<LoginResponseDto>, NetworkError> {
         await authApiClient.googleLogin(accessToken: token)
     }
 }

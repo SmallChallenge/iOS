@@ -9,87 +9,46 @@ import Foundation
 import Combine
 
 final class LoginViewModel: ObservableObject {
-    private let useCase: LoginUseCaseProtocol
-    private var appleLogin: SocialLoginProtocol
-    private var kakaoLogin: SocialLoginProtocol?
-    private var googleLogin: SocialLoginProtocol?
+    private let useCase: LoginUseCase
 
-    init(
-        useCase: LoginUseCaseProtocol,
-        appleLogin: SocialLoginProtocol = AppleLogin(),
-        kakaoLogin: SocialLoginProtocol? = nil,
-        googleLogin: SocialLoginProtocol? = nil
-    ) {
+    init(useCase: LoginUseCase) {
         self.useCase = useCase
-        self.appleLogin = appleLogin
-        self.kakaoLogin = kakaoLogin
-        self.googleLogin = googleLogin
-
-        // Delegate 설정
-        self.appleLogin.delegate = self
-        self.kakaoLogin?.delegate = self
-        self.googleLogin?.delegate = self
+        self.useCase.delegate = self
     }
 
-    // MARK: Output Properties...
+    // MARK: - Output Properties
 
     @Published var isLoading = false
     @Published var errorMessage: String?
 
-    // MARK: Input Methods...
+    // MARK: - Input Methods
 
     func clickAppleLoginButton() {
-        appleLogin.login()
+        useCase.loginWithApple()
     }
 
     func clickKakaoLoginButton() {
-        kakaoLogin?.login()
+        useCase.loginWithKakao()
     }
 
     func clickGoogleLoginButton() {
-        googleLogin?.login()
+        useCase.loginWithGoogle()
     }
 }
 
-// MARK: - SocialLoginDelegate
+// MARK: - LoginUseCaseDelegate
 
-extension LoginViewModel: SocialLoginDelegate {
-    func didLogin(type: LoginType, didReceiveToken token: String?, error: Error?) {
-        guard let token = token else {
-            errorMessage = error?.localizedDescription ?? "로그인 실패"
-            return
-        }
-        print(">>>>> token: \(token)")
-        isLoading = true
+extension LoginViewModel: LoginUseCaseDelegate {
+    func loginUseCase(didStartLoading: Bool) {
+        isLoading = didStartLoading
+    }
 
-        Task {
-            let result: Result<LoginResponseDto, NetworkError>
+    func loginUseCase(didReceiveError message: String) {
+        errorMessage = message
+    }
 
-            switch type {
-            case .kakao:
-                // TODO: Implement kakao login
-                result = .failure(.dataNil)
-//                result = await useCase.kakaoLogin(accessToken: token)
-            case .google:
-                // TODO: Implement google login
-                result = .failure(.dataNil)
-//                result = await useCase.googleLogin(accessToken: token)
-            case .apple:
-                result = await useCase.appleLogin(accessToken: token)
-            }
-
-            await MainActor.run {
-                isLoading = false
-
-                switch result {
-                case .success(let response):
-                    print(">>>>> 로그인 성공: \(response)")
-                    // TODO: 로그인 성공 처리 (토큰 저장, 화면 전환 등)
-                case let .failure(error):
-                    errorMessage = error.localizedDescription
-                    print(">>>>> 로그인 실패: \(error)")
-                }
-            }
-        }
+    func loginUseCase(didLoginSuccess response: LoginResponseDto) {
+        print(">>>>> 로그인 성공: \(response)")
+        // TODO: 로그인 성공 처리 (토큰 저장, 화면 전환 등)
     }
 }

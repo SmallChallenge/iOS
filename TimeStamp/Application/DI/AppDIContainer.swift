@@ -37,12 +37,7 @@ final class AppDIContainer {
     func makeLoginView() -> LoginView {
         let repository = LoginRepository(authApiClient: authApiClient)
         let useCase = LoginUseCase(repository: repository)
-        let viewModel = LoginViewModel(
-            useCase: useCase,
-            appleLogin: AppleLogin(),
-            kakaoLogin: nil,
-            googleLogin: nil
-        )
+        let viewModel = LoginViewModel(useCase: useCase)
         return LoginView(viewModel: viewModel)
     }
 

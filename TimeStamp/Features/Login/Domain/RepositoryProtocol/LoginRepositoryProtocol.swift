@@ -8,9 +8,9 @@
 import Foundation
 
 public protocol LoginRepositoryProtocol {
-    func kakaoLogin(accessToken token: String) async -> Result<LoginResponseDto, NetworkError>
-    func appleLogin(accessToken token: String) async -> Result<LoginResponseDto, NetworkError>
-    func googleLogin(accessToken token: String) async -> Result<LoginResponseDto, NetworkError>
+    func kakaoLogin(accessToken token: String) async -> Result<ResponseBody<LoginResponseDto>, NetworkError>
+    func appleLogin(accessToken token: String) async -> Result<ResponseBody<LoginResponseDto>, NetworkError>
+    func googleLogin(accessToken token: String) async -> Result<ResponseBody<LoginResponseDto>, NetworkError>
 }
 
 

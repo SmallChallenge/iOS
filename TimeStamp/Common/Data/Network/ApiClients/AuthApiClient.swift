@@ -75,9 +75,9 @@ extension AuthRouter: Router {
 // MARK: - API Client Protocol
 
 public protocol AuthApiClientProtocol {
-    func kakaoLogin(accessToken token: String) async -> Result<LoginResponseDto, NetworkError>
-    func appleLogin(accessToken token: String) async -> Result<LoginResponseDto, NetworkError>
-    func googleLogin(accessToken token: String) async -> Result<LoginResponseDto, NetworkError>
+    func kakaoLogin(accessToken token: String) async -> Result<ResponseBody<LoginResponseDto>, NetworkError>
+    func appleLogin(accessToken token: String) async -> Result<ResponseBody<LoginResponseDto>, NetworkError>
+    func googleLogin(accessToken token: String) async -> Result<ResponseBody<LoginResponseDto>, NetworkError>
     // 토큰 재발급
     // 로그아웃
     // 회원탈퇴
@@ -88,13 +88,13 @@ public protocol AuthApiClientProtocol {
 // MARK: - API Client
 
 public class AuthApiClient: ApiClient<AuthRouter>, AuthApiClientProtocol {
-    public func kakaoLogin(accessToken token: String) async -> Result<LoginResponseDto, NetworkError> {
+    public func kakaoLogin(accessToken token: String) async -> Result<ResponseBody<LoginResponseDto>, NetworkError> {
         await request(AuthRouter.kakaoLogin(accessToken: token))
     }
-    public func appleLogin(accessToken token: String) async -> Result<LoginResponseDto, NetworkError> {
+    public func appleLogin(accessToken token: String) async -> Result<ResponseBody<LoginResponseDto>, NetworkError> {
         await request(AuthRouter.appleLogin(accessToken: token))
     }
-    public func googleLogin(accessToken token: String) async -> Result<LoginResponseDto, NetworkError> {
+    public func googleLogin(accessToken token: String) async -> Result<ResponseBody<LoginResponseDto>, NetworkError> {
         await request(AuthRouter.googleLogin(accessToken: token))
     }
 }
