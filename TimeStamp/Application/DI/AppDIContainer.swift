@@ -34,11 +34,12 @@ final class AppDIContainer {
 
     // MARK: - Login Feature
 
+    private lazy var loginDIContainer: LoginDIContainer = {
+        LoginDIContainer(authApiClient: authApiClient)
+    }()
+
     func makeLoginView() -> LoginView {
-        let repository = LoginRepository(authApiClient: authApiClient)
-        let useCase = LoginUseCase(repository: repository)
-        let viewModel = LoginViewModel(useCase: useCase)
-        return LoginView(viewModel: viewModel)
+        return loginDIContainer.makeLoginView()
     }
 
     // MARK: - Camera Feature
