@@ -10,7 +10,7 @@ public struct LoginResponseDto: Codable {
     let userId: Int
     let nickname: String?
     let socialType: String
-    let profileImageUrl: String
+    let profileImageUrl: String?
     let accessToken: String
     let refreshToken: String
     let isNewUser: Bool
