@@ -14,6 +14,7 @@ import UIKit
  */
 
 final class AppleLogin: NSObject, SocialLoginProtocol {
+
     var delegate: SocialLoginDelegate?
 
     @Keychain(key: "appleEmail")
@@ -23,7 +24,6 @@ final class AppleLogin: NSObject, SocialLoginProtocol {
     private var fullName: String?
 
     func login() {
-        print(">>>>> apple login")
         let appleIdProvider = ASAuthorizationAppleIDProvider()
         let request = appleIdProvider.createRequest()
         request.requestedScopes = [.email, .fullName]
