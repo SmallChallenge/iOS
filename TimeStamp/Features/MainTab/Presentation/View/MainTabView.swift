@@ -12,6 +12,7 @@ import AVFoundation
 struct MainTabView: View {
     @State private var selectedTab: Int = 0
     @State private var showCamera: Bool = false
+    @State private var showLogin: Bool = false
 
     private let container = AppDIContainer.shared
 
@@ -21,6 +22,7 @@ struct MainTabView: View {
                 
                 HeaderView {
                     // 프로필버튼 클릭
+                    showLogin = true
                 }
                 
                 TabView (selection: $selectedTab){
@@ -49,6 +51,9 @@ struct MainTabView: View {
                 showCamera = false
             }
         }
+        .sheet(isPresented: $showLogin, content: {
+            container.makeLoginView()
+        })
         .onAppear {
             // 카메라 권한 받기
             requestCameraPermission()
