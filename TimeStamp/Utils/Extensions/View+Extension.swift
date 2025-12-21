@@ -18,6 +18,14 @@ extension View {
                 .stroke(color, lineWidth: lineWidth)
         )
     }
+    
+    
+    func rounded(radius: CGFloat) -> some View {
+        self.clipShape(
+            RoundedRectangle(cornerRadius: radius, style: .continuous)
+                
+        )
+    }
 }
 
 
