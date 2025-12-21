@@ -8,9 +8,6 @@
 import Foundation
 import UIKit
 
-enum LoginType: String {
-    case  kakao, google, apple
-}
 
 // MARK: - SocialLoginProtocol
 

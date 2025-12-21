@@ -13,7 +13,7 @@ protocol LoginUseCaseProtocol {
     func loginWithGoogle()
 }
 
-public final class LoginUseCase: LoginUseCaseProtocol {
+final class LoginUseCase: LoginUseCaseProtocol {
     private let repository: LoginRepositoryProtocol
     private var appleLogin: SocialLoginProtocol
     private var kakaoLogin: SocialLoginProtocol
@@ -21,7 +21,7 @@ public final class LoginUseCase: LoginUseCaseProtocol {
 
     weak var delegate: LoginUseCaseDelegate?
 
-    public init(
+    init(
         repository: LoginRepositoryProtocol
     ) {
         self.repository = repository
@@ -49,7 +49,7 @@ public final class LoginUseCase: LoginUseCaseProtocol {
 
     // MARK: - Private Methods
 
-    private func performLogin(type: LoginType, accessToken: String) async -> Result<ResponseBody<LoginResponseDto>, NetworkError> {
+    private func performLogin(type: LoginType, accessToken: String) async -> Result<LoginEntity, NetworkError> {
         switch type {
         case .apple:
             return await repository.appleLogin(accessToken: accessToken)
@@ -66,7 +66,7 @@ public final class LoginUseCase: LoginUseCaseProtocol {
 protocol LoginUseCaseDelegate: AnyObject {
     func loginUseCase(didStartLoading: Bool)
     func loginUseCase(didReceiveError message: String)
-    func loginUseCase(didLoginSuccess response: LoginResponseDto)
+    func loginUseCase(didLoginSuccess entity: LoginEntity)
 }
 
 // MARK: - SocialLoginDelegate
@@ -87,14 +87,10 @@ extension LoginUseCase: SocialLoginDelegate {
                 delegate?.loginUseCase(didStartLoading: false)
 
                 switch result {
-                case .success(let response):
-                    guard let dto = response.data else {
-                        delegate?.loginUseCase(didReceiveError: "data is nil")
-                        return
-                    }
-                    // TODO: dto to entity
-                    delegate?.loginUseCase(didLoginSuccess: dto)
-                    
+                case .success(let entity):
+                    delegate?.loginUseCase(didLoginSuccess: entity)
+                    // TODO: 로그인 성공 처리 (토큰 저장, 화면 전환 등)
+
                 case let .failure(error):
                     let message = error.localizedDescription
                     delegate?.loginUseCase(didReceiveError: message)
