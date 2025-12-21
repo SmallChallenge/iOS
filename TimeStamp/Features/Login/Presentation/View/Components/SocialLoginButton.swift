@@ -8,7 +8,7 @@
 import SwiftUI
 
 struct SocialLoginButton: View {
-    let type: SocialLoginType
+    let type: SocialLoginViewType
     let action: () -> Void
     
     var body: some View {
@@ -35,7 +35,7 @@ struct SocialLoginButton: View {
 }
 
 
-enum SocialLoginType {
+enum SocialLoginViewType {
     case apple
     case kakao
     case google
