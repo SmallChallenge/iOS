@@ -9,9 +9,14 @@ import SwiftUI
 
 /// 사진 촬영 화면(탭뷰)에서 카메라 화면
 struct CameraView: View {
-    @StateObject private var viewModel = CameraViewModel()
+    @StateObject var viewModel: CameraViewModel
     let onDismiss: () -> Void
     @State private var navigateToSavePhoto = false
+
+    init(viewModel: CameraViewModel, onDismiss: @escaping () -> Void) {
+        _viewModel = StateObject(wrappedValue: viewModel)
+        self.onDismiss = onDismiss
+    }
 
     var body: some View {
         ZStack {
@@ -130,6 +135,6 @@ struct CameraView: View {
 }
 
 #Preview {
-    CameraView(onDismiss: {})
+    CameraView(viewModel: CameraViewModel(), onDismiss: {})
         .background(Color.black)
 }

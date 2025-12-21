@@ -44,8 +44,12 @@ final class AppDIContainer {
 
     // MARK: - Camera Feature
 
+    private lazy var cameraTabDIContainer: CameraTabDIContainer = {
+        CameraTabDIContainer()
+    }()
+
     func makeCameraTapView(onDismiss: @escaping () -> Void) -> CameraTabView {
-        return CameraTabView(onDismiss: onDismiss)
+        return cameraTabDIContainer.makeCameraTabView(onDismiss: onDismiss)
     }
 
     // MARK: - SavePhoto Feature

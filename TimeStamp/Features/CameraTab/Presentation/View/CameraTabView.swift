@@ -9,6 +9,7 @@ import SwiftUI
 
 struct CameraTabView: View {
     /// 뒤로가기 액션 클로저 (Environment 대신 클로저로 성능 최적화)
+    let diContainer: CameraTabDIContainer
     let onDismiss: () -> Void
 
     @State var selectedTab: CameraViewTab = .camera
@@ -27,7 +28,7 @@ struct CameraTabView: View {
                 if selectedTab == .camera {
 
                     // 카메라 화면
-                    CameraView(onDismiss: onDismiss)
+                    diContainer.makeCameraView(onDismiss: onDismiss)
 
                 } else {
 
@@ -74,9 +75,7 @@ struct CameraTabView: View {
 }
 
 #Preview {
-    CameraView {
-        // dismiss()
-    }
+    AppDIContainer.shared.makeCameraTapView(onDismiss: {})
 }
 
 
