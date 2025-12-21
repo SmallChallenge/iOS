@@ -9,6 +9,8 @@
 /* Begin PBXBuildFile section */
 		D0AB7D342EF8092700963A12 /* GoogleSignIn in Frameworks */ = {isa = PBXBuildFile; productRef = D0AB7D332EF8092700963A12 /* GoogleSignIn */; };
 		D0AB7D362EF8092700963A12 /* GoogleSignInSwift in Frameworks */ = {isa = PBXBuildFile; productRef = D0AB7D352EF8092700963A12 /* GoogleSignInSwift */; };
+		D0AB7E4C2EF80BA900963A12 /* KakaoSDK in Frameworks */ = {isa = PBXBuildFile; productRef = D0AB7E4B2EF80BA900963A12 /* KakaoSDK */; };
+		D0AB7E4E2EF80BA900963A12 /* KakaoSDKAuth in Frameworks */ = {isa = PBXBuildFile; productRef = D0AB7E4D2EF80BA900963A12 /* KakaoSDKAuth */; };
 		D0DAF8BE2EE150D20040F646 /* Kingfisher in Frameworks */ = {isa = PBXBuildFile; productRef = D0DAF8BD2EE150D20040F646 /* Kingfisher */; };
 		D0DAF8C12EE150E20040F646 /* Alamofire in Frameworks */ = {isa = PBXBuildFile; productRef = D0DAF8C02EE150E20040F646 /* Alamofire */; };
 		D0DAF8C42EE150EE0040F646 /* Then in Frameworks */ = {isa = PBXBuildFile; productRef = D0DAF8C32EE150EE0040F646 /* Then */; };
@@ -73,11 +75,13 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				D0AB7E4E2EF80BA900963A12 /* KakaoSDKAuth in Frameworks */,
 				D0AB7D362EF8092700963A12 /* GoogleSignInSwift in Frameworks */,
 				D0DAF8BE2EE150D20040F646 /* Kingfisher in Frameworks */,
 				D0AB7D342EF8092700963A12 /* GoogleSignIn in Frameworks */,
 				D0DAF8C42EE150EE0040F646 /* Then in Frameworks */,
 				D0DAF8C12EE150E20040F646 /* Alamofire in Frameworks */,
+				D0AB7E4C2EF80BA900963A12 /* KakaoSDK in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -143,6 +147,8 @@
 				D0DAF8C32EE150EE0040F646 /* Then */,
 				D0AB7D332EF8092700963A12 /* GoogleSignIn */,
 				D0AB7D352EF8092700963A12 /* GoogleSignInSwift */,
+				D0AB7E4B2EF80BA900963A12 /* KakaoSDK */,
+				D0AB7E4D2EF80BA900963A12 /* KakaoSDKAuth */,
 			);
 			productName = TimeStamp;
 			productReference = D0DAF8782EE149E70040F646 /* TimeStamp.app */;
@@ -231,6 +237,7 @@
 				D0DAF8BF2EE150E20040F646 /* XCRemoteSwiftPackageReference "Alamofire" */,
 				D0DAF8C22EE150EE0040F646 /* XCRemoteSwiftPackageReference "Then" */,
 				D0AB7D322EF8092700963A12 /* XCRemoteSwiftPackageReference "GoogleSignIn-iOS" */,
+				D0AB7E4A2EF80BA900963A12 /* XCRemoteSwiftPackageReference "kakao-ios-sdk" */,
 			);
 			preferredProjectObjectVersion = 77;
 			productRefGroup = D0DAF8792EE149E70040F646 /* Products */;
@@ -441,6 +448,8 @@
 				INFOPLIST_FILE = TimeStamp/Info.plist;
 				INFOPLIST_KEY_CFBundleDisplayName = Stampy;
 				INFOPLIST_KEY_LSApplicationCategoryType = "public.app-category.lifestyle";
+				INFOPLIST_KEY_NSCameraUsageDescription = "사진을 촬영하기 위해 카메라 접근 권한이 필요합니다.";
+				INFOPLIST_KEY_NSPhotoLibraryAddUsageDescription = "촬영한 사진을 저장하기 위해 사진 라이브러리 접근 권한이 필요합니다.";
 				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
@@ -482,6 +491,8 @@
 				INFOPLIST_FILE = TimeStamp/Info.plist;
 				INFOPLIST_KEY_CFBundleDisplayName = Stampy;
 				INFOPLIST_KEY_LSApplicationCategoryType = "public.app-category.lifestyle";
+				INFOPLIST_KEY_NSCameraUsageDescription = "사진을 촬영하기 위해 카메라 접근 권한이 필요합니다.";
+				INFOPLIST_KEY_NSPhotoLibraryAddUsageDescription = "촬영한 사진을 저장하기 위해 사진 라이브러리 접근 권한이 필요합니다.";
 				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
@@ -643,6 +654,14 @@
 				minimumVersion = 9.0.0;
 			};
 		};
+		D0AB7E4A2EF80BA900963A12 /* XCRemoteSwiftPackageReference "kakao-ios-sdk" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/kakao/kakao-ios-sdk";
+			requirement = {
+				branch = master;
+				kind = branch;
+			};
+		};
 		D0DAF8BC2EE150D20040F646 /* XCRemoteSwiftPackageReference "Kingfisher" */ = {
 			isa = XCRemoteSwiftPackageReference;
 			repositoryURL = "https://github.com/onevcat/Kingfisher";
@@ -679,6 +698,16 @@
 			isa = XCSwiftPackageProductDependency;
 			package = D0AB7D322EF8092700963A12 /* XCRemoteSwiftPackageReference "GoogleSignIn-iOS" */;
 			productName = GoogleSignInSwift;
+		};
+		D0AB7E4B2EF80BA900963A12 /* KakaoSDK */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = D0AB7E4A2EF80BA900963A12 /* XCRemoteSwiftPackageReference "kakao-ios-sdk" */;
+			productName = KakaoSDK;
+		};
+		D0AB7E4D2EF80BA900963A12 /* KakaoSDKAuth */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = D0AB7E4A2EF80BA900963A12 /* XCRemoteSwiftPackageReference "kakao-ios-sdk" */;
+			productName = KakaoSDKAuth;
 		};
 		D0DAF8BD2EE150D20040F646 /* Kingfisher */ = {
 			isa = XCSwiftPackageProductDependency;
