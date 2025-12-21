@@ -47,8 +47,8 @@ extension LoginViewModel: LoginUseCaseDelegate {
         errorMessage = message
     }
 
-    func loginUseCase(didLoginSuccess response: LoginResponseDto) {
-        print(">>>>> 로그인 성공: \(response)")
+    func loginUseCase(didLoginSuccess entity: LoginEntity) {
+        print(">>>>> 로그인 성공: \(entity)")
         // TODO: 로그인 성공 처리 (토큰 저장, 화면 전환 등)
     }
 }
