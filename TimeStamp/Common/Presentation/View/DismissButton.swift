@@ -14,7 +14,15 @@ struct DismissButton: View {
     var body: some View {
         Button(action: action) {
             Image(systemName: "chevron.left")
+                .frame(width: 24, height: 24)
                 .foregroundStyle(.gray50)
+                .padding(.vertical, 20)
+                .padding(.trailing, 20)
+                
         }
+        .buttonStyle(.plain)
     }
+}
+#Preview {
+    DismissButton(action: {})
 }
