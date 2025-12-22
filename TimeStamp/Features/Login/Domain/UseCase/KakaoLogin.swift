@@ -16,13 +16,11 @@ final class KakaoLogin: SocialLoginProtocol {
     func login() {
         UserApi.shared.loginWithKakao(BridgeConfiguration(), loginProperties: LoginConfiguration()) { [weak self] token, error in
             if let error = error {
-                print(print(">>>>> loginWithKakao() failed: \(error)"))
                 // 에러 처리
                 self?.delegate?.didLogin(type: .kakao, didReceiveToken: nil, error: error)
                 return
             }
             
-            print(">>>>> loginWithKakao() success.")
             // 성공 시 동작 구현
             _ = token
             let accessToken = token?.accessToken

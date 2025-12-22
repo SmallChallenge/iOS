@@ -8,6 +8,7 @@
 import SwiftUI
 import KakaoSDKCommon
 import KakaoSDKAuth
+import GoogleSignIn
 
 // 화면 회전 제어를 위한 AppDelegate
 class AppDelegate: NSObject, UIApplicationDelegate {
@@ -30,10 +31,12 @@ struct TimeStampApp: App {
     var body: some Scene {
         WindowGroup {
             MainTabView()
-            // onOpenURL()을 사용해 커스텀 URL 스킴 처리 (kakao)
+            // 인증 리디렉션 url 처리
                 .onOpenURL(perform: { url in
                     if (AuthApi.isKakaoTalkLoginUrl(url)) {
                         AuthController.handleOpenUrl(url: url)
+                    } else {
+                        GIDSignIn.sharedInstance.handle(url)
                     }
                 })
         }
