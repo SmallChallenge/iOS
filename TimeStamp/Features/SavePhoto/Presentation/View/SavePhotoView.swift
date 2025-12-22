@@ -12,11 +12,14 @@ import SwiftUI
 // 카테고리, 공개 여부 선택
 // 사진 저장
 struct SavePhotoView: View {
-    let capturedImage: UIImage
+    
     @StateObject var viewModel: SavePhotoViewModel
+    let capturedImage: UIImage
+    let onGoBack: (() -> Void)?
     let onDismiss: () -> Void
-    @State var selectedCategory: CategoryViewData? = nil
-    @Environment(\.presentationMode) var presentationMode
+    
+    
+    @State private var selectedCategory: CategoryViewData? = nil
 
     var body: some View {
         ScrollView {
@@ -46,18 +49,21 @@ struct SavePhotoView: View {
             }
         }
         .navigationBarTitleDisplayMode(.inline)
+        .navigationBarBackButtonHidden(true)
         .toolbar {
+            ToolbarItem(placement: .navigationBarLeading) {
+                DismissButton {
+                    onGoBack?()
+                }
+            }
+
             ToolbarItem(placement: .navigationBarTrailing) {
-                //TODO: 버튼 모양 바꾸기
-                Button {
+                MainButton(title: "완료", size: .small) {
                     savePhoto()
-                } label: {
-                    Text("완료")
-                        .font(.Btn2_b)
-                        .foregroundColor(.gray50)
                 }
             }
         }
+        
         .mainBackgourndColor()
         .onChange(of: viewModel.isSaved) { isSaved in
             if isSaved {
@@ -148,8 +154,9 @@ struct SavePhotoView: View {
     let useCase = SavePhotoUseCase(repository: repository)
     let viewModel = SavePhotoViewModel(useCase: useCase)
     return SavePhotoView(
-        capturedImage: UIImage(systemName: "photo")!,
         viewModel: viewModel,
+        capturedImage: UIImage(systemName: "photo")!,
+        onGoBack: nil,
         onDismiss: {}
     )
 }

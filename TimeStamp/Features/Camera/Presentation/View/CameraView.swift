@@ -65,9 +65,11 @@ struct CameraView: View {
                 NavigationLink(
                     destination: AppDIContainer.shared.makeSavePhotoView(
                         capturedImage: image,
-                        onDismiss: onDismiss
-                    )
-                    .navigationBarBackButtonHidden(false),
+                        onDismiss: onDismiss,
+                        onGoBack: {
+                            navigateToSavePhoto = false
+                        }
+                    ),
                     isActive: $navigateToSavePhoto
                 ) {
                     EmptyView()
