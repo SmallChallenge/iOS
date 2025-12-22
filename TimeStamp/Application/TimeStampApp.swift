@@ -24,8 +24,9 @@ struct TimeStampApp: App {
     @UIApplicationDelegateAdaptor(AppDelegate.self) var appDelegate
     
     init() {
-        // Kakao SDK 초기화
-        KakaoSDK.initSDK(appKey: "971afea14146fb0c32c67bff9840350e")
+        // Kakao SDK 초기화 (환경변수에서 가져옴)
+        let kakaoAppKey = Bundle.main.kakaoAppKey
+        KakaoSDK.initSDK(appKey: kakaoAppKey)
     }
     
     var body: some Scene {

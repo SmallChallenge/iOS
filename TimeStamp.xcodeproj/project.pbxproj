@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		D09119332EF9516C00214271 /* Secrets.xcconfig in Resources */ = {isa = PBXBuildFile; fileRef = D09119322EF9516C00214271 /* Secrets.xcconfig */; };
 		D0AB7D342EF8092700963A12 /* GoogleSignIn in Frameworks */ = {isa = PBXBuildFile; productRef = D0AB7D332EF8092700963A12 /* GoogleSignIn */; };
 		D0AB7D362EF8092700963A12 /* GoogleSignInSwift in Frameworks */ = {isa = PBXBuildFile; productRef = D0AB7D352EF8092700963A12 /* GoogleSignInSwift */; };
 		D0AB7E4C2EF80BA900963A12 /* KakaoSDK in Frameworks */ = {isa = PBXBuildFile; productRef = D0AB7E4B2EF80BA900963A12 /* KakaoSDK */; };
@@ -34,6 +35,7 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
+		D09119322EF9516C00214271 /* Secrets.xcconfig */ = {isa = PBXFileReference; lastKnownFileType = text.xcconfig; path = Secrets.xcconfig; sourceTree = "<group>"; };
 		D0DAF8782EE149E70040F646 /* TimeStamp.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = TimeStamp.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		D0DAF8852EE149E80040F646 /* TimeStampTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = TimeStampTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		D0DAF88F2EE149E80040F646 /* TimeStampUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = TimeStampUITests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -109,6 +111,7 @@
 				D0DAF8882EE149E80040F646 /* TimeStampTests */,
 				D0DAF8922EE149E80040F646 /* TimeStampUITests */,
 				D0DAF8792EE149E70040F646 /* Products */,
+				D09119322EF9516C00214271 /* Secrets.xcconfig */,
 			);
 			sourceTree = "<group>";
 		};
@@ -256,6 +259,7 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				D09119332EF9516C00214271 /* Secrets.xcconfig in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -315,6 +319,7 @@
 /* Begin XCBuildConfiguration section */
 		D0DAF8972EE149E80040F646 /* Debug */ = {
 			isa = XCBuildConfiguration;
+			baseConfigurationReference = D09119322EF9516C00214271 /* Secrets.xcconfig */;
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = NO;
 				ASSETCATALOG_COMPILER_GENERATE_SWIFT_ASSET_SYMBOL_EXTENSIONS = YES;
@@ -379,6 +384,7 @@
 		};
 		D0DAF8982EE149E80040F646 /* Release */ = {
 			isa = XCBuildConfiguration;
+			baseConfigurationReference = D09119322EF9516C00214271 /* Secrets.xcconfig */;
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = NO;
 				ASSETCATALOG_COMPILER_GENERATE_SWIFT_ASSET_SYMBOL_EXTENSIONS = YES;

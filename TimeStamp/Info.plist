@@ -9,7 +9,8 @@
 			<string>Editor</string>
 			<key>CFBundleURLSchemes</key>
 			<array>
-				<string>kakao971afea14146fb0c32c67bff9840350e</string>
+				<string>kakao$(KAKAO_APP_KEY)</string>
+				<string>$(GOOGLE_REVERSED_CLIENT_ID)</string>
 			</array>
 		</dict>
 	</array>
@@ -29,16 +30,11 @@
 		<string>Pretendard-SemiBold.otf</string>
 		<string>Pretendard-Thin.otf</string>
 	</array>
-    <key>GIDClientID</key>
-    <string>18886173344-ad2jtnksaoa159iacoukvd77csa3gju4.apps.googleusercontent.com</string>
-    <key>CFBundleURLTypes</key>
-    <array>
-      <dict>
-        <key>CFBundleURLSchemes</key>
-        <array>
-          <string>com.googleusercontent.apps.18886173344-ad2jtnksaoa159iacoukvd77csa3gju4</string>
-        </array>
-      </dict>
-    </array>
+	<key>GIDClientID</key>
+	<string>$(GOOGLE_CLIENT_ID)</string>
+	<key>KAKAO_APP_KEY</key>
+	<string>$(KAKAO_APP_KEY)</string>
+	<key>GOOGLE_CLIENT_ID</key>
+	<string>$(GOOGLE_CLIENT_ID)</string>
 </dict>
 </plist>
