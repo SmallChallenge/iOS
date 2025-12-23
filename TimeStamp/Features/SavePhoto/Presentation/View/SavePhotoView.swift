@@ -18,6 +18,8 @@ struct SavePhotoView: View {
     let onGoBack: (() -> Void)?
     let onDismiss: () -> Void
     
+    @State private var didAttemptConfirm: Bool = false
+    
     
     @State private var selectedCategory: CategoryViewData? = nil
 
@@ -85,13 +87,12 @@ struct SavePhotoView: View {
     // MARK: - Actions
 
     private func savePhoto() {
-        // 카테고리, 공개 여부가 선택되지 않았으면 메세지띄우기
+        didAttemptConfirm = true
+        
+        // 카테고리, 공개 여부가 선택되었는지 확인
         guard let category = selectedCategory,
         let visibility = selectedVisibility
-        else {
-            viewModel.errorMessage = "카테고리를 선택해주세요."
-            return
-        }
+        else { return }
         
         // ViewModel을 통해 저장
         viewModel.savePhoto(
@@ -107,9 +108,17 @@ struct SavePhotoView: View {
     // 카테고리 선택
     var categoryPicker: some View {
         VStack(alignment: .leading, spacing: 12) {
-            Text("카테고리 선택")
-                .font(.SubTitle2)
-                .foregroundStyle(.gray50)
+            HStack(spacing: 8) {
+                Text("카테고리 선택")
+                    .font(.SubTitle2)
+                    .foregroundStyle(.gray50)
+                
+                if didAttemptConfirm && selectedCategory == nil {
+                    Text("* 필수 선택")
+                        .foregroundStyle(Color.error)
+                        .font(.caption)
+                }
+            }
             
             HStack(alignment: .center, spacing: 8){
                 ForEach(CategoryViewData.allCases, id: \.self) { category in
@@ -138,9 +147,17 @@ struct SavePhotoView: View {
     /// 공개여부 선택
     var visibilityPicker: some View {
         VStack(alignment: .leading, spacing: 12) {
-            Text("공개 여부 선택")
-                .font(.SubTitle2)
-                .foregroundStyle(.gray50)
+            HStack(spacing: 8){
+                Text("공개 여부 선택")
+                    .font(.SubTitle2)
+                    .foregroundStyle(.gray50)
+                
+                if didAttemptConfirm && selectedVisibility == nil {
+                    Text("* 필수 선택")
+                        .foregroundStyle(Color.error)
+                        .font(.caption)
+                }
+            }
             
             HStack(spacing: 8){
                 ForEach(VisibilityViewData.allCases, id: \.self){ type in
