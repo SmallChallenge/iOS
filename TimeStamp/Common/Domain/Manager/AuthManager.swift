@@ -54,6 +54,12 @@ final class AuthManager: ObservableObject {
 
         print("✅ 로그인 성공: \(user.nickname ?? "익명") (userId: \(user.userId))")
     }
+    
+    /// 토큰갱신
+    func refreshToken(accessToken: String, refreshToken: String){
+        self.accessToken = accessToken
+        self.refreshToken = refreshToken
+    }
 
     /// 로그아웃
     func logout() {

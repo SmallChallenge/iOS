@@ -13,6 +13,15 @@ protocol LoginUseCaseProtocol {
     func loginWithGoogle()
 }
 
+// Usecase -> ViewModel
+protocol LoginUseCaseDelegate: AnyObject {
+    func loginUseCase(didStartLoading: Bool)
+    func loginUseCase(didReceiveError message: String)
+    func loginUseCase(didLoginSuccess entity: LoginEntity)
+}
+
+
+// MARK: LoginUseCase
 final class LoginUseCase: LoginUseCaseProtocol {
     private let repository: LoginRepositoryProtocol
     private var appleLogin: SocialLoginProtocol
@@ -61,13 +70,6 @@ final class LoginUseCase: LoginUseCaseProtocol {
     }
 }
 
-// MARK: - LoginUseCaseDelegate
-
-protocol LoginUseCaseDelegate: AnyObject {
-    func loginUseCase(didStartLoading: Bool)
-    func loginUseCase(didReceiveError message: String)
-    func loginUseCase(didLoginSuccess entity: LoginEntity)
-}
 
 // MARK: - SocialLoginDelegate
 

@@ -31,7 +31,7 @@ struct TimeStampApp: App {
     
     var body: some Scene {
         WindowGroup {
-            MainTabView()
+            AppDIContainer.shared.makeLaunchScreenView()
             // 인증 리디렉션 url 처리
                 .onOpenURL(perform: { url in
                     if (AuthApi.isKakaoTalkLoginUrl(url)) {

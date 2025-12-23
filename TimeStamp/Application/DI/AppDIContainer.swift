@@ -32,6 +32,16 @@ final class AppDIContainer {
         AuthApiClient(session: session)
     }()
 
+    // MARK: - LaunchScreen Feature
+
+    func makeLaunchScreenView() -> LaunchScreenView {
+        let repository = LaunchScreenRepository(authApiClient: authApiClient)
+        let useCase = LaunchScreenUseCase(repository: repository)
+        let viewModel = LaunchScreenViewModel(useCase: useCase)
+        useCase.delegate = viewModel
+        return LaunchScreenView(viewModel: viewModel)
+    }
+
     // MARK: - Login Feature
 
     private lazy var loginDIContainer: LoginDIContainer = {

@@ -17,6 +17,7 @@ public enum AuthRouter {
     case googleLogin(accessToken: String)
     
     // 토큰 재발급
+    case refresh(token: String)
     // 로그아웃
     // 회원탈퇴
     // 닉네임 설정
@@ -30,7 +31,13 @@ extension AuthRouter: Router {
     }
     
     public var path: String {
-        "api/v1/auth/social-login"
+        switch self {
+        case .appleLogin, .googleLogin, .kakaoLogin:
+            "api/v1/auth/social-login"
+            
+        case .refresh:
+            "api/v1/auth/refresh"            
+        }
     }
     
     public var method: HTTPMethod {
@@ -59,6 +66,12 @@ extension AuthRouter: Router {
                 "accessToken" : token,
             ]
             return params
+            
+        case let .refresh(token):
+            let params: Parameters = [
+                "refreshToken" : token,
+            ]
+            return params
         }
     }
     
@@ -78,7 +91,8 @@ public protocol AuthApiClientProtocol {
     func kakaoLogin(accessToken token: String) async -> Result<ResponseBody<LoginResponseDto>, NetworkError>
     func appleLogin(accessToken token: String) async -> Result<ResponseBody<LoginResponseDto>, NetworkError>
     func googleLogin(accessToken token: String) async -> Result<ResponseBody<LoginResponseDto>, NetworkError>
-    // 토큰 재발급
+    /// 토큰 재발급
+    func refreshToken(refreshToken token: String) async -> Result<ResponseBody<RefreshDto>, NetworkError>
     // 로그아웃
     // 회원탈퇴
     // 닉네임 설정
@@ -96,5 +110,9 @@ public class AuthApiClient: ApiClient<AuthRouter>, AuthApiClientProtocol {
     }
     public func googleLogin(accessToken token: String) async -> Result<ResponseBody<LoginResponseDto>, NetworkError> {
         await request(AuthRouter.googleLogin(accessToken: token))
+    }
+    
+    public func refreshToken(refreshToken token: String) async -> Result<ResponseBody<RefreshDto>, NetworkError> {
+        await request(.refresh(token: token))
     }
 }
