@@ -79,7 +79,7 @@ public class ApiClient<R: Router> {
             // 디코딩 실패 시 raw data 출력 (디버깅용)
             #if DEBUG
             if let jsonString = String(data: data, encoding: .utf8) {
-                print(">>>>>❌ Decoding failed for: \(jsonString)")
+                print("❌ Decoding failed for: \(jsonString)")
             }
             #endif
 

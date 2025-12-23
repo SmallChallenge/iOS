@@ -185,7 +185,6 @@ final class CameraManager: NSObject, ObservableObject {
             return
         }
         flashMode.next()
-        print(">>>>> flashMode: \(flashMode)")
     }
 
     /// 사진 촬영
@@ -200,11 +199,11 @@ final class CameraManager: NSObject, ObservableObject {
         if let device = currentDevice,
            device.hasFlash,
            device.position == .back {
+            // 플래시(flashMode)로 촬영
             settings.flashMode = flashMode.avFlashMode
-            print("📸 플래시 \(flashMode)로 촬영")
         } else {
+            //플래시 OFF로 촬영 (전면 카메라 또는 플래시 없음)
             settings.flashMode = .off
-            print("📸 플래시 OFF로 촬영 (전면 카메라 또는 플래시 없음)")
         }
 
         output.capturePhoto(with: settings, delegate: self)

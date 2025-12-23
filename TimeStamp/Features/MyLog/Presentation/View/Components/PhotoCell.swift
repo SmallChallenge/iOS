@@ -31,7 +31,7 @@ struct PhotoCell: View {
                         .retry(maxCount: 3, interval: .seconds(2))
                         .cacheMemoryOnly()
                         .onFailure { error in
-                            print("Image load failed: \(error.localizedDescription)")
+                            print(">>>>> Image load failed: \(error.localizedDescription)")
                         }
                         .fade(duration: 0.25)
                         .resizable()
