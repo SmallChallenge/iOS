@@ -100,21 +100,21 @@ struct MainButtonStyle {
         case (.secondary, true, _):
             // Secondary - Disabled
             return MainButtonStyle(
-                backgroundColor: .gray900,
+                backgroundColor: .clear,
                 foregroundColor: .gray500,
                 borderColor: .gray700
             )
         case (.secondary, false, true):
             // Secondary - Pressed
             return MainButtonStyle(
-                backgroundColor: .gray900,
+                backgroundColor: .clear,
                 foregroundColor: .gray400,
                 borderColor: .gray500
             )
         case (.secondary, false, false):
             // Secondary - Normal
             return MainButtonStyle(
-                backgroundColor: .gray900,
+                backgroundColor: .clear,
                 foregroundColor: .gray300,
                 borderColor: .gray400
             )
@@ -158,6 +158,7 @@ struct MainButton: View {
                 .frame(height: size.height)
                 .foregroundColor(currentStyle.foregroundColor)
                 .background(currentStyle.backgroundColor)
+                .contentShape(RoundedRectangle(cornerRadius: size.cornerRadius))
                 .cornerRadius(size.cornerRadius)
                 .overlay(
                     RoundedRectangle(cornerRadius: size.cornerRadius)
