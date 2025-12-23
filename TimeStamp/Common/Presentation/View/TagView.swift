@@ -90,7 +90,6 @@ struct TagButton: View {
                 state: isActive ? .active : .inactive
             )
         }
-
     }
 }
 
