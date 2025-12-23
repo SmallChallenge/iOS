@@ -7,7 +7,6 @@
 
 
 enum CategoryViewData: String, CaseIterable {
-
     case study
     case health
     case food

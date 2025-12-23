@@ -110,7 +110,7 @@ struct SavePhotoView: View {
                 .font(.SubTitle2)
                 .foregroundStyle(.gray50)
             
-            HStack(spacing: 8){
+            HStack(alignment: .center, spacing: 8){
                 ForEach(CategoryViewData.allCases, id: \.self) { category in
                     CategoryButton(
                         type: category,
@@ -127,18 +127,28 @@ struct SavePhotoView: View {
                         selectedCategory = category
                     }
                 }
+                
+                Spacer()
             }
         }
     }
     
+    @State var selectedVisibility: VisibilityViewData? = nil
+    /// 공개여부 선택
     var visibilityPicker: some View {
         VStack(alignment: .leading, spacing: 12) {
-            Text("카테고리 선택")
+            Text("공개 여부 선택")
                 .font(.SubTitle2)
                 .foregroundStyle(.gray50)
             
             HStack(spacing: 8){
-                
+                ForEach(VisibilityViewData.allCases, id: \.self){ type in
+                    TagButton(
+                        title: type.title,
+                        isActive: selectedVisibility == type) {
+                            selectedVisibility = type
+                        }
+                }
             }
             
             Text("👆전체 공개 설정하고 커뮤니티 활동을 시작해보세요!")
@@ -147,6 +157,8 @@ struct SavePhotoView: View {
         }
     }
 }
+
+
 
 #Preview {
     let localRepository = LocalTimeStampLogRepository()
