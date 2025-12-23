@@ -70,12 +70,30 @@ final class CameraViewModel: ObservableObject {
 
     /// 사진 촬영
     func capturePhoto() {
+        #if targetEnvironment(simulator)
+        // 시뮬레이터: Color.gray를 UIImage로 변환
+        let dummyImage = createDummyImage()
+        Task { @MainActor in
+            self.capturedImage = dummyImage
+        }
+        #else
+        // 실제 기기: 카메라로 촬영
         cameraManager.capturePhoto { [weak self] image in
             guard let self = self else { return }
             Task { @MainActor in
                 self.capturedImage = image
-                // TODO: 촬영된 사진 처리 (저장, 프리뷰 등)
             }
+        }
+        #endif
+    }
+
+    /// 시뮬레이터용 더미 이미지 생성 (회색 이미지)
+    private func createDummyImage() -> UIImage? {
+        let size = CGSize(width: 1000, height: 1000)
+        let renderer = UIGraphicsImageRenderer(size: size)
+        return renderer.image { context in
+            UIColor.gray.setFill()
+            context.fill(CGRect(origin: .zero, size: size))
         }
     }
 }

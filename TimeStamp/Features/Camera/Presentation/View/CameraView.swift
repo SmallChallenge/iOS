@@ -25,7 +25,11 @@ struct CameraView: View {
                 // 카메라 프리뷰 + 오버레이
                 ZStack {
                     // 카메라 프리뷰
+                    #if targetEnvironment(simulator)
+                    Color.gray
+                    #else
                     CameraPreviewView(session: viewModel.cameraManager.session)
+                    #endif
 
                     // 오버레이 뷰 (타임스탬프, 로고)
                     DefaultTemplateView()
