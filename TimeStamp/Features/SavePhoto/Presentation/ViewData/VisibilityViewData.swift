@@ -9,7 +9,7 @@ import Foundation
 
 enum VisibilityViewData: String, CaseIterable {
     case publicVisible
-    case privateVisible
+    case privateVisible 
     
     var title: String {
         switch self {

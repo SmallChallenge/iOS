@@ -23,7 +23,6 @@ struct TimeStampLog: Identifiable {
         case remote(RemoteTimeStampImage) 
     }
     
-    
     struct LocalTimeStampImage {
         let imageFileName: String
     }
@@ -34,8 +33,4 @@ struct TimeStampLog: Identifiable {
     }
 }
 
-/// 공개여부
-enum VisibilityType:  Codable{
-    case publicVisible
-    case privateVisible
-}
+

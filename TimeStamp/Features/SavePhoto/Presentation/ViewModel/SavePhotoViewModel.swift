@@ -43,9 +43,11 @@ final class SavePhotoViewModel: ObservableObject {
     ///   - image: 저장할 이미지
     ///   - category: 선택된 카테고리
     ///   - visibility: 공개 여부
-    func savePhoto(image: UIImage, category: String, visibility: String) {
+    func savePhoto(image: UIImage, category: CategoryViewData, visibility: VisibilityViewData) {
         do {
-            try useCase.savePhoto(image: image, category: category, visibility: visibility)
+            let categoryEntity = CategoryMapper().toEntity(from: category)
+            let visibilityEntity = VisibilityTypeMapper().toEntity(from: visibility)
+            try useCase.savePhoto(image: image, category: categoryEntity, visibility: visibilityEntity)
 
             // 저장 성공
             isSaved = true

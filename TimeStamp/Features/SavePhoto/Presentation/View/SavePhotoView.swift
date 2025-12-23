@@ -85,22 +85,23 @@ struct SavePhotoView: View {
     // MARK: - Actions
 
     private func savePhoto() {
-        // 카테고리가 선택되지 않았으면 경고
-        guard let category = selectedCategory else {
+        // 카테고리, 공개 여부가 선택되지 않았으면 메세지띄우기
+        guard let category = selectedCategory,
+        let visibility = selectedVisibility
+        else {
             viewModel.errorMessage = "카테고리를 선택해주세요."
             return
         }
-
-        // TODO: visibility도 선택하도록 수정 필요 (현재는 임시로 privateVisible)
-        let visibility = "privateVisible"
-
+        
         // ViewModel을 통해 저장
         viewModel.savePhoto(
             image: capturedImage,
-            category: category.rawValue,
+            category: category,
             visibility: visibility
         )
     }
+    
+    
     
    
     // 카테고리 선택

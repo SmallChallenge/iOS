@@ -23,18 +23,14 @@ struct SavePhotoUseCase: SavePhotoUseCaseProtocol {
     // MARK: - Methods
 
     /// 사진을 저장하고 Core Data에 로그 생성
-    func savePhoto(image: UIImage, category: String, visibility: String) throws {
-        // String → Entity enum 변환 (rawValue 사용)
-        let categoryEnum = Category(rawValue: category) ?? .etc
-
-        let visibilityEnum: VisibilityType = visibility == "publicVisible" ? .publicVisible : .privateVisible
+    func savePhoto(image: UIImage, category: Category, visibility: VisibilityType) throws {
 
         // Repository를 통해 저장
         try repository.savePhoto(
             image: image,
-            category: categoryEnum,
+            category: category,
             timeStamp: Date(),
-            visibility: visibilityEnum
+            visibility: visibility
         )
     }
 }
