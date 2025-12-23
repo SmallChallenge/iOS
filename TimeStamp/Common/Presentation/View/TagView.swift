@@ -77,16 +77,16 @@ struct TagView: View {
 
 // MARK: - TagButton
 struct TagButton: View {
-    @State private var isActive = false
+    let title: String
+    let isActive: Bool
     let action: () -> Void
 
     var body: some View {
         Button {
-            isActive.toggle()
             action()
         } label: {
             TagView(
-                title: "Toggle Me",
+                title: title,
                 state: isActive ? .active : .inactive
             )
         }
@@ -102,7 +102,7 @@ struct TagButton: View {
         
         TagView(title: "Pressed", state: .pressed)
 
-        TagButton(){}
+        TagButton(title: "title", isActive: false){}
     }
     .padding()
     .background(Color.black)
