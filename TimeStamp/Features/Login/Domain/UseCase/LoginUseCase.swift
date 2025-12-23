@@ -88,8 +88,23 @@ extension LoginUseCase: SocialLoginDelegate {
 
                 switch result {
                 case .success(let entity):
-                    delegate?.loginUseCase(didLoginSuccess: entity)
+                    
+                    // 로그인 성공 처리 (토큰 + 사용자 정보 저장)
+                    let user = User(
+                        userId: entity.userId,
+                        nickname: entity.nickname,
+                        socialType: entity.socialType,
+                        profileImageUrl: entity.profileImageUrl
+                    )
+                    AuthManager.shared.login(
+                        user: user,
+                        accessToken: entity.accessToken,
+                        refreshToken: entity.refreshToken
+                    )
+                    
                     // TODO: 로그인 성공 처리 (토큰 저장, 화면 전환 등)
+
+                    delegate?.loginUseCase(didLoginSuccess: entity)
 
                 case let .failure(error):
                     let message = error.localizedDescription

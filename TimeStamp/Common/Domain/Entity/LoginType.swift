@@ -7,7 +7,7 @@
 
 import Foundation
 
-enum LoginType: String {
+enum LoginType: String, Codable {
     case  kakao, google, apple
     
     init?(socialType: String) {
