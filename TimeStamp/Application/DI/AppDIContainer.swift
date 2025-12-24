@@ -34,49 +34,14 @@ final class AppDIContainer {
 
     // MARK: - LaunchScreen Feature
 
+    private lazy var launchScreenDIContainer: LaunchScreenDIContainer = {
+        LaunchScreenDIContainer(authApiClient: authApiClient)
+    }()
+
     func makeLaunchScreenView() -> LaunchScreenView {
-        let repository = LaunchScreenRepository(authApiClient: authApiClient)
-        let useCase = LaunchScreenUseCase(repository: repository)
-        let viewModel = LaunchScreenViewModel(useCase: useCase)
-        useCase.delegate = viewModel
-        return LaunchScreenView(viewModel: viewModel)
+        return launchScreenDIContainer.makeLaunchScreenView()
     }
-
-    // MARK: - Login Feature
-
-    private lazy var loginDIContainer: LoginDIContainer = {
-        LoginDIContainer(authApiClient: authApiClient)
-    }()
-
-    func makeLoginView() -> LoginView {
-        return loginDIContainer.makeLoginView()
-    }
-
-    // MARK: - Camera Feature
-
-    private lazy var cameraTabDIContainer: CameraTabDIContainer = {
-        CameraTabDIContainer()
-    }()
-
-    func makeCameraTapView(onDismiss: @escaping () -> Void) -> CameraTabView {
-        return cameraTabDIContainer.makeCameraTabView(onDismiss: onDismiss)
-    }
-
-    // MARK: - SavePhoto Feature
-
-    func makeSavePhotoView(capturedImage: UIImage, onDismiss: @escaping () -> Void, onGoBack: (() -> Void)? = nil) -> SavePhotoView {
-        let localDataSource = LocalTimeStampLogDataSource()
-        let repository = SavePhotoRepository(localDataSource: localDataSource)
-        let useCase = SavePhotoUseCase(repository: repository)
-        let viewModel = SavePhotoViewModel(useCase: useCase)
-        return SavePhotoView(
-            viewModel: viewModel,
-            capturedImage: capturedImage,
-            onGoBack: onGoBack,
-            onDismiss: onDismiss
-        )
-    }
-
+    
     // MARK: - MyLog Feature
 
     private lazy var myLogDIContainer: MyLogDIContainer = {
@@ -88,6 +53,17 @@ final class AppDIContainer {
         return myLogDIContainer.makeMyLogView()
     }
 
+    // MARK: - Camera Feature
+
+    private lazy var cameraTabDIContainer: CameraDIContainer = {
+        let localDataSource = LocalTimeStampLogDataSource()
+        return CameraDIContainer(localDataSource: localDataSource)
+    }()
+
+    func makeCameraTapView(onDismiss: @escaping () -> Void) -> CameraTabView {
+        return cameraTabDIContainer.makeCameraTabView(onDismiss: onDismiss)
+    }
+   
     // MARK: - Community Feature
 
     func makeCommunityView() -> CommunityView {
@@ -104,4 +80,15 @@ final class AppDIContainer {
     func makeMyPageView() -> MyPageView {
         myPageDIContainer.makeMyPageView()
     }
+    
+    // MARK: - Login Feature
+
+    private lazy var loginDIContainer: LoginDIContainer = {
+        LoginDIContainer(authApiClient: authApiClient)
+    }()
+
+    func makeLoginView() -> LoginView {
+        return loginDIContainer.makeLoginView()
+    }
+
 }

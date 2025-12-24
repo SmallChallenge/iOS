@@ -9,7 +9,7 @@ import SwiftUI
 
 struct CameraTabView: View {
     /// 뒤로가기 액션 클로저 (Environment 대신 클로저로 성능 최적화)
-    let diContainer: CameraTabDIContainer
+    let diContainer: CameraDIContainerProtocol
     let onDismiss: () -> Void
 
     @State var selectedTab: CameraViewTab = .camera

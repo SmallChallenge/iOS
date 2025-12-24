@@ -10,12 +10,18 @@ import SwiftUI
 /// 사진 촬영 화면(탭뷰)에서 카메라 화면
 struct CameraView: View {
     @StateObject var viewModel: CameraViewModel
+    let diContainer: CameraDIContainerProtocol
     let onDismiss: () -> Void
     @State private var navigateToSavePhoto = false
 
-    init(viewModel: CameraViewModel, onDismiss: @escaping () -> Void) {
+    init(
+        viewModel: CameraViewModel,
+        diContainer: CameraDIContainerProtocol,
+        onDismiss: @escaping () -> Void
+    ) {
         _viewModel = StateObject(wrappedValue: viewModel)
         self.onDismiss = onDismiss
+        self.diContainer = diContainer
     }
 
     var body: some View {
@@ -66,7 +72,7 @@ struct CameraView: View {
             // NavigationLink (hidden)
             if let image = viewModel.capturedImage {
                 NavigationLink(
-                    destination: AppDIContainer.shared.makeSavePhotoView(
+                    destination: diContainer.makeSavePhotoView(
                         capturedImage: image,
                         onDismiss: onDismiss,
                         onGoBack: {
@@ -140,6 +146,11 @@ struct CameraView: View {
 }
 
 #Preview {
-    CameraView(viewModel: CameraViewModel(), onDismiss: {})
-        .background(Color.black)
+    
+    CameraView(
+        viewModel: CameraViewModel(),
+        diContainer: MockCameraDIContainer(),
+        onDismiss: {}
+    )
+    .background(Color.black)
 }
