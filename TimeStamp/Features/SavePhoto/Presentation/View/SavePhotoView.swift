@@ -18,15 +18,18 @@ struct SavePhotoView: View {
     let onGoBack: (() -> Void)?
     let onDismiss: () -> Void
     
-    @State private var didAttemptConfirm: Bool = false
     
-    
+    @ObservedObject private var authManager = AuthManager.shared
     @State private var selectedCategory: CategoryViewData? = nil
+    @State private var didAttemptConfirm: Bool = false
+    @State private var showLoginPopup: Bool = false
+    @State private var showLoginView: Bool = false
+    
+    
 
     var body: some View {
         ScrollView {
             VStack (alignment: .leading, spacing: 0){
-                
 
                 // 이미지뷰
                 Image(uiImage: capturedImage)
@@ -50,6 +53,7 @@ struct SavePhotoView: View {
                     .padding(.horizontal, 20)
             }
         }
+        .mainBackgourndColor()
         .navigationBarTitleDisplayMode(.inline)
         .navigationBarBackButtonHidden(true)
         .toolbar {
@@ -65,8 +69,23 @@ struct SavePhotoView: View {
                 }
             }
         }
-        
-        .mainBackgourndColor()
+        .loading(viewModel.isLoading)
+        .popup(isPresented: $showLoginPopup, content: {
+            Modal(title: "로그인이 필요합니다.")
+                .buttons {
+                    MainButton(title: "취소", colorType: .secondary) {
+                        showLoginPopup = false
+                    }
+                    MainButton(title: "확인", colorType: .primary) {
+                        // 로그인 화면 띄우기
+                        showLoginPopup = false
+                        showLoginView = true
+                    }
+                }
+        })
+        .sheet(isPresented: $showLoginView, content: {
+            AppDIContainer.shared.makeLoginView()
+        })
         .onChange(of: viewModel.isSaved) { isSaved in
             if isSaved {
                 // 저장 성공 시 CameraView까지 닫기 (MainTabView로 돌아가기)
@@ -160,13 +179,25 @@ struct SavePhotoView: View {
             }
             
             HStack(spacing: 8){
-                ForEach(VisibilityViewData.allCases, id: \.self){ type in
-                    TagButton(
-                        title: type.title,
-                        isActive: selectedVisibility == type) {
-                            selectedVisibility = type
+                // 전체 공개
+                TagButton(
+                    title: VisibilityViewData.publicVisible.title,
+                    isActive: selectedVisibility == .publicVisible) {
+                        // TODO: 로그인 여부 확인, 비로그인상태면 로그인 유도 팝업 띄우기
+                        guard authManager.isLoggedIn else {
+                            print(">>>>> 비로그인 상태")
+                            showLoginPopup = true
+                            return
                         }
-                }
+                        selectedVisibility = .publicVisible
+                    }
+                
+                // 비공개
+                TagButton(
+                    title: VisibilityViewData.privateVisible.title,
+                    isActive: selectedVisibility == .privateVisible) {
+                        selectedVisibility = .privateVisible
+                    }
             }
             
             Text("👆전체 공개 설정하고 커뮤니티 활동을 시작해보세요!")

@@ -26,6 +26,9 @@ final class SavePhotoViewModel: ObservableObject {
 
     /// 저장 성공 여부
     @Published var isSaved = false
+    
+    /// 로딩
+    @Published var isLoading: Bool = false
 
     /// 에러 메시지
     @Published var errorMessage: String?
