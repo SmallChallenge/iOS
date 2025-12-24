@@ -17,7 +17,9 @@ final class LoginViewModel: ObservableObject {
     }
 
     // MARK: - Output Properties
-
+    
+    /// 로그인 성공여부
+    @Published var isLoggedIn = false
     @Published var isLoading = false
     @Published var errorMessage: String?
 
@@ -46,10 +48,12 @@ extension LoginViewModel: LoginUseCaseDelegate {
     func loginUseCase(didReceiveError message: String) {
         Logger.error("로그인 실패: \(message)")
         errorMessage = message
+        isLoggedIn = false
     }
 
     func loginUseCase(didLoginSuccess entity: LoginEntity) {
         Logger.success("로그인 성공: \(entity)")
         // TODO: 로그인 성공 처리 (토큰 저장, 화면 전환 등)
+        isLoggedIn = true
     }
 }

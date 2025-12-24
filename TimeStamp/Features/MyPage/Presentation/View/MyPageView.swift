@@ -10,7 +10,7 @@ import SwiftUI
 /// 마이페이지 화면
 struct MyPageView: View {
     @StateObject private var viewModel: MyPageViewModel
-    @State var showLoginSheet: Bool = false
+    @State var showLoginView: Bool = false
     private let container = AppDIContainer.shared
     
     
@@ -22,14 +22,16 @@ struct MyPageView: View {
     var body: some View {
         VStack {
             Button("로그인") {
-                showLoginSheet = true
+                showLoginView = true
             }
             Button("로그아웃"){
                 viewModel.logout()
             }
         }
-        .sheet(isPresented: $showLoginSheet) {
-            container.makeLoginView()
+        .sheet(isPresented: $showLoginView) {
+            container.makeLoginView {
+                showLoginView = false
+            }
 
         }
         

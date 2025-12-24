@@ -84,7 +84,9 @@ struct SavePhotoView: View {
                 }
         })
         .sheet(isPresented: $showLoginView, content: {
-            AppDIContainer.shared.makeLoginView()
+            AppDIContainer.shared.makeLoginView {
+                showLoginView = false
+            }
         })
         .onChange(of: viewModel.isSaved) { isSaved in
             if isSaved {

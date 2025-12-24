@@ -39,8 +39,8 @@ final class LoginDIContainer {
 
     // MARK: - View
 
-    func makeLoginView() -> LoginView {
+    func makeLoginView(onDismiss: @escaping () -> Void) -> LoginView {
         let viewModel = makeLoginViewModel()
-        return LoginView(viewModel: viewModel)
+        return LoginView(viewModel: viewModel, onDismiss: onDismiss)
     }
 }

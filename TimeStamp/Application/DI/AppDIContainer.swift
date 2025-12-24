@@ -87,8 +87,8 @@ final class AppDIContainer {
         LoginDIContainer(authApiClient: authApiClient)
     }()
 
-    func makeLoginView() -> LoginView {
-        return loginDIContainer.makeLoginView()
+    func makeLoginView(onDismiss: @escaping () -> Void) -> LoginView {
+        return loginDIContainer.makeLoginView(onDismiss: onDismiss)
     }
 
 }

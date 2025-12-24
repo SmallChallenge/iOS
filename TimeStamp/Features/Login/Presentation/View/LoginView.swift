@@ -11,8 +11,10 @@ import SwiftUI
 
 struct LoginView: View {
     @StateObject var viewModel: LoginViewModel
-    init(viewModel: LoginViewModel) {
+    private let onDismiss: () -> Void
+    init(viewModel: LoginViewModel, onDismiss: @escaping () -> Void) {
         _viewModel = StateObject(wrappedValue: viewModel)
+        self.onDismiss = onDismiss
     }
     
     var body: some View {
@@ -70,16 +72,19 @@ struct LoginView: View {
             }
             .foregroundStyle(Color.gray600)
             
-            
-
-            
             Spacer()
-        }
+        }// ~Vstack
         .mainBackgourndColor()
+        .onChange(of: viewModel.isLoggedIn) { isLoggedIn in
+            if isLoggedIn {
+                // 로그인 성공 시, 로그인 화면 닫기
+                onDismiss()
+            }
+        }
     }
 }
 
 #Preview {
-    AppDIContainer.shared.makeLoginView()
+    AppDIContainer.shared.makeLoginView(onDismiss: {})
 }
 
