@@ -9,11 +9,33 @@ import SwiftUI
 
 /// 마이페이지 화면
 struct MyPageView: View {
+    @StateObject private var viewModel: MyPageViewModel
+    @State var showLoginSheet: Bool = false
+    private let container = AppDIContainer.shared
+    
+    
+    init(viewModel: MyPageViewModel){
+        _viewModel = StateObject(wrappedValue: viewModel)
+    }
+    
+    
     var body: some View {
-        Text("Hello, World!")
+        VStack {
+            Button("로그인") {
+                showLoginSheet = true
+            }
+            Button("로그아웃"){
+                viewModel.logout()
+            }
+        }
+        .sheet(isPresented: $showLoginSheet) {
+            container.makeLoginView()
+
+        }
+        
     }
 }
 
 #Preview {
-    MyPageView()
+    MyPageView(viewModel: MyPageViewModel())
 }

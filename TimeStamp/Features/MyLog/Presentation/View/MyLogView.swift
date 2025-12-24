@@ -9,7 +9,7 @@ import SwiftUI
 
 struct MyLogView: View {
     @State private var selectedCategory: CategoryFilterViewData = .all
-    @StateObject var viewModel: MyLogViewModel
+    @StateObject private var viewModel: MyLogViewModel
 
     // 사진 간격
     private let columns = [

@@ -29,12 +29,13 @@ final class MyPageDIContainer {
     }
     
     // MARK: - ViewModel
-    private func makeMyPageViewModel() {
-        
+    private func makeMyPageViewModel() -> MyPageViewModel {
+        MyPageViewModel()
     }
     
     // MARK: - View
     func makeMyPageView() -> MyPageView {
-        MyPageView()
+        let vm = makeMyPageViewModel()
+        return MyPageView(viewModel: vm)
     }
 }

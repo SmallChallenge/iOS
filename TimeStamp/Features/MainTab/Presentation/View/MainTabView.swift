@@ -47,7 +47,7 @@ struct MainTabView: View {
                 
                 // 마이페이지 이동
                 NavigationLink(
-                    destination: AppDIContainer.shared.makeMyPageView(),
+                    destination: container.makeMyPageView(),
                     isActive: $presentMypage) {
                     EmptyView()
                 }
