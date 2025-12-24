@@ -50,6 +50,7 @@ struct CameraTabView: View {
 
 
             } // ~VStack
+            .mainBackgourndColor()
             .navigationBarTitleDisplayMode(.inline)
             .toolbar {
                 ToolbarItem(placement: .navigationBarLeading) {
@@ -58,9 +59,7 @@ struct CameraTabView: View {
                     }
                 }
             }
-            .mainBackgourndColor()
         } //~ NavigationView
-        .statusBarHidden(false)
         .onAppear {
             // 세로 방향으로 고정
             AppDelegate.orientationLock = .portrait

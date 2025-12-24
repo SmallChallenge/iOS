@@ -94,4 +94,14 @@ final class AppDIContainer {
         // TODO: ViewModel이 필요하면 여기서 주입
         return CommunityView()
     }
+    
+    // MARK: - MyPage Feature
+    
+    private lazy var myPageDIContainer: MyPageDIContainer = {
+        return MyPageDIContainer(authApiClient: authApiClient)
+    }()
+    
+    func makeMyPageView() -> MyPageView {
+        myPageDIContainer.makeMyPageView()
+    }
 }

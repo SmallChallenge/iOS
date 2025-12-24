@@ -20,8 +20,7 @@ struct CameraView: View {
 
     var body: some View {
         ZStack {
-            VStack(spacing: 0)
-            {
+            VStack(spacing: 0) {
                 // 카메라 프리뷰 + 오버레이
                 ZStack {
                     // 카메라 프리뷰
@@ -41,7 +40,7 @@ struct CameraView: View {
                 Spacer()
                 controller
                 Spacer()
-            }
+            } // ~VStack
             .onAppear {
                 viewModel.onAppear()
             }
@@ -79,7 +78,7 @@ struct CameraView: View {
                     EmptyView()
                 }
             }
-        }
+        } // ~Zstack
     }
     
     // MARK: - Controller
