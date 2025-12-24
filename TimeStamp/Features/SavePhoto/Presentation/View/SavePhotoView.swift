@@ -208,8 +208,8 @@ struct SavePhotoView: View {
 
 
 #Preview {
-    let localRepository = LocalTimeStampLogRepository()
-    let repository = SavePhotoRepository(localRepository: localRepository)
+    let localDataSource = LocalTimeStampLogDataSource()
+    let repository = SavePhotoRepository(localDataSource: localDataSource)
     let useCase = SavePhotoUseCase(repository: repository)
     let viewModel = SavePhotoViewModel(useCase: useCase)
     return SavePhotoView(

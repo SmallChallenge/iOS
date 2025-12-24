@@ -11,18 +11,18 @@ final class MyLogDIContainer {
 
     // MARK: - Dependencies
 
-    private let localRepository: LocalTimeStampLogRepositoryProtocol
+    private let localDataSource: LocalTimeStampLogDataSourceProtocol
 
     // MARK: - Initializer
 
-    init(localRepository: LocalTimeStampLogRepositoryProtocol) {
-        self.localRepository = localRepository
+    init(localDataSource: LocalTimeStampLogDataSourceProtocol) {
+        self.localDataSource = localDataSource
     }
 
     // MARK: - Repository
 
     private func makeMyLogRepository() -> MyLogRepositoryProtocol {
-        return MyLogRepository(localRepository: localRepository)
+        return MyLogRepository(localDataSource: localDataSource)
     }
 
     // MARK: - UseCase

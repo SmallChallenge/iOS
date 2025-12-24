@@ -1,5 +1,5 @@
 //
-//  LocalTimeStampLogRepositoryProtocol.swift
+//  LocalTimeStampLogDataSourceProtocol.swift
 //  TimeStamp
 //
 //  Created by 임주희 on 12/18/25.
@@ -7,7 +7,7 @@
 
 import Foundation
 
-protocol LocalTimeStampLogRepositoryProtocol {
+protocol LocalTimeStampLogDataSourceProtocol {
     // MARK: create
     func create(_ log: LocalTimeStampLogDto) throws
     

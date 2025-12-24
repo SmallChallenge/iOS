@@ -9,26 +9,26 @@ import Foundation
 import UIKit
 
 /// SavePhoto Repository 구현 (Data Layer)
-/// - LocalTimeStampLogRepository를 사용하여 로컬 데이터 저장
+/// - LocalTimeStampLogDataSource를 사용하여 로컬 데이터 저장
 /// - 이미지 파일 저장 기능 포함
 final class SavePhotoRepository: SavePhotoRepositoryProtocol {
-    
-    
+
+
     // MARK: - Properties
 
     /// 이미지 압축율
     private let imageCompressionQuality: CGFloat = 0.8
-    
+
     /// 로컬 저장소 (CoreData)
-    private let localRepository: LocalTimeStampLogRepositoryProtocol
+    private let localDataSource: LocalTimeStampLogDataSourceProtocol
 
     // TODO: 나중에 추가
-    // private let remoteRepository: RemoteTimeStampLogRepositoryProtocol
+    // private let remoteDataSource: RemoteTimeStampLogDataSourceProtocol
 
     // MARK: - Init
 
-    init(localRepository: LocalTimeStampLogRepositoryProtocol) {
-        self.localRepository = localRepository
+    init(localDataSource: LocalTimeStampLogDataSourceProtocol) {
+        self.localDataSource = localDataSource
     }
 
     // MARK: - SavePhotoRepositoryProtocol
@@ -48,7 +48,7 @@ final class SavePhotoRepository: SavePhotoRepositoryProtocol {
         )
 
         // 3. 로컬 저장소에 저장
-        try localRepository.create(dto)
+        try localDataSource.create(dto)
 
         // TODO: 나중에 서버에도 업로드
     }

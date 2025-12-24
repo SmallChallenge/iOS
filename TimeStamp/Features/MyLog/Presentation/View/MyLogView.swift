@@ -84,8 +84,8 @@ struct MyLogView: View {
 }
 
 #Preview {
-    let localRepository = LocalTimeStampLogRepository()
-    let diContainer = MyLogDIContainer(localRepository: localRepository)
+    let localDataSource = LocalTimeStampLogDataSource()
+    let diContainer = MyLogDIContainer(localDataSource: localDataSource)
     return diContainer.makeMyLogView()
 }
 

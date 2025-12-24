@@ -1,5 +1,5 @@
 //
-//  LocalTimeStampLogRepository.swift
+//  LocalTimeStampLogDataSource.swift
 //  TimeStamp
 //
 //  Created by 임주희 on 12/18/25.
@@ -8,10 +8,10 @@
 import CoreData
 import Foundation
 
-/// 로컬 타임스탬프 로그를 관리하는 Repository
+/// 로컬 타임스탬프 로그를 관리하는 DataSource
 /// - Core Data를 사용하여 TimeStampLogEntity를 LocalTimeStampLogDto로 변환
 /// - TimeStampLogEntity의 생성, 조회, 수정, 삭제
-final class LocalTimeStampLogRepository: LocalTimeStampLogRepositoryProtocol {
+final class LocalTimeStampLogDataSource: LocalTimeStampLogDataSourceProtocol {
 
     /// Core Data Stack을 관리하는 컨트롤러
     private let persistenceController: PersistenceController
