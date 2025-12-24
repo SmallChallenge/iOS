@@ -40,7 +40,7 @@ final class LocalTimeStampLogDataSource: LocalTimeStampLogDataSourceProtocol {
         let entity = TimeStampLogEntity(context: context)
         entity.id = log.id
         entity.category = log.category
-        entity.timeStamp = log.timeStamp
+        entity.timeStamp = log.timeStamp.toDate(.iso8601)
         entity.imageFileName = log.imageFileName
         entity.visibility = log.visibility
 
@@ -110,7 +110,7 @@ final class LocalTimeStampLogDataSource: LocalTimeStampLogDataSourceProtocol {
 
         // Entity의 속성 업데이트 (id는 변경 불가)
         entity.category = log.category
-        entity.timeStamp = log.timeStamp
+        entity.timeStamp = log.timeStamp.toDate(.iso8601)
         entity.imageFileName = log.imageFileName
         entity.visibility = log.visibility
 
@@ -178,7 +178,7 @@ final class LocalTimeStampLogDataSource: LocalTimeStampLogDataSourceProtocol {
         LocalTimeStampLogDto(
             id: entity.id ?? UUID(),
             category: entity.category ?? "",
-            timeStamp: entity.timeStamp ?? Date(),
+            timeStamp: entity.timeStamp?.toString(.iso8601) ?? (Date().toString(.iso8601)),
             imageFileName: entity.imageFileName ?? "",
             visibility: entity.visibility ?? ""
         )

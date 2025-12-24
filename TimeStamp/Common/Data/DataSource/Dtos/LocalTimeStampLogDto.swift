@@ -10,7 +10,7 @@ import Foundation
 struct LocalTimeStampLogDto: Identifiable, Codable {
     let id: UUID
     let category: String
-    let timeStamp: Date
+    let timeStamp: String
     
     // 로컬 이미지 경로
     let imageFileName: String

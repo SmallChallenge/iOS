@@ -15,5 +15,8 @@ protocol SavePhotoUseCaseProtocol {
     ///   - category: 카테고리
     ///   - visibility: 공개 여부
     /// - Throws: 저장 실패 시 에러
-    func savePhoto(image: UIImage, category: Category, visibility: VisibilityType) throws 
+    func savePhotoToLacal(image: UIImage, category: Category, visibility: VisibilityType) throws
+    
+    func savePhotoToServer(image: UIImage, category: Category, visibility: VisibilityType) throws
+    
 }

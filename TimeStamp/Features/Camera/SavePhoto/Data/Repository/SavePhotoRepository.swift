@@ -12,7 +12,7 @@ import UIKit
 /// - LocalTimeStampLogDataSource를 사용하여 로컬 데이터 저장
 /// - 이미지 파일 저장 기능 포함
 final class SavePhotoRepository: SavePhotoRepositoryProtocol {
-
+   
 
     // MARK: - Properties
 
@@ -31,11 +31,11 @@ final class SavePhotoRepository: SavePhotoRepositoryProtocol {
         self.localDataSource = localDataSource
     }
 
-    // MARK: - SavePhotoRepositoryProtocol
+    // MARK: - SavePhoto
 
-    /// 사진을 저장하고 타임스탬프 로그 생성
-    func savePhoto(image: UIImage, category: Category, timeStamp: Date, visibility: VisibilityType) throws {
-        // 1. 이미지를 파일로 저장
+    /// 사진 저장하고, CoreData에 타임스탬프 저장
+    func savePhotoToLacal(image: UIImage, category: Category, visibility: VisibilityType, timeStamp: String) throws {
+        // 1. 이미지를 파일로 저장 (이미지를 Documents 디렉토리에 저장)
         let fileName = try saveImageToDocuments(image: image)
 
         // 2. Entity를 DTO로 변환
@@ -49,9 +49,15 @@ final class SavePhotoRepository: SavePhotoRepositoryProtocol {
 
         // 3. 로컬 저장소에 저장
         try localDataSource.create(dto)
-
-        // TODO: 나중에 서버에도 업로드
     }
+    
+    /// 서버에 사진 저장
+    func savePhotoToServer(image: UIImage, category: Category, visibility: VisibilityType, timeStamp: String) throws {
+        
+    }
+    
+
+    
 
     // MARK: - Private Helpers
 

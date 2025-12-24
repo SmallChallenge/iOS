@@ -70,7 +70,7 @@ final class MyLogRepository: MyLogRepositoryProtocol {
         return TimeStampLog(
             id: dto.id,
             category: category,
-            timeStamp: dto.timeStamp,
+            timeStamp: dto.timeStamp.toDate(.iso8601) ?? Date(),
             imageSource: imageSource,
             visibility: visibility
         )

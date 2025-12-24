@@ -16,4 +16,29 @@ extension String {
         !isEmpty
     }
     
+    // MARK: - DATE
+    
+
+    /// 문자열을 지정된 형식의 Date로 변환
+        /// - Parameters:
+        ///   - format: 날짜 형식 (예: "yyyy-MM-dd'T'HH:mm:ss")
+        ///   - timeZone: 타임존 (기본값: 현재 타임존)
+        ///   - locale: 로케일 (기본값: en_US_POSIX)
+        /// - Returns: 변환된 Date 객체 (실패시 nil)
+        func toDate(format: String,
+                    timeZone: TimeZone = .current,
+                    locale: Locale = Locale(identifier: "en_US_POSIX")) -> Date? {
+            let formatter = DateFormatter()
+            formatter.dateFormat = format
+            formatter.timeZone = timeZone
+            formatter.locale = locale
+            return formatter.date(from: self)
+        }
+    
+    /// 프리셋 형식을 사용한 Date 변환
+        func toDate(_ format: Date.DateFormat,
+                    timeZone: TimeZone = .current,
+                    locale: Locale = Locale(identifier: "en_US_POSIX")) -> Date? {
+            return toDate(format: format.rawValue, timeZone: timeZone, locale: locale)
+        }
 }

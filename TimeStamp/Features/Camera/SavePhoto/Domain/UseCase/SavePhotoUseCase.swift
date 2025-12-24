@@ -22,15 +22,25 @@ struct SavePhotoUseCase: SavePhotoUseCaseProtocol {
 
     // MARK: - Methods
 
-    /// 사진을 저장하고 Core Data에 로그 생성
-    func savePhoto(image: UIImage, category: Category, visibility: VisibilityType) throws {
+    /// Core Data에 사진을 저장하고
+    func savePhotoToLacal(image: UIImage, category: Category, visibility: VisibilityType) throws {
+        
+        // "2024-01-15T10:30:00"
+        let dateString = Date().toString(.iso8601)
 
         // Repository를 통해 저장
-        try repository.savePhoto(
+        try repository.savePhotoToLacal(
             image: image,
             category: category,
-            timeStamp: Date(),
-            visibility: visibility
+            visibility: visibility,
+            timeStamp: dateString
         )
+    }
+    
+    func savePhotoToServer(image: UIImage, category: Category, visibility: VisibilityType) throws {
+        
+        // "2024-01-15T10:30:00"
+        let dateString = Date().toString(format: "yyyy-MM-dd'T'HH:mm:ss")
+        
     }
 }
