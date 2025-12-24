@@ -56,11 +56,11 @@ final class MyLogViewModel: ObservableObject {
             let entities = try useCase.fetchAllLogs()
             myLogs = entities.map { toViewData($0) }
             isLoading = false
-            print("✅ 로그 불러오기 성공: \(myLogs.count)개")
+            Logger.success("로그 불러오기 성공: \(myLogs.count)개")
         } catch {
             errorMessage = "로그를 불러오는데 실패했습니다: \(error.localizedDescription)"
             isLoading = false
-            print("❌ 로그 불러오기 실패: \(error)")
+            Logger.error("로그 불러오기 실패: \(error)")
         }
     }
 

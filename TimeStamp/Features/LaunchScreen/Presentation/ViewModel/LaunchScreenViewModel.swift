@@ -34,10 +34,10 @@ extension LaunchScreenViewModel: LaunchScreenUseCaseDelegate {
     func didRefreshToken(success: Bool) {
         // 메인 스레드에서 호출됨
         if success {
-            print("✅ 토큰 갱신 성공 → 메인 화면으로")
+            Logger.success("토큰 갱신 성공 → 메인 화면으로")
             // TODO: 유저 정보 가져오기
         } else {
-            print("⚠️ 토큰 갱신 실패 → 메인 화면으로 (로그인 필요)")
+            Logger.warning("토큰 갱신 실패 → 메인 화면으로 (로그인 필요)")
         }
 
         // 성공/실패 상관없이 메인 화면으로 이동

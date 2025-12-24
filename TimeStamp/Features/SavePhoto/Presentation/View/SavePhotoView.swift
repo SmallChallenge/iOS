@@ -183,9 +183,7 @@ struct SavePhotoView: View {
                 TagButton(
                     title: VisibilityViewData.publicVisible.title,
                     isActive: selectedVisibility == .publicVisible) {
-                        // TODO: 로그인 여부 확인, 비로그인상태면 로그인 유도 팝업 띄우기
                         guard authManager.isLoggedIn else {
-                            print(">>>>> 비로그인 상태")
                             showLoginPopup = true
                             return
                         }

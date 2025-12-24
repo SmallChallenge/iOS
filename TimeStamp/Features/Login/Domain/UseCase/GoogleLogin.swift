@@ -15,7 +15,7 @@ final class GoogleLogin: SocialLoginProtocol {
     
     func login() {
         guard let rootViewController: UIViewController = viewController else {
-            print("❌ 구글 로그인 실패: rootVC 못찾음")
+            Logger.error("구글 로그인 실패: rootVC 못찾음")
             return
         }
         
@@ -58,7 +58,7 @@ final class GoogleLogin: SocialLoginProtocol {
             let idToken = user.idToken?.tokenString ?? ""//사용자의 ID 토큰
 
         } else {
-            print(">>>>> checkUserInfo error: Not Logged In")
+            Logger.debug("checkUserInfo error: Not Logged In")
         }
     }
     

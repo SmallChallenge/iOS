@@ -39,7 +39,7 @@ struct PHAssetImageView: View {
 
         guard let asset = fetchResult.firstObject else {
             isLoading = false
-            print(">>>>> Failed to fetch PHAsset with identifier: \(assetIdentifier)")
+            Logger.error("Failed to fetch PHAsset with identifier: \(assetIdentifier)")
             return
         }
 

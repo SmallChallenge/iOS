@@ -77,11 +77,9 @@ public class ApiClient<R: Router> {
             }
 
             // 디코딩 실패 시 raw data 출력 (디버깅용)
-            #if DEBUG
             if let jsonString = String(data: data, encoding: .utf8) {
-                print("❌ Decoding failed for: \(jsonString)")
+                Logger.error("Decoding failed for: \(jsonString)")
             }
-            #endif
 
             return .failure(.failToDecode("Unable to decode as ResponseBody or direct T"))
 

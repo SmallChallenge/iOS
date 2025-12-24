@@ -66,7 +66,7 @@ class LaunchScreenUseCase: LaunchScreenUseCaseProtocol {
               // 유저 정보만 저장, Delegate 호출 안함
               AuthManager.shared.updateUser(user)
           case .failure(let error):
-              print("❌ 유저 정보 실패: \(error)")
+              Logger.error("유저 정보 실패: \(error)")
               // 실패해도 Delegate 호출 안함 (토큰은 갱신됐으니)
          */
     }

@@ -52,7 +52,7 @@ final class AuthManager: ObservableObject {
         currentUser = user
         isLoggedIn = true
 
-        print("✅ 로그인 성공: \(user.nickname ?? "익명") (userId: \(user.userId))")
+        Logger.success("로그인 성공: \(user.nickname ?? "익명") (userId: \(user.userId))")
     }
     
     /// 토큰갱신
@@ -75,7 +75,7 @@ final class AuthManager: ObservableObject {
         currentUser = nil
         isLoggedIn = false
 
-        print("✅ 로그아웃 완료")
+        Logger.success("로그아웃 완료")
     }
 
     /// Access Token 가져오기 (API 호출 시 사용)
@@ -96,7 +96,7 @@ final class AuthManager: ObservableObject {
         currentUser = storedUser
 
         if isLoggedIn {
-            print("✅ 저장된 로그인 상태 복원: \(currentUser?.nickname ?? "익명")")
+            Logger.success("저장된 로그인 상태 복원: \(currentUser?.nickname ?? "익명")")
         }
     }
 }

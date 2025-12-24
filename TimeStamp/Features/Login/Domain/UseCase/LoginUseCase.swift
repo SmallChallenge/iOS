@@ -111,7 +111,6 @@ extension LoginUseCase: SocialLoginDelegate {
                 case let .failure(error):
                     let message = error.localizedDescription
                     delegate?.loginUseCase(didReceiveError: message)
-                    print(">>>>> ❌ \(type.rawValue) 로그인 실패: \(error)")
                 }
             }
         }

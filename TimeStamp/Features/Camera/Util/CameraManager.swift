@@ -172,7 +172,7 @@ final class CameraManager: NSObject, ObservableObject {
         // 전면 카메라로 전환 시 플래시 자동으로 끄기 (전면 카메라는 플래시 없음)
         if isFrontCamera && flashMode != .off {
             flashMode = .off
-            print("⚠️ 전면 카메라로 전환하여 플래시를 껐습니다.")
+            Logger.warning("전면 카메라로 전환하여 플래시를 껐습니다.")
         }
     }
 
@@ -181,7 +181,7 @@ final class CameraManager: NSObject, ObservableObject {
     func toggleFlash() {
         // 현재 디바이스에 플래시가 있는지 확인
         guard currentDevice?.hasFlash == true else {
-            print("⚠️ 현재 카메라에는 플래시가 없습니다.")
+            Logger.warning("현재 카메라에는 플래시가 없습니다.")
             return
         }
         flashMode.next()

@@ -54,7 +54,7 @@ final class SavePhotoViewModel: ObservableObject {
 
             // 저장 성공
             isSaved = true
-            print("✅ 사진 저장 성공")
+            Logger.success("사진 저장 성공")
 
             // MyLogView에 새로고침 알림
             NotificationCenter.default.post(name: .didSavePhoto, object: nil)
@@ -62,7 +62,7 @@ final class SavePhotoViewModel: ObservableObject {
         } catch {
             // 저장 실패
             errorMessage = "사진 저장에 실패했습니다: \(error.localizedDescription)"
-            print("❌ 사진 저장 실패: \(error)")
+            Logger.error("사진 저장 실패: \(error)")
         }
     }
 }

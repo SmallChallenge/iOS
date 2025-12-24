@@ -43,7 +43,7 @@ struct LocalImageView: View {
             in: .userDomainMask
         ).first else {
             isLoading = false
-            print("❌ Documents 디렉토리를 찾을 수 없습니다.")
+            Logger.error("Documents 디렉토리를 찾을 수 없습니다.")
             return
         }
 
@@ -52,16 +52,16 @@ struct LocalImageView: View {
         // 파일이 존재하는지 확인
         guard FileManager.default.fileExists(atPath: fileURL.path) else {
             isLoading = false
-            print("❌ 이미지 파일을 찾을 수 없습니다: \(imageFileName)")
+            Logger.error("이미지 파일을 찾을 수 없습니다: \(imageFileName)")
             return
         }
 
         // 이미지 로드
         if let loadedImage = UIImage(contentsOfFile: fileURL.path) {
             self.image = loadedImage
-            print("✅ 이미지 로드 성공: \(imageFileName)")
+            Logger.debug("이미지 로드 성공: \(imageFileName)")
         } else {
-            print("❌ 이미지 로드 실패: \(imageFileName)")
+            Logger.error("이미지 로드 실패: \(imageFileName)")
         }
 
         isLoading = false

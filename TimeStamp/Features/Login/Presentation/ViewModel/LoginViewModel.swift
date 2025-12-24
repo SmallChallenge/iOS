@@ -44,11 +44,12 @@ extension LoginViewModel: LoginUseCaseDelegate {
     }
 
     func loginUseCase(didReceiveError message: String) {
+        Logger.error("로그인 실패: \(message)")
         errorMessage = message
     }
 
     func loginUseCase(didLoginSuccess entity: LoginEntity) {
-        print(">>>>> 로그인 성공: \(entity)")
+        Logger.success("로그인 성공: \(entity)")
         // TODO: 로그인 성공 처리 (토큰 저장, 화면 전환 등)
     }
 }
