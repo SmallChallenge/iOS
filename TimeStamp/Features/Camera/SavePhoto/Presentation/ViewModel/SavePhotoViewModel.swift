@@ -12,7 +12,7 @@ import Combine
 // MARK: - Notification Names
 
 extension Notification.Name {
-    static let didSavePhoto = Notification.Name("didSavePhoto")
+    static let shouldRefreshMyLog = Notification.Name("shouldRefreshMyLog")
 }
 
 /// 사진 저장 화면의 비즈니스 로직을 관리하는 ViewModel
@@ -75,7 +75,7 @@ final class SavePhotoViewModel: ObservableObject, MessageDisplayable {
             Logger.success("사진 저장 성공")
 
             // MyLogView에 새로고침 알림
-            NotificationCenter.default.post(name: .didSavePhoto, object: nil)
+            NotificationCenter.default.post(name: .shouldRefreshMyLog, object: nil)
 
         } catch {
             // 저장 실패
@@ -99,7 +99,7 @@ final class SavePhotoViewModel: ObservableObject, MessageDisplayable {
             Logger.success("서버에 사진 저장 성공")
 
             // MyLogView에 새로고침 알림
-            NotificationCenter.default.post(name: .didSavePhoto, object: nil)
+            NotificationCenter.default.post(name: .shouldRefreshMyLog, object: nil)
 
         } catch {
             // 저장 실패

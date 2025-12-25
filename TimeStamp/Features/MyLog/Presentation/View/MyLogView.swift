@@ -76,8 +76,8 @@ struct MyLogView: View {
         .onAppear {
             viewModel.loadLogs()
         }
-        .onReceive(NotificationCenter.default.publisher(for: .didSavePhoto)) { _ in
-            // 사진 저장 후 목록 새로고침
+        .onReceive(NotificationCenter.default.publisher(for: .shouldRefreshMyLog)) { _ in
+            // 사진 저장 또는 로그인 후 목록 새로고침
             viewModel.loadLogs()
         }
         .toast(message: $viewModel.toastMessage)
