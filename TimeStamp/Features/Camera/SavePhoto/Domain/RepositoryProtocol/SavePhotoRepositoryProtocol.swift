@@ -12,14 +12,9 @@ import UIKit
 /// - Entity 기반 인터페이스
 /// - Data Layer에서 구현
 protocol SavePhotoRepositoryProtocol {
-    /// coredata에 사진을 저장하고 타임스탬프 로그 생성
-    /// - Parameters:
-    ///   - image: 저장할 이미지
-    ///   - category: 카테고리
-    ///   - timeStamp: 타임스탬프
-    ///   - visibility: 공개 여부
-    /// - Throws: 저장 실패 시 에러
-    func savePhotoToLacal(image: UIImage, category: String, visibility: String, timeStamp: String) throws
+    
+    /// 이미지를 파일로 저장하고 DTO를 DataSource에 저장
+    func savePhotoToLocal(image: UIImage, fileName: String, dto: LocalTimeStampLogDto) throws
 
     // MARK: - Server API
 

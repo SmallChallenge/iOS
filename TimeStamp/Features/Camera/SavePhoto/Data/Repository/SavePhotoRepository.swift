@@ -35,21 +35,12 @@ final class SavePhotoRepository: SavePhotoRepositoryProtocol {
 
     // MARK: - SavePhoto
 
-    /// 사진 저장하고, CoreData에 타임스탬프 저장
-    func savePhotoToLacal(image: UIImage, category: String, visibility: String, timeStamp: String) throws {
-        // 1. 이미지를 파일로 저장 (이미지를 Documents 디렉토리에 저장)
-        let fileName = try saveImageToDocuments(image: image)
+    /// 이미지를 파일로 저장하고 DTO를 DataSource에 저장
+    func savePhotoToLocal(image: UIImage, fileName: String, dto: LocalTimeStampLogDto) throws {
+        // 1. 주어진 fileName으로 이미지 저장
+        try saveImageToDocuments(fileName: fileName, image: image)
 
-        // 2. Entity를 DTO로 변환
-        let dto = LocalTimeStampLogDto(
-            id: UUID(),
-            category: category,
-            timeStamp: timeStamp,
-            imageFileName: fileName,
-            visibility: visibility
-        )
-
-        // 3. 로컬 저장소에 저장
+        // 2. DTO를 로컬 저장소에 저장
         try localDataSource.create(dto)
     }
     
@@ -111,10 +102,7 @@ final class SavePhotoRepository: SavePhotoRepositoryProtocol {
     // MARK: - Private Helpers
 
     /// 이미지를 Documents 디렉토리에 저장
-    private func saveImageToDocuments(image: UIImage) throws -> String {
-        // 고유한 파일명 생성 (UUID + timestamp)
-        let fileName = "\(UUID().uuidString)_\(Date().timeIntervalSince1970).jpg"
-
+    private func saveImageToDocuments(fileName: String, image: UIImage) throws {
         // Documents 디렉토리 경로 가져오기
         guard let documentsDirectory = FileManager.default.urls(
             for: .documentDirectory,
@@ -132,8 +120,6 @@ final class SavePhotoRepository: SavePhotoRepositoryProtocol {
 
         // 파일로 저장
         try imageData.write(to: fileURL)
-
-        return fileName
     }
 
     /// S3에 이미지 업로드 (Private Helper)

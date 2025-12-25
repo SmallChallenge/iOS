@@ -116,7 +116,6 @@ struct MockCameraDIContainer: CameraDIContainerProtocol {
     struct MockSavePhotoUseCase: SavePhotoUseCaseProtocol {
         func savePhotoToLacal(image: UIImage, category: Category, visibility: VisibilityType) throws {}
         func savePhotoToServer(image: UIImage, category: Category, visibility: VisibilityType) async throws {}
-        func savePhoto(image: UIImage, category: Category, visibility: VisibilityType) throws {}
     }
     
     private func makeSavePhotoViewModel() -> SavePhotoViewModel {

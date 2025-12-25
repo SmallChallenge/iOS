@@ -24,16 +24,26 @@ struct SavePhotoUseCase: SavePhotoUseCaseProtocol {
 
     /// Core Data에 사진을 저장하고
     func savePhotoToLacal(image: UIImage, category: Category, visibility: VisibilityType) throws {
-        
-        // "2024-01-15T10:30:00"
+        // 1. 타임스탬프 생성
         let dateString = Date().toString(.iso8601)
 
-        // Repository를 통해 저장
-        try repository.savePhotoToLacal(
-            image: image,
+        // 2. 파일 이름 생성
+        let fileName = "\(UUID().uuidString)_\(Date().timeIntervalSince1970).jpg"
+
+        // 3. DTO 생성
+        let dto = LocalTimeStampLogDto(
+            id: UUID(),
             category: category.rawValue,
-            visibility: visibility.rawValue,
-            timeStamp: dateString
+            timeStamp: dateString,
+            imageFileName: fileName,
+            visibility: visibility.rawValue
+        )
+
+        // 4. Repository에 전달하여 저장
+        try repository.savePhotoToLocal(
+            image: image,
+            fileName: fileName,
+            dto: dto
         )
     }
     
