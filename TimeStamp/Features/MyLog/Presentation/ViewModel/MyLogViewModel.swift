@@ -54,16 +54,11 @@ final class MyLogViewModel: ObservableObject, MessageDisplayable {
     func loadLogs() {
         isLoading = true
         Task {
-            do {
-                let entities = try await useCase.fetchAllLogs()
-                myLogs = entities.map { toViewData($0) }
-                isLoading = false
-                Logger.success("로그 불러오기 성공: \(myLogs.count)개")
-            } catch {
-                isLoading = false
-                show(.unknownRequestFailed)
-                Logger.error("로그 불러오기 실패: \(error)")
-            }
+            let isLoggedIn = AuthManager.shared.isLoggedIn
+            let entities = await useCase.fetchAllLogs(isLoggedIn: isLoggedIn)
+            myLogs = entities.map { toViewData($0) }
+            isLoading = false
+            Logger.success("로그 불러오기 성공: \(myLogs.count)개")
         }
     }
 

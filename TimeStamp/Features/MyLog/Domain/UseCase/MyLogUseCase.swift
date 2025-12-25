@@ -23,20 +23,34 @@ struct MyLogUseCase: MyLogUseCaseProtocol {
     // MARK: - Methods
 
     /// 모든 타임스탬프 로그를 조회
-    func fetchAllLogs() async throws -> [TimeStampLog] {
-        
+    func fetchAllLogs(isLoggedIn: Bool) async -> [TimeStampLog] {
+
         // 로컬 로그 가져오기
-        let localLogs = try repository.fetchAllLogsFromLocal()
-        
-        
-        // TODO: 서버 로그 가져오기
-        let serverLogs = try await repository.fetchAllLogFromServer(page: page)
-        
-        // TODO 합치고, 정렬하기
-        
-        
-        return serverLogs
-        
-        
+        let localLogs: [TimeStampLog]
+        do {
+            localLogs = try repository.fetchAllLogsFromLocal()
+        } catch {
+            Logger.error("로컬 로그 가져오기 실패: \(error)")
+            localLogs = []
+        }
+
+        // 서버 로그 가져오기 (로그인 상태일 때만)
+        let serverLogs: [TimeStampLog]
+        if isLoggedIn {
+            do {
+                serverLogs = try await repository.fetchAllLogFromServer(page: page)
+            } catch {
+                Logger.error("서버 로그 가져오기 실패: \(error)")
+                serverLogs = []
+            }
+        } else {
+            serverLogs = []
+        }
+
+        // 로컬 로그와 서버 로그를 합치고, timeStamp 기준으로 최신순 정렬
+        let allLogs = localLogs + serverLogs
+        let sortedLogs = allLogs.sorted { $0.timeStamp > $1.timeStamp }
+
+        return sortedLogs
     }
 }

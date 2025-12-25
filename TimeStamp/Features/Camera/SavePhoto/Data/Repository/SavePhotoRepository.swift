@@ -99,8 +99,6 @@ final class SavePhotoRepository: SavePhotoRepositoryProtocol {
     }
     
 
-    
-
     // MARK: - Private Helpers
 
     /// 이미지를 Documents 디렉토리에 저장
