@@ -80,6 +80,7 @@ struct MyLogView: View {
             // 사진 저장 후 목록 새로고침
             viewModel.loadLogs()
         }
+        .toast(message: $viewModel.toastMessage)
     }
 }
 

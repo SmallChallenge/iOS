@@ -94,15 +94,17 @@ struct SavePhotoView: View {
                 onDismiss()
             }
         }
-        .alert("오류", isPresented: .constant(viewModel.errorMessage != nil)) {
+        .toast(message: $viewModel.toastMessage)
+        .alert("오류", isPresented: .constant(viewModel.alertMessage != nil)) {
             Button("확인") {
-                viewModel.errorMessage = nil
+                viewModel.alertMessage = nil
             }
         } message: {
-            if let errorMessage = viewModel.errorMessage {
+            if let errorMessage = viewModel.alertMessage {
                 Text(errorMessage)
             }
         }
+        
     }
 
     // MARK: - Actions

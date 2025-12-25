@@ -17,7 +17,7 @@ extension Notification.Name {
 
 /// 사진 저장 화면의 비즈니스 로직을 관리하는 ViewModel
 @MainActor
-final class SavePhotoViewModel: ObservableObject {
+final class SavePhotoViewModel: ObservableObject, MessageDisplayable {
 
     // MARK: - Properties
 
@@ -31,7 +31,8 @@ final class SavePhotoViewModel: ObservableObject {
     @Published var isLoading: Bool = false
 
     /// 에러 메시지
-    @Published var errorMessage: String?
+    @Published var toastMessage: String?
+    @Published var alertMessage: String?
 
     // MARK: - Init
 
@@ -70,6 +71,7 @@ final class SavePhotoViewModel: ObservableObject {
 
             // 저장 성공
             isSaved = true
+            show(.photoSaveSuccess)
             Logger.success("사진 저장 성공")
 
             // MyLogView에 새로고침 알림
@@ -77,7 +79,7 @@ final class SavePhotoViewModel: ObservableObject {
 
         } catch {
             // 저장 실패
-            errorMessage = "사진 저장에 실패했습니다: \(error.localizedDescription)"
+            show(.saveFailed)
             Logger.error("로컬 사진 저장 실패: \(error)")
         }
     }
@@ -93,6 +95,7 @@ final class SavePhotoViewModel: ObservableObject {
             // 저장 성공
             isSaved = true
             isLoading = false
+            show(.saveFailed)
             Logger.success("서버에 사진 저장 성공")
 
             // MyLogView에 새로고침 알림
@@ -101,9 +104,8 @@ final class SavePhotoViewModel: ObservableObject {
         } catch {
             // 저장 실패
             isLoading = false
-            errorMessage = "사진 저장에 실패했습니다: \(error.localizedDescription)"
+            show(.saveFailed)
             Logger.error("서버에 사진 저장 실패: \(error)")
         }
     }
-    
 }

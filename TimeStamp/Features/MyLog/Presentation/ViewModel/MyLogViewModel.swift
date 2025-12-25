@@ -9,7 +9,7 @@ import Foundation
 import Combine
 
 @MainActor
-final class MyLogViewModel: ObservableObject {
+final class MyLogViewModel: ObservableObject, MessageDisplayable {
 
     // MARK: - Properties
 
@@ -19,7 +19,9 @@ final class MyLogViewModel: ObservableObject {
     // MARK: - Output Properties
 
     @Published var isLoading = false
-    @Published var errorMessage: String?
+    
+    @Published var toastMessage: String?
+    @Published var alertMessage: String?
 
     /// 전체 로그 (필터링은 View에서 수행)
     @Published var myLogs: [TimeStampLogViewData] = []
@@ -58,8 +60,8 @@ final class MyLogViewModel: ObservableObject {
                 isLoading = false
                 Logger.success("로그 불러오기 성공: \(myLogs.count)개")
             } catch {
-                errorMessage = "로그를 불러오는데 실패했습니다: \(error.localizedDescription)"
                 isLoading = false
+                show(.unknownRequestFailed)
                 Logger.error("로그 불러오기 실패: \(error)")
             }
         }
