@@ -13,8 +13,17 @@ import Alamofire
 public final class APIRequestInterceptor: RequestInterceptor {
     private let environment: NetworkEnvironment
 
+    // 토큰 갱신 전용 서비스 (순환 의존성 방지를 위해 interceptor 없는 별도 session 사용)
+    private let tokenRefreshService: TokenRefreshService
+
     public init(environment: NetworkEnvironment) {
         self.environment = environment
+        
+        let configuration = URLSessionConfiguration.af.default
+        configuration.timeoutIntervalForRequest = 20
+        let refreshSession = Session(configuration: configuration)
+        let authApiClient = AuthApiClient(session: refreshSession)
+        self.tokenRefreshService = TokenRefreshService(authApiClient: authApiClient)
     }
 
     // Adapt request if needed (e.g., attach auth headers)
@@ -25,7 +34,7 @@ public final class APIRequestInterceptor: RequestInterceptor {
         request.setValue("application/json", forHTTPHeaderField: "Content-Type")
         request.setValue("application/json", forHTTPHeaderField: "Accept")
 
-        // 인증 토큰있으면, 추가
+        // 인증 토큰있으면, 추가ㅌ
          if let token = AuthManager.shared.getAccessToken() {
              request.setValue("Bearer \(token)", forHTTPHeaderField: "Authorization")
          }
@@ -40,11 +49,11 @@ public final class APIRequestInterceptor: RequestInterceptor {
             return
         }
 
-        // 401 에러 시 토큰 갱신 후 재시도 (추후 구현)
-        if response.statusCode == 401 {
-            // TODO: 토큰 갱신 로직 구현
-            // refreshToken 후 .retry 또는 .retryWithDelay 반환
-            completion(.doNotRetry)
+        // 401/403 에러 시 토큰 갱신 후 재시도
+        if [401, 403].contains(response.statusCode) {
+            tokenRefreshService.refreshToken { success in
+                completion(success ? .retry : .doNotRetry)
+            }
         } else if (500...599).contains(response.statusCode) {
             // 서버 에러 시 최대 3번까지 재시도
             let retryCount = request.retryCount
@@ -54,3 +63,5 @@ public final class APIRequestInterceptor: RequestInterceptor {
         }
     }
 }
+
+
