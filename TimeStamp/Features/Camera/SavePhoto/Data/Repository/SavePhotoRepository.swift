@@ -53,14 +53,15 @@ final class SavePhotoRepository: SavePhotoRepositoryProtocol {
         guard case .success(let response) = result else {
             if case .failure(let error) = result {
                 Logger.error("presignedUrl 요청 실패: \(error)")
+                throw error
             }
-            throw SavePhotoError.networkError
+            throw NetworkError.requestFailed("presignedUrl 요청 실패")
         }
 
         guard let uploadURL = response.data?.uploadURL,
               let objectKey = response.data?.objectKey else {
             Logger.error("data is nil")
-            throw SavePhotoError.networkError
+            throw NetworkError.dataNil
         }
         
         Logger.success("presignedUrl 받기 성공")
@@ -86,12 +87,13 @@ final class SavePhotoRepository: SavePhotoRepositoryProtocol {
         guard case .success(let response) = result else {
             if case .failure(let error) = result {
                 Logger.error("saveTimeStamp 요청 실패: \(error)")
+                throw error
             }
-            throw SavePhotoError.networkError
+            throw NetworkError.requestFailed("saveTimeStamp 요청 실패")
         }
         guard let imageId = response.data?.imageId else {
             Logger.error("data is nil")
-            throw SavePhotoError.networkError
+            throw NetworkError.dataNil
         }
         Logger.success("서버에 메타데이터 저장 성공: imageId=\(imageId)")
     }
@@ -108,14 +110,14 @@ final class SavePhotoRepository: SavePhotoRepositoryProtocol {
             for: .documentDirectory,
             in: .userDomainMask
         ).first else {
-            throw SavePhotoError.documentsDirectoryNotFound
+            throw FileManagerError.documentsDirectoryNotFound
         }
 
         let fileURL = documentsDirectory.appendingPathComponent(fileName)
 
         // 이미지를 JPEG 데이터로 변환 (압축률 0.8)
         guard let imageData = image.jpegData(compressionQuality: imageCompressionQuality) else {
-            throw SavePhotoError.imageConversionFailed
+            throw FileManagerError.imageConversionFailed
         }
 
         // 파일로 저장
@@ -134,7 +136,7 @@ final class SavePhotoRepository: SavePhotoRepositoryProtocol {
                         continuation.resume()
                     case .failure(let error):
                         Logger.error("S3 이미지 업로드 실패: \(error)")
-                        continuation.resume(throwing: SavePhotoError.networkError)
+                        continuation.resume(throwing: error)
                     }
                 }
         }

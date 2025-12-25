@@ -53,7 +53,7 @@ struct SavePhotoUseCase: SavePhotoUseCaseProtocol {
 
         // 2. 이미지를 JPEG 데이터로 변환
         guard let imageData = image.jpegData(compressionQuality: 0.8) else {
-            throw SavePhotoError.imageConversionFailed
+            throw FileManagerError.imageConversionFailed
         }
         
         // 3. 파일 크기 가져오기
