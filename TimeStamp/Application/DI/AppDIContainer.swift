@@ -46,7 +46,7 @@ final class AppDIContainer {
 
     private lazy var myLogDIContainer: MyLogDIContainer = {
         let localDataSource = LocalTimeStampLogDataSource()
-        return MyLogDIContainer(localDataSource: localDataSource)
+        return MyLogDIContainer(session: session, localDataSource: localDataSource)
     }()
 
     func makeMyLogView() -> MyLogView {

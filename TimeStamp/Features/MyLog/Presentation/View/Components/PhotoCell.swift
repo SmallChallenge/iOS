@@ -22,6 +22,7 @@ struct PhotoCell: View {
                     
                     KFImage(URL(string: remoteImage.imageUrl))
                         .placeholder {
+                            // TODO: 플레이스홀더 넣기
                             //Image("placeholder")
                             Color.gray100
                                 .overlay {

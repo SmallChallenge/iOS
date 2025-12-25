@@ -8,7 +8,7 @@
 import Foundation
 
 extension Date {
-    enum DateFormat: String {
+    public enum DateFormat: String {
             case iso8601 = "yyyy-MM-dd'T'HH:mm:ss"
             case iso8601WithMilliseconds = "yyyy-MM-dd'T'HH:mm:ss.SSS"
             case iso8601UTC = "yyyy-MM-dd'T'HH:mm:ss'Z'"
@@ -26,7 +26,7 @@ extension Date {
     ///   - locale: 로케일 (기본값: en_US_POSIX)
     /// - Returns: 형식화된 날짜 문자열
     /// - NOTE:요일이나 월 이름을 한국어로 표시할 때만 Locale(identifier: "ko_KR") 사용하기
-    func toString(format: String,
+    public func toString(format: String,
                   timeZone: TimeZone = .current,
                   locale: Locale = Locale(identifier: "en_US_POSIX")) -> String {
         let formatter = DateFormatter()
@@ -44,7 +44,7 @@ extension Date {
     ///   - locale: 로케일 (기본값: en_US_POSIX)
     /// - Returns: 형식화된 날짜 문자열
     /// - NOTE:요일이나 월 이름을 한국어로 표시할 때만 Locale(identifier: "ko_KR") 사용하기
-    func toString(_ format: DateFormat,
+    public func toString(_ format: DateFormat,
                      timeZone: TimeZone = .current,
                      locale: Locale = Locale(identifier: "en_US_POSIX")) -> String {
            return toString(format: format.rawValue, timeZone: timeZone, locale: locale)

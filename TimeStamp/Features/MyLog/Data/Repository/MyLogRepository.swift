@@ -11,68 +11,45 @@ import Foundation
 /// - LocalTimeStampLogDataSource를 사용하여 로컬 데이터 관리
 /// - 나중에 RemoteAPI 추가 가능
 final class MyLogRepository: MyLogRepositoryProtocol {
+    private let pageSize = 20
 
     // MARK: - Properties
 
     /// 로컬 저장소 (CoreData)
     private let localDataSource: LocalTimeStampLogDataSourceProtocol
-
-    // TODO: 나중에 추가
-    // private let remoteDataSource: RemoteTimeStampLogDataSourceProtocol
+    
+    private let apiClient: MyLogApiClientProtocol
 
     // MARK: - Init
 
-    init(localDataSource: LocalTimeStampLogDataSourceProtocol) {
+    init(localDataSource: LocalTimeStampLogDataSourceProtocol, apiClient: MyLogApiClientProtocol) {
         self.localDataSource = localDataSource
+        self.apiClient = apiClient
     }
 
-    // MARK: - MyLogRepositoryProtocol
+    // MARK: - 로컬 로그 가져오기
 
     /// 모든 타임스탬프 로그를 조회
-    func fetchAllLogs() throws -> [TimeStampLog] {
-        // 현재는 로컬에서만 조회
-        // TODO: 나중에 서버에서도 조회하여 병합
+    func fetchAllLogsFromLocal() throws -> [TimeStampLog] {
         let dtos = try localDataSource.readAll()
-        return dtos.map { toEntity($0) }
+        return dtos.map { $0.toEntity() }
     }
-
-    /// 특정 ID의 타임스탬프 로그를 조회
-    func fetchLog(by id: UUID) throws -> TimeStampLog? {
-        guard let dto = try localDataSource.read(id: id) else {
-            return nil
+    
+    // MARK: - 서버 로그 가져오기
+    
+    func fetchAllLogFromServer(page: Int) async throws -> [TimeStampLog] {
+        let result = await apiClient.fetchMyLogList(category: nil, page: page, size: pageSize)
+        
+        guard case .success(let response) = result else {
+            if case .failure(let error) = result {
+                Logger.error("사진 목록 가져오기 요청 실패: \(error)")
+                throw error
+            }
+            throw NetworkError.requestFailed("사진 목록 가져오기 요청 실패:")
         }
-        return toEntity(dto)
-    }
-
-    // MARK: - Private Helpers
-
-    /// DTO를 Entity로 변환
-    private func toEntity(_ dto: LocalTimeStampLogDto) -> TimeStampLog {
-        // Category rawValue로 변환
-        let category = Category(rawValue: dto.category) ?? .etc
-
-        // Visibility 문자열을 enum으로 변환
-        let visibility: VisibilityType
-        switch dto.visibility {
-        case "publicVisible":
-            visibility = .publicVisible
-        case "privateVisible":
-            visibility = .privateVisible
-        default:
-            visibility = .privateVisible
-        }
-
-        // ImageSource 생성 (로컬 이미지)
-        let imageSource = TimeStampLog.ImageSource.local(
-            TimeStampLog.LocalTimeStampImage(imageFileName: dto.imageFileName)
-        )
-
-        return TimeStampLog(
-            id: dto.id,
-            category: category,
-            timeStamp: dto.timeStamp.toDate(.iso8601) ?? Date(),
-            imageSource: imageSource,
-            visibility: visibility
-        )
+        
+        _ = response.data?.pageInfo
+        let myLogs: [MyLogsDto.TimeStampLog] = response.data?.logs ?? []
+        return myLogs.map { $0.toEntity() }
     }
 }

@@ -6,23 +6,33 @@
 //
 
 import Foundation
+import Alamofire
 
-final class MyLogDIContainer {
+
+struct MyLogDIContainer {
 
     // MARK: - Dependencies
 
     private let localDataSource: LocalTimeStampLogDataSourceProtocol
+    private let session: Session
 
     // MARK: - Initializer
 
-    init(localDataSource: LocalTimeStampLogDataSourceProtocol) {
+    init(session: Session, localDataSource: LocalTimeStampLogDataSourceProtocol) {
+        self.session = session
         self.localDataSource = localDataSource
+    }
+    
+    // MARK: - ApiClient
+    private func makeMyLogApiClient() -> MyLogApiClientProtocol {
+        return MyLogApiClient(session: session)
     }
 
     // MARK: - Repository
 
     private func makeMyLogRepository() -> MyLogRepositoryProtocol {
-        return MyLogRepository(localDataSource: localDataSource)
+        let apiClient = makeMyLogApiClient()
+        return MyLogRepository(localDataSource: localDataSource, apiClient: apiClient)
     }
 
     // MARK: - UseCase
@@ -42,5 +52,25 @@ final class MyLogDIContainer {
     func makeMyLogView() -> MyLogView {
         let viewModel = makeMyLogViewModel()
         return MyLogView(viewModel: viewModel)
+    }
+}
+
+// MARK: - Mock
+struct MockMyLogDIContainer {
+    private func makeMyLogUseCase() -> MyLogUseCaseProtocol {
+        return MockMyLogUseCase()
+    }
+    private func makeMyLogViewModel() -> MyLogViewModel {
+        return MyLogViewModel(useCase: makeMyLogUseCase())
+    }
+    func makeMyLogView() -> MyLogView {
+        let viewModel = makeMyLogViewModel()
+        return MyLogView(viewModel: viewModel)
+    }
+    
+    struct MockMyLogUseCase: MyLogUseCaseProtocol {
+        func fetchAllLogs() async throws -> [TimeStampLog] {
+            []
+        }
     }
 }

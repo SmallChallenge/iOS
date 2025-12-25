@@ -84,9 +84,8 @@ struct MyLogView: View {
 }
 
 #Preview {
-    let localDataSource = LocalTimeStampLogDataSource()
-    let diContainer = MyLogDIContainer(localDataSource: localDataSource)
-    return diContainer.makeMyLogView()
+    let diContainer = MockMyLogDIContainer()
+    diContainer.makeMyLogView()
 }
 
 

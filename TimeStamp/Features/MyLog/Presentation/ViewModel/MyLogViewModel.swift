@@ -51,16 +51,17 @@ final class MyLogViewModel: ObservableObject {
     /// 모든 로그를 불러오기
     func loadLogs() {
         isLoading = true
-
-        do {
-            let entities = try useCase.fetchAllLogs()
-            myLogs = entities.map { toViewData($0) }
-            isLoading = false
-            Logger.success("로그 불러오기 성공: \(myLogs.count)개")
-        } catch {
-            errorMessage = "로그를 불러오는데 실패했습니다: \(error.localizedDescription)"
-            isLoading = false
-            Logger.error("로그 불러오기 실패: \(error)")
+        Task {
+            do {
+                let entities = try await useCase.fetchAllLogs()
+                myLogs = entities.map { toViewData($0) }
+                isLoading = false
+                Logger.success("로그 불러오기 성공: \(myLogs.count)개")
+            } catch {
+                errorMessage = "로그를 불러오는데 실패했습니다: \(error.localizedDescription)"
+                isLoading = false
+                Logger.error("로그 불러오기 실패: \(error)")
+            }
         }
     }
 
