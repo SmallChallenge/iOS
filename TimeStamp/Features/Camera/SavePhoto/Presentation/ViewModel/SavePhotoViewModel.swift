@@ -40,7 +40,9 @@ final class SavePhotoViewModel: ObservableObject {
     }
 
     // MARK: - Actions
-
+    
+    /// 사진 저장 (로컬 or 서버)
+    /// - NOTE: 로그인 상태면 서버에 저장, 로그아웃상태면 로컬에 저장
     func savePhoto(image: UIImage, category: CategoryViewData, visibility: VisibilityViewData) {
         // 로그인 여부 확인
         if AuthManager.shared.isLoggedIn {

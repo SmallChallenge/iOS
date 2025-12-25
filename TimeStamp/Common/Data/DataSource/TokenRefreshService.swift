@@ -37,7 +37,12 @@ final class TokenRefreshService {
 
         isRefreshing = true
 
-        Task {
+        Task { [weak self] in
+            guard let self = self else {
+                completion(false)
+                return
+            }
+
             let result = await authApiClient.refreshToken(refreshToken: refreshToken)
 
             let success: Bool

@@ -11,14 +11,13 @@ import Alamofire
 
 
 public final class APIRequestInterceptor: RequestInterceptor {
-    private let environment: NetworkEnvironment
 
-    // 토큰 갱신 전용 서비스 (순환 의존성 방지를 위해 interceptor 없는 별도 session 사용)
+    
     private let tokenRefreshService: TokenRefreshService
 
-    public init(environment: NetworkEnvironment) {
-        self.environment = environment
+    public init() {
         
+        // 토큰 갱신 전용 서비스 (순환 의존성 방지를 위해 interceptor 없는 별도 session 사용)
         let configuration = URLSessionConfiguration.af.default
         configuration.timeoutIntervalForRequest = 20
         let refreshSession = Session(configuration: configuration)
@@ -34,7 +33,7 @@ public final class APIRequestInterceptor: RequestInterceptor {
         request.setValue("application/json", forHTTPHeaderField: "Content-Type")
         request.setValue("application/json", forHTTPHeaderField: "Accept")
 
-        // 인증 토큰있으면, 추가ㅌ
+        // 인증 토큰 있으면 추가
          if let token = AuthManager.shared.getAccessToken() {
              request.setValue("Bearer \(token)", forHTTPHeaderField: "Authorization")
          }
@@ -49,7 +48,7 @@ public final class APIRequestInterceptor: RequestInterceptor {
             return
         }
 
-        // 401/403 에러 시 토큰 갱신 후 재시도
+        // 401,403 에러 시 토큰 갱신 후 재시도
         if [401, 403].contains(response.statusCode) {
             tokenRefreshService.refreshToken { success in
                 completion(success ? .retry : .doNotRetry)

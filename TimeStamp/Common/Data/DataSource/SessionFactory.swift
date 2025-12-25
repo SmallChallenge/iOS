@@ -31,7 +31,7 @@ public final class SessionFactory {
         let monitors: [EventMonitor] = []
         #endif
 
-        let interceptor = APIRequestInterceptor(environment: env)
+        let interceptor = APIRequestInterceptor()
 
         return Session(configuration: configuration,
                        interceptor: interceptor,
