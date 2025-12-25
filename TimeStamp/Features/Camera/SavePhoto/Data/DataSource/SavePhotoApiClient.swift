@@ -9,8 +9,8 @@ import Foundation
 import Alamofire
 
 enum SavePhotoRouter {
-    case presignedUrl(fileName: String, size: CGSize)
-    case saveTimeStamp(fileName: String, size: CGSize, objectKey: String, category: String, visibility: String, originalTakenAt: String)
+    case presignedUrl(fileName: String, size: Int)
+    case saveTimeStamp(fileName: String, size: Int, objectKey: String, category: String, visibility: String, originalTakenAt: String)
     
 }
 extension SavePhotoRouter: Router {
@@ -20,7 +20,8 @@ extension SavePhotoRouter: Router {
     
     var method: Alamofire.HTTPMethod {
         switch self {
-        case .presignedUrl,.saveTimeStamp: .post
+        case .presignedUrl,.saveTimeStamp:
+                .post
             
         }
     }
@@ -66,17 +67,17 @@ extension SavePhotoRouter: Router {
 
 // MARK: - SavePhotoApiClient
 protocol SavePhotoApiClientProtocol {
-    func presignedUrl(fileName: String, size: CGSize) async -> Result<ResponseBody<PresignedURLDto>, NetworkError>
+    func presignedUrl(fileName: String, size: Int) async -> Result<ResponseBody<PresignedURLDto>, NetworkError>
     
-    func saveTimeStamp(fileName: String, size: CGSize, objectKey: String, category: String, visibility: String, originalTakenAt: String) async -> Result<ResponseBody<SaveTimeStampDto>, NetworkError>
+    func saveTimeStamp(fileName: String, size: Int, objectKey: String, category: String, visibility: String, originalTakenAt: String) async -> Result<ResponseBody<SaveTimeStampDto>, NetworkError>
 }
 class SavePhotoApiClient: ApiClient<SavePhotoRouter>,SavePhotoApiClientProtocol {
     
-    func presignedUrl(fileName: String, size: CGSize) async -> Result<ResponseBody<PresignedURLDto>, NetworkError>{
+    func presignedUrl(fileName: String, size: Int) async -> Result<ResponseBody<PresignedURLDto>, NetworkError>{
         await request(SavePhotoRouter.presignedUrl(fileName: fileName, size: size))
     }
     
-    func saveTimeStamp(fileName: String, size: CGSize, objectKey: String, category: String, visibility: String, originalTakenAt: String) async -> Result<ResponseBody<SaveTimeStampDto>, NetworkError> {
+    func saveTimeStamp(fileName: String, size: Int, objectKey: String, category: String, visibility: String, originalTakenAt: String) async -> Result<ResponseBody<SaveTimeStampDto>, NetworkError> {
         await request(SavePhotoRouter.saveTimeStamp(fileName: fileName, size: size, objectKey: objectKey, category: category, visibility: visibility, originalTakenAt: originalTakenAt))
     }
 }

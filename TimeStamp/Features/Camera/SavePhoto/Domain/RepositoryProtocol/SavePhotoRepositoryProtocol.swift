@@ -19,9 +19,16 @@ protocol SavePhotoRepositoryProtocol {
     ///   - timeStamp: 타임스탬프
     ///   - visibility: 공개 여부
     /// - Throws: 저장 실패 시 에러
-    func savePhotoToLacal(image: UIImage, category: Category, visibility: VisibilityType, timeStamp: String) throws
-    
-    
-    
-    func savePhotoToServer(image: UIImage, category: Category, visibility: VisibilityType, timeStamp: String) throws
+    func savePhotoToLacal(image: UIImage, category: String, visibility: String, timeStamp: String) throws
+
+    // MARK: - Server API
+
+    /// presignedUrl 받기
+    func getPresignedUrl(fileName: String, imageSize: Int) async throws -> (presignedUrl: String, objectKey: String)
+
+    /// S3에 이미지 업로드
+    func uploadImageToS3(imageData: Data, presignedUrl: String) async throws
+
+    /// 서버에 타임스탬프 메타데이터 저장
+    func saveTimeStampMetadata(fileName: String, imageSize: Int, objectKey: String, category: String, visibility: String, timeStamp: String) async throws
 }

@@ -25,10 +25,10 @@ public final class APIRequestInterceptor: RequestInterceptor {
         request.setValue("application/json", forHTTPHeaderField: "Content-Type")
         request.setValue("application/json", forHTTPHeaderField: "Accept")
 
-        // 인증 토큰이 필요한 경우 (추후 구현)
-        // if let token = TokenManager.shared.accessToken {
-        //     request.setValue("Bearer \(token)", forHTTPHeaderField: "Authorization")
-        // }
+        // 인증 토큰있으면, 추가
+         if let token = AuthManager.shared.getAccessToken() {
+             request.setValue("Bearer \(token)", forHTTPHeaderField: "Authorization")
+         }
 
         completion(.success(request))
     }

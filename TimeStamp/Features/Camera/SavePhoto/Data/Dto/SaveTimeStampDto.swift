@@ -13,17 +13,18 @@ struct SaveTimeStampDto: Codable {
     let originalFilename: String
     let objectKey: String
     let accessURL: String
-    let fileSize: CGSize
+    let fileSize: Int
     let contentType: String
     let category: String
     let visibility: String
+    let savedAt: String
 
     enum CodingKeys: String, CodingKey {
         case imageId = "imageId"
         case userId = "userId"
         case originalFilename, objectKey
         case accessURL = "accessUrl"
-        case fileSize, contentType, category, visibility
+        case fileSize, contentType, category, visibility, savedAt
     }
 }
 

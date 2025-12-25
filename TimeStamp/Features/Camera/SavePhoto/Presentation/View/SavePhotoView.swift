@@ -210,14 +210,5 @@ struct SavePhotoView: View {
 
 
 #Preview {
-    let localDataSource = LocalTimeStampLogDataSource()
-    let repository = SavePhotoRepository(localDataSource: localDataSource)
-    let useCase = SavePhotoUseCase(repository: repository)
-    let viewModel = SavePhotoViewModel(useCase: useCase)
-    return SavePhotoView(
-        viewModel: viewModel,
-        capturedImage: UIImage(systemName: "photo")!,
-        onGoBack: nil,
-        onDismiss: {}
-    )
+    MockCameraDIContainer().makeSavePhotoView(capturedImage: UIImage(), onDismiss: {}, onGoBack: {})
 }

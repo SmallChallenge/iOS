@@ -57,7 +57,7 @@ final class AppDIContainer {
 
     private lazy var cameraTabDIContainer: CameraDIContainer = {
         let localDataSource = LocalTimeStampLogDataSource()
-        return CameraDIContainer(localDataSource: localDataSource)
+        return CameraDIContainer(session: session, localDataSource: localDataSource)
     }()
 
     func makeCameraTapView(onDismiss: @escaping () -> Void) -> CameraTabView {

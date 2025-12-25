@@ -7,6 +7,7 @@
 
 import Foundation
 import UIKit
+import Alamofire
 
 protocol CameraDIContainerProtocol {
     func makeCameraTabView(onDismiss: @escaping () -> Void) -> CameraTabView
@@ -27,8 +28,10 @@ final class CameraDIContainer: CameraDIContainerProtocol {
     
     // save photo용
     private let localDataSource: LocalTimeStampLogDataSourceProtocol
+    private let session: Session
 
-    init(localDataSource: LocalTimeStampLogDataSourceProtocol) {
+    init(session: Session, localDataSource: LocalTimeStampLogDataSourceProtocol) {
+        self.session = session
         self.localDataSource = localDataSource
     }
     
@@ -57,11 +60,17 @@ final class CameraDIContainer: CameraDIContainerProtocol {
         )
     }
 
-
     // MARK: - Save Photo feature
-    
+
+    private func makeSavePhotoApiClient() -> SavePhotoApiClientProtocol {
+        return SavePhotoApiClient(session: session)
+    }
+
     private func makeSavePhotoRepository() -> SavePhotoRepositoryProtocol {
-        return SavePhotoRepository(localDataSource: localDataSource)
+        return SavePhotoRepository(
+            localDataSource: localDataSource,
+            apiClient: makeSavePhotoApiClient()
+        )
     }
     
     private func makeSavePhotoUseCase() -> SavePhotoUseCaseProtocol {
@@ -106,7 +115,7 @@ struct MockCameraDIContainer: CameraDIContainerProtocol {
     
     struct MockSavePhotoUseCase: SavePhotoUseCaseProtocol {
         func savePhotoToLacal(image: UIImage, category: Category, visibility: VisibilityType) throws {}
-        func savePhotoToServer(image: UIImage, category: Category, visibility: VisibilityType) throws {}
+        func savePhotoToServer(image: UIImage, category: Category, visibility: VisibilityType) async throws {}
         func savePhoto(image: UIImage, category: Category, visibility: VisibilityType) throws {}
     }
     

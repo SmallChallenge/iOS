@@ -7,7 +7,7 @@
 
 
 /// 공개여부
-enum VisibilityType {
-    case publicVisible
-    case privateVisible 
+enum VisibilityType: String {
+    case publicVisible = "PUBLIC"
+    case privateVisible = "PRIVATE"
 }

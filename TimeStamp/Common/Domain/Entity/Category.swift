@@ -7,10 +7,10 @@
 
 
 enum Category: String, Codable {
-    case food
-    case study
-    case health
-    case etc
+    case food = "FOOD"
+    case study = "STUDY"
+    case health = "EXERCISE"
+    case etc = "ETC"
 }
 
 
