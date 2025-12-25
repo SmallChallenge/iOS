@@ -55,7 +55,7 @@ struct MyLogView: View {
                         )
 
                         // 사진 목록
-                        LazyVGrid(columns: columns, spacing: 0) {
+                        LazyVGrid(columns: columns, spacing: 1) {
                             ForEach(Array(filteredLogs.enumerated()), id: \.element.id) { index, log in
                                 PhotoCell(log: log)
                                     .aspectRatio(1, contentMode: .fill)
