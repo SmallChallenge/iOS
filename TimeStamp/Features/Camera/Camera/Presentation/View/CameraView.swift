@@ -12,7 +12,7 @@ struct CameraView: View {
     @StateObject var viewModel: CameraViewModel
     let diContainer: CameraDIContainerProtocol
     let onDismiss: () -> Void
-    @State private var navigateToSavePhoto = false
+    @State private var navigateToPhotoSave = false
 
     init(
         viewModel: CameraViewModel,
@@ -65,7 +65,7 @@ struct CameraView: View {
             }
             .onChange(of: viewModel.capturedImage) { newImage in
                 if newImage != nil {
-                    navigateToSavePhoto = true
+                    navigateToPhotoSave = true
                 }
             }
 
@@ -75,10 +75,10 @@ struct CameraView: View {
                     destination:
                     diContainer.makeEditorView(
                         capturedImage: image,
-                        onGoBack: { navigateToSavePhoto = false },
+                        onGoBack: { navigateToPhotoSave = false },
                         onDismiss:  onDismiss
                     ),
-                    isActive: $navigateToSavePhoto
+                    isActive: $navigateToPhotoSave
                 ) {
                     EmptyView()
                 }

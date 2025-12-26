@@ -18,7 +18,7 @@ struct EditorView: View {
     @State private var showAdPopup: Bool = false
     @State private var selectedCategory: CategoryFilterViewData = .all
     @State private var isOnLogo: Bool = false
-    @State private var navigateToSavePhoto = false
+    @State private var navigateToPhotoSave = false
     
     var body: some View {
         ZStack {
@@ -115,7 +115,7 @@ struct EditorView: View {
 
                 ToolbarItem(placement: .navigationBarTrailing) {
                     MainButton(title: "다음", size: .small) {
-                        navigateToSavePhoto = true
+                        navigateToPhotoSave = true
                     }
                 }
             }
@@ -138,11 +138,11 @@ struct EditorView: View {
                 destination: diContainer.makePhotoSaveView(
                     capturedImage: capturedImage,
                     onGoBack: {
-                        navigateToSavePhoto = false
+                        navigateToPhotoSave = false
                     },
                     onDismiss: onDismiss
                 ),
-                isActive: $navigateToSavePhoto
+                isActive: $navigateToPhotoSave
             ) {
                 EmptyView()
             }

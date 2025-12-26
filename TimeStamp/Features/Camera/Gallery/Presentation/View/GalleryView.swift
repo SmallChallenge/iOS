@@ -14,7 +14,7 @@ struct GalleryView: View {
     let diContainer: CameraDIContainerProtocol
     let onDismiss: () -> Void
 
-    @State private var navigateToSavePhoto = false
+    @State private var navigateToPhotoSave = false
 
     // 그리드 레이아웃 설정
     private let columns = [
@@ -36,10 +36,10 @@ struct GalleryView: View {
                 NavigationLink(
                     destination: diContainer.makeEditorView(
                         capturedImage: image,
-                        onGoBack: { navigateToSavePhoto = false },
+                        onGoBack: { navigateToPhotoSave = false },
                         onDismiss: onDismiss
                     ),
-                    isActive: $navigateToSavePhoto
+                    isActive: $navigateToPhotoSave
                 ) {
                     EmptyView()
                 }
@@ -63,7 +63,7 @@ struct GalleryView: View {
         }
         .onChange(of: viewModel.selectedImage) { image in
             if image != nil {
-                navigateToSavePhoto = true
+                navigateToPhotoSave = true
             }
         }
     }
