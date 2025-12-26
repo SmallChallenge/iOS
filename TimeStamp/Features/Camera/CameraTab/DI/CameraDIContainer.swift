@@ -63,8 +63,22 @@ final class CameraDIContainer: CameraDIContainerProtocol {
 
     // MARK: - Gallery Feature
 
+    private func makePhotoLibraryRepository() -> PhotoLibraryRepositoryProtocol {
+        return PhotoLibraryRepository()
+    }
+
+    private func makeGalleryUseCase() -> GalleryUseCaseProtocol {
+        return GalleryUseCase(repository: makePhotoLibraryRepository())
+    }
+
+    private func makeGalleryViewModel() -> GalleryViewModel {
+        return GalleryViewModel(useCase: makeGalleryUseCase())
+    }
+
     func makeGalleryView(onDismiss: @escaping () -> Void) -> GalleryView {
+        let viewModel = makeGalleryViewModel()
         return GalleryView(
+            viewModel: viewModel,
             diContainer: self,
             onDismiss: onDismiss
         )
@@ -123,8 +137,22 @@ struct MockCameraDIContainer: CameraDIContainerProtocol {
         )
     }
 
+    private func makePhotoLibraryRepository() -> PhotoLibraryRepositoryProtocol {
+        return PhotoLibraryRepository()
+    }
+
+    private func makeGalleryUseCase() -> GalleryUseCaseProtocol {
+        return GalleryUseCase(repository: makePhotoLibraryRepository())
+    }
+
+    private func makeGalleryViewModel() -> GalleryViewModel {
+        return GalleryViewModel(useCase: makeGalleryUseCase())
+    }
+
     func makeGalleryView(onDismiss: @escaping () -> Void) -> GalleryView {
+        let viewModel = makeGalleryViewModel()
         return GalleryView(
+            viewModel: viewModel,
             diContainer: self,
             onDismiss: onDismiss
         )
