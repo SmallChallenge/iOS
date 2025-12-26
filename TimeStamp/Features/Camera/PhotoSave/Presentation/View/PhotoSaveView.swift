@@ -58,7 +58,7 @@ struct PhotoSaveView: View {
         .navigationBarBackButtonHidden(true)
         .toolbar {
             ToolbarItem(placement: .navigationBarLeading) {
-                DismissButton {
+                BackButton {
                     onGoBack?()
                 }
             }

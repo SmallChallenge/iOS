@@ -55,7 +55,7 @@ struct CameraTabView: View {
             .toolbar {
                 ToolbarItem(placement: .navigationBarLeading) {
                     // 뒤로가기 버튼
-                    DismissButton {
+                    BackButton {
                         onDismiss()
                     }
                 }

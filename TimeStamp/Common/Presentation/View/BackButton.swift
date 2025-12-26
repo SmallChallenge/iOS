@@ -1,5 +1,5 @@
 //
-//  DismissButton.swift
+//  BackButton.swift
 //  TimeStamp
 //
 //  Created by 임주희 on 12/18/25.
@@ -8,7 +8,7 @@
 import SwiftUI
 
 /// 뒤로가기 버튼 컴포넌트
-struct DismissButton: View {
+struct BackButton: View {
     let action: () -> Void
 
     var body: some View {
@@ -24,5 +24,5 @@ struct DismissButton: View {
     }
 }
 #Preview {
-    DismissButton(action: {})
+    BackButton(action: {})
 }
