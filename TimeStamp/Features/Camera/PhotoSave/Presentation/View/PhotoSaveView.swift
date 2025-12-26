@@ -30,13 +30,17 @@ struct PhotoSaveView: View {
     var body: some View {
         ScrollView {
             VStack (alignment: .leading, spacing: 0){
-
+                
                 // 이미지뷰
-                Image(uiImage: capturedImage)
-                    .resizable()
+                Color.clear
                     .aspectRatio(1, contentMode: .fill)
-                    .frame(maxWidth: .infinity)
-                    .clipped()
+                    .overlay {
+                        Image(uiImage: capturedImage)
+                            .resizable()
+                            .scaledToFill()
+                            .clipped()
+                    }
+                
                     .clipShape(RoundedRectangle(cornerRadius: 8))
                     .roundedBorder(color: .gray700, radius: 8)
                     .padding(.top, 28)
@@ -214,5 +218,7 @@ struct PhotoSaveView: View {
 
 
 #Preview {
-    MockCameraDIContainer().makePhotoSaveView(capturedImage: UIImage(), onGoBack: {}, onDismiss: {})
+    MockCameraDIContainer().makePhotoSaveView(
+        capturedImage: UIImage(named: "sampleImage")!
+        , onGoBack: {}, onDismiss: {})
 }

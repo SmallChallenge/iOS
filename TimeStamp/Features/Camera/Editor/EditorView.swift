@@ -9,16 +9,20 @@ import SwiftUI
 import Combine
 
 struct EditorView: View {
-
+    
     let capturedImage: UIImage
     let diContainer: CameraDIContainerProtocol
     let onGoBack: (() -> Void)?
     let onDismiss: () -> Void
-
+    
+    
+    
     @State private var showAdPopup: Bool = false
     @State private var selectedCategory: CategoryFilterViewData = .all
     @State private var isOnLogo: Bool = false
     @State private var navigateToPhotoSave = false
+    @State private var editedImage: UIImage?
+    private let imageSize: CGFloat = UIScreen.main.bounds.width
     
     var body: some View {
         ZStack {
@@ -26,130 +30,98 @@ struct EditorView: View {
 
                 Spacer()
                     .frame(maxHeight: 40)
-                
-            ZStack {
-                // 이미지뷰
-                Image(uiImage: capturedImage)
-                    .resizable()
-                    .aspectRatio(1, contentMode: .fill)
-                    .frame(maxWidth: .infinity)
-                    .clipped()
-                    .background(Color.gray400)
 
-                // 오버레이 뷰 (타임스탬프, 로고)
-                DefaultTemplateView()
-            }
-            .aspectRatio(1, contentMode: .fit)
-               
-            
-            Spacer()
-                .frame(maxHeight: 56)
-            
-            VStack(spacing: 24) {
+                // 이미지뷰
+                editedImageView()
+
+                Spacer()
+                    .frame(maxHeight: 56)
                 
-                // 카테고리 | 로고 스위치
-                HStack {
-                    // 카테고리 목록
-                    categoryTab
+                // 템플릿 선택 뷰
+                VStack(spacing: 24) {
                     
-                    Spacer()
-                    
-                    // 로고 스위치
-                    logoToggle
-                }
-                .padding(.horizontal, 20)
-                
-                ScrollView(.horizontal, showsIndicators: false) {
-                    HStack(spacing: 8) {
-                        Color.gray300
-                            .cornerRadius(8)
-                            .roundedBorder(color: Color.gray700, radius: 8)
-                            .frame(width: 90, height: 90)
+                    // 카테고리 | 로고 스위치
+                    HStack {
+                        // 카테고리 목록
+                        categoryTab
                         
-                        Color.gray300
-                            .cornerRadius(8)
-                            .roundedBorder(color: Color.gray700, radius: 8)
-                            .frame(width: 90, height: 90)
+                        Spacer()
                         
-                        Color.gray300
-                            .cornerRadius(8)
-                            .roundedBorder(color: Color.gray700, radius: 8)
-                            .frame(width: 90, height: 90)
-                        
-                        
-                        Color.gray300
-                            .cornerRadius(8)
-                            .roundedBorder(color: Color.gray700, radius: 8)
-                            .frame(width: 90, height: 90)
-                        
-                        Color.gray300
-                            .cornerRadius(8)
-                            .roundedBorder(color: Color.gray700, radius: 8)
-                            .frame(width: 90, height: 90)
-                        
-                        Color.gray300
-                            .cornerRadius(8)
-                            .roundedBorder(color: Color.gray700, radius: 8)
-                            .frame(width: 90, height: 90)
-                        
-                        Color.gray300
-                            .cornerRadius(8)
-                            .roundedBorder(color: Color.gray700, radius: 8)
-                            .frame(width: 90, height: 90)
-                        
-                        
+                        // 로고 스위치
+                        logoToggle
                     }
                     .padding(.horizontal, 20)
+                    
+                    
+                    // 템플릿 스크롤
+                    ScrollView(.horizontal, showsIndicators: false) {
+                        HStack(spacing: 8) {
+                            Color.gray300
+                                .cornerRadius(8)
+                                .roundedBorder(color: Color.gray700, radius: 8)
+                                .frame(width: 90, height: 90)
+                            
+                            Color.gray300
+                                .cornerRadius(8)
+                                .roundedBorder(color: Color.gray700, radius: 8)
+                                .frame(width: 90, height: 90)
+                            
+                        }
+                        .padding(.horizontal, 20)
+                    }
                 }
-            }
             } // ~VStack
-            .mainBackgourndColor()
-            .navigationBarTitleDisplayMode(.inline)
-            .navigationBarBackButtonHidden(true)
-            .toolbar {
-                ToolbarItem(placement: .navigationBarLeading) {
-                    BackButton {
-                        onGoBack?()
-                    }
-                }
-
-                ToolbarItem(placement: .navigationBarTrailing) {
-                    MainButton(title: "다음", size: .small) {
-                        navigateToPhotoSave = true
-                    }
-                }
-            }
-            // 광고 시청 팝업 띄우기
-            .popup(isPresented: $showAdPopup, content: {
-                Modal(title: "광고 시청 후\n워터마크를 제거하세요.")
-                    .buttons {
-                        MainButton(title: "취소", colorType: .secondary) {
-                            showAdPopup = false
-                        }
-                        MainButton(title: "광고 시청", colorType: .primary) {
-                            showAdPopup = false
-                            // TODO: 광고 시청
-                        }
-                    }
-            })
-
+            
             // NavigationLink (hidden)
-            NavigationLink(
-                destination: diContainer.makePhotoSaveView(
-                    capturedImage: capturedImage,
-                    onGoBack: {
-                        navigateToPhotoSave = false
-                    },
-                    onDismiss: onDismiss
-                ),
-                isActive: $navigateToPhotoSave
-            ) {
-                EmptyView()
+            if let editedImage = editedImage {
+                NavigationLink(
+                    destination: diContainer.makePhotoSaveView(
+                        capturedImage: editedImage,
+                        onGoBack: {
+                            navigateToPhotoSave = false
+                        },
+                        onDismiss: onDismiss
+                    ),
+                    isActive: $navigateToPhotoSave
+                ) {
+                    EmptyView()
+                }
             }
+            
         } // ~ZStack
+        .mainBackgourndColor()
+        .navigationBarTitleDisplayMode(.inline)
+        .navigationBarBackButtonHidden(true)
+        .toolbar {
+            ToolbarItem(placement: .navigationBarLeading) {
+                BackButton {
+                    onGoBack?()
+                }
+            }
+            
+            ToolbarItem(placement: .navigationBarTrailing) {
+                MainButton(title: "다음", size: .small) {
+                    captureEditedImage()
+                }
+            }
+        }
+        // 광고 시청 팝업 띄우기
+        .popup(isPresented: $showAdPopup, content: {
+            Modal(title: "광고 시청 후\n워터마크를 제거하세요.")
+                .buttons {
+                    MainButton(title: "취소", colorType: .secondary) {
+                        showAdPopup = false
+                    }
+                    MainButton(title: "광고 시청", colorType: .primary) {
+                        showAdPopup = false
+                        // TODO: 광고 시청
+                    }
+                }
+        })
     }
     
-    
+    // MARK: - Subviews
+
     var categoryTab: some View {
         HStack (spacing: 16){
             ForEach(CategoryFilterViewData.allCases, id: \.self) { category in
@@ -173,14 +145,59 @@ struct EditorView: View {
             Toggle("Logo", isOn: $isOnLogo)
                 .labelsHidden()
                 .fixedSize()
-                
+            
         }
     }
+    
+    @ViewBuilder
+    private func editedImageView() -> some View {
+        ZStack {
+            Color.gray500
+                .overlay {
+                    Image(uiImage: capturedImage)
+                        .resizable()
+                        .scaledToFill()
+                        .clipped()
+                }
+                .clipShape(Rectangle())
+
+            // 오버레이 뷰 (타임스탬프, 로고)
+            DefaultTemplateView()
+                .frame(width: imageSize, height: imageSize)
+        }
+        .frame(width: imageSize, height: imageSize)
+//        .aspectRatio(1, contentMode: .fit)
+//        .frame(maxWidth: .infinity)
+    }
+    
+    
+    // MARK: - Functions
+
+    @MainActor
+    private func captureEditedImage() {
+        let view = editedImageView()
+        if let uiImage = renderView(view: view, size: CGSize(width: imageSize, height: imageSize)) {
+            editedImage = uiImage
+            navigateToPhotoSave = true
+        }
+    }
+
+    private func renderView<Content: View>(view: Content, size: CGSize) -> UIImage? {
+        let controller = UIHostingController(rootView: view)
+        controller.view.bounds = CGRect(origin: .zero, size: size)
+        controller.view.backgroundColor = .clear
+
+        let renderer = UIGraphicsImageRenderer(size: size)
+        return renderer.image { context in
+            controller.view.drawHierarchy(in: controller.view.bounds, afterScreenUpdates: true)
+        }
+    }
+
 }
 
 #Preview {
     EditorView(
-        capturedImage: UIImage(),
+        capturedImage: UIImage(named: "sampleImage")!,
         diContainer: MockCameraDIContainer(),
         onGoBack: nil,
         onDismiss: {}
