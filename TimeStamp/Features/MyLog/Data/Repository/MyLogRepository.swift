@@ -37,9 +37,9 @@ final class MyLogRepository: MyLogRepositoryProtocol {
     
     // MARK: - 서버 로그 가져오기
     
-    func fetchAllLogFromServer(page: Int) async throws -> [TimeStampLog] {
+    func fetchAllLogFromServer(page: Int) async throws -> (logs: [TimeStampLog], pageInfo: PageInfo) {
         let result = await apiClient.fetchMyLogList(category: nil, page: page, size: pageSize)
-        
+
         guard case .success(let response) = result else {
             if case .failure(let error) = result {
                 Logger.error("사진 목록 가져오기 요청 실패: \(error)")
@@ -48,8 +48,15 @@ final class MyLogRepository: MyLogRepositoryProtocol {
             throw NetworkError.requestFailed("사진 목록 가져오기 요청 실패:")
         }
         
-        _ = response.data?.pageInfo
-        let myLogs: [MyLogsDto.TimeStampLog] = response.data?.logs ?? []
-        return myLogs.map { $0.toEntity() }
+        guard let myLogs: [MyLogsDto.TimeStampLog] = response.data?.logs,
+              let pageInfoDto = response.data?.pageInfo
+        else {
+            throw NetworkError.dataNil
+        }
+              
+        let logs = myLogs.map { $0.toEntity() }
+        let pageInfo = pageInfoDto.toEntity()
+
+        return (logs: logs, pageInfo: pageInfo)
     }
 }

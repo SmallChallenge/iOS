@@ -61,10 +61,20 @@ struct MyLogView: View {
                                     .aspectRatio(1, contentMode: .fill)
                                     .onAppear {
                                         if index == filteredLogs.count - 1 {
-                                            //viewModel.loadMore()
+                                            viewModel.loadMore()
                                         }
                                     }
                             }
+                        }
+                       
+                        // 추가 로딩 인디케이터
+                        if viewModel.isLoadingMore {
+                            
+                             ProgressView()
+                                 .tint(.neon300)
+                                 .frame(maxWidth: .infinity)
+                                 .padding()
+                             
                         }
 
                     }

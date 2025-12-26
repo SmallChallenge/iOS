@@ -12,7 +12,6 @@ struct MyLogUseCase: MyLogUseCaseProtocol {
     // MARK: - Properties
 
     private let repository: MyLogRepositoryProtocol
-    private var page: Int = 0
 
     // MARK: - Init
 
@@ -23,7 +22,7 @@ struct MyLogUseCase: MyLogUseCaseProtocol {
     // MARK: - Methods
 
     /// 모든 타임스탬프 로그를 조회
-    func fetchAllLogs(isLoggedIn: Bool) async -> [TimeStampLog] {
+    func fetchAllLogs(isLoggedIn: Bool) async -> (logs: [TimeStampLog], pageInfo: PageInfo?) {
 
         // 로컬 로그 가져오기
         let localLogs: [TimeStampLog]
@@ -35,22 +34,30 @@ struct MyLogUseCase: MyLogUseCaseProtocol {
         }
 
         // 서버 로그 가져오기 (로그인 상태일 때만)
-        let serverLogs: [TimeStampLog]
+        var serverLogs: [TimeStampLog] = []
+        var pageInfo: PageInfo? = nil
+
         if isLoggedIn {
-            do {
-                serverLogs = try await repository.fetchAllLogFromServer(page: page)
-            } catch {
-                Logger.error("서버 로그 가져오기 실패: \(error)")
-                serverLogs = []
-            }
-        } else {
-            serverLogs = []
+            let result = await fetchServerLogs(page: 0)
+            serverLogs = result.logs
+            pageInfo = result.pageInfo
         }
 
         // 로컬 로그와 서버 로그를 합치고, timeStamp 기준으로 최신순 정렬
         let allLogs = localLogs + serverLogs
         let sortedLogs = allLogs.sorted { $0.timeStamp > $1.timeStamp }
 
-        return sortedLogs
+        return (logs: sortedLogs, pageInfo: pageInfo)
+    }
+
+    /// 서버 로그 가져오기 (+ 페이지네이션)
+    func fetchServerLogs(page: Int) async -> (logs: [TimeStampLog], pageInfo: PageInfo?) {
+        do {
+            let result = try await repository.fetchAllLogFromServer(page: page)
+            return (logs: result.logs, pageInfo: result.pageInfo)
+        } catch {
+            Logger.error("서버 로그 가져오기 실패 (page: \(page)): \(error)")
+            return (logs: [], pageInfo: nil)
+        }
     }
 }

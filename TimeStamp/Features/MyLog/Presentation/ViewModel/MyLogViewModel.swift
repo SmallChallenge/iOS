@@ -19,12 +19,17 @@ final class MyLogViewModel: ObservableObject, MessageDisplayable {
     // MARK: - Output Properties
 
     @Published var isLoading = false
-    
+    @Published var isLoadingMore = false
+
     @Published var toastMessage: String?
     @Published var alertMessage: String?
 
     /// 전체 로그 (필터링은 View에서 수행)
     @Published var myLogs: [TimeStampLogViewData] = []
+
+    /// 페이지네이션 상태
+    private var currentPage = 0
+    private var hasMorePages = false
 
     /// 사진이 있는 카테고리만 필터링    
     var availableCategories: [CategoryFilterViewData] {
@@ -48,30 +53,70 @@ final class MyLogViewModel: ObservableObject, MessageDisplayable {
         loadLogs()
     }
 
-    // MARK: - Methods
+    // MARK: - Input Methods
 
     /// 모든 로그를 불러오기
     func loadLogs() {
+        // 중복 호출 방지
+        guard isLoading == false && isLoadingMore == false
+        else { return }
+
         isLoading = true
         Task {
+            // 페이지 초기화
+            currentPage = 0
+            hasMorePages = false
+
             let isLoggedIn = AuthManager.shared.isLoggedIn
-            let entities = await useCase.fetchAllLogs(isLoggedIn: isLoggedIn)
-            myLogs = entities.map { toViewData($0) }
+            let result = await useCase.fetchAllLogs(isLoggedIn: isLoggedIn)
+
+            myLogs = result.logs.map { $0.toViewData() }
+
+            // 페이지네이션 정보 업데이트
+            if let pageInfo = result.pageInfo {
+                currentPage = pageInfo.currentPage
+                hasMorePages = pageInfo.hasNext
+            }
+
             isLoading = false
-            Logger.success("로그 불러오기 성공: \(myLogs.count)개")
+            Logger.success("로그 불러오기 성공: \(myLogs.count)개, hasMore: \(hasMorePages)")
         }
     }
 
-    // MARK: - Private Helpers
+    /// 다음 페이지 로그 불러오기 (서버 로그만)
+    func loadMore() {
+        // 중복 호출 방지
+        guard !isLoading && !isLoadingMore else { return }
 
-    /// Entity를 ViewData로 변환
-    private func toViewData(_ entity: TimeStampLog) -> TimeStampLogViewData {
-        return TimeStampLogViewData(
-            id: entity.id,
-            category: entity.category,
-            timeStamp: entity.timeStamp,
-            imageSource: entity.imageSource,
-            visibility: entity.visibility
-        )
+        // 다음 페이지가 없으면 리턴
+        guard hasMorePages else {
+            return
+        }
+
+        // 로그인 상태가 아니면 리턴 (서버 로그만 페이지네이션)
+        guard AuthManager.shared.isLoggedIn else {
+            return
+        }
+
+        isLoadingMore = true
+        Task {
+            let nextPage = currentPage + 1
+            let result = await useCase.fetchServerLogs(page: nextPage)
+
+            // 새로운 로그를 기존 로그와 합치고 정렬(최신순)
+            let newLogs = result.logs.map { $0.toViewData() }
+            myLogs = (myLogs + newLogs) //.sorted { $0.timeStamp > $1.timeStamp } // 정렬안해도 될껄?
+
+            // 페이지네이션 정보 업데이트
+            if let pageInfo = result.pageInfo {
+                currentPage = pageInfo.currentPage
+                hasMorePages = pageInfo.hasNext
+            } else {
+                hasMorePages = false
+            }
+
+            isLoadingMore = false
+            Logger.success("추가 로그 불러오기 성공: \(newLogs.count)개, 현재 페이지: \(currentPage), hasMore: \(hasMorePages)")
+        }
     }
 }

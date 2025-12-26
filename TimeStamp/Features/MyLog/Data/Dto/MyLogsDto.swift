@@ -52,4 +52,3 @@ struct MyLogsDto: Codable {
         case pageInfo
     }
 }
-

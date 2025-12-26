@@ -69,8 +69,11 @@ struct MockMyLogDIContainer {
     }
     
     struct MockMyLogUseCase: MyLogUseCaseProtocol {
-        func fetchAllLogs(isLoggedIn: Bool) async -> [TimeStampLog] {
-            []
+        func fetchAllLogs(isLoggedIn: Bool) async -> (logs: [TimeStampLog], pageInfo: PageInfo?) {
+            ([], nil)
         }
+        func fetchServerLogs(page: Int) async -> (logs: [TimeStampLog], pageInfo: PageInfo?) {
+            ([], nil)
+        }   
     }
 }

@@ -125,7 +125,7 @@ final class SavePhotoRepository: SavePhotoRepositoryProtocol {
     /// S3에 이미지 업로드 (Private Helper)
     private func uploadImageToS3Helper(imageData: Data, presignedUrl: String) async throws {
         return try await withCheckedThrowingContinuation { continuation in
-            AF.upload(imageData, to: presignedUrl, method: .put, headers: ["Content-Type": "image/jpeg"])
+            AF.upload(imageData, to: presignedUrl, method: .put, headers: ["Content-Type": "image/jpeg", "x-amz-acl": "public-read"])
                 .validate()
                 .response { response in
                     switch response.result {
