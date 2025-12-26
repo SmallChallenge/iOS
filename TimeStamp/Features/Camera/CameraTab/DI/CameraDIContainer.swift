@@ -12,11 +12,11 @@ import Alamofire
 protocol CameraDIContainerProtocol {
     func makeCameraTabView(onDismiss: @escaping () -> Void) -> CameraTabView
     func makeCameraView(onDismiss: @escaping () -> Void) -> CameraView
-    func makeSavePhotoView(
+    func makePhotoSaveView(
         capturedImage: UIImage,
         onDismiss: @escaping () -> Void,
         onGoBack: (() -> Void)?
-    ) -> SavePhotoView
+    ) -> PhotoSaveView
 }
 
 final class CameraDIContainer: CameraDIContainerProtocol {
@@ -62,32 +62,32 @@ final class CameraDIContainer: CameraDIContainerProtocol {
 
     // MARK: - Save Photo feature
 
-    private func makeSavePhotoApiClient() -> SavePhotoApiClientProtocol {
-        return SavePhotoApiClient(session: session)
+    private func makePhotoSaveApiClient() -> PhotoSaveApiClientProtocol {
+        return PhotoSaveApiClient(session: session)
     }
 
-    private func makeSavePhotoRepository() -> SavePhotoRepositoryProtocol {
-        return SavePhotoRepository(
+    private func makePhotoSaveRepository() -> PhotoSaveRepositoryProtocol {
+        return PhotoSaveRepository(
             localDataSource: localDataSource,
-            apiClient: makeSavePhotoApiClient()
+            apiClient: makePhotoSaveApiClient()
         )
     }
     
-    private func makeSavePhotoUseCase() -> SavePhotoUseCaseProtocol {
-        return SavePhotoUseCase(repository: makeSavePhotoRepository())
+    private func makePhotoSaveUseCase() -> PhotoSaveUseCaseProtocol {
+        return PhotoSaveUseCase(repository: makePhotoSaveRepository())
     }
     
-    private func makeSavePhotoViewModel() -> SavePhotoViewModel {
-        return SavePhotoViewModel(useCase: makeSavePhotoUseCase())
+    private func makePhotoSaveViewModel() -> PhotoSaveViewModel {
+        return PhotoSaveViewModel(useCase: makePhotoSaveUseCase())
     }
     
-    func makeSavePhotoView(
+    func makePhotoSaveView(
         capturedImage: UIImage,
         onDismiss: @escaping () -> Void,
         onGoBack: (() -> Void)? = nil
-    ) -> SavePhotoView {
-        let viewModel = makeSavePhotoViewModel()
-        return SavePhotoView(
+    ) -> PhotoSaveView {
+        let viewModel = makePhotoSaveViewModel()
+        return PhotoSaveView(
             viewModel: viewModel,
             capturedImage: capturedImage,
             onGoBack: onGoBack,
@@ -113,17 +113,18 @@ struct MockCameraDIContainer: CameraDIContainerProtocol {
         )
     }
     
-    struct MockSavePhotoUseCase: SavePhotoUseCaseProtocol {
+    struct MockPhotoSaveUseCase: PhotoSaveUseCaseProtocol {
         func savePhotoToLacal(image: UIImage, category: Category, visibility: VisibilityType) throws {}
+        
         func savePhotoToServer(image: UIImage, category: Category, visibility: VisibilityType) async throws {}
     }
     
-    private func makeSavePhotoViewModel() -> SavePhotoViewModel {
-        return SavePhotoViewModel(useCase: MockSavePhotoUseCase())
+    private func makePhotoSaveViewModel() -> PhotoSaveViewModel {
+        return PhotoSaveViewModel(useCase: MockPhotoSaveUseCase())
     }
-    func makeSavePhotoView(capturedImage: UIImage, onDismiss: @escaping () -> Void, onGoBack: (() -> Void)?) -> SavePhotoView {
-        let viewModel = makeSavePhotoViewModel()
-        return SavePhotoView(
+    func makePhotoSaveView(capturedImage: UIImage, onDismiss: @escaping () -> Void, onGoBack: (() -> Void)?) -> PhotoSaveView {
+        let viewModel = makePhotoSaveViewModel()
+        return PhotoSaveView(
             viewModel: viewModel,
             capturedImage: capturedImage,
             onGoBack: onGoBack,

@@ -1,5 +1,5 @@
 //
-//  SavePhotoViewModel.swift
+//  PhotoSaveViewModel.swift
 //  TimeStamp
 //
 //  Created by 임주희 on 12/20/25.
@@ -17,16 +17,16 @@ extension Notification.Name {
 
 /// 사진 저장 화면의 비즈니스 로직을 관리하는 ViewModel
 @MainActor
-final class SavePhotoViewModel: ObservableObject, MessageDisplayable {
+final class PhotoSaveViewModel: ObservableObject, MessageDisplayable {
 
     // MARK: - Properties
 
     /// 사진 저장 UseCase
-    private let useCase: SavePhotoUseCaseProtocol
+    private let useCase: PhotoSaveUseCaseProtocol
 
     /// 저장 성공 여부
     @Published var isSaved = false
-    
+
     /// 로딩
     @Published var isLoading: Bool = false
 
@@ -36,7 +36,7 @@ final class SavePhotoViewModel: ObservableObject, MessageDisplayable {
 
     // MARK: - Init
 
-    init(useCase: SavePhotoUseCaseProtocol) {
+    init(useCase: PhotoSaveUseCaseProtocol) {
         self.useCase = useCase
     }
 

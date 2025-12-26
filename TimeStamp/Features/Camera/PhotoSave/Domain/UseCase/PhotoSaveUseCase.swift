@@ -1,5 +1,5 @@
 //
-//  SavePhotoUseCase.swift
+//  PhotoSaveUseCase.swift
 //  TimeStamp
 //
 //  Created by 임주희 on 12/20/25.
@@ -8,15 +8,15 @@
 import Foundation
 import UIKit
 
-struct SavePhotoUseCase: SavePhotoUseCaseProtocol {
+struct PhotoSaveUseCase: PhotoSaveUseCaseProtocol {
 
     // MARK: - Properties
 
-    private let repository: SavePhotoRepositoryProtocol
+    private let repository: PhotoSaveRepositoryProtocol
 
     // MARK: - Init
 
-    init(repository: SavePhotoRepositoryProtocol) {
+    init(repository: PhotoSaveRepositoryProtocol) {
         self.repository = repository
     }
 

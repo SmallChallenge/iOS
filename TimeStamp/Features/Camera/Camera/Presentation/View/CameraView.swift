@@ -72,7 +72,7 @@ struct CameraView: View {
             // NavigationLink (hidden)
             if let image = viewModel.capturedImage {
                 NavigationLink(
-                    destination: diContainer.makeSavePhotoView(
+                    destination: diContainer.makePhotoSaveView(
                         capturedImage: image,
                         onDismiss: onDismiss,
                         onGoBack: {

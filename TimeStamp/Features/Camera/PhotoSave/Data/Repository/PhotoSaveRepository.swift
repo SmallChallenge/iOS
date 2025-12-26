@@ -1,5 +1,5 @@
 //
-//  SavePhotoRepository.swift
+//  PhotoSaveRepository.swift
 //  TimeStamp
 //
 //  Created by 임주희 on 12/20/25.
@@ -9,11 +9,11 @@ import Foundation
 import UIKit
 import Alamofire
 
-/// SavePhoto Repository 구현 (Data Layer)
+/// PhotoSave Repository 구현 (Data Layer)
 /// - LocalTimeStampLogDataSource를 사용하여 로컬 데이터 저장
 /// - 이미지 파일 저장 기능 포함
-final class SavePhotoRepository: SavePhotoRepositoryProtocol {
-   
+final class PhotoSaveRepository: PhotoSaveRepositoryProtocol {
+
     // MARK: - Properties
 
     /// 이미지 압축율
@@ -23,12 +23,12 @@ final class SavePhotoRepository: SavePhotoRepositoryProtocol {
     private let localDataSource: LocalTimeStampLogDataSourceProtocol
 
     /// 서버 API 클라이언트
-    private let apiClient: SavePhotoApiClientProtocol
+    private let apiClient: PhotoSaveApiClientProtocol
 
     // MARK: - Init
 
     init(localDataSource: LocalTimeStampLogDataSourceProtocol,
-         apiClient: SavePhotoApiClientProtocol) {
+         apiClient: PhotoSaveApiClientProtocol) {
         self.localDataSource = localDataSource
         self.apiClient = apiClient
     }

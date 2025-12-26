@@ -1,5 +1,5 @@
 //
-//  SavePhotoApiClient.swift
+//  PhotoSaveApiClient.swift
 //  TimeStamp
 //
 //  Created by 임주희 on 12/24/25.
@@ -8,12 +8,12 @@
 import Foundation
 import Alamofire
 
-enum SavePhotoRouter {
+enum PhotoSaveRouter {
     case presignedUrl(fileName: String, size: Int)
     case saveTimeStamp(fileName: String, size: Int, objectKey: String, category: String, visibility: String, originalTakenAt: String)
-    
+
 }
-extension SavePhotoRouter: Router {
+extension PhotoSaveRouter: Router {
     var baseURL: URL {
         URL(string: NetworkConfig.baseURL)!
     }
@@ -65,19 +65,19 @@ extension SavePhotoRouter: Router {
     }
 }
 
-// MARK: - SavePhotoApiClient
-protocol SavePhotoApiClientProtocol {
+// MARK: - PhotoSaveApiClient
+protocol PhotoSaveApiClientProtocol {
     func presignedUrl(fileName: String, size: Int) async -> Result<ResponseBody<PresignedURLDto>, NetworkError>
-    
+
     func saveTimeStamp(fileName: String, size: Int, objectKey: String, category: String, visibility: String, originalTakenAt: String) async -> Result<ResponseBody<SaveTimeStampDto>, NetworkError>
 }
-class SavePhotoApiClient: ApiClient<SavePhotoRouter>,SavePhotoApiClientProtocol {
-    
+class PhotoSaveApiClient: ApiClient<PhotoSaveRouter>, PhotoSaveApiClientProtocol {
+
     func presignedUrl(fileName: String, size: Int) async -> Result<ResponseBody<PresignedURLDto>, NetworkError>{
-        await request(SavePhotoRouter.presignedUrl(fileName: fileName, size: size))
+        await request(PhotoSaveRouter.presignedUrl(fileName: fileName, size: size))
     }
-    
+
     func saveTimeStamp(fileName: String, size: Int, objectKey: String, category: String, visibility: String, originalTakenAt: String) async -> Result<ResponseBody<SaveTimeStampDto>, NetworkError> {
-        await request(SavePhotoRouter.saveTimeStamp(fileName: fileName, size: size, objectKey: objectKey, category: category, visibility: visibility, originalTakenAt: originalTakenAt))
+        await request(PhotoSaveRouter.saveTimeStamp(fileName: fileName, size: size, objectKey: objectKey, category: category, visibility: visibility, originalTakenAt: originalTakenAt))
     }
 }

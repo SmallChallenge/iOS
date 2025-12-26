@@ -1,5 +1,5 @@
 //
-//  SavePhotoView.swift
+//  PhotoSaveView.swift
 //  TimeStamp
 //
 //  Created by 임주희 on 12/20/25.
@@ -11,9 +11,9 @@ import SwiftUI
 /// 사진 저장 화면
 // 카테고리, 공개 여부 선택
 // 사진 저장
-struct SavePhotoView: View {
-    
-    @StateObject var viewModel: SavePhotoViewModel
+struct PhotoSaveView: View {
+
+    @StateObject var viewModel: PhotoSaveViewModel
     let capturedImage: UIImage
     let onGoBack: (() -> Void)?
     let onDismiss: () -> Void
@@ -213,5 +213,5 @@ struct SavePhotoView: View {
 
 
 #Preview {
-    MockCameraDIContainer().makeSavePhotoView(capturedImage: UIImage(), onDismiss: {}, onGoBack: {})
+    MockCameraDIContainer().makePhotoSaveView(capturedImage: UIImage(), onDismiss: {}, onGoBack: {})
 }

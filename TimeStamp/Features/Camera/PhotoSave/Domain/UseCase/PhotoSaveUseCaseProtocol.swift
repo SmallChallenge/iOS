@@ -1,5 +1,5 @@
 //
-//  SavePhotoUseCaseProtocol.swift
+//  PhotoSaveUseCaseProtocol.swift
 //  TimeStamp
 //
 //  Created by 임주희 on 12/20/25.
@@ -8,7 +8,7 @@
 import Foundation
 import UIKit
 
-protocol SavePhotoUseCaseProtocol {
+protocol PhotoSaveUseCaseProtocol {
     /// 사진을 저장하고 Core Data에 로그 생성
     /// - Parameters:
     ///   - image: 저장할 이미지
