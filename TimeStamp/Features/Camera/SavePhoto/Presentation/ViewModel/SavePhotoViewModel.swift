@@ -45,6 +45,7 @@ final class SavePhotoViewModel: ObservableObject, MessageDisplayable {
     /// 사진 저장 (로컬 or 서버)
     /// - NOTE: 로그인 상태면 서버에 저장, 로그아웃상태면 로컬에 저장
     func savePhoto(image: UIImage, category: CategoryViewData, visibility: VisibilityViewData) {
+        guard isLoading == false else { return }
         // 로그인 여부 확인
         if AuthManager.shared.isLoggedIn {
             // 로그인되어 있으면 서버에 저장
@@ -95,7 +96,7 @@ final class SavePhotoViewModel: ObservableObject, MessageDisplayable {
             // 저장 성공
             isSaved = true
             isLoading = false
-            show(.saveFailed)
+            show(.photoSaveSuccess)
             Logger.success("서버에 사진 저장 성공")
 
             // MyLogView에 새로고침 알림

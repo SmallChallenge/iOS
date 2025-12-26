@@ -67,6 +67,7 @@ struct SavePhotoView: View {
                 MainButton(title: "완료", size: .small) {
                     savePhoto()
                 }
+                .disabled(viewModel.isLoading)
             }
         }
         .loading(viewModel.isLoading)
