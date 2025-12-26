@@ -33,7 +33,7 @@ struct CameraTabView: View {
                 } else {
 
                     // 갤러리 화면
-                    Spacer()
+                    diContainer.makeGalleryView(onDismiss: onDismiss)
                 }
 
                 //갤러리, 카메라 버튼
@@ -54,6 +54,7 @@ struct CameraTabView: View {
             .navigationBarTitleDisplayMode(.inline)
             .toolbar {
                 ToolbarItem(placement: .navigationBarLeading) {
+                    // 뒤로가기 버튼
                     DismissButton {
                         onDismiss()
                     }

@@ -12,6 +12,7 @@ import Alamofire
 protocol CameraDIContainerProtocol {
     func makeCameraTabView(onDismiss: @escaping () -> Void) -> CameraTabView
     func makeCameraView(onDismiss: @escaping () -> Void) -> CameraView
+    func makeGalleryView(onDismiss: @escaping () -> Void) -> GalleryView
     func makePhotoSaveView(
         capturedImage: UIImage,
         onDismiss: @escaping () -> Void,
@@ -55,6 +56,15 @@ final class CameraDIContainer: CameraDIContainerProtocol {
         let viewModel = makeCameraViewModel()
         return CameraView(
             viewModel: viewModel,
+            diContainer: self,
+            onDismiss: onDismiss
+        )
+    }
+
+    // MARK: - Gallery Feature
+
+    func makeGalleryView(onDismiss: @escaping () -> Void) -> GalleryView {
+        return GalleryView(
             diContainer: self,
             onDismiss: onDismiss
         )
@@ -112,7 +122,14 @@ struct MockCameraDIContainer: CameraDIContainerProtocol {
             onDismiss: onDismiss
         )
     }
-    
+
+    func makeGalleryView(onDismiss: @escaping () -> Void) -> GalleryView {
+        return GalleryView(
+            diContainer: self,
+            onDismiss: onDismiss
+        )
+    }
+
     struct MockPhotoSaveUseCase: PhotoSaveUseCaseProtocol {
         func savePhotoToLacal(image: UIImage, category: Category, visibility: VisibilityType) throws {}
         
