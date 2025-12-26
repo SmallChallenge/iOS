@@ -34,13 +34,10 @@ struct GalleryView: View {
             // NavigationLink (hidden)
             if let image = viewModel.selectedImage {
                 NavigationLink(
-                    destination: diContainer.makePhotoSaveView(
+                    destination: diContainer.makeEditorView(
                         capturedImage: image,
-                        onDismiss: onDismiss,
-                        onGoBack: {
-                            navigateToSavePhoto = false
-                            viewModel.clearSelectedImage()
-                        }
+                        onGoBack: { navigateToSavePhoto = false },
+                        onDismiss: onDismiss
                     ),
                     isActive: $navigateToSavePhoto
                 ) {

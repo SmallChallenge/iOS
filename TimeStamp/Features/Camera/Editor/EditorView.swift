@@ -1,0 +1,188 @@
+//
+//  EditorView.swift
+//  TimeStamp
+//
+//  Created by 임주희 on 12/26/25.
+//
+
+import SwiftUI
+import Combine
+
+struct EditorView: View {
+
+    let capturedImage: UIImage
+    let diContainer: CameraDIContainerProtocol
+    let onGoBack: (() -> Void)?
+    let onDismiss: () -> Void
+
+    @State private var showAdPopup: Bool = false
+    @State private var selectedCategory: CategoryFilterViewData = .all
+    @State private var isOnLogo: Bool = false
+    @State private var navigateToSavePhoto = false
+    
+    var body: some View {
+        ZStack {
+            VStack (alignment: .leading, spacing: 0){
+
+                Spacer()
+                    .frame(maxHeight: 40)
+                
+            ZStack {
+                // 이미지뷰
+                Image(uiImage: capturedImage)
+                    .resizable()
+                    .aspectRatio(1, contentMode: .fill)
+                    .frame(maxWidth: .infinity)
+                    .clipped()
+                    .background(Color.gray400)
+
+                // 오버레이 뷰 (타임스탬프, 로고)
+                DefaultTemplateView()
+            }
+            .aspectRatio(1, contentMode: .fit)
+               
+            
+            Spacer()
+                .frame(maxHeight: 56)
+            
+            VStack(spacing: 24) {
+                
+                // 카테고리 | 로고 스위치
+                HStack {
+                    // 카테고리 목록
+                    categoryTab
+                    
+                    Spacer()
+                    
+                    // 로고 스위치
+                    logoToggle
+                }
+                .padding(.horizontal, 20)
+                
+                ScrollView(.horizontal, showsIndicators: false) {
+                    HStack(spacing: 8) {
+                        Color.gray300
+                            .cornerRadius(8)
+                            .roundedBorder(color: Color.gray700, radius: 8)
+                            .frame(width: 90, height: 90)
+                        
+                        Color.gray300
+                            .cornerRadius(8)
+                            .roundedBorder(color: Color.gray700, radius: 8)
+                            .frame(width: 90, height: 90)
+                        
+                        Color.gray300
+                            .cornerRadius(8)
+                            .roundedBorder(color: Color.gray700, radius: 8)
+                            .frame(width: 90, height: 90)
+                        
+                        
+                        Color.gray300
+                            .cornerRadius(8)
+                            .roundedBorder(color: Color.gray700, radius: 8)
+                            .frame(width: 90, height: 90)
+                        
+                        Color.gray300
+                            .cornerRadius(8)
+                            .roundedBorder(color: Color.gray700, radius: 8)
+                            .frame(width: 90, height: 90)
+                        
+                        Color.gray300
+                            .cornerRadius(8)
+                            .roundedBorder(color: Color.gray700, radius: 8)
+                            .frame(width: 90, height: 90)
+                        
+                        Color.gray300
+                            .cornerRadius(8)
+                            .roundedBorder(color: Color.gray700, radius: 8)
+                            .frame(width: 90, height: 90)
+                        
+                        
+                    }
+                    .padding(.horizontal, 20)
+                }
+            }
+            } // ~VStack
+            .mainBackgourndColor()
+            .navigationBarTitleDisplayMode(.inline)
+            .navigationBarBackButtonHidden(true)
+            .toolbar {
+                ToolbarItem(placement: .navigationBarLeading) {
+                    BackButton {
+                        onGoBack?()
+                    }
+                }
+
+                ToolbarItem(placement: .navigationBarTrailing) {
+                    MainButton(title: "다음", size: .small) {
+                        navigateToSavePhoto = true
+                    }
+                }
+            }
+            // 광고 시청 팝업 띄우기
+            .popup(isPresented: $showAdPopup, content: {
+                Modal(title: "광고 시청 후\n워터마크를 제거하세요.")
+                    .buttons {
+                        MainButton(title: "취소", colorType: .secondary) {
+                            showAdPopup = false
+                        }
+                        MainButton(title: "광고 시청", colorType: .primary) {
+                            showAdPopup = false
+                            // TODO: 광고 시청
+                        }
+                    }
+            })
+
+            // NavigationLink (hidden)
+            NavigationLink(
+                destination: diContainer.makePhotoSaveView(
+                    capturedImage: capturedImage,
+                    onGoBack: {
+                        navigateToSavePhoto = false
+                    },
+                    onDismiss: onDismiss
+                ),
+                isActive: $navigateToSavePhoto
+            ) {
+                EmptyView()
+            }
+        } // ~ZStack
+    }
+    
+    
+    var categoryTab: some View {
+        HStack (spacing: 16){
+            ForEach(CategoryFilterViewData.allCases, id: \.self) { category in
+                Button {
+                    selectedCategory = category
+                } label: {
+                    Text(category.title)
+                        .font(.Btn2_b)
+                        .foregroundColor(category == selectedCategory ? Color.gray50 : Color.gray500)
+                }
+            }
+        }
+    }
+    
+    var logoToggle: some View {
+        HStack(spacing: 6){
+            Text("Logo")
+                .font(.Body2)
+                .foregroundStyle(Color.gray300)
+            
+            Toggle("Logo", isOn: $isOnLogo)
+                .labelsHidden()
+                .fixedSize()
+                
+        }
+    }
+}
+
+#Preview {
+    EditorView(
+        capturedImage: UIImage(),
+        diContainer: MockCameraDIContainer(),
+        onGoBack: nil,
+        onDismiss: {}
+    )
+}

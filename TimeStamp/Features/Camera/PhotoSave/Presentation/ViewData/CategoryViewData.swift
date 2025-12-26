@@ -15,7 +15,6 @@ enum CategoryViewData: String, CaseIterable {
 
     var title: String {
         switch self {
-
         case .study: return "공부"
         case .health: return "운동"
         case .food: return "음식"
@@ -25,7 +24,6 @@ enum CategoryViewData: String, CaseIterable {
 
     var image: String {
         switch self {
-
         case .study: return "category_study"
         case .health: return "category_health"
         case .food: return "category_food"

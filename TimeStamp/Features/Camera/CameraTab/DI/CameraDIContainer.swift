@@ -15,12 +15,19 @@ protocol CameraDIContainerProtocol {
     func makeGalleryView(onDismiss: @escaping () -> Void) -> GalleryView
     func makePhotoSaveView(
         capturedImage: UIImage,
-        onDismiss: @escaping () -> Void,
-        onGoBack: (() -> Void)?
+        onGoBack: (() -> Void)?,
+        onDismiss: @escaping () -> Void
     ) -> PhotoSaveView
+    func makeEditorView(
+        capturedImage: UIImage,
+        onGoBack: (() -> Void)?,
+        onDismiss: @escaping () -> Void
+    ) -> EditorView
 }
 
 final class CameraDIContainer: CameraDIContainerProtocol {
+    
+    
 
     // MARK: - Dependencies
 
@@ -83,6 +90,22 @@ final class CameraDIContainer: CameraDIContainerProtocol {
             onDismiss: onDismiss
         )
     }
+    
+    // MARK: - EditorView
+    
+    func makeEditorView(
+        capturedImage: UIImage,
+        onGoBack: (() -> Void)?,
+        onDismiss: @escaping () -> Void
+    ) -> EditorView {
+        return EditorView(
+            capturedImage: capturedImage,
+            diContainer: self,
+            onGoBack: onGoBack,
+            onDismiss: onDismiss
+        )
+    }
+    
 
     // MARK: - Save Photo feature
 
@@ -107,8 +130,8 @@ final class CameraDIContainer: CameraDIContainerProtocol {
     
     func makePhotoSaveView(
         capturedImage: UIImage,
-        onDismiss: @escaping () -> Void,
-        onGoBack: (() -> Void)? = nil
+        onGoBack: (() -> Void)? = nil,
+        onDismiss: @escaping () -> Void
     ) -> PhotoSaveView {
         let viewModel = makePhotoSaveViewModel()
         return PhotoSaveView(
@@ -157,6 +180,19 @@ struct MockCameraDIContainer: CameraDIContainerProtocol {
             onDismiss: onDismiss
         )
     }
+    
+    func makeEditorView(
+        capturedImage: UIImage,
+        onGoBack: (() -> Void)?,
+        onDismiss: @escaping () -> Void
+    ) -> EditorView {
+        return EditorView(
+            capturedImage: capturedImage,
+            diContainer: self,
+            onGoBack: onGoBack,
+            onDismiss: onDismiss
+        )
+    }
 
     struct MockPhotoSaveUseCase: PhotoSaveUseCaseProtocol {
         func savePhotoToLacal(image: UIImage, category: Category, visibility: VisibilityType) throws {}
@@ -167,7 +203,11 @@ struct MockCameraDIContainer: CameraDIContainerProtocol {
     private func makePhotoSaveViewModel() -> PhotoSaveViewModel {
         return PhotoSaveViewModel(useCase: MockPhotoSaveUseCase())
     }
-    func makePhotoSaveView(capturedImage: UIImage, onDismiss: @escaping () -> Void, onGoBack: (() -> Void)?) -> PhotoSaveView {
+    func makePhotoSaveView(
+        capturedImage: UIImage,
+        onGoBack: (() -> Void)?,
+        onDismiss: @escaping () -> Void
+    ) -> PhotoSaveView {
         let viewModel = makePhotoSaveViewModel()
         return PhotoSaveView(
             viewModel: viewModel,

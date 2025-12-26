@@ -55,6 +55,7 @@ private struct ModalWithButtons<Buttons: View>: View {
             VStack(alignment: .center, spacing: 8) {
                 Text(modal.title)
                     .font(.H3)
+                    .multilineTextAlignment(.center)
                     .foregroundStyle(Color.gray50)
 
                 if let content = modal.content {

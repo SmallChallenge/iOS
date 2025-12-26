@@ -103,10 +103,10 @@ enum AppMessage {
     var displayType: MessageDisplayType {
         switch self {
         // 팝업
-        case .loginFailed,
-                .loginRequired,
-                .maxPhotoLimitReached,
-                .signoutFailed:
+        case .loginFailed, // 로그인 실패
+                .loginRequired, // 로그인 필요
+                .maxPhotoLimitReached, // 기록초과
+                .signoutFailed: //회원가입 탈퇴
             return .alert
 
         // 토스트

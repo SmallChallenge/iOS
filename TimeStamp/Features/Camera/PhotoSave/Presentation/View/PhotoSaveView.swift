@@ -71,6 +71,7 @@ struct PhotoSaveView: View {
             }
         }
         .loading(viewModel.isLoading)
+        // 로그인 팝업 띄우기
         .popup(isPresented: $showLoginPopup, content: {
             Modal(title: "로그인이 필요합니다.")
                 .buttons {
@@ -84,28 +85,30 @@ struct PhotoSaveView: View {
                     }
                 }
         })
+        // 로그인 화면 띄우기
         .sheet(isPresented: $showLoginView, content: {
             AppDIContainer.shared.makeLoginView {
                 showLoginView = false
             }
         })
+        // 저장 성공 시 CameraView까지 닫기 (MainTabView로 돌아가기)
         .onChange(of: viewModel.isSaved) { isSaved in
             if isSaved {
-                // 저장 성공 시 CameraView까지 닫기 (MainTabView로 돌아가기)
                 onDismiss()
             }
         }
         .toast(message: $viewModel.toastMessage)
-        .alert("오류", isPresented: .constant(viewModel.alertMessage != nil)) {
-            Button("확인") {
-                viewModel.alertMessage = nil
-            }
-        } message: {
-            if let errorMessage = viewModel.alertMessage {
-                Text(errorMessage)
-            }
-        }
-        
+        .popup(isPresented: Binding(
+            get: { viewModel.alertMessage != nil },
+            set: { if !$0 { viewModel.alertMessage = nil } }
+        ), content: {
+            Modal(title: viewModel.alertMessage ?? "")
+                .buttons {
+                    MainButton(title: "확인", colorType: .primary) {
+                        viewModel.alertMessage = nil
+                    }
+                }
+        })
     }
 
     // MARK: - Actions
@@ -127,8 +130,6 @@ struct PhotoSaveView: View {
     }
     
     
-    
-   
     // 카테고리 선택
     var categoryPicker: some View {
         VStack(alignment: .leading, spacing: 12) {
@@ -213,5 +214,5 @@ struct PhotoSaveView: View {
 
 
 #Preview {
-    MockCameraDIContainer().makePhotoSaveView(capturedImage: UIImage(), onDismiss: {}, onGoBack: {})
+    MockCameraDIContainer().makePhotoSaveView(capturedImage: UIImage(), onGoBack: {}, onDismiss: {})
 }
