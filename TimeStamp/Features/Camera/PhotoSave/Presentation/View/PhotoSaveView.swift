@@ -30,22 +30,19 @@ struct PhotoSaveView: View {
     var body: some View {
         ScrollView {
             VStack (alignment: .leading, spacing: 0){
-                
+
                 // 이미지뷰
-                Color.clear
-                    .aspectRatio(1, contentMode: .fill)
-                    .overlay {
-                        Image(uiImage: capturedImage)
-                            .resizable()
-                            .scaledToFill()
-                            .clipped()
-                    }
-                
+                Image(uiImage: capturedImage)
+                    .resizable()
+                    .scaledToFit()
                     .clipShape(RoundedRectangle(cornerRadius: 8))
                     .roundedBorder(color: .gray700, radius: 8)
                     .padding(.top, 28)
                     .padding(.horizontal, 20)
                     .padding(.bottom, 32)
+                    .onAppear {
+                        print("📷 PhotoSaveView received image size: \(capturedImage.size), scale: \(capturedImage.scale)")
+                    }
 
                 // 카테고리 선택
                 categoryPicker
