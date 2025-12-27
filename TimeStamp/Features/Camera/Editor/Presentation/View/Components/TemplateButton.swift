@@ -37,12 +37,14 @@ struct TemplateButton: View {
 #Preview {
     HStack(spacing: 8) {
         TemplateButton(
-            template: Template.all[0],
+            template: Template(id: "1", name: "모던", style: .modern, viewBuilder: { _,_ in AnyView(EmptyView())}
+                              ),
             isSelected: true
         ) {}
 
         TemplateButton(
-            template: Template.all[0],
+            template: Template(id: "13", name: "모던", style: .modern, viewBuilder: { _,_ in AnyView(EmptyView())}
+                              ),
             isSelected: false
         ) {}
     }

@@ -7,19 +7,27 @@
 
 import SwiftUI
 
-protocol TemplateViewProtocol: View {}
+
+/// 템플릿 스타일 (Domain Layer)
+enum TemplateStyle: CaseIterable {
+    case modern
+    case vintage
+    case cute
+    case simple
+}
+
 
 /// 템플릿
 struct Template: Identifiable, Equatable {
     let id: String
     let name: String
-    let category: Category
+    let style: TemplateStyle
     private let viewBuilder: (Date, Bool) -> AnyView
 
-    init(id: String, name: String, category: Category, viewBuilder: @escaping (Date, Bool) -> AnyView) {
+    init(id: String, name: String, style: TemplateStyle, viewBuilder: @escaping (Date, Bool) -> AnyView) {
         self.id = id
         self.name = name
-        self.category = category
+        self.style = style
         self.viewBuilder = viewBuilder
     }
 
@@ -37,70 +45,67 @@ struct Template: Identifiable, Equatable {
 // MARK: - 템플릿 목록
 
 extension Template {
-    /// 모든 템플릿 목록
+    /// 모든 템플릿
     static let all: [Template] = [
-        
-        // MARK: 공부
+        // MARK: - Modern
         Template(
             id: "default",
-            name: "기본",
-            category: .study,
+            name: "모던",
+            style: .modern,
             viewBuilder: { date, hasLogo in
                 AnyView(DefaultTemplateView(displayDate: date, hasLogo: hasLogo))
             }
         ),
-        
-        // MARK: 운동
-        
+
+        // MARK:  - Cute
         Template(
             id: "default2",
-            name: "기본2",
-            category: .health,
+            name: "큐트",
+            style: .cute,
             viewBuilder: { date, hasLogo in
                 AnyView(DefaultTemplateView2(displayDate: date, hasLogo: hasLogo))
             }
         ),
-        
-        // MARK: 음식
+
+        // MARK: - Vintage
         Template(
             id: "sample1",
-            name: "샘플1",
-            category: .food,
+            name: "빈티지1",
+            style: .vintage,
             viewBuilder: { _, _ in
                 AnyView(sampleTemplateView())
             }
         ),
         Template(
             id: "sample2",
-            name: "샘플2",
-            category: .food,
+            name: "빈티지2",
+            style: .vintage,
             viewBuilder: { _, _ in
                 AnyView(sampleTemplateView2())
             }
         ),
         Template(
             id: "sample3",
-            name: "샘플3",
-            category: .food,
+            name: "빈티지3",
+            style: .vintage,
             viewBuilder: { _, _ in
                 AnyView(sampleTemplateView3())
             }
         ),
-        
-        // MARK: 기타
-        
+
+        // MARK: - Simple
         Template(
             id: "sample4",
             name: "샘플4",
-            category: .etc,
+            style: .simple,
             viewBuilder: { _, _ in
                 AnyView(sampleTemplateView4())
             }
         ),
         Template(
             id: "sample5",
-            name: "샘플5",
-            category: .etc,
+            name: "심플5",
+            style: .simple,
             viewBuilder: { _, _ in
                 AnyView(sampleTemplateView5())
             }
@@ -108,7 +113,7 @@ extension Template {
         Template(
             id: "sample6",
             name: "샘플6",
-            category: .etc,
+            style: .simple,
             viewBuilder: { _, _ in
                 AnyView(sampleTemplateView6())
             }
@@ -116,11 +121,6 @@ extension Template {
     ]
 }
 
-// MARK: - 기존 코드 호환성
-
-/// 기존 TemplateType을 Template로 변경 (deprecated)
-@available(*, deprecated, renamed: "Template", message: "Use Template instead")
-typealias TemplateType = Template
 
 
 

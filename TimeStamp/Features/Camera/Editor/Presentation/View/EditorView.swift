@@ -18,7 +18,7 @@ struct EditorView: View {
     
     // MARK: prevate property
 
-    @State private var selectedCategory: CategoryFilterViewData = .all
+    @State private var selectedTemplateStyle: TemplateStyleViewData = .modern
     @State private var selectedTemplate: Template = Template.all[0]
     
     // 광고, 로고 여부 //
@@ -39,18 +39,11 @@ struct EditorView: View {
         capturedDate ?? Date()
     }
 
-    /// 선택된 카테고리에 맞는 템플릿 필터링
+    /// 선택된 스타일에 맞는 템플릿 필터링
     private var filteredTemplates: [Template] {
-        // CategoryFilterViewData를 Category로 변환
-        guard let category = selectedCategory.toDomainCategory() else {
-            // "전체"면 모든 템플릿 반환
-            return Template.all
-        }
-
-        // 특정 카테고리의 템플릿만 필터링
-        return Template.all.filter { $0.category == category }
+        Template.all.filter { $0.style == selectedTemplateStyle }
     }
-
+    
     var body: some View {
         ZStack {
             VStack (alignment: .leading, spacing: 0){
@@ -67,10 +60,10 @@ struct EditorView: View {
                 // 템플릿 선택 뷰
                 VStack(spacing: 24) {
                     
-                    // 카테고리 | 로고 스위치
+                    // 템플릿스타일 | 로고 스위치
                     HStack {
-                        // 카테고리 목록
-                        categoryTab
+                        // 스타일 버튼 목록
+                        templateStyleSelectorView
                         
                         Spacer()
                         
@@ -140,15 +133,15 @@ struct EditorView: View {
     
     // MARK: - Subviews
 
-    var categoryTab: some View {
+    var templateStyleSelectorView: some View {
         HStack (spacing: 16){
-            ForEach(CategoryFilterViewData.allCases, id: \.self) { category in
+            ForEach(TemplateStyleViewData.allCases, id: \.self) { type in
                 Button {
-                    selectedCategory = category
+                    selectedTemplateStyle = type
                 } label: {
-                    Text(category.title)
+                    Text(type.name)
                         .font(.Btn2_b)
-                        .foregroundColor(category == selectedCategory ? Color.gray50 : Color.gray500)
+                        .foregroundColor(type == selectedTemplateStyle ? Color.gray50 : Color.gray500)
                 }
             }
         }
@@ -194,7 +187,7 @@ struct EditorView: View {
         .aspectRatio(1, contentMode: .fit)
     }
     
-    /// 카테고리별 템플릿 목록
+    /// 필터링된 템플릿 목록
     private var templateList: some View {
         ScrollView(.horizontal, showsIndicators: false) {
             HStack(spacing: 8) {
@@ -205,11 +198,6 @@ struct EditorView: View {
                     ) {
                         selectedTemplate = template
                     }
-                }
-
-                // 템플릿 없으면 공란두기
-                if filteredTemplates.isEmpty {
-                    templatePlaceholder
                 }
             }
             .padding(.horizontal, 20)
