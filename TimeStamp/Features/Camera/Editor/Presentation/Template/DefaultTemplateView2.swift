@@ -1,16 +1,17 @@
 //
-//  DefaultTemplateView.swift
+//  DefaultTemplateView2.swift
 //  TimeStamp
 //
-//  Created by 임주희 on 12/19/25.
+//  Created by 임주희 on 12/27/25.
 //
 
 import SwiftUI
 import Combine
 
-
-/// 기본 타임스탬프 템플릿 뷰
-struct DefaultTemplateView: View {
+struct DefaultTemplateView2: View {
+    let hasLogo: Bool
+    
+    
     @State private var currentDate = Date()
 
     // 매초마다 업데이트되는 타이머
@@ -21,24 +22,26 @@ struct DefaultTemplateView: View {
             // 중앙: 날짜 + 시계
             VStack(spacing: 8) {
                 Text(formattedDate)
-                    .font(.system(size: 20, weight: .medium))
-                    .foregroundColor(.white)
+                    .font(.H3)
+                    .foregroundColor(.gray50)
 
                 Text(formattedTime)
-                    .font(.system(size: 48, weight: .bold))
-                    .foregroundColor(.white)
+                    .font(.H1)
+                    .foregroundColor(.gray50)
             }
 
             // 오른쪽 하단: 로고
-            VStack {
-                Spacer()
-                HStack {
+            if hasLogo {
+                VStack {
                     Spacer()
-                    Image("TemplateLogo_Stampy")
-                        .resizable()
-                        .frame(width: 100, height: 27)
-                        .foregroundColor(.gray50)
-                        .padding(16)
+                    HStack {
+                        Spacer()
+                        Image("TemplateLogo_Stampy")
+                            .resizable()
+                            .frame(width: 100, height: 27)
+                            .foregroundColor(.gray50)
+                            .padding(16)
+                    }
                 }
             }
         }
@@ -65,6 +68,5 @@ struct DefaultTemplateView: View {
 }
 
 #Preview {
-    DefaultTemplateView()
-        .background(Color.black)
+    DefaultTemplateView2(hasLogo: true)
 }

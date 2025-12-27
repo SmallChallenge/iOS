@@ -37,7 +37,7 @@ struct CameraView: View {
                     #endif
 
                     // 오버레이 뷰 (타임스탬프, 로고)
-                    DefaultTemplateView()
+                    DefaultTemplateView(hasLogo: true)
                 }
                 .aspectRatio(1, contentMode: .fit)
                 .padding(.top, 40)

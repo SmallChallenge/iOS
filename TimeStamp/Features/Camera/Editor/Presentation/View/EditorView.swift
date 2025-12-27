@@ -15,14 +15,29 @@ struct EditorView: View {
     let onGoBack: (() -> Void)?
     let onDismiss: () -> Void
     
+    // MARK: prevate property
     
     @State private var showAdPopup: Bool = false
     @State private var selectedCategory: CategoryFilterViewData = .all
-    @State private var isOnLogo: Bool = false
+    @State private var selectedTemplate: TemplateType = .defaultTemplate
+    @State private var isOnLogo: Bool = true
+    
     @State private var navigateToPhotoSave = false
     @State private var editedImage: UIImage?
 
     private let imageCompositor = ImageCompositor()
+
+    /// 선택된 카테고리에 맞는 템플릿 필터링
+    private var filteredTemplates: [TemplateType] {
+        // CategoryFilterViewData를 Category로 변환
+        guard let category = selectedCategory.toDomainCategory() else {
+            // "전체"면 모든 템플릿 반환
+            return TemplateType.allCases
+        }
+
+        // 특정 카테고리의 템플릿만 필터링
+        return TemplateType.allCases.filter { $0.category == category }
+    }
 
     var body: some View {
         ZStack {
@@ -52,27 +67,13 @@ struct EditorView: View {
                     }
                     .padding(.horizontal, 20)
                     
-                    
-                    // 템플릿 스크롤
-                    ScrollView(.horizontal, showsIndicators: false) {
-                        HStack(spacing: 8) {
-                            Color.gray300
-                                .cornerRadius(8)
-                                .roundedBorder(color: Color.gray700, radius: 8)
-                                .frame(width: 90, height: 90)
-                            
-                            Color.gray300
-                                .cornerRadius(8)
-                                .roundedBorder(color: Color.gray700, radius: 8)
-                                .frame(width: 90, height: 90)
-                            
-                        }
-                        .padding(.horizontal, 20)
-                    }
+                    // 템플릿 목록
+                    templateList
+
                 }
             } // ~VStack
             
-            // NavigationLink (hidden)
+            // NavigationLink (저장화면으로 넘기기)
             if let editedImage = editedImage {
                 NavigationLink(
                     destination: diContainer.makePhotoSaveView(
@@ -94,11 +95,13 @@ struct EditorView: View {
         .navigationBarBackButtonHidden(true)
         .toolbar {
             ToolbarItem(placement: .navigationBarLeading) {
+                // 뒤로가기 버튼
                 BackButton {
                     onGoBack?()
                 }
             }
             
+            // 다음 버튼 (사진저장화면으로)
             ToolbarItem(placement: .navigationBarTrailing) {
                 MainButton(title: "다음", size: .small) {
                     captureEditedImage()
@@ -114,6 +117,7 @@ struct EditorView: View {
                     }
                     MainButton(title: "광고 시청", colorType: .primary) {
                         showAdPopup = false
+                        isOnLogo = false
                         // TODO: 광고 시청
                     }
                 }
@@ -149,6 +153,7 @@ struct EditorView: View {
         }
     }
     
+    
     @ViewBuilder
     private func editedImageView() -> some View {
         ZStack {
@@ -161,15 +166,43 @@ struct EditorView: View {
                 }
                 .clipShape(Rectangle())
 
-            // 오버레이 뷰 (타임스탬프, 로고)
-            DefaultTemplateView()
+            // 템플릿 (타임스탬프, 로고)
+            selectedTemplate.makeView(hasLogo: isOnLogo)
         }
         .aspectRatio(1, contentMode: .fit)
     }
     
+    /// 카테고리별 템플릿 목록
+    private var templateList: some View {
+        ScrollView(.horizontal, showsIndicators: false) {
+            HStack(spacing: 8) {
+                ForEach(filteredTemplates) { template in
+                    TemplateButton(
+                        template: template,
+                        isSelected: selectedTemplate == template
+                    ) {
+                        selectedTemplate = template
+                    }
+                }
+
+                // 템플릿 없으면 공란두기
+                if filteredTemplates.isEmpty {
+                    templatePlaceholder
+                }
+            }
+            .padding(.horizontal, 20)
+        }
+    }
+    
+    private var templatePlaceholder: some View {
+        Color.clear
+            .frame(width: 90, height: 90)
+    }
+    
     
     // MARK: - Functions
-
+    
+    /// 이미지 렌더해서 뽑아내기
     @MainActor
     private func captureEditedImage() {
         let imageSize: CGFloat = UIScreen.main.bounds.width
@@ -177,7 +210,7 @@ struct EditorView: View {
 
         guard let composedImage = imageCompositor.composeImage(
             background: capturedImage,
-            template: DefaultTemplateView(),
+            template: selectedTemplate.makeView(hasLogo: isOnLogo),
             templateSize: targetSize
         ) else {
             return

@@ -33,4 +33,16 @@ enum CategoryFilterViewData: CaseIterable {
         case .etc: return "category_etc"
         }
     }
+
+    /// CategoryFilterViewData를 도메인 Category로 변환
+    /// - Returns: Category (all인 경우 nil 반환 가능하도록 Optional)
+    func toDomainCategory() -> Category? {
+        switch self {
+        case .all: return nil
+        case .study: return .study
+        case .health: return .health
+        case .food: return .food
+        case .etc: return .etc
+        }
+    }
 }
