@@ -9,8 +9,9 @@ import SwiftUI
 import Combine
 
 struct EditorView: View {
-    
+
     let capturedImage: UIImage
+    let capturedDate: Date? // 갤러리에서 가져온 경우 PHAsset의 날짜, nil이면 Date()생성
     let diContainer: CameraDIContainerProtocol
     let onGoBack: (() -> Void)?
     let onDismiss: () -> Void
@@ -30,7 +31,13 @@ struct EditorView: View {
     @State private var editedImage: UIImage?
 
     private let imageCompositor = ImageCompositor()
-   
+
+    /// 실제 촬영/생성 날짜
+    private var photoDate: Date {
+        // from 갤러리: PHAsset.creationDate
+        // from 카메라: 현재 시간
+        capturedDate ?? Date()
+    }
 
     /// 선택된 카테고리에 맞는 템플릿 필터링
     private var filteredTemplates: [TemplateType] {
@@ -182,8 +189,7 @@ struct EditorView: View {
                 .clipShape(Rectangle())
 
             // 템플릿 (타임스탬프, 로고)
-            // TODO: 사진 날짜 가져와서 넣기
-            selectedTemplate.makeView(displayDate: Date(), hasLogo: isOnLogo)
+            selectedTemplate.makeView(displayDate: photoDate, hasLogo: isOnLogo)
         }
         .aspectRatio(1, contentMode: .fit)
     }
@@ -224,10 +230,9 @@ struct EditorView: View {
         let imageSize: CGFloat = UIScreen.main.bounds.width
         let targetSize = CGSize(width: imageSize, height: imageSize)
 
-        // TODO: 사진 날짜 가져와서 넣기
         guard let composedImage = imageCompositor.composeImage(
             background: capturedImage,
-            template: selectedTemplate.makeView(displayDate: Date(), hasLogo: isOnLogo),
+            template: selectedTemplate.makeView(displayDate: photoDate, hasLogo: isOnLogo),
             templateSize: targetSize
         ) else {
             return
@@ -257,6 +262,7 @@ struct EditorView: View {
 #Preview {
     EditorView(
         capturedImage: UIImage(named: "sampleImage")!,
+        capturedDate: Date(),
         diContainer: MockCameraDIContainer(),
         onGoBack: nil,
         onDismiss: {}

@@ -20,6 +20,7 @@ protocol CameraDIContainerProtocol {
     ) -> PhotoSaveView
     func makeEditorView(
         capturedImage: UIImage,
+        capturedDate: Date?,
         onGoBack: (() -> Void)?,
         onDismiss: @escaping () -> Void
     ) -> EditorView
@@ -95,11 +96,13 @@ final class CameraDIContainer: CameraDIContainerProtocol {
     
     func makeEditorView(
         capturedImage: UIImage,
+        capturedDate: Date?,
         onGoBack: (() -> Void)?,
         onDismiss: @escaping () -> Void
     ) -> EditorView {
         return EditorView(
             capturedImage: capturedImage,
+            capturedDate: capturedDate,
             diContainer: self,
             onGoBack: onGoBack,
             onDismiss: onDismiss
@@ -183,11 +186,13 @@ struct MockCameraDIContainer: CameraDIContainerProtocol {
     
     func makeEditorView(
         capturedImage: UIImage,
+        capturedDate: Date?,
         onGoBack: (() -> Void)?,
         onDismiss: @escaping () -> Void
     ) -> EditorView {
         return EditorView(
             capturedImage: capturedImage,
+            capturedDate: capturedDate,
             diContainer: self,
             onGoBack: onGoBack,
             onDismiss: onDismiss

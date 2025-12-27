@@ -36,6 +36,7 @@ struct GalleryView: View {
                 NavigationLink(
                     destination: diContainer.makeEditorView(
                         capturedImage: image,
+                        capturedDate: viewModel.selectedImageDate, // 갤러리: PHAsset의 creationDate
                         onGoBack: { navigateToPhotoSave = false },
                         onDismiss: onDismiss
                     ),

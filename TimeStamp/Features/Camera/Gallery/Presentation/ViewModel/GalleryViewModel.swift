@@ -23,6 +23,9 @@ final class GalleryViewModel: ObservableObject {
     /// 선택된 이미지
     @Published var selectedImage: UIImage? = nil
 
+    /// 선택된 이미지의 촬영 날짜
+    @Published var selectedImageDate: Date? = nil
+
     /// 권한 알림 표시 여부
     @Published var showPermissionAlert = false
 
@@ -60,11 +63,13 @@ final class GalleryViewModel: ObservableObject {
     func loadFullImage(from asset: PHAsset) async {
         isLoading = true
         selectedImage = await useCase.loadFullImage(from: asset)
+        selectedImageDate = asset.creationDate
         isLoading = false
     }
 
     /// 선택된 이미지 초기화
     func clearSelectedImage() {
         selectedImage = nil
+        selectedImageDate = nil
     }
 }

@@ -85,6 +85,7 @@ struct CameraView: View {
                     destination:
                     diContainer.makeEditorView(
                         capturedImage: image,
+                        capturedDate: nil, 
                         onGoBack: { navigateToEditor = false },
                         onDismiss:  onDismiss
                     ),
