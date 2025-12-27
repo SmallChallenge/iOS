@@ -12,7 +12,13 @@ struct CameraView: View {
     @StateObject var viewModel: CameraViewModel
     let diContainer: CameraDIContainerProtocol
     let onDismiss: () -> Void
-    @State private var navigateToPhotoSave = false
+
+    // MARK: - Private property
+
+    // 다음화면으로 (에디터)
+    @State private var navigateToEditor = false
+
+    // MARK: - Initialization
 
     init(
         viewModel: CameraViewModel,
@@ -23,6 +29,8 @@ struct CameraView: View {
         self.onDismiss = onDismiss
         self.diContainer = diContainer
     }
+    
+    // MARK: - body
 
     var body: some View {
         ZStack {
@@ -36,8 +44,10 @@ struct CameraView: View {
                     CameraPreviewView(session: viewModel.cameraManager.session)
                     #endif
 
-                    // 오버레이 뷰 (타임스탬프, 로고)
-                    DefaultTemplateView(hasLogo: true)
+                    // 오버레이 뷰 (타임스탬프, 로고) - 매분 정각에 자동 업데이트
+                    TimelineView(.everyMinute) { context in
+                        DefaultTemplateView(displayDate: context.date, hasLogo: true)
+                    }
                 }
                 .aspectRatio(1, contentMode: .fit)
                 .padding(.top, 40)
@@ -65,7 +75,7 @@ struct CameraView: View {
             }
             .onChange(of: viewModel.capturedImage) { newImage in
                 if newImage != nil {
-                    navigateToPhotoSave = true
+                    navigateToEditor = true
                 }
             }
 
@@ -75,10 +85,10 @@ struct CameraView: View {
                     destination:
                     diContainer.makeEditorView(
                         capturedImage: image,
-                        onGoBack: { navigateToPhotoSave = false },
+                        onGoBack: { navigateToEditor = false },
                         onDismiss:  onDismiss
                     ),
-                    isActive: $navigateToPhotoSave
+                    isActive: $navigateToEditor
                 ) {
                     EmptyView()
                 }

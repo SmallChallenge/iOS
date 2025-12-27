@@ -6,26 +6,20 @@
 //
 
 import SwiftUI
-import Combine
 
 struct DefaultTemplateView2: View {
+    let displayDate: Date
     let hasLogo: Bool
     
-    
-    @State private var currentDate = Date()
-
-    // 매초마다 업데이트되는 타이머
-    let timer = Timer.publish(every: 1, on: .main, in: .common).autoconnect()
-
     var body: some View {
         ZStack {
             // 중앙: 날짜 + 시계
             VStack(spacing: 8) {
-                Text(formattedDate)
+                Text(displayDate.toString(format: "yyyy.MM.dd"))
                     .font(.H3)
                     .foregroundColor(.gray50)
 
-                Text(formattedTime)
+                Text(displayDate.toString(format: "HH:mm"))
                     .font(.H1)
                     .foregroundColor(.gray50)
             }
@@ -45,28 +39,9 @@ struct DefaultTemplateView2: View {
                 }
             }
         }
-        .onReceive(timer) { _ in
-            currentDate = Date()
-        }
-    }
-
-    // MARK: - Time Formatting
-
-    /// 현재 날짜 문자열 (예: 2025.12.19)
-    private var formattedDate: String {
-        let formatter = DateFormatter()
-        formatter.dateFormat = "yyyy.MM.dd"
-        return formatter.string(from: currentDate)
-    }
-
-    /// 현재 시간 문자열 (예: 14:30:45)
-    private var formattedTime: String {
-        let formatter = DateFormatter()
-        formatter.dateFormat = "HH:mm"
-        return formatter.string(from: currentDate)
     }
 }
 
 #Preview {
-    DefaultTemplateView2(hasLogo: true)
+    DefaultTemplateView2(displayDate: Date(), hasLogo: true)
 }

@@ -182,7 +182,8 @@ struct EditorView: View {
                 .clipShape(Rectangle())
 
             // 템플릿 (타임스탬프, 로고)
-            selectedTemplate.makeView(hasLogo: isOnLogo)
+            // TODO: 사진 날짜 가져와서 넣기
+            selectedTemplate.makeView(displayDate: Date(), hasLogo: isOnLogo)
         }
         .aspectRatio(1, contentMode: .fit)
     }
@@ -223,9 +224,10 @@ struct EditorView: View {
         let imageSize: CGFloat = UIScreen.main.bounds.width
         let targetSize = CGSize(width: imageSize, height: imageSize)
 
+        // TODO: 사진 날짜 가져와서 넣기
         guard let composedImage = imageCompositor.composeImage(
             background: capturedImage,
-            template: selectedTemplate.makeView(hasLogo: isOnLogo),
+            template: selectedTemplate.makeView(displayDate: Date(), hasLogo: isOnLogo),
             templateSize: targetSize
         ) else {
             return
@@ -246,7 +248,7 @@ struct EditorView: View {
         // 광고 미시청: 로고 없애려면 광고보기 팝업띄우기
         if isOnLogo {
             showAdPopup = true
-        } 
+        }
     }
     
 

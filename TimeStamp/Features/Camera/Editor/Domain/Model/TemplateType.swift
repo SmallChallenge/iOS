@@ -33,13 +33,13 @@ enum TemplateType: String, CaseIterable, Identifiable {
 
     /// 템플릿 뷰 생성
     @ViewBuilder
-    func makeView(hasLogo: Bool) -> some View {
+    func makeView(displayDate: Date, hasLogo: Bool) -> some View {
         switch self {
         case .defaultTemplate:
-            DefaultTemplateView(hasLogo: hasLogo)
+            DefaultTemplateView(displayDate: displayDate, hasLogo: hasLogo)
             
         case .defaultTemplate2:
-            DefaultTemplateView2(hasLogo: hasLogo)
+            DefaultTemplateView2(displayDate: displayDate, hasLogo: hasLogo)
         }
     }
 }
