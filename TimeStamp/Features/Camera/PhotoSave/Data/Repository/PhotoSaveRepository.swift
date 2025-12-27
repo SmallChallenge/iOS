@@ -8,6 +8,7 @@
 import Foundation
 import UIKit
 import Alamofire
+import Photos
 
 /// PhotoSave Repository 구현 (Data Layer)
 /// - LocalTimeStampLogDataSource를 사용하여 로컬 데이터 저장
@@ -97,7 +98,39 @@ final class PhotoSaveRepository: PhotoSaveRepositoryProtocol {
         }
         Logger.success("서버에 메타데이터 저장 성공: imageId=\(imageId)")
     }
-    
+
+    // MARK: - Gallery
+
+    /// 갤러리에 사진 저장
+    func savePhotoToGallery(image: UIImage) {
+        // Stampy 앨범 찾기 또는 생성
+        let albumName = "Stampy"
+
+        // 앨범이 존재하는지 확인
+        let fetchOptions = PHFetchOptions()
+        fetchOptions.predicate = NSPredicate(format: "title = %@", albumName)
+        let collection = PHAssetCollection.fetchAssetCollections(with: .album, subtype: .any, options: fetchOptions)
+
+        if let album = collection.firstObject {
+            // 앨범이 이미 존재하면 해당 앨범에 사진 추가
+            saveImageToAlbum(image: image, album: album)
+        } else {
+            // 앨범이 없으면 생성 후 사진 추가
+            PHPhotoLibrary.shared().performChanges({
+                PHAssetCollectionChangeRequest.creationRequestForAssetCollection(withTitle: albumName)
+            }) { success, error in
+                if success {
+                    // 앨범 생성 성공 후 다시 앨범을 찾아서 사진 추가
+                    let newCollection = PHAssetCollection.fetchAssetCollections(with: .album, subtype: .any, options: fetchOptions)
+                    if let newAlbum = newCollection.firstObject {
+                        self.saveImageToAlbum(image: image, album: newAlbum)
+                    }
+                } else if let error = error {
+                    Logger.error("Stampy 앨범 생성 실패: \(error)")
+                }
+            }
+        }
+    }
 
     // MARK: - Private Helpers
 
@@ -137,6 +170,27 @@ final class PhotoSaveRepository: PhotoSaveRepositoryProtocol {
                         continuation.resume(throwing: error)
                     }
                 }
+        }
+    }
+
+    /// 특정 앨범에 이미지 저장 (Private Helper)
+    /// - Parameters:
+    ///   - image: 저장할 이미지
+    ///   - album: 저장할 앨범
+    private func saveImageToAlbum(image: UIImage, album: PHAssetCollection) {
+        PHPhotoLibrary.shared().performChanges({
+            let assetRequest = PHAssetChangeRequest.creationRequestForAsset(from: image)
+            guard let placeholder = assetRequest.placeholderForCreatedAsset,
+                  let albumChangeRequest = PHAssetCollectionChangeRequest(for: album) else {
+                return
+            }
+            albumChangeRequest.addAssets([placeholder] as NSArray)
+        }) { success, error in
+            if success {
+                Logger.success("Stampy 앨범에 사진 저장 성공")
+            } else if let error = error {
+                Logger.error("Stampy 앨범에 사진 저장 실패: \(error)")
+            }
         }
     }
 }

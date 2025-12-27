@@ -55,10 +55,10 @@ struct PhotoSaveUseCase: PhotoSaveUseCaseProtocol {
         guard let imageData = image.jpegData(compressionQuality: 0.8) else {
             throw FileManagerError.imageConversionFailed
         }
-        
+
         // 3. 파일 크기 가져오기
         let fileSize = imageData.count
-        
+
         // 4. 고유한 파일명 생성
         let fileName = "\(UUID().uuidString)_\(Date().toString(.dateOnly)).jpg"
 
@@ -83,5 +83,9 @@ struct PhotoSaveUseCase: PhotoSaveUseCaseProtocol {
             visibility: visibility.rawValue,
             timeStamp: dateString
         )
+    }
+
+    func savePhotoToGallery(image: UIImage) {
+        repository.savePhotoToGallery(image: image)
     }
 }

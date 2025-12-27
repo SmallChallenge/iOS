@@ -12,7 +12,7 @@ import UIKit
 /// - Entity 기반 인터페이스
 /// - Data Layer에서 구현
 protocol PhotoSaveRepositoryProtocol {
-    
+
     /// 이미지를 파일로 저장하고 DTO를 DataSource에 저장
     func savePhotoToLocal(image: UIImage, fileName: String, dto: LocalTimeStampLogDto) throws
 
@@ -26,4 +26,10 @@ protocol PhotoSaveRepositoryProtocol {
 
     /// 서버에 타임스탬프 메타데이터 저장
     func saveTimeStampMetadata(fileName: String, imageSize: Int, objectKey: String, category: String, visibility: String, timeStamp: String) async throws
+
+    // MARK: - Gallery
+
+    /// 갤러리에 사진 저장
+    /// - Parameter image: 저장할 이미지
+    func savePhotoToGallery(image: UIImage)
 }
