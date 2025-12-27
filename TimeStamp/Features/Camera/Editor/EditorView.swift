@@ -22,7 +22,6 @@ struct EditorView: View {
     @State private var isOnLogo: Bool = false
     @State private var navigateToPhotoSave = false
     @State private var editedImage: UIImage?
-    private let imageSize: CGFloat = UIScreen.main.bounds.width
     
     var body: some View {
         ZStack {
@@ -163,11 +162,8 @@ struct EditorView: View {
 
             // 오버레이 뷰 (타임스탬프, 로고)
             DefaultTemplateView()
-                .frame(width: imageSize, height: imageSize)
         }
-        .frame(width: imageSize, height: imageSize)
-//        .aspectRatio(1, contentMode: .fit)
-//        .frame(maxWidth: .infinity)
+        .aspectRatio(1, contentMode: .fit)
     }
     
     
@@ -175,6 +171,7 @@ struct EditorView: View {
 
     @MainActor
     private func captureEditedImage() {
+        let imageSize: CGFloat = UIScreen.main.bounds.width
         let targetSize = CGSize(width: imageSize, height: imageSize)
 
         // 1. 배경 이미지 렌더링 (정사각형으로 크롭)

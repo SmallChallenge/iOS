@@ -40,9 +40,6 @@ struct PhotoSaveView: View {
                     .padding(.top, 28)
                     .padding(.horizontal, 20)
                     .padding(.bottom, 32)
-                    .onAppear {
-                        print("📷 PhotoSaveView received image size: \(capturedImage.size), scale: \(capturedImage.scale)")
-                    }
 
                 // 카테고리 선택
                 categoryPicker
