@@ -17,9 +17,9 @@ struct EditorView: View {
     let onDismiss: () -> Void
     
     // MARK: prevate property
-    
+
     @State private var selectedCategory: CategoryFilterViewData = .all
-    @State private var selectedTemplate: TemplateType = .defaultTemplate
+    @State private var selectedTemplate: Template = Template.all[0]
     
     // 광고, 로고 여부 //
     @State private var showAdPopup: Bool = false // 광고보기 팝업 띄우기
@@ -40,15 +40,15 @@ struct EditorView: View {
     }
 
     /// 선택된 카테고리에 맞는 템플릿 필터링
-    private var filteredTemplates: [TemplateType] {
+    private var filteredTemplates: [Template] {
         // CategoryFilterViewData를 Category로 변환
         guard let category = selectedCategory.toDomainCategory() else {
             // "전체"면 모든 템플릿 반환
-            return TemplateType.allCases
+            return Template.all
         }
 
         // 특정 카테고리의 템플릿만 필터링
-        return TemplateType.allCases.filter { $0.category == category }
+        return Template.all.filter { $0.category == category }
     }
 
     var body: some View {

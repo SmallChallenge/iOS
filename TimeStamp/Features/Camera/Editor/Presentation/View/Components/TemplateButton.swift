@@ -9,7 +9,7 @@ import SwiftUI
 
 /// 템플릿 선택 버튼
 struct TemplateButton: View {
-    let template: TemplateType
+    let template: Template
     let isSelected: Bool
     let action: () -> Void
 
@@ -19,7 +19,7 @@ struct TemplateButton: View {
             ZStack {
                 Color.gray300
 
-                Text(template.rawValue)
+                Text(template.name)
                     .font(.caption)
                     .foregroundColor(.gray50)
             }
@@ -37,12 +37,12 @@ struct TemplateButton: View {
 #Preview {
     HStack(spacing: 8) {
         TemplateButton(
-            template: .defaultTemplate,
+            template: Template.all[0],
             isSelected: true
         ) {}
 
         TemplateButton(
-            template: .defaultTemplate,
+            template: Template.all[0],
             isSelected: false
         ) {}
     }

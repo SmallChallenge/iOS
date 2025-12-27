@@ -7,8 +7,9 @@
 
 import SwiftUI
 
+
 /// 기본 타임스탬프 템플릿 뷰
-struct DefaultTemplateView: View {
+struct DefaultTemplateView: TemplateViewProtocol {
     let displayDate: Date
     let hasLogo: Bool
     

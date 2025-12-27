@@ -7,7 +7,7 @@
 
 import SwiftUI
 
-struct DefaultTemplateView2: View {
+struct DefaultTemplateView2: TemplateViewProtocol{
     let displayDate: Date
     let hasLogo: Bool
     
