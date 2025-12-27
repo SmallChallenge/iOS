@@ -17,15 +17,20 @@ struct EditorView: View {
     
     // MARK: prevate property
     
-    @State private var showAdPopup: Bool = false
     @State private var selectedCategory: CategoryFilterViewData = .all
     @State private var selectedTemplate: TemplateType = .defaultTemplate
-    @State private var isOnLogo: Bool = true
+    
+    // 광고, 로고 여부 //
+    @State private var showAdPopup: Bool = false // 광고보기 팝업 띄우기
+    @State private var isOnLogo: Bool = true // 로고 여부
+    @State private var hasWatchedAd: Bool  = false // 광고시청여부
+    
     
     @State private var navigateToPhotoSave = false
     @State private var editedImage: UIImage?
 
     private let imageCompositor = ImageCompositor()
+   
 
     /// 선택된 카테고리에 맞는 템플릿 필터링
     private var filteredTemplates: [TemplateType] {
@@ -116,9 +121,11 @@ struct EditorView: View {
                         showAdPopup = false
                     }
                     MainButton(title: "광고 시청", colorType: .primary) {
-                        showAdPopup = false
-                        isOnLogo = false
                         // TODO: 광고 시청
+                        hasWatchedAd = true
+                        isOnLogo = false
+                        showAdPopup = false
+                        
                     }
                 }
         })
@@ -146,10 +153,18 @@ struct EditorView: View {
                 .font(.Body2)
                 .foregroundStyle(Color.gray300)
             
+            
             Toggle("Logo", isOn: $isOnLogo)
                 .labelsHidden()
                 .fixedSize()
-            
+                .allowsHitTesting(false)
+                .overlay {
+                    Color.clear
+                        .contentShape(Rectangle())
+                        .onTapGesture {
+                            handleLogoToggleTap()
+                        }
+                }
         }
     }
     
@@ -219,6 +234,21 @@ struct EditorView: View {
         editedImage = composedImage
         navigateToPhotoSave = true
     }
+    
+    /// 로고 토글 탭 이벤트 처리
+    private func handleLogoToggleTap() {
+        // 광고 시청 완료: 자유롭게 설정가능
+        guard !hasWatchedAd else {
+            isOnLogo = !isOnLogo
+            return
+        }
+        
+        // 광고 미시청: 로고 없애려면 광고보기 팝업띄우기
+        if isOnLogo {
+            showAdPopup = true
+        } 
+    }
+    
 
 }
 
