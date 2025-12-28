@@ -102,15 +102,7 @@ struct LoginView: View {
                 }
             }// ~Vstack
             .toast(message: $viewModel.toastMessage)
-            .alert(isPresented: .constant(viewModel.alertMessage != nil)) {
-                Alert(
-                    title: Text("알림"),
-                    message: Text(viewModel.alertMessage ?? ""),
-                    dismissButton: .default(Text("확인")) {
-                        viewModel.alertMessage = nil
-                    }
-                )
-            }
+            .popup(message: $viewModel.alertMessage)
             .loading(viewModel.isLoading)
             .mainBackgourndColor()
             .navigationBarTitleDisplayMode(.inline)

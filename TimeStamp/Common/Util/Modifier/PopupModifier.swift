@@ -45,4 +45,23 @@ extension View {
     ) -> some View {
         self.modifier(PopupModifier(isPresented: isPresented, popupContent: content))
     }
+
+    /// 메시지 기반 팝업 (toast처럼 message가 있을 때만 자동으로 표시)
+    func popup(message: Binding<String?>) -> some View {
+        self.popup(
+            isPresented: Binding(
+                get: { message.wrappedValue != nil },
+                set: { if !$0 { message.wrappedValue = nil } }
+            )
+        ) {
+            if let msg = message.wrappedValue {
+                Modal(title: msg, content: nil)
+                    .buttons {
+                        MainButton(title: "확인", size: .large, colorType: .primary) {
+                            message.wrappedValue = nil
+                        }
+                    }
+            }
+        }
+    }
 }
