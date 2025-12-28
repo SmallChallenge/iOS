@@ -84,11 +84,12 @@ struct PhotoSaveView: View {
                 }
         })
         // 로그인 화면 띄우기
-        .sheet(isPresented: $showLoginView, content: {
+        .fullScreenCover(isPresented: $showLoginView, content: {
             AppDIContainer.shared.makeLoginView {
                 showLoginView = false
             }
         })
+        
         // 저장 성공 시 CameraView까지 닫기 (MainTabView로 돌아가기)
         .onChange(of: viewModel.isSaved) { isSaved in
             if isSaved {

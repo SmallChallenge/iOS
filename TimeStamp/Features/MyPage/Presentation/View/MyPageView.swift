@@ -28,11 +28,10 @@ struct MyPageView: View {
                 viewModel.logout()
             }
         }
-        .sheet(isPresented: $showLoginView) {
+        .fullScreenCover(isPresented: $showLoginView) {
             container.makeLoginView {
                 showLoginView = false
             }
-
         }
         
     }

@@ -126,7 +126,11 @@ public extension Text {
         modifier(FontStyleModifier(style: fontStyle))
     }
 }
-
+public extension TextField {
+    func font(_ fontStyle: FontStyle) -> ModifiedContent<TextField, FontStyleModifier> {
+        modifier(FontStyleModifier(style: fontStyle))
+    }
+}
 
 
 /*

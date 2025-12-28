@@ -7,7 +7,12 @@
 
 import Foundation
 
-final class LoginDIContainer {
+protocol LoginDIContainerProtocol {
+    func makeLoginView(onDismiss: @escaping () -> Void) -> LoginView
+    func makeNicknameSettingView(onGoBack: @escaping () -> Void, onDismiss: @escaping () -> Void) -> NicknameSettingView 
+}
+
+final class LoginDIContainer: LoginDIContainerProtocol {
 
     // MARK: - Dependencies
 
@@ -41,6 +46,14 @@ final class LoginDIContainer {
 
     func makeLoginView(onDismiss: @escaping () -> Void) -> LoginView {
         let viewModel = makeLoginViewModel()
-        return LoginView(viewModel: viewModel, onDismiss: onDismiss)
+        return LoginView(viewModel: viewModel, diContainer: self, onDismiss: onDismiss)
+    }
+    
+    // MARK: -- 닉네임 설정
+    func makeNicknameSettingView(onGoBack: @escaping () -> Void, onDismiss: @escaping () -> Void) -> NicknameSettingView {
+        NicknameSettingView(
+            onGoBack: onGoBack,
+            onDismiss: onDismiss
+        )
     }
 }
