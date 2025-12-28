@@ -16,6 +16,14 @@ public enum AuthRouter {
     case appleLogin(accessToken: String)
     case googleLogin(accessToken: String)
     
+    // 약관 동의 (계정 활성화)
+    case activeAccount(
+        accessToken: String,
+        agreedToPrivacyPolicy: Bool,
+        agreedToTermsOfService: Bool,
+        agreedToMarketing: Bool
+    )
+    
     // 토큰 재발급
     case refresh(token: String)
     // 로그아웃
@@ -43,6 +51,9 @@ extension AuthRouter: Router {
             
         case .setNickname:
             "/api/v1/auth/nickname"
+            
+        case .activeAccount:
+            "api/v1/auth/terms-agreement"
         }
     }
     
@@ -84,11 +95,25 @@ extension AuthRouter: Router {
                 "nickname" : nickname,
             ]
             return params
+            
+        case let .activeAccount(_, privacyPolicy, termsOfService, marketing):
+            let params: Parameters = [
+                "agreedToPrivacyPolicy" : privacyPolicy,
+                "agreedToTermsOfService" : termsOfService,
+                "agreedToMarketing" : marketing,
+                "allRequiredTermsAgreed" : (privacyPolicy && termsOfService),
+            ]
+            return params
         }
     }
     
     public var headers: HTTPHeaders? {
-        nil
+        switch self {
+        case let .activeAccount(token, _, _, _):
+            return ["Authorization": "Bearer \(token)"]
+        default:
+            return nil
+        }
     }
     
     public var encoding: Encoding? {
@@ -103,6 +128,12 @@ public protocol AuthApiClientProtocol {
     func kakaoLogin(accessToken token: String) async -> Result<LoginResponseDto, NetworkError>
     func appleLogin(accessToken token: String) async -> Result<LoginResponseDto, NetworkError>
     func googleLogin(accessToken token: String) async -> Result<LoginResponseDto, NetworkError>
+    func activeAccount(
+        accessToken token: String, 
+        agreedToPrivacyPolicy: Bool,
+        agreedToTermsOfService: Bool,
+        agreedToMarketing: Bool
+    ) async -> Result<ActiveAccountDto, NetworkError>
     /// 토큰 재발급
     func refreshToken(refreshToken token: String) async -> Result<RefreshDto, NetworkError>
     // 로그아웃
@@ -117,6 +148,8 @@ public protocol AuthApiClientProtocol {
 // MARK: - API Client
 
 public class AuthApiClient: ApiClient<AuthRouter>, AuthApiClientProtocol {
+   
+    
     public func kakaoLogin(accessToken token: String) async -> Result<LoginResponseDto, NetworkError> {
         await request(AuthRouter.kakaoLogin(accessToken: token))
     }
@@ -135,4 +168,10 @@ public class AuthApiClient: ApiClient<AuthRouter>, AuthApiClientProtocol {
     public func setNickname(nickname: String) async -> Result<SetNicknameDto, NetworkError> {
         await request(AuthRouter.setNickname(nickname: nickname))
     }
+    
+    /// 약관 동의 받기 (계정 활성화)
+    public func activeAccount(accessToken token: String, agreedToPrivacyPolicy: Bool, agreedToTermsOfService: Bool, agreedToMarketing: Bool) async -> Result<ActiveAccountDto, NetworkError> {
+        await request(.activeAccount(accessToken: token, agreedToPrivacyPolicy: agreedToPrivacyPolicy, agreedToTermsOfService: agreedToTermsOfService, agreedToMarketing: agreedToMarketing))
+    }
 }
+
