@@ -20,7 +20,14 @@ struct LoginView: View {
         self.onDismiss = onDismiss
     }
 
-    @State private var navigateToEditor = false
+    // 닉네임 설정 화면으로 넘어가기
+    @State private var navigateToNicknameSetting = false
+    /// 약관동의  sheet띄우기 (동의 받기)
+    @State private var showTermsSheet: Bool = false
+    
+    /// 이용약관 띄우기(웹뷰)
+    @State private var showTermsWebView: Bool = false
+    
     
     var body: some View {
         NavigationView {
@@ -69,7 +76,7 @@ struct LoginView: View {
                     
                     // 이용약관 띄우기
                     Button {
-                        navigateToEditor = true
+                         showTermsWebView = true
                         
                     } label: {
                         Text(AttributedString("이용약관", attributes: AttributeContainer([.underlineStyle: NSUnderlineStyle.single.rawValue])))
@@ -86,22 +93,15 @@ struct LoginView: View {
                 
                 // 닉네임 설정 화면으로 넘기기
                 NavigationLink(destination:
-                                
                                 diContainer.makeNicknameSettingView(
-                                    onGoBack: { navigateToEditor = false },
+                                    onGoBack: { navigateToNicknameSetting = false },
                                     onDismiss: onDismiss
                                 )
-                               , isActive: $navigateToEditor) {
+                               , isActive: $navigateToNicknameSetting) {
                     EmptyView()
                 }
             }// ~Vstack
             .mainBackgourndColor()
-            .onChange(of: viewModel.isLoggedIn) { isLoggedIn in
-                if isLoggedIn {
-                    // 로그인 성공 시, 로그인 화면 닫기
-                    onDismiss()
-                }
-            }
             .navigationBarTitleDisplayMode(.inline)
             .navigationBarBackButtonHidden(true)
             .toolbar {
@@ -113,6 +113,28 @@ struct LoginView: View {
                     .padding(.trailing, -12)
                 }
             }
+            .onChange(of: viewModel.isLoggedIn) { isLoggedIn in
+                if isLoggedIn {
+                    // 로그인 성공 시, 로그인 화면 닫기
+                    onDismiss()
+                }
+            }
+            .onChange(of: viewModel.needNickname) { needNickname in
+                if needNickname {
+                    navigateToNicknameSetting = true
+                }
+            }
+            .onChange(of: viewModel.needTerms) { needTerms in
+                if needTerms {
+                    showTermsSheet = true
+                }
+            }
+            .sheet(isPresented: $showTermsWebView) {
+                diContainer.makeTermsWebView {
+                    showTermsWebView = false
+                }
+            }
+            
         } // ~NavigationView
     }
 }

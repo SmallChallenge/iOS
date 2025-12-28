@@ -18,9 +18,12 @@ final class LoginViewModel: ObservableObject {
     // MARK: - Output Properties
 
     /// 로그인 성공여부
-    @Published var isLoggedIn = false
     @Published var isLoading = false
     @Published var errorMessage: String?
+    
+    @Published var needNickname = false
+    @Published var needTerms = false
+    @Published var isLoggedIn = false
 
     // MARK: - Input Methods
 
@@ -52,8 +55,20 @@ final class LoginViewModel: ObservableObject {
         do {
             let entity = try await loginAction()
             Logger.success("로그인 성공: \(entity)")
-            isLoggedIn = true
+            
             isLoading = false
+            // 신구회원, 약관 화면으로 이동
+            if entity.isNewUser {
+                return
+            } else if entity.needNickname {
+                // 닉네임 입력화면으로 보내기.
+                return
+            }
+        
+            // 로그인 성공 시, 로그인 화면 닫기
+            // (약관 안받아도 되고, 닉네임도 있음(
+            isLoggedIn = true
+            
         } catch {
             Logger.error("로그인 실패: \(error)")
             errorMessage = error.localizedDescription

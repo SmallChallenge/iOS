@@ -6,10 +6,12 @@
 //
 
 import Foundation
+import SwiftUI
 
 protocol LoginDIContainerProtocol {
     func makeLoginView(onDismiss: @escaping () -> Void) -> LoginView
-    func makeNicknameSettingView(onGoBack: @escaping () -> Void, onDismiss: @escaping () -> Void) -> NicknameSettingView 
+    func makeNicknameSettingView(onGoBack: @escaping () -> Void, onDismiss: @escaping () -> Void) -> NicknameSettingView
+    func makeTermsWebView(onDismiss: @escaping () -> Void) -> AnyView
 }
 
 final class LoginDIContainer: LoginDIContainerProtocol {
@@ -73,6 +75,30 @@ final class LoginDIContainer: LoginDIContainerProtocol {
             onDismiss: onDismiss
         )
     }
+
+    // MARK: - Terms WebView
+
+    func makeTermsWebView(onDismiss: @escaping () -> Void) -> AnyView {
+        return AnyView(
+            NavigationView {
+                AdvancedWebView(
+                    url: URL(string: AppConstants.URLs.termsOfService)!,
+                    isLoading: .constant(false)
+                )
+                .navigationBarTitleDisplayMode(.inline)
+                .toolbar {
+                    ToolbarItem(placement: .navigationBarTrailing) {
+                        Button {
+                            onDismiss()
+                        } label: {
+                            Image(systemName: "xmark")
+                                .foregroundColor(.gray)
+                        }
+                    }
+                }
+            }
+        )
+    }
 }
 
 // MARK: - Mock
@@ -108,7 +134,29 @@ final class MockLoginDIContainer: LoginDIContainerProtocol {
             onDismiss: onDismiss
         )
     }
-    
+
+    func makeTermsWebView(onDismiss: @escaping () -> Void) -> AnyView {
+        return AnyView(
+            NavigationView {
+                AdvancedWebView(
+                    url: URL(string: AppConstants.URLs.termsOfService)!,
+                    isLoading: .constant(false)
+                )
+                .navigationBarTitleDisplayMode(.inline)
+                .toolbar {
+                    ToolbarItem(placement: .navigationBarTrailing) {
+                        Button {
+                            onDismiss()
+                        } label: {
+                            Image(systemName: "xmark")
+                                .foregroundColor(.gray)
+                        }
+                    }
+                }
+            }
+        )
+    }
+
     // Mock struct
     
     struct MockLoginUseCase: LoginUseCaseProtocol {

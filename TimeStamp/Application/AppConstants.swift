@@ -1,0 +1,44 @@
+//
+//  AppConstants.swift
+//  TimeStamp
+//
+//  Created by 임주희 on 12/28/25.
+//
+
+import Foundation
+
+enum AppConstants {
+
+    // MARK: - URLs
+
+    enum URLs {
+        /// 이용약관
+        static let termsOfService = "https://sage-hare-ff7.notion.site/2d5f2907580d80df9a21f95acd343d3f?source=copy_link"
+        /// 개인정보 처리방침
+        static let privacyPolicy = "https://sage-hare-ff7.notion.site/2d5f2907580d80eda745ccfbda543bc5?source=copy_link"
+        //static let supportEmail = "support@stampy.kr"
+    }
+
+    // MARK: - App Info
+
+    enum AppInfo {
+        static let appName = "STAMPY"
+        static let version = Bundle.main.infoDictionary?["CFBundleShortVersionString"] as? String ?? "1.0.0"
+        static let buildNumber = Bundle.main.infoDictionary?["CFBundleVersion"] as? String ?? "1"
+    }
+
+    // MARK: - UI
+
+//    enum UI {
+//        static let animationDuration: TimeInterval = 0.3
+//        static let cornerRadius: CGFloat = 12
+//    }
+
+    // MARK: - Limits
+
+    enum Limits {
+        static let maxNicknameLength = 10
+        static let minNicknameLength = 2
+        static let maxImageSize = 10 * 1024 * 1024 // 10MB
+    }
+}
