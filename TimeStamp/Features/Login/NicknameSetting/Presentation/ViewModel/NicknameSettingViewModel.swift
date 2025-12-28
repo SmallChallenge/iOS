@@ -70,12 +70,8 @@ class NicknameSettingViewModel: ObservableObject {
                     // 서버 에러 code별 처리
                     switch error {
                     case .serverFailed(let code, let message):
-                        if code == "NICKNAME_DUPLICATED" {
-                            validateMessage = "이미 사용 중인 닉네임입니다."
-                        } else if code == "INVALID_NICKNAME" {
-                            validateMessage = "사용할 수 없는 닉네임입니다."
-                        } else {
-                            validateMessage = message
+                        if code == "NICKNAME_ALREADY_EXISTS" {
+                            validateMessage = "이미 누군가 사용하고 있어요."
                         }
                         Logger.error("닉네임 설정 실패 [\(code)]: \(message)")
                     default:
