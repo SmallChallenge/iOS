@@ -12,6 +12,8 @@ struct LoginRepository: LoginRepositoryProtocol {
     init(authApiClient: AuthApiClientProtocol) {
         self.authApiClient = authApiClient
     }
+    
+    // MARK: - 
 
     func kakaoLogin(accessToken token: String) async -> Result<LoginEntity, NetworkError> {
         let result = await authApiClient.kakaoLogin(accessToken: token)

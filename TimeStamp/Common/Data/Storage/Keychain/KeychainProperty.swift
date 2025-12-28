@@ -37,7 +37,7 @@ extension Keychain {
         do {
             try KeychainItem(service: identifier, key: key).saveItem(value)
         } catch {
-             print(">>>>> failed to save data in keychain. error: \(error)")
+            Logger.error("failed to save data in keychain. error: \(error)")
         }
     }
 
@@ -46,7 +46,7 @@ extension Keychain {
             let value: String = try KeychainItem(service: identifier, key: key).readItem()
             return value
         } catch {
-             print(">>>>> failed to read data in keychain. error: \(error)")
+            Logger.error("failed to read data in keychain. error: \(error)")
             return nil
         }
     }
@@ -55,7 +55,7 @@ extension Keychain {
         do {
             try KeychainItem(service: identifier, key: key).deleteItem()
         } catch {
-             print(">>>>> failed to delete data in keychain. error: \(error)")
+            Logger.error("failed to delete data in keychain. error: \(error)")
         }
     }
 }

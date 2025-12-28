@@ -8,7 +8,7 @@
 import Foundation
 import Combine
 
-final class LoginViewModel: ObservableObject {
+final class LoginViewModel: ObservableObject, MessageDisplayable {
     private let useCase: LoginUseCaseProtocol
 
     init(useCase: LoginUseCaseProtocol) {
@@ -19,61 +19,104 @@ final class LoginViewModel: ObservableObject {
 
     /// 로그인 성공여부
     @Published var isLoading = false
-    @Published var errorMessage: String?
-    
+
     @Published var needNickname = false
     @Published var needTerms = false
     @Published var isLoggedIn = false
+    
+    @Published var toastMessage: String?
+    @Published var alertMessage: String?
+
+    // MARK: - Private Properties
+
+    /// 약관 완료 후 닉네임 체크를 위해 저장
+    var pendingLoginEntity: LoginEntity?
 
     // MARK: - Input Methods
 
     func clickAppleLoginButton() {
+        guard !isLoading else { return }
         Task {
             await performLogin { try await useCase.loginWithApple() }
         }
     }
 
     func clickKakaoLoginButton() {
+        guard !isLoading else { return }
         Task {
             await performLogin { try await useCase.loginWithKakao() }
         }
     }
 
     func clickGoogleLoginButton() {
+        guard !isLoading else { return }
         Task {
             await performLogin { try await useCase.loginWithGoogle() }
         }
     }
 
-    // MARK: - Private Methods
+    /// 약관 완료 후 호출
+    func onTermsCompleted() {
+        guard let entity = pendingLoginEntity else { return }
+        
+        // 로그인하기
+        useCase.login(entity: entity)
+        
+        if entity.needNickname {
+            // 약관 완료 후 닉네임 필요하면 닉네임 화면으로
+            needNickname = true
+        } else {
+            // 모든 절차 완료
+            isLoggedIn = true
+        }
+        pendingLoginEntity = nil
+    }
 
+    // MARK: - Private Methods
+    
+    private func clearData(){
+        pendingLoginEntity = nil
+        needNickname = false
+        needTerms = false
+        isLoggedIn = false
+    }
+
+    // 로그인 공통
     @MainActor
     private func performLogin(_ loginAction: () async throws -> LoginEntity) async {
         isLoading = true
-        errorMessage = nil
+        clearData()
 
         do {
             let entity = try await loginAction()
             Logger.success("로그인 성공: \(entity)")
             
-            isLoading = false
-            // 신구회원, 약관 화면으로 이동
-            if entity.isNewUser {
-                return
-            } else if entity.needNickname {
-                // 닉네임 입력화면으로 보내기.
-                return
+            await MainActor.run {
+                isLoading = false
+                // 신규회원, 약관 화면으로 이동
+                if entity.isNewUser {
+                    Logger.debug(">>>>> 신규회원 약관 화면으로 이동")
+                    pendingLoginEntity = entity  // 저장해두고 약관 완료 후 체크
+                    needTerms = true
+                    return
+                } else if entity.needNickname {
+                    // 닉네임 입력화면으로 보내기.
+                    Logger.debug(">>>>> 닉네임 입력화면으로 보내기.")
+                    needNickname = true
+                    return
+                }
+
+                // 로그인 성공 시, 로그인 화면 닫기
+                // (약관 안받아도 되고, 닉네임도 있음)
+                isLoggedIn = true
             }
-        
-            // 로그인 성공 시, 로그인 화면 닫기
-            // (약관 안받아도 되고, 닉네임도 있음(
-            isLoggedIn = true
             
         } catch {
-            Logger.error("로그인 실패: \(error)")
-            errorMessage = error.localizedDescription
             isLoggedIn = false
             isLoading = false
+            show(.loginFailed)
+            
+            Logger.error("로그인 실패: \(error)")
         }
     }
 }

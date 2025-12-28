@@ -77,6 +77,7 @@ struct NicknameSettingView: View {
                 .padding(.horizontal, 20)
                 .padding(.bottom, 20)
             } // ~VStack
+            .loading(viewModel.isLoading)
             .onChange(of: text){ newValue in
                 viewModel.checkValidateNickname(newValue)
             }

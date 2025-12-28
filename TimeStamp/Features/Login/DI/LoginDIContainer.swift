@@ -11,7 +11,8 @@ import SwiftUI
 protocol LoginDIContainerProtocol {
     func makeLoginView(onDismiss: @escaping () -> Void) -> LoginView
     func makeNicknameSettingView(onGoBack: @escaping () -> Void, onDismiss: @escaping () -> Void) -> NicknameSettingView
-    func makeTermsWebView(onDismiss: @escaping () -> Void) -> AnyView
+    func makeTermsView(accessToken token: String?, onDismiss: @escaping (_ isActive: Bool) -> Void) -> TermsView
+    func makeWebView(url: String, onDismiss: @escaping () -> Void) -> AnyView
 }
 
 final class LoginDIContainer: LoginDIContainerProtocol {
@@ -75,14 +76,33 @@ final class LoginDIContainer: LoginDIContainerProtocol {
             onDismiss: onDismiss
         )
     }
+    
+    // MARK: - Terms
+    private func makeTermsRepository() -> TermsRepositoryProtocol {
+        TermsRepository(authApiClient: authApiClient)
+    }
+    private func makeTermsUseCase() -> TermsUseCaseProtocol {
+        let repo = makeTermsRepository()
+        return TermsUseCase(repository: repo )
+    }
+    
+    private func makeTermsViewModel() -> TermsViewModel {
+        let usecase = makeTermsUseCase()
+        return TermsViewModel(usecase: usecase)
+    }
+    
+    func makeTermsView(accessToken token: String?, onDismiss: @escaping (_ isActive: Bool) -> Void) -> TermsView {
+        let vm = makeTermsViewModel()
+        return TermsView(viewModel: vm, diContainer: self, accessToken: token, onDismiss: onDismiss)
+    }
 
     // MARK: - Terms WebView
 
-    func makeTermsWebView(onDismiss: @escaping () -> Void) -> AnyView {
+    func makeWebView(url: String, onDismiss: @escaping () -> Void) -> AnyView {
         return AnyView(
             NavigationView {
                 AdvancedWebView(
-                    url: URL(string: AppConstants.URLs.termsOfService)!,
+                    url: URL(string: url)!,
                     isLoading: .constant(false)
                 )
                 .navigationBarTitleDisplayMode(.inline)
@@ -135,11 +155,11 @@ final class MockLoginDIContainer: LoginDIContainerProtocol {
         )
     }
 
-    func makeTermsWebView(onDismiss: @escaping () -> Void) -> AnyView {
+    func makeWebView(url: String, onDismiss: @escaping () -> Void) -> AnyView {
         return AnyView(
             NavigationView {
                 AdvancedWebView(
-                    url: URL(string: AppConstants.URLs.termsOfService)!,
+                    url: URL(string: url)!,
                     isLoading: .constant(false)
                 )
                 .navigationBarTitleDisplayMode(.inline)
@@ -156,10 +176,18 @@ final class MockLoginDIContainer: LoginDIContainerProtocol {
             }
         )
     }
+    
+    func makeTermsView(accessToken token: String?, onDismiss: @escaping (_ isActive: Bool) -> Void) -> TermsView {
+        let useCase = MockTermsUseCase()
+        let vm = TermsViewModel(usecase: useCase)
+        return TermsView(viewModel: vm, diContainer: self, accessToken: token, onDismiss: {_ in })
+    }
 
-    // Mock struct
+    // -------- Mock struct ------ //
     
     struct MockLoginUseCase: LoginUseCaseProtocol {
+        func login(entity: LoginEntity) {}
+        
         func loginWithApple() async throws -> LoginEntity {
             throw NetworkError.dataNil
         }
@@ -176,6 +204,11 @@ final class MockLoginDIContainer: LoginDIContainerProtocol {
     struct MockNicknameSettingUseCase: NicknameSettingUseCaseProtocol {
         func setNickname(nickname: String) async throws -> NicknameEntity {
             NicknameEntity(userId: 1, nickname: "닉네임", isProfileComplete: true)
+        }
+    }
+    struct MockTermsUseCase: TermsUseCaseProtocol {
+        func activeAccount(accessToken token: String, agreedToPrivacyPolicy: Bool, agreedToTermsOfService: Bool, agreedToMarketing: Bool) async throws -> ActiveAccount {
+            throw NetworkError.dataNil
         }
     }
 }

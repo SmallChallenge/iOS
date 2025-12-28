@@ -11,6 +11,8 @@ protocol LoginUseCaseProtocol {
     func loginWithApple() async throws -> LoginEntity
     func loginWithKakao() async throws -> LoginEntity
     func loginWithGoogle() async throws -> LoginEntity
+    
+    func login(entity: LoginEntity)
 }
 
 // MARK: LoginUseCase
@@ -54,23 +56,27 @@ final class LoginUseCase: LoginUseCaseProtocol {
 
         switch result {
         case .success(let entity):
-            // 로그인 성공 처리 (토큰 + 사용자 정보 저장)
-            let user = User(
-                userId: entity.userId,
-                nickname: entity.nickname,
-                socialType: entity.socialType,
-                profileImageUrl: entity.profileImageUrl
-            )
-            AuthManager.shared.login(
-                user: user,
-                accessToken: entity.accessToken,
-                refreshToken: entity.refreshToken
-            )
+            
             return entity
 
         case .failure(let error):
             throw error
         }
+    }
+    
+    // 로그인 성공 처리 (토큰 + 사용자 정보 저장)
+    func login(entity: LoginEntity){
+        let user = User(
+            userId: entity.userId,
+            nickname: entity.nickname,
+            socialType: entity.socialType,
+            profileImageUrl: entity.profileImageUrl
+        )
+        AuthManager.shared.login(
+            user: user,
+            accessToken: entity.accessToken,
+            refreshToken: entity.refreshToken
+        )
     }
 
     private func performLogin(type: LoginType, accessToken: String) async -> Result<LoginEntity, NetworkError> {

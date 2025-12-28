@@ -101,6 +101,17 @@ struct LoginView: View {
                     EmptyView()
                 }
             }// ~Vstack
+            .toast(message: $viewModel.toastMessage)
+            .alert(isPresented: .constant(viewModel.alertMessage != nil)) {
+                Alert(
+                    title: Text("알림"),
+                    message: Text(viewModel.alertMessage ?? ""),
+                    dismissButton: .default(Text("확인")) {
+                        viewModel.alertMessage = nil
+                    }
+                )
+            }
+            .loading(viewModel.isLoading)
             .mainBackgourndColor()
             .navigationBarTitleDisplayMode(.inline)
             .navigationBarBackButtonHidden(true)
@@ -130,11 +141,24 @@ struct LoginView: View {
                 }
             }
             .sheet(isPresented: $showTermsWebView) {
-                diContainer.makeTermsWebView {
-                    showTermsWebView = false
-                }
+                diContainer.makeWebView(url: AppConstants.URLs.termsOfService) {
+                        showTermsWebView = false
+                    }
             }
-            
+            .bottomSheet(isPresented: $showTermsSheet, onDismiss: {
+                viewModel.needTerms = false
+            }) {
+                diContainer.makeTermsView(
+                    accessToken: viewModel.pendingLoginEntity?.accessToken, onDismiss: { isActive in
+                    if isActive {
+                        showTermsSheet = false
+                        // 약관 완료 후 닉네임 필요한지 체크
+                        viewModel.onTermsCompleted()
+                    }
+                    viewModel.needTerms = false
+                })
+                .frame(height: UIScreen.main.bounds.height * 0.3)
+            }
         } // ~NavigationView
     }
 }
