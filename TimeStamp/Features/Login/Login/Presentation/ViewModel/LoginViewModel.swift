@@ -9,15 +9,14 @@ import Foundation
 import Combine
 
 final class LoginViewModel: ObservableObject {
-    private let useCase: LoginUseCase
+    private let useCase: LoginUseCaseProtocol
 
-    init(useCase: LoginUseCase) {
+    init(useCase: LoginUseCaseProtocol) {
         self.useCase = useCase
-        self.useCase.delegate = self
     }
 
     // MARK: - Output Properties
-    
+
     /// 로그인 성공여부
     @Published var isLoggedIn = false
     @Published var isLoading = false
@@ -26,34 +25,40 @@ final class LoginViewModel: ObservableObject {
     // MARK: - Input Methods
 
     func clickAppleLoginButton() {
-        useCase.loginWithApple()
+        Task {
+            await performLogin { try await useCase.loginWithApple() }
+        }
     }
 
     func clickKakaoLoginButton() {
-        useCase.loginWithKakao()
+        Task {
+            await performLogin { try await useCase.loginWithKakao() }
+        }
     }
 
     func clickGoogleLoginButton() {
-        useCase.loginWithGoogle()
-    }
-}
-
-// MARK: - LoginUseCaseDelegate
-
-extension LoginViewModel: LoginUseCaseDelegate {
-    func loginUseCase(didStartLoading: Bool) {
-        isLoading = didStartLoading
+        Task {
+            await performLogin { try await useCase.loginWithGoogle() }
+        }
     }
 
-    func loginUseCase(didReceiveError message: String) {
-        Logger.error("로그인 실패: \(message)")
-        errorMessage = message
-        isLoggedIn = false
-    }
+    // MARK: - Private Methods
 
-    func loginUseCase(didLoginSuccess entity: LoginEntity) {
-        Logger.success("로그인 성공: \(entity)")
-        // TODO: 로그인 성공 처리 (토큰 저장, 화면 전환 등)
-        isLoggedIn = true
+    @MainActor
+    private func performLogin(_ loginAction: () async throws -> LoginEntity) async {
+        isLoading = true
+        errorMessage = nil
+
+        do {
+            let entity = try await loginAction()
+            Logger.success("로그인 성공: \(entity)")
+            isLoggedIn = true
+            isLoading = false
+        } catch {
+            Logger.error("로그인 실패: \(error)")
+            errorMessage = error.localizedDescription
+            isLoggedIn = false
+            isLoading = false
+        }
     }
 }
