@@ -20,6 +20,7 @@ struct TermsView: View {
         self.onDismiss = onDismiss
     }
     
+    @State private var isCheckedAll: Bool = false
     // 이용약관 체크
     @State private var isCheckedOfService: Bool = false
     // 개인정보처리방침 체크
@@ -32,46 +33,93 @@ struct TermsView: View {
     @State private var showPrivacyPolicy: Bool = false
     
     var body: some View {
-        VStack(spacing: 20) {
+        VStack(alignment: .leading, spacing: .zero) {
+            
             HStack {
-                CheckBox(isChecked: $isCheckedOfService, title: "이용약관 동의")
-                
-                Spacer()
-                
                 Button {
-                    showTermsOfService = true
+                    isCheckedAll.toggle()
+                    isCheckedOfService = isCheckedAll
+                    isCheckedOfPrivacy = isCheckedAll
+                    checkTerms()
                 } label: {
-                    Image(systemName: "chevron.right")
-                        .foregroundStyle(.gray50)
+                    CheckBox(isChecked: isCheckedAll) {
+                        Text("전체 동의하고 시작")
+                            .font(.H3)
+                            .foregroundStyle(Color.gray900)
+                    }
                 }
             }
-            .padding(.horizontal, 20)
+            .padding(.horizontal, 28)
+            .padding(.vertical, 36)
             
-            // 개인정보 처리방침
-            HStack {
-                CheckBox(isChecked: $isCheckedOfPrivacy, title: "개인정보 처리방침 동의")
+            
+            
+            Color.gray300
+                .frame( height: 1)
+            
+            VStack(spacing: .zero){
                 
-                Spacer()
-                
-                Button {
-                    showPrivacyPolicy = true
-                } label: {
-                    Image(systemName: "chevron.right")
-                        .foregroundStyle(.gray50)
+                HStack {
+                    Button {
+                        isCheckedOfService.toggle()
+                        isCheckedAll = isCheckedOfService && isCheckedOfPrivacy
+                        checkTerms()
+                    } label: {
+                        CheckBox(isChecked: isCheckedOfService) {
+                            Text("이용약관 (필수)")
+                                .font(.Body1)
+                                .foregroundStyle(Color.gray900)
+                        }
+                    }
+                    
+                    Spacer()
+                    
+                    Button {
+                        showTermsOfService = true
+                    } label: {
+                        Image(systemName: "chevron.right")
+                            .foregroundStyle(Color.gray900)
+                            .padding([.vertical, .trailing], 5.33)
+                            .padding(.leading, 8.33)
+                    }
                 }
+                .padding(.vertical, 11)
+                .padding(.horizontal, 28)
+                
+                
+                // 개인정보 처리방침
+                HStack {
+                    Button {
+                        isCheckedOfPrivacy.toggle()
+                        isCheckedAll = isCheckedOfService && isCheckedOfPrivacy
+                        checkTerms()
+                    } label: {
+                        CheckBox(isChecked: isCheckedOfPrivacy) {
+                            Text("개인정보 수집 및 이용 (필수)")
+                                .font(.Body1)
+                                .foregroundStyle(Color.gray900)
+                        }
+                    }
+
+                    
+                    Spacer()
+                    
+                    Button {
+                        showPrivacyPolicy = true
+                    } label: {
+                        Image(systemName: "chevron.right")
+                            .foregroundStyle(.gray900)
+                            .padding([.vertical, .trailing], 5.33)
+                            .padding(.leading, 8.33)
+                    }
+                }
+                .padding(.vertical, 11)
+                .padding(.horizontal, 28)
             }
-            .padding(.horizontal, 20)
-            
-            MainButton(title: "확인", isDisabled: !(isCheckedOfService && isCheckedOfPrivacy)) {
-                // 계정 활성화
-                viewModel.saveTerms(
-                    accessToken: accessToken,
-                    isCheckedOfService: isCheckedOfService,
-                    isCheckedOfPrivacy: isCheckedOfPrivacy,
-                    isCheckedOfMarketing: false)
-            }
+            .padding(.vertical, 10)
+
+            Spacer()
         }
-        .mainBackgourndColor()
         .loading(viewModel.isLoading)
         .sheet(isPresented: $showTermsOfService) {
             diContainer.makeWebView(url: AppConstants.URLs.termsOfService) {
@@ -90,8 +138,34 @@ struct TermsView: View {
         }
         .toast(message: $viewModel.toastMessage)
     }
+    
+    private func checkTerms(){
+        viewModel.saveTerms(
+            accessToken: accessToken,
+            isCheckedOfService: isCheckedOfService,
+            isCheckedOfPrivacy: isCheckedOfPrivacy,
+            isCheckedOfMarketing: false
+        )
+    }
 }
 
 #Preview {
-    MockLoginDIContainer().makeTermsView(accessToken: "", onDismiss: { _ in })
+    BottomSheetTestView2()
+}
+struct BottomSheetTestView2: View {
+    @State private var showBottomSheet = true
+
+    var body: some View {
+        VStack {
+            Text("Hello, World!")
+
+            Button("바텀시트 열기") {
+                showBottomSheet = true
+            }
+        }
+        .bottomSheet(isPresented: $showBottomSheet) {
+            MockLoginDIContainer().makeTermsView(accessToken: "", onDismiss: { _ in })
+            .frame(height: UIScreen.main.bounds.height * 0.3)
+        }
+    }
 }

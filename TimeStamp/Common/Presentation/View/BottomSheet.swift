@@ -47,7 +47,7 @@ struct BottomSheet<Content: View>: View {
                         content
                     }
                     .frame(maxWidth: .infinity)
-                    .background(Color.gray900)
+                    .background(Color.gray50)
                     .clipShape(RoundedCorner(radius: 20, corners: [.topLeft, .topRight]))
                 }
                 .ignoresSafeArea(edges: .bottom)
@@ -148,6 +148,7 @@ struct BottomSheetTestView: View {
                 MainButton(title: "확인", size: .large) {
                     showBottomSheet = false
                 }
+                
             }
             .padding(20)
             .frame(height: UIScreen.main.bounds.height * 0.5)

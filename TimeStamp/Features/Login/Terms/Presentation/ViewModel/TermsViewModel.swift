@@ -25,7 +25,11 @@ final class TermsViewModel: ObservableObject, MessageDisplayable {
     
     // Input Method
     func saveTerms(accessToken token: String?, isCheckedOfService: Bool, isCheckedOfPrivacy: Bool, isCheckedOfMarketing: Bool){
-        guard !isLoading, let token else { return }
+        guard let token,
+              !isLoading,
+              (isCheckedOfService && isCheckedOfPrivacy)
+        else { return }
+        
         isLoading = true
         
         Task {

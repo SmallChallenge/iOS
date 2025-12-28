@@ -76,7 +76,8 @@ struct LoginView: View {
                     
                     // 이용약관 띄우기
                     Button {
-                         showTermsWebView = true
+//                         showTermsWebView = true
+                        showTermsSheet = true
                         
                     } label: {
                         Text(AttributedString("이용약관", attributes: AttributeContainer([.underlineStyle: NSUnderlineStyle.single.rawValue])))

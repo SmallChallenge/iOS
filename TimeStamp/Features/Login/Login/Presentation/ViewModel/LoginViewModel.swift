@@ -95,20 +95,20 @@ final class LoginViewModel: ObservableObject, MessageDisplayable {
                 isLoading = false
                 // 신규회원, 약관 화면으로 이동
                 if entity.isNewUser {
-                    Logger.debug(">>>>> 신규회원 약관 화면으로 이동")
                     pendingLoginEntity = entity  // 저장해두고 약관 완료 후 체크
                     needTerms = true
                     return
                 } else if entity.needNickname {
                     // 닉네임 입력화면으로 보내기.
-                    Logger.debug(">>>>> 닉네임 입력화면으로 보내기.")
                     needNickname = true
+                    useCase.login(entity: entity) // 로그인성공
                     return
                 }
 
                 // 로그인 성공 시, 로그인 화면 닫기
                 // (약관 안받아도 되고, 닉네임도 있음)
                 isLoggedIn = true
+                useCase.login(entity: entity) // 로그인성공
             }
             
         } catch {
