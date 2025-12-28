@@ -42,3 +42,12 @@ extension String {
             return toDate(format: format.rawValue, timeZone: timeZone, locale: locale)
         }
 }
+
+extension String? {
+    var isEmptyOrNil: Bool {
+        if let string = self {
+            return string.isEmpty
+        }
+        return true
+    }
+}

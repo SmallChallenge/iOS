@@ -20,7 +20,10 @@ public enum AuthRouter {
     case refresh(token: String)
     // 로그아웃
     // 회원탈퇴
+    
+    // 닉네임 중복 확인
     // 닉네임 설정
+    case setNickname(nickname: String)
     
 }
 extension AuthRouter: Router {
@@ -36,7 +39,10 @@ extension AuthRouter: Router {
             "api/v1/auth/social-login"
             
         case .refresh:
-            "api/v1/auth/refresh"            
+            "api/v1/auth/refresh"
+            
+        case .setNickname:
+            "/api/v1/auth/nickname"
         }
     }
     
@@ -72,6 +78,12 @@ extension AuthRouter: Router {
                 "refreshToken" : token,
             ]
             return params
+            
+        case let .setNickname(nickname):
+            let params: Parameters = [
+                "nickname" : nickname,
+            ]
+            return params
         }
     }
     
@@ -95,7 +107,10 @@ public protocol AuthApiClientProtocol {
     func refreshToken(refreshToken token: String) async -> Result<ResponseBody<RefreshDto>, NetworkError>
     // 로그아웃
     // 회원탈퇴
+    
+    // 닉네임 중복확인
     // 닉네임 설정
+    func setNickname(nickname: String) async -> Result<ResponseBody<SetNicknameDto>, NetworkError>
     
 }
 
@@ -114,5 +129,10 @@ public class AuthApiClient: ApiClient<AuthRouter>, AuthApiClientProtocol {
     
     public func refreshToken(refreshToken token: String) async -> Result<ResponseBody<RefreshDto>, NetworkError> {
         await request(.refresh(token: token))
+    }
+    
+    /// 닉네임 설정
+    public func setNickname(nickname: String) async -> Result<ResponseBody<SetNicknameDto>, NetworkError> {
+        await request(AuthRouter.setNickname(nickname: nickname))
     }
 }

@@ -148,7 +148,8 @@ final class CameraDIContainer: CameraDIContainerProtocol {
 }
 
 
-// MARK: Mock
+// MARK: - Mock
+
 struct MockCameraDIContainer: CameraDIContainerProtocol {
     func makeCameraTabView(onDismiss: @escaping () -> Void) -> CameraTabView {
         CameraTabView(diContainer: self, onDismiss: {})

@@ -8,10 +8,17 @@
 import SwiftUI
 
 struct NicknameSettingView: View {
+    
+    init(viewModel: NicknameSettingViewModel, onGoBack: @escaping () -> Void, onDismiss: @escaping () -> Void) {
+        self.onGoBack = onGoBack
+        self.onDismiss = onDismiss
+        self._viewModel = StateObject(wrappedValue: viewModel)
+    }
+    
     let onGoBack: () -> Void
     let onDismiss: () -> Void
     
-    
+    @StateObject private var viewModel: NicknameSettingViewModel
     @State private var text: String = ""
     @FocusState private var isTextFieldFocused: Bool
     
@@ -37,16 +44,21 @@ struct NicknameSettingView: View {
                         Spacer()
                             .frame(maxHeight: 80)
                         
-                        
                         VStack(spacing: 12) {
-                            TextField("입력", text: $text)
+                            // 입력필드
+                            TextField("닉네임", text: $text)
                                 .font(.H2)
                                 .multilineTextAlignment(.center)
                                 .focused($isTextFieldFocused)
                                 .foregroundStyle(Color.gray50)
                             
-                            Color.neon300
+                            // 밑줄
+                            ((text.isEmpty || viewModel.validateMessage.isEmptyOrNil) ? Color.neon300 : Color.error)
                                 .frame(height:1)
+                            
+                            Text(viewModel.validateMessage ?? "")
+                                .font(.caption)
+                                .foregroundStyle(text.isEmpty ? Color.clear : Color.error)
                         }
                         .padding(.horizontal, 48)
                         
@@ -59,12 +71,21 @@ struct NicknameSettingView: View {
                     .frame(minHeight: geometry.size.height - 80)
                 }
                 
-                MainButton(title: "확인") {
-                    
+                MainButton(title: "확인", isDisabled: (text.isNotEmpty && viewModel.validateMessage != nil)) {
+                    viewModel.saveNickname(text)
                 }
                 .padding(.horizontal, 20)
                 .padding(.bottom, 20)
             } // ~VStack
+            .onChange(of: text){ newValue in
+                let _ = viewModel.checkValidateNickname(newValue)
+            }
+            // 저장 성공 시 로그인뷰 닫기
+            .onChange(of: viewModel.isSaved) { isSaved in
+                if isSaved {
+                    onDismiss()
+                }
+            }
             .mainBackgourndColor()
             .navigationBarTitleDisplayMode(.inline)
             .navigationBarBackButtonHidden(true)
@@ -89,5 +110,5 @@ struct NicknameSettingView: View {
 }
 
 #Preview {
-    NicknameSettingView(onGoBack: {}, onDismiss: {})
+    MockLoginDIContainer().makeNicknameSettingView(onGoBack: {}, onDismiss: {})
 }

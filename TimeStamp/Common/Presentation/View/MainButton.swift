@@ -77,8 +77,8 @@ struct MainButtonStyle {
         case (.primary, true, _):
             // Primary - Disabled
             return MainButtonStyle(
-                backgroundColor: .gray300,
-                foregroundColor: .gray500,
+                backgroundColor: .gray500,
+                foregroundColor: .gray300,
                 borderColor: .clear
             )
         case (.primary, false, true):
