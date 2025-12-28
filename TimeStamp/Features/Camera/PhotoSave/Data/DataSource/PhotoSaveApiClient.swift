@@ -67,17 +67,17 @@ extension PhotoSaveRouter: Router {
 
 // MARK: - PhotoSaveApiClient
 protocol PhotoSaveApiClientProtocol {
-    func presignedUrl(fileName: String, size: Int) async -> Result<ResponseBody<PresignedURLDto>, NetworkError>
+    func presignedUrl(fileName: String, size: Int) async -> Result<PresignedURLDto, NetworkError>
 
-    func saveTimeStamp(fileName: String, size: Int, objectKey: String, category: String, visibility: String, originalTakenAt: String) async -> Result<ResponseBody<SaveTimeStampDto>, NetworkError>
+    func saveTimeStamp(fileName: String, size: Int, objectKey: String, category: String, visibility: String, originalTakenAt: String) async -> Result<SaveTimeStampDto, NetworkError>
 }
 class PhotoSaveApiClient: ApiClient<PhotoSaveRouter>, PhotoSaveApiClientProtocol {
 
-    func presignedUrl(fileName: String, size: Int) async -> Result<ResponseBody<PresignedURLDto>, NetworkError>{
+    func presignedUrl(fileName: String, size: Int) async -> Result<PresignedURLDto, NetworkError>{
         await request(PhotoSaveRouter.presignedUrl(fileName: fileName, size: size))
     }
 
-    func saveTimeStamp(fileName: String, size: Int, objectKey: String, category: String, visibility: String, originalTakenAt: String) async -> Result<ResponseBody<SaveTimeStampDto>, NetworkError> {
+    func saveTimeStamp(fileName: String, size: Int, objectKey: String, category: String, visibility: String, originalTakenAt: String) async -> Result<SaveTimeStampDto, NetworkError> {
         await request(PhotoSaveRouter.saveTimeStamp(fileName: fileName, size: size, objectKey: objectKey, category: category, visibility: visibility, originalTakenAt: originalTakenAt))
     }
 }

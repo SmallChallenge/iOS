@@ -51,22 +51,15 @@ final class PhotoSaveRepository: PhotoSaveRepositoryProtocol {
     func getPresignedUrl(fileName: String, imageSize: Int) async throws -> (presignedUrl: String, objectKey: String) {
         let result = await apiClient.presignedUrl(fileName: fileName, size: imageSize)
 
-        guard case .success(let response) = result else {
-            if case .failure(let error) = result {
-                Logger.error("presignedUrl 요청 실패: \(error)")
-                throw error
-            }
-            throw NetworkError.requestFailed("presignedUrl 요청 실패")
-        }
+        switch result {
+        case .success(let dto):
+            Logger.success("presignedUrl 받기 성공")
+            return (dto.uploadURL, dto.objectKey)
 
-        guard let uploadURL = response.data?.uploadURL,
-              let objectKey = response.data?.objectKey else {
-            Logger.error("data is nil")
-            throw NetworkError.dataNil
+        case .failure(let error):
+            Logger.error("presignedUrl 요청 실패: \(error)")
+            throw error
         }
-        
-        Logger.success("presignedUrl 받기 성공")
-        return (uploadURL, objectKey)
     }
 
     /// S3에 이미지 업로드 (helper를 재사용)
@@ -85,18 +78,14 @@ final class PhotoSaveRepository: PhotoSaveRepositoryProtocol {
             originalTakenAt: timeStamp
         )
 
-        guard case .success(let response) = result else {
-            if case .failure(let error) = result {
-                Logger.error("saveTimeStamp 요청 실패: \(error)")
-                throw error
-            }
-            throw NetworkError.requestFailed("saveTimeStamp 요청 실패")
+        switch result {
+        case .success(let dto):
+            Logger.success("서버에 메타데이터 저장 성공: imageId=\(dto.imageId)")
+
+        case .failure(let error):
+            Logger.error("saveTimeStamp 요청 실패: \(error)")
+            throw error
         }
-        guard let imageId = response.data?.imageId else {
-            Logger.error("data is nil")
-            throw NetworkError.dataNil
-        }
-        Logger.success("서버에 메타데이터 저장 성공: imageId=\(imageId)")
     }
 
     // MARK: - Gallery

@@ -14,6 +14,7 @@ public enum NetworkError: Error {
     case failToDecode(String)
     case dataNil
     case serverError(Int)
+    case serverFailed(code: String, message: String) // 서버에서 보낸 에러 정보
     case requestFailed(String)
     case noInternet
     case cancelled
@@ -35,6 +36,8 @@ public enum NetworkError: Error {
             "데이터가 없습니다."
         case .serverError(let statusCode):
             "서버 에러: \(statusCode)"
+        case .serverFailed(let code, let message):
+            "\(message) (코드: \(code))"
         case .requestFailed(let message):
             "서버 요청 실패: \(message)"
         case .noInternet:
@@ -55,7 +58,7 @@ public enum NetworkError: Error {
     // 사용자에게 보여줄지 여부
     public var isUserFacing: Bool {
         switch self {
-        case .noInternet, .serverError, .timeout, .unauthorized, .forbidden, .notFound:
+        case .noInternet, .serverError, .serverFailed, .timeout, .unauthorized, .forbidden, .notFound:
             return true
         default:
             return false

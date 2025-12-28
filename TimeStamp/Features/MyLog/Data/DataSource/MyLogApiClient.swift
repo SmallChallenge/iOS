@@ -60,12 +60,12 @@ extension MyLogRouter: Router {
 
 // MARK: - ApiClient
 protocol MyLogApiClientProtocol {
-    
-    func fetchMyLogList(category: String?, page: Int, size: Int) async -> Result<ResponseBody<MyLogsDto>, NetworkError>
-    
+
+    func fetchMyLogList(category: String?, page: Int, size: Int) async -> Result<MyLogsDto, NetworkError>
+
 }
 final class MyLogApiClient: ApiClient<MyLogRouter>,MyLogApiClientProtocol {
-    func fetchMyLogList(category: String?, page: Int, size: Int) async -> Result<ResponseBody<MyLogsDto>, NetworkError> {
+    func fetchMyLogList(category: String?, page: Int, size: Int) async -> Result<MyLogsDto, NetworkError> {
         await request(MyLogRouter.myLogList(category: category, page: page, size: size))
     }
 }

@@ -30,12 +30,9 @@ struct LoginRepository: LoginRepositoryProtocol {
 
     // MARK: - Private Methods
 
-    private func mapToEntity(_ result: Result<ResponseBody<LoginResponseDto>, NetworkError>) -> Result<LoginEntity, NetworkError> {
+    private func mapToEntity(_ result: Result<LoginResponseDto, NetworkError>) -> Result<LoginEntity, NetworkError> {
         switch result {
-        case .success(let response):
-            guard let dto = response.data else {
-                return .failure(.dataNil)
-            }
+        case .success(let dto):
             guard let entity = LoginMapper.toEntity(from: dto) else {
                 return .failure(.failToDecode("Invalid socialType"))
             }

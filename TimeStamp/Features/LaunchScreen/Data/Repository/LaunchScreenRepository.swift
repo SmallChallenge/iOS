@@ -19,18 +19,13 @@ struct LaunchScreenRepository: LaunchScreenRepositoryProtocol {
     func refreshToken(token: String) async -> Result<RefreshTokenEntity, NetworkError> {
         let result = await authApiClient.refreshToken(refreshToken: token)
         switch result {
-        case let .success(response):
-            guard let dto = response.data else {
-                return .failure(.dataNil)
-            }
+        case let .success(dto):
             let entity = dto.toEntity()
             return .success(entity)
-            
+
         case let .failure(error):
             return .failure(error)
-            
         }
-        
     }
     
 }

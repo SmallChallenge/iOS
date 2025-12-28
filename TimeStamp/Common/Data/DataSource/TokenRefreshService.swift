@@ -48,20 +48,15 @@ final class TokenRefreshService {
             let success: Bool
 
             switch result {
-            case .success(let response):
-                if let accessToken = response.data?.accessToken,
-                   let refreshToken = response.data?.refreshToken {
-                    // 새 토큰 저장
-                    AuthManager.shared.refreshToken(
-                        accessToken: accessToken,
-                        refreshToken: refreshToken
-                    )
-                    success = true
-                } else {
-                    // 토큰 갱신 실패 시 로그아웃 처리
-                    AuthManager.shared.logout()
-                    success = false
-                }
+            case .success(let dto):
+                let accessToken = dto.accessToken
+                let refreshToken = dto.refreshToken
+                // 새 토큰 저장
+                AuthManager.shared.refreshToken(
+                    accessToken: accessToken,
+                    refreshToken: refreshToken
+                )
+                success = true
 
             case .failure(let error):
                 Logger.error("토큰 갱신 실패: \(error)")

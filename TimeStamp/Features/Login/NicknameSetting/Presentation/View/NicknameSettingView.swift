@@ -71,14 +71,14 @@ struct NicknameSettingView: View {
                     .frame(minHeight: geometry.size.height - 80)
                 }
                 
-                MainButton(title: "확인", isDisabled: (text.isNotEmpty && viewModel.validateMessage != nil)) {
+                MainButton(title: "확인", isDisabled: text.isEmpty || viewModel.validateMessage != nil) {
                     viewModel.saveNickname(text)
                 }
                 .padding(.horizontal, 20)
                 .padding(.bottom, 20)
             } // ~VStack
             .onChange(of: text){ newValue in
-                let _ = viewModel.checkValidateNickname(newValue)
+                viewModel.checkValidateNickname(newValue)
             }
             // 저장 성공 시 로그인뷰 닫기
             .onChange(of: viewModel.isSaved) { isSaved in

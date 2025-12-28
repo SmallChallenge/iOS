@@ -50,23 +50,46 @@ class NicknameSettingViewModel: ObservableObject {
     }
     
     /// 닉네임 저장하기
-    func saveNickname(_ nickname: String){
+    func saveNickname(_ nickname: String) {
         guard checkValidateNickname(nickname) && !isLoading else { return }
-        isLoading = true
-        Logger.debug("닉네임 저장하기: \(nickname)")
-        
+
         Task {
+            await MainActor.run { isLoading = true }
+            Logger.debug("닉네임 저장하기: \(nickname)")
+
             do {
                 let result = try await useCase.setNickname(nickname: nickname)
-                isLoading = false
-                isSaved = true
-                Logger.success("닉네임 설정 완 \(result.nickname)")
-            } catch(let error) {
-                
+                await MainActor.run {
+                    isLoading = false
+                    isSaved = true
+                    Logger.success("닉네임 설정 완료: \(result.nickname)")
+                }
+            } catch let error as NetworkError {
+                await MainActor.run {
+                    isLoading = false
+                    // 서버 에러 code별 처리
+                    switch error {
+                    case .serverFailed(let code, let message):
+                        if code == "NICKNAME_DUPLICATED" {
+                            validateMessage = "이미 사용 중인 닉네임입니다."
+                        } else if code == "INVALID_NICKNAME" {
+                            validateMessage = "사용할 수 없는 닉네임입니다."
+                        } else {
+                            validateMessage = message
+                        }
+                        Logger.error("닉네임 설정 실패 [\(code)]: \(message)")
+                    default:
+                        validateMessage = error.description
+                        Logger.error("닉네임 설정 실패: \(error)")
+                    }
+                }
+            } catch {
+                await MainActor.run {
+                    isLoading = false
+                    validateMessage = error.localizedDescription
+                    Logger.error("닉네임 설정 실패: \(error)")
+                }
             }
         }
-        
-        isLoading = false
-        isSaved = true
     }
 }

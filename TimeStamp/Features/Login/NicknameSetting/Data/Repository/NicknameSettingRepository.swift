@@ -17,13 +17,10 @@ struct NicknameSettingRepository: NicknameSettingRepositoryProtocol {
     func setNickname(nickName: String) async -> Result<NicknameEntity, NetworkError> {
         let result = await authApiClient.setNickname(nickname: nickName)
         switch result {
-        case let .success(response):
-            guard let dto = response.data else {
-                return .failure(.dataNil)
-            }
+        case let .success(dto):
             let entity = dto.toEntity()
             return .success(entity)
-            
+
         case let .failure(error):
             return .failure(error)
         }
