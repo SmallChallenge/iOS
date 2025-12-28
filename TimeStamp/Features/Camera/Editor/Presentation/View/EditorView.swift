@@ -18,7 +18,7 @@ struct EditorView: View {
     
     // MARK: prevate property
 
-    @State private var selectedTemplateStyle: TemplateStyleViewData = .modern
+    @State private var selectedTemplateStyle: TemplateStyleViewData = .basic
     @State private var selectedTemplate: Template = Template.all[0]
     
     // 광고, 로고 여부 //

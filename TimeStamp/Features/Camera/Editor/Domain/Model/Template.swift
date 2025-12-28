@@ -10,10 +10,10 @@ import SwiftUI
 
 /// 템플릿 스타일 (Domain Layer)
 enum TemplateStyle: CaseIterable {
-    case modern
-    case vintage
-    case cute
-    case simple
+    case basic
+    case moody
+    case active
+    case digital
 }
 
 
@@ -47,73 +47,73 @@ struct Template: Identifiable, Equatable {
 extension Template {
     /// 모든 템플릿
     static let all: [Template] = [
-        // MARK: - Modern
+        // MARK: - Basic
         Template(
             id: "default",
-            name: "모던",
-            style: .modern,
+            name: "베이직",
+            style: .basic,
             viewBuilder: { date, hasLogo in
                 AnyView(DefaultTemplateView(displayDate: date, hasLogo: hasLogo))
             }
         ),
 
-        // MARK:  - Cute
+        // MARK:  - Moody
         Template(
             id: "default2",
-            name: "큐트",
-            style: .cute,
+            name: "Moody",
+            style: .moody,
             viewBuilder: { date, hasLogo in
                 AnyView(DefaultTemplateView2(displayDate: date, hasLogo: hasLogo))
             }
         ),
 
-        // MARK: - Vintage
+        // MARK: - Active
         Template(
             id: "sample1",
-            name: "빈티지1",
-            style: .vintage,
+            name: "Active1",
+            style: .active,
             viewBuilder: { _, _ in
                 AnyView(sampleTemplateView())
             }
         ),
         Template(
             id: "sample2",
-            name: "빈티지2",
-            style: .vintage,
+            name: "Active2",
+            style: .active,
             viewBuilder: { _, _ in
                 AnyView(sampleTemplateView2())
             }
         ),
         Template(
             id: "sample3",
-            name: "빈티지3",
-            style: .vintage,
+            name: "Active3",
+            style: .active,
             viewBuilder: { _, _ in
                 AnyView(sampleTemplateView3())
             }
         ),
 
-        // MARK: - Simple
+        // MARK: - Digital
         Template(
             id: "sample4",
-            name: "샘플4",
-            style: .simple,
+            name: "Digital4",
+            style: .digital,
             viewBuilder: { _, _ in
                 AnyView(sampleTemplateView4())
             }
         ),
         Template(
             id: "sample5",
-            name: "심플5",
-            style: .simple,
+            name: "심플Digital",
+            style: .digital,
             viewBuilder: { _, _ in
                 AnyView(sampleTemplateView5())
             }
         ),
         Template(
             id: "sample6",
-            name: "샘플6",
-            style: .simple,
+            name: "Digital6",
+            style: .digital,
             viewBuilder: { _, _ in
                 AnyView(sampleTemplateView6())
             }
