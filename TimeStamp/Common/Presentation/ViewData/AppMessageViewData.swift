@@ -116,22 +116,6 @@ enum AppMessage {
     }
 }
 
-// MARK: - ObservableObject Extension
-
-extension ObservableObject {
-    /// AppMessage를 표시 (toastMessage, alertMessage 프로퍼티 필요)
-    func show(_ message: AppMessage) {
-        if let self = self as? any MessageDisplayable {
-            switch message.displayType {
-            case .toast:
-                self.showToast(message.text)
-            case .alert:
-                self.showAlert(message.text)
-            }
-        }
-    }
-}
-
 // MARK: - Message Displayable Protocol
 
 protocol MessageDisplayable: ObservableObject {
@@ -146,5 +130,15 @@ extension MessageDisplayable {
 
     func showAlert(_ message: String) {
         alertMessage = message
+    }
+
+    /// AppMessage를 표시
+    func show(_ message: AppMessage) {
+        switch message.displayType {
+        case .toast:
+            showToast(message.text)
+        case .alert:
+            showAlert(message.text)
+        }
     }
 }
