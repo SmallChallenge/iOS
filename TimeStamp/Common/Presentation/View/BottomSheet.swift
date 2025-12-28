@@ -9,10 +9,19 @@ import SwiftUI
 
 struct BottomSheet<Content: View>: View {
     @Binding var isPresented: Bool
+    let dismissOnBackgroundTap: Bool
+    let onDismiss: (() -> Void)?
     let content: Content
 
-    init(isPresented: Binding<Bool>, @ViewBuilder content: () -> Content) {
+    init(
+        isPresented: Binding<Bool>,
+        dismissOnBackgroundTap: Bool = true,
+        onDismiss: (() -> Void)? = nil,
+        @ViewBuilder content: () -> Content
+    ) {
         self._isPresented = isPresented
+        self.dismissOnBackgroundTap = dismissOnBackgroundTap
+        self.onDismiss = onDismiss
         self.content = content()
     }
 
@@ -23,8 +32,10 @@ struct BottomSheet<Content: View>: View {
                 Color.black.opacity(0.4)
                     .ignoresSafeArea()
                     .onTapGesture {
-                        withAnimation(.easeInOut(duration: 0.3)) {
-                            isPresented = false
+                        if dismissOnBackgroundTap {
+                            withAnimation(.easeInOut(duration: 0.3)) {
+                                isPresented = false
+                            }
                         }
                     }
 
@@ -44,6 +55,11 @@ struct BottomSheet<Content: View>: View {
             }
         }
         .animation(.easeInOut(duration: 0.3), value: isPresented)
+        .onChange(of: isPresented) { newValue in
+            if !newValue {
+                onDismiss?()
+            }
+        }
     }
 }
 
@@ -51,12 +67,19 @@ struct BottomSheet<Content: View>: View {
 
 struct BottomSheetModifier<SheetContent: View>: ViewModifier {
     @Binding var isPresented: Bool
+    let dismissOnBackgroundTap: Bool
+    let onDismiss: (() -> Void)?
     let sheetContent: () -> SheetContent
 
     func body(content: Content) -> some View {
         ZStack {
             content
-            BottomSheet(isPresented: $isPresented, content: sheetContent)
+            BottomSheet(
+                isPresented: $isPresented,
+                dismissOnBackgroundTap: dismissOnBackgroundTap,
+                onDismiss: onDismiss,
+                content: sheetContent
+            )
         }
     }
 }
@@ -64,9 +87,18 @@ struct BottomSheetModifier<SheetContent: View>: ViewModifier {
 extension View {
     func bottomSheet<Content: View>(
         isPresented: Binding<Bool>,
+        dismissOnBackgroundTap: Bool = true,
+        onDismiss: (() -> Void)? = nil,
         @ViewBuilder content: @escaping () -> Content
     ) -> some View {
-        self.modifier(BottomSheetModifier(isPresented: isPresented, sheetContent: content))
+        self.modifier(
+            BottomSheetModifier(
+                isPresented: isPresented,
+                dismissOnBackgroundTap: dismissOnBackgroundTap,
+                onDismiss: onDismiss,
+                sheetContent: content
+            )
+        )
     }
 }
 
