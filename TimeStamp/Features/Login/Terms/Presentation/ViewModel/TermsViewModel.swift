@@ -25,15 +25,15 @@ final class TermsViewModel: ObservableObject, MessageDisplayable {
     
     // Input Method
     func saveTerms(accessToken token: String?, isCheckedOfService: Bool, isCheckedOfPrivacy: Bool, isCheckedOfMarketing: Bool){
-        guard !isLoading else { return }
+        guard !isLoading, let token else { return }
         isLoading = true
         
         Task {
             do {
                 let result = try await usecase.activeAccount(
-                    accessToken: token ?? "",
-                    agreedToPrivacyPolicy: isCheckedOfService,
-                    agreedToTermsOfService: isCheckedOfPrivacy,
+                    accessToken: token,
+                    agreedToPrivacyPolicy: isCheckedOfPrivacy,
+                    agreedToTermsOfService: isCheckedOfService,
                     agreedToMarketing: isCheckedOfMarketing
                 )
                 await MainActor.run {

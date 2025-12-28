@@ -56,7 +56,6 @@ final class LoginUseCase: LoginUseCaseProtocol {
 
         switch result {
         case .success(let entity):
-            
             return entity
 
         case .failure(let error):

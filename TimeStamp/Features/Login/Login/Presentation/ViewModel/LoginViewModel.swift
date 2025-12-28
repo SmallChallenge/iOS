@@ -30,7 +30,7 @@ final class LoginViewModel: ObservableObject, MessageDisplayable {
     // MARK: - Private Properties
 
     /// 약관 완료 후 닉네임 체크를 위해 저장
-    var pendingLoginEntity: LoginEntity?
+    private(set) var pendingLoginEntity: LoginEntity?
 
     // MARK: - Input Methods
 
