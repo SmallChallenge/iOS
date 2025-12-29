@@ -96,7 +96,6 @@ iOSInjectionProject/
 ### SwiftPackageManager ###
 Packages
 xcuserdata
-*.xcodeproj
 
 
 ### SwiftPM ###
@@ -114,6 +113,8 @@ xcuserdata
 !*.xcworkspace/contents.xcworkspacedata
 /*.gcno
 **/xcshareddata/WorkspaceSettings.xcsettings
+# Ignore dev scheme
+*.xcodeproj/xcshareddata/xcschemes/dev_*.xcscheme
 
 # Secrets
 Config/Secrets.xcconfig
