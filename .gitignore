@@ -119,7 +119,4 @@ xcuserdata
 Config/Secrets.xcconfig
 
 # End of https://www.toptal.com/developers/gitignore/api/swift,swiftpackagemanager,swiftpm,cocoapods,xcode
-Certificates/AuthKey_ND4D3J763Y.p8
-Certificates/CertificateSigningRequest.certSigningRequest
-Certificates/Certificate>AppleDistribution/distribution.cer
-Certificates/Certificate>iOS App Development/ios_development.cer
+Certificates/*
