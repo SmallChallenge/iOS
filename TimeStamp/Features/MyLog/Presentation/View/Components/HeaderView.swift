@@ -13,9 +13,11 @@ struct HeaderView: View {
     var body: some View {
         HStack (alignment: .center){
             Image("MainAppName")
+                .renderingMode(.template)
                 .resizable()
-                .frame(width: 108, height: 40)
-                .padding(.vertical, 10)
+                .foregroundStyle(Color.gray50)
+                .frame(width: 122.8, height: 26)
+                .padding(.vertical, 17)
                 .padding(.leading, 20)
             
             Spacer()
