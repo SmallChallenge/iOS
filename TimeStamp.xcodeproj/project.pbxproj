@@ -454,9 +454,9 @@
 				INFOPLIST_FILE = TimeStamp/Info.plist;
 				INFOPLIST_KEY_CFBundleDisplayName = Stampy;
 				INFOPLIST_KEY_LSApplicationCategoryType = "public.app-category.lifestyle";
-				INFOPLIST_KEY_NSCameraUsageDescription = "사진을 촬영하기 위해 카메라 접근 권한이 필요합니다.";
-				INFOPLIST_KEY_NSPhotoLibraryAddUsageDescription = "사진을 갤러리에 저장하기 위해 사진 라이브러리 접근 권한이 필요합니다.";
-				INFOPLIST_KEY_NSPhotoLibraryUsageDescription = "앨범의 사진을 선택하여 타임스탬프를 저장하기 위해 사진 접근 권한이  필요합니다.";
+				INFOPLIST_KEY_NSCameraUsageDescription = "사진 촬영을 위해 카메라 접근 권한을 허용해 주세요.";
+				INFOPLIST_KEY_NSPhotoLibraryAddUsageDescription = "촬영한 사진을 갤러리에 저장하기 위해 앨범 접근 권한을 허용해 주세요.";
+				INFOPLIST_KEY_NSPhotoLibraryUsageDescription = "사진에 타임스탬프를 적용하기 위해 앨범 권한을 허용해 주세요.";
 				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
@@ -498,9 +498,9 @@
 				INFOPLIST_FILE = TimeStamp/Info.plist;
 				INFOPLIST_KEY_CFBundleDisplayName = Stampy;
 				INFOPLIST_KEY_LSApplicationCategoryType = "public.app-category.lifestyle";
-				INFOPLIST_KEY_NSCameraUsageDescription = "사진을 촬영하기 위해 카메라 접근 권한이 필요합니다.";
-				INFOPLIST_KEY_NSPhotoLibraryAddUsageDescription = "사진을 갤러리에 저장하기 위해 사진 라이브러리 접근 권한이 필요합니다.";
-				INFOPLIST_KEY_NSPhotoLibraryUsageDescription = "앨범의 사진을 선택하여 타임스탬프를 저장하기 위해 사진 접근 권한이  필요합니다.";
+				INFOPLIST_KEY_NSCameraUsageDescription = "사진 촬영을 위해 카메라 접근 권한을 허용해 주세요.";
+				INFOPLIST_KEY_NSPhotoLibraryAddUsageDescription = "촬영한 사진을 갤러리에 저장하기 위해 앨범 접근 권한을 허용해 주세요.";
+				INFOPLIST_KEY_NSPhotoLibraryUsageDescription = "사진에 타임스탬프를 적용하기 위해 앨범 권한을 허용해 주세요.";
 				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
