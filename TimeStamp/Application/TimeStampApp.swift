@@ -31,16 +31,33 @@ struct TimeStampApp: App {
     
     var body: some Scene {
         WindowGroup {
-            AppDIContainer.shared.makeLaunchScreenView()
-            // 인증 리디렉션 url 처리
-                .onOpenURL(perform: { url in
-                    if (AuthApi.isKakaoTalkLoginUrl(url)) {
-                        AuthController.handleOpenUrl(url: url)
-                    } else {
-                        GIDSignIn.sharedInstance.handle(url)
-                    }
-                })
+            RootViewWithGlobalToast {
+                AppDIContainer.shared.makeLaunchScreenView()
+                // 인증 리디렉션 url 처리
+                    .onOpenURL(perform: { url in
+                        if (AuthApi.isKakaoTalkLoginUrl(url)) {
+                            AuthController.handleOpenUrl(url: url)
+                        } else {
+                            GIDSignIn.sharedInstance.handle(url)
+                        }
+                    })
+            }
         }
+    }
+}
+
+// MARK: - 전역 토스트를 위한 Root View
+struct RootViewWithGlobalToast<Content: View>: View {
+    @StateObject private var toastManager = ToastManager.shared
+    let content: Content
+
+    init(@ViewBuilder content: () -> Content) {
+        self.content = content()
+    }
+
+    var body: some View {
+        content
+            .toast(message: $toastManager.message)
     }
     
 }
