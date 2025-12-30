@@ -18,6 +18,9 @@ struct LogDetailView: View {
     init(viewModel: LogDetailViewModel, onGoBack: @escaping () -> Void) {
         self._viewModel = StateObject(wrappedValue: viewModel)
         self.onGoBack = onGoBack
+
+        // 삭제 성공 시 뒤로가기 (이미 DIContainer에서 설정되어 있음)
+        // viewModel.onDeleteSuccess는 DIContainer에서 설정됨
     }
     
     @State private var showDeletePopup: Bool = false
@@ -80,7 +83,7 @@ struct LogDetailView: View {
         .popup(isPresented: $showDeletePopup) {
             Modal(title: "사진을 삭제하시겠습니까?")
                 .buttons {
-                    MainButton(title: "취소", size: .middle) {
+                    MainButton(title: "취소", size: .middle, colorType: .secondary) {
                         showDeletePopup = false
                     }
                     MainButton(title: "삭제", size: .middle) {
@@ -232,22 +235,14 @@ struct LogDetailView: View {
 }
 
 #Preview {
-    NavigationView {
-        LogDetailView(
-            viewModel: LogDetailViewModel(
-                log: TimeStampLogViewData(
-                    id: UUID(),
-                    category: .food,
-                    timeStamp: Date.now,
-                    imageSource: .remote(TimeStampLog.RemoteTimeStampImage(
-                        id: 0,
-                        imageUrl: "https://picsum.photos/400/400"
-                    )),
-                    visibility: .privateVisible
-                )
-            ),
-            onGoBack: {}
-        )
-    }
+    MockMyLogDIContainer().makeLogDetailView(
+        log: .init(
+            id: UUID(),
+            category: .food,
+            timeStamp: Date(),
+            imageSource: .local(.init(imageFileName: "")),
+            visibility: .privateVisible),
+        onGoBack: {}
+    )
 
 }

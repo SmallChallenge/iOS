@@ -49,14 +49,34 @@ struct MyLogDIContainer: MyLogDIContainerProtocol {
         let viewModel = makeMyLogViewModel()
         return MyLogView(viewModel: viewModel, diContainer: self)
     }
-    
-    private func makeLogDetailViewModel(log: TimeStampLogViewData) -> LogDetailViewModel {
-        return LogDetailViewModel(log: log)
+
+    // MARK: - LogDetail
+    private func makeLogDetailApiClient() -> LogDetailApiClientProtocol {
+        return LogDetailApiClient(session: session)
+    }
+
+    private func makeLogDetailRepository() -> LogDetailRepositoryProtocol {
+        let apiClient = makeLogDetailApiClient()
+        return LogDetailRepository(apiClient: apiClient, localDataSource: localDataSource)
+    }
+
+    private func makeLogDetailUseCase() -> LogDetailUseCaseProtocol {
+        return LogDetailUseCase(repository: makeLogDetailRepository())
+    }
+
+    private func makeLogDetailViewModel(log: TimeStampLogViewData, onGoBack: @escaping () -> Void) -> LogDetailViewModel {
+        let viewModel = LogDetailViewModel(log: log, useCase: makeLogDetailUseCase())
+        viewModel.onDeleteSuccess = {
+            // 삭제 성공 시 MyLog 새로고침 및 뒤로가기
+            NotificationCenter.default.post(name: .shouldRefreshMyLog, object: nil)
+            onGoBack()
+        }
+        return viewModel
     }
 
     // MARK: - LogDetailView
     func makeLogDetailView(log: TimeStampLogViewData, onGoBack: @escaping () -> Void) -> LogDetailView {
-        let viewModel = makeLogDetailViewModel(log: log)
+        let viewModel = makeLogDetailViewModel(log: log, onGoBack: onGoBack)
         return LogDetailView(
             viewModel: viewModel,
             onGoBack: onGoBack
@@ -79,12 +99,19 @@ struct MockMyLogDIContainer: MyLogDIContainerProtocol {
         }
         func fetchServerLogs(page: Int) async -> (logs: [TimeStampLog], pageInfo: PageInfo?) {
             ([], nil)
-        }   
+        }
     }
-    
+
+    struct MockLogDetailUseCase: LogDetailUseCaseProtocol {
+        func deleteLogFromServer(logId: Int) async throws {
+            // Mock: 성공
+        }
+    }
+
     // MARK: - LogDetailView
     func makeLogDetailView(log: TimeStampLogViewData, onGoBack: @escaping () -> Void) -> LogDetailView {
-        let viewModel = LogDetailViewModel(log: log)
+        let useCase = MockLogDetailUseCase()
+        let viewModel = LogDetailViewModel(log: log, useCase: useCase)
         return LogDetailView(
             viewModel: viewModel,
             onGoBack: onGoBack
