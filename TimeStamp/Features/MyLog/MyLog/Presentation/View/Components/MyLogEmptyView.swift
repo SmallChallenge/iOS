@@ -12,13 +12,38 @@ struct MyLogEmptyView: View {
     var body: some View {
         VStack(alignment: .center, spacing: 20) {
             
-            Image("sample_category")
+            Image("img_mr_empty")
                 .resizable()
-                .frame(width: 100, height: 100)
+                .frame(width: 140, height: 140)
             
-            Text("기록을 추가해보세요~!")
-                .font(.Body1)
-                .foregroundStyle(Color.gray50)
+
+            VStack(alignment: .leading, spacing: 4) {
+                Text("아직 남긴 기록이 없어요.")
+                    .font(.Body1)
+                    .foregroundStyle(Color.gray500)
+                
+                HStack(spacing: 0) {
+                    Text("+ 버튼")
+                        .font(.Body1)
+                        .overlay(
+                            Rectangle()
+                                .fill(Color.gray500)
+                                .frame(height: 1)
+                                .offset(y: 2),
+                            alignment: .bottom
+                        )
+                        .foregroundStyle(Color.gray500)
+                    Text("을 눌러 기록을 시작해보세요!")
+                        .font(.Body1)
+                        .foregroundStyle(Color.gray500)
+                }
+            }
+            .padding(.bottom)
+            
+            Image("arrow")
+            
+            
+            
         }
         .frame(maxWidth: .infinity, maxHeight: .infinity)
     }
