@@ -6,7 +6,7 @@
 //
 
 
-enum Category: String, Codable {
+enum Category: String, Codable, Hashable {
     case food = "FOOD"
     case study = "STUDY"
     case health = "EXERCISE"

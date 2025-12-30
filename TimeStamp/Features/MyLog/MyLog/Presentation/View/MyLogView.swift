@@ -9,7 +9,11 @@ import SwiftUI
 
 struct MyLogView: View {
     @State private var selectedCategory: CategoryFilterViewData = .all
+    @State private var selectedLog: TimeStampLogViewData?
     @StateObject private var viewModel: MyLogViewModel
+    private let diContainer: MyLogDIContainerProtocol
+
+    
 
     // 사진 간격
     private let columns = [
@@ -18,7 +22,8 @@ struct MyLogView: View {
         GridItem(.flexible(), spacing: 1)
     ]
 
-    init(viewModel: MyLogViewModel){
+    init(viewModel: MyLogViewModel, diContainer: MyLogDIContainerProtocol){
+        self.diContainer = diContainer
         _viewModel = StateObject(wrappedValue: viewModel)
     }
 
@@ -57,13 +62,17 @@ struct MyLogView: View {
                         // 사진 목록
                         LazyVGrid(columns: columns, spacing: 1) {
                             ForEach(Array(filteredLogs.enumerated()), id: \.element.id) { index, log in
-                                PhotoCell(log: log)
-                                    .aspectRatio(1, contentMode: .fill)
-                                    .onAppear {
-                                        if index == filteredLogs.count - 1 {
-                                            viewModel.loadMore()
-                                        }
+                                Button(action: {
+                                    selectedLog = log
+                                }, label: {
+                                    PhotoCell(log: log)
+                                        .aspectRatio(1, contentMode: .fill)
+                                })
+                                .onAppear {
+                                    if index == filteredLogs.count - 1 {
+                                        viewModel.loadMore()
                                     }
+                                }
                             }
                         }
                        
@@ -79,6 +88,23 @@ struct MyLogView: View {
 
                     }
                 }
+                .background(
+                    NavigationLink(
+                        destination: Group {
+                            if let log = selectedLog {
+                                diContainer.makeLogDetailView(log: log) {
+                                    selectedLog = nil
+                                }
+                            }
+                        },
+                        isActive: Binding(
+                            get: { selectedLog != nil },
+                            set: { if !$0 { selectedLog = nil } }
+                        )
+                    ) {
+                        EmptyView()
+                    }
+                )
             }
         }
         .mainBackgourndColor()

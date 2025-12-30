@@ -8,8 +8,12 @@
 import Foundation
 import Alamofire
 
+protocol MyLogDIContainerProtocol {
+    func makeMyLogView() -> MyLogView
+    func makeLogDetailView(log: TimeStampLogViewData, onGoBack: @escaping () -> Void) -> LogDetailView
 
-struct MyLogDIContainer {
+}
+struct MyLogDIContainer: MyLogDIContainerProtocol {
 
     // MARK: - Dependencies
 
@@ -23,49 +27,50 @@ struct MyLogDIContainer {
         self.localDataSource = localDataSource
     }
     
-    // MARK: - ApiClient
+    // MARK: - MyLog
     private func makeMyLogApiClient() -> MyLogApiClientProtocol {
         return MyLogApiClient(session: session)
     }
-
-    // MARK: - Repository
 
     private func makeMyLogRepository() -> MyLogRepositoryProtocol {
         let apiClient = makeMyLogApiClient()
         return MyLogRepository(localDataSource: localDataSource, apiClient: apiClient)
     }
 
-    // MARK: - UseCase
-
     private func makeMyLogUseCase() -> MyLogUseCaseProtocol {
         return MyLogUseCase(repository: makeMyLogRepository())
     }
 
-    // MARK: - ViewModel
-
     private func makeMyLogViewModel() -> MyLogViewModel {
         return MyLogViewModel(useCase: makeMyLogUseCase())
     }
 
-    // MARK: - View
-
     func makeMyLogView() -> MyLogView {
         let viewModel = makeMyLogViewModel()
-        return MyLogView(viewModel: viewModel)
+        return MyLogView(viewModel: viewModel, diContainer: self)
+    }
+    
+    private func makeLogDetailViewModel(log: TimeStampLogViewData) -> LogDetailViewModel {
+        return LogDetailViewModel(log: log)
+    }
+
+    // MARK: - LogDetailView
+    func makeLogDetailView(log: TimeStampLogViewData, onGoBack: @escaping () -> Void) -> LogDetailView {
+        let viewModel = makeLogDetailViewModel(log: log)
+        return LogDetailView(
+            viewModel: viewModel,
+            onGoBack: onGoBack
+        )
     }
 }
 
-// MARK: - Mock
-struct MockMyLogDIContainer {
-    private func makeMyLogUseCase() -> MyLogUseCaseProtocol {
-        return MockMyLogUseCase()
-    }
-    private func makeMyLogViewModel() -> MyLogViewModel {
-        return MyLogViewModel(useCase: makeMyLogUseCase())
-    }
+// MARK: --------------------------------- Mock --------------------------------
+struct MockMyLogDIContainer: MyLogDIContainerProtocol {
+   
     func makeMyLogView() -> MyLogView {
-        let viewModel = makeMyLogViewModel()
-        return MyLogView(viewModel: viewModel)
+        let usecase = MockMyLogUseCase()
+        let viewModel = MyLogViewModel(useCase: usecase)
+        return MyLogView(viewModel: viewModel, diContainer: self)
     }
     
     struct MockMyLogUseCase: MyLogUseCaseProtocol {
@@ -75,5 +80,14 @@ struct MockMyLogDIContainer {
         func fetchServerLogs(page: Int) async -> (logs: [TimeStampLog], pageInfo: PageInfo?) {
             ([], nil)
         }   
+    }
+    
+    // MARK: - LogDetailView
+    func makeLogDetailView(log: TimeStampLogViewData, onGoBack: @escaping () -> Void) -> LogDetailView {
+        let viewModel = LogDetailViewModel(log: log)
+        return LogDetailView(
+            viewModel: viewModel,
+            onGoBack: onGoBack
+        )
     }
 }

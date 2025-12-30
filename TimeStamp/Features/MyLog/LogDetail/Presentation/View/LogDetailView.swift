@@ -176,7 +176,21 @@ struct LogDetailView: View {
 
 #Preview {
     NavigationView {
-        LogDetailView(viewModel: LogDetailViewModel(), onGoBack: {})
+        LogDetailView(
+            viewModel: LogDetailViewModel(
+                log: TimeStampLogViewData(
+                    id: UUID(),
+                    category: .food,
+                    timeStamp: Date.now,
+                    imageSource: .remote(TimeStampLog.RemoteTimeStampImage(
+                        id: 0,
+                        imageUrl: "https://picsum.photos/400/400"
+                    )),
+                    visibility: .privateVisible
+                )
+            ),
+            onGoBack: {}
+        )
     }
-    
+
 }
