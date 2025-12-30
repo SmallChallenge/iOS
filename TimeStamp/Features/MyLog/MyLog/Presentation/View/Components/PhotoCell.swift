@@ -23,7 +23,7 @@ struct PhotoCell: View {
                     
                     KFImage(URL(string: remoteImage.imageUrl))
                         .placeholder {
-                            Image("placeholder")
+                            Placeholder()
                         }
                         .retry(maxCount: 3, interval: .seconds(2))
                         .cacheMemoryOnly()
