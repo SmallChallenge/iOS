@@ -152,8 +152,8 @@ struct LogDetailView: View {
                 .foregroundStyle(Color.gray400)
             
             HStack(alignment: .center, spacing: 9) {
-                Image(viewModel.category.image)
-                Text(viewModel.category.title)
+                Image(viewModel.log.category.image)
+                Text(viewModel.log.category.title)
                     .font(.Btn2_b)
                     .foregroundStyle(Color.gray50)
             }
@@ -168,7 +168,7 @@ struct LogDetailView: View {
                 .font(.SubTitle2)
                 .foregroundStyle(Color.gray400)
             
-            TagView(title: viewModel.visibility.title, state: .active)
+            TagView(title: viewModel.log.visibility.title, state: .active)
             
         }
     }
