@@ -13,7 +13,7 @@ struct CategoryView: View {
 
     var body: some View {
         ScrollView(.horizontal, showsIndicators: false) {
-            HStack(spacing: 16) {
+            HStack(spacing: 12) {
                 ForEach(availableCategories, id: \.self) { category in
                     CategoryFilterButton(
                         type: category,

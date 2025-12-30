@@ -12,7 +12,7 @@ struct HeaderView: View {
     
     var body: some View {
         HStack (alignment: .center){
-            Image("MainAppName")
+            Image("Logotype")
                 .renderingMode(.template)
                 .resizable()
                 .foregroundStyle(Color.gray50)
@@ -39,4 +39,5 @@ struct HeaderView: View {
 
 #Preview {
     HeaderView(onProfileTap: {})
+        .background(Color.gray900)
 }

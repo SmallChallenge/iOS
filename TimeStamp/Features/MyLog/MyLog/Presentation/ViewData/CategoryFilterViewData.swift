@@ -26,7 +26,7 @@ enum CategoryFilterViewData: CaseIterable {
 
     var image: String {
         switch self {
-        case .all: return "sample_category"
+        case .all: return "category_all"
         case .study: return "category_study"
         case .health: return "category_health"
         case .food: return "category_food"
