@@ -10,7 +10,7 @@ import Foundation
 struct TimeStampLogViewData: Identifiable, Hashable {
     /// id in local
     let id: UUID
-    let category: Category
+    let category: CategoryViewData
     let timeStamp: Date
 
     
