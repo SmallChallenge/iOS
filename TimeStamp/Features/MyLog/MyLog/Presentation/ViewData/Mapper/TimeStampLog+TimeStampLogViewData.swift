@@ -10,12 +10,13 @@ import Foundation
 extension TimeStampLog {
     func toViewData() -> TimeStampLogViewData {
         let category = CategoryViewDataMapper().toViewData(from: self.category)
+        let visibility = VisibilityViewDataMapper().toViewData(from: self.visibility)
         return TimeStampLogViewData(
             id: self.id,
             category: category,
             timeStamp: self.timeStamp,
             imageSource: self.imageSource,
-            visibility: self.visibility
+            visibility: visibility
         )
     }
 }

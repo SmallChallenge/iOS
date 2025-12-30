@@ -17,5 +17,5 @@ struct TimeStampLogViewData: Identifiable, Hashable {
     var imageSource: TimeStampLog.ImageSource
     
     /// 공개여부
-    let visibility: VisibilityType
+    let visibility: VisibilityViewData
 }
