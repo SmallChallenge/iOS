@@ -24,11 +24,7 @@ struct LocalImageView: View {
                 ProgressView()
             } else {
                 // 이미지 로드 실패
-                Color.gray400
-                    .overlay {
-                        Image(systemName: "photo")
-                            .foregroundColor(.gray500)
-                    }
+                Placeholder()
             }
         }
         .onAppear {

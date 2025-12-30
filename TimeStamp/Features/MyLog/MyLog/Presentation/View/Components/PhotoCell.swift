@@ -8,6 +8,7 @@
 import SwiftUI
 import Kingfisher
 import Photos
+import Foundation
 
 struct PhotoCell: View {
     let log: TimeStampLogViewData
@@ -22,12 +23,7 @@ struct PhotoCell: View {
                     
                     KFImage(URL(string: remoteImage.imageUrl))
                         .placeholder {
-                            // TODO: 플레이스홀더 넣기
-                            //Image("placeholder")
-                            Color.gray100
-                                .overlay {
-                                    Image(systemName: "photo")
-                                }
+                            Image("placeholder")
                         }
                         .retry(maxCount: 3, interval: .seconds(2))
                         .cacheMemoryOnly()

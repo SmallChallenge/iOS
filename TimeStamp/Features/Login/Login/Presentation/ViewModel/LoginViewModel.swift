@@ -16,14 +16,13 @@ final class LoginViewModel: ObservableObject, MessageDisplayable {
     }
 
     // MARK: - Output Properties
-
-    /// 로그인 성공여부
-    @Published var isLoading = false
-
+    
     @Published var needNickname = false
     @Published var needTerms = false
+    /// 로그인 성공여부
     @Published var isLoggedIn = false
     
+    @Published var isLoading = false
     @Published var toastMessage: String?
     @Published var alertMessage: String?
 
