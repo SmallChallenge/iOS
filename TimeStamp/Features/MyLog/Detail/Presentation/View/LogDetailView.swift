@@ -11,13 +11,14 @@ import Photos
 
 /// 기록 상세 보기 화면
 struct LogDetailView: View {
-    
     @ObservedObject private var authManager = AuthManager.shared
     @StateObject private var viewModel: LogDetailViewModel
+    private let diContainer: MyLogDIContainerProtocol
     let onGoBack: (() -> Void)
-    init(viewModel: LogDetailViewModel, onGoBack: @escaping () -> Void) {
+    init(viewModel: LogDetailViewModel, diContainer: MyLogDIContainerProtocol, onGoBack: @escaping () -> Void) {
         self._viewModel = StateObject(wrappedValue: viewModel)
         self.onGoBack = onGoBack
+        self.diContainer = diContainer
 
         // 삭제 성공 시 뒤로가기 (이미 DIContainer에서 설정되어 있음)
         // viewModel.onDeleteSuccess는 DIContainer에서 설정됨
@@ -26,6 +27,7 @@ struct LogDetailView: View {
     @State private var showDeletePopup: Bool = false
     @State private var showShareSheet: Bool = false
     @State private var showPopoverMenu: Bool = false
+    @State private var showEditorView: Bool = false
     
     var body: some View {
         ScrollView {
@@ -96,6 +98,11 @@ struct LogDetailView: View {
                     }
                 }
         }
+        .fullScreenCover(isPresented: $showEditorView, content: {
+            diContainer.makeLogEditorView {
+                showEditorView = false // (닫기)
+            }
+        })
         .sheet(isPresented: $showShareSheet) {
             if let image = viewModel.shareImage {
                 ShareSheet(items: [image])
@@ -120,7 +127,7 @@ struct LogDetailView: View {
                     PopoverMenu(
                         items: [
                             .init(title: "기록 수정", icon: "square.and.pencil") {
-                                // TODO: 수정하기
+                                showEditorView = true
                             },
                             .init(title: "기록 삭제", icon: "trash") {
                                 showDeletePopup = true
@@ -131,7 +138,6 @@ struct LogDetailView: View {
                     .padding(.top, 30)
                     .padding(.trailing, 20)
                     .rounded(radius: 12)
-                    
                 }
                 
                 .transition(.opacity)

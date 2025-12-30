@@ -12,6 +12,7 @@ import UIKit
 protocol MyLogDIContainerProtocol {
     func makeMyLogView() -> MyLogView
     func makeLogDetailView(log: TimeStampLogViewData, onGoBack: @escaping () -> Void) -> LogDetailView
+    func makeLogEditorView(onDismiss: @escaping () -> Void) -> LogEditorView
 
 }
 struct MyLogDIContainer: MyLogDIContainerProtocol {
@@ -51,7 +52,7 @@ struct MyLogDIContainer: MyLogDIContainerProtocol {
         return MyLogView(viewModel: viewModel, diContainer: self)
     }
 
-    // MARK: - LogDetail
+    // MARK: - LogDetailView
     private func makeLogDetailApiClient() -> LogDetailApiClientProtocol {
         return LogDetailApiClient(session: session)
     }
@@ -75,13 +76,18 @@ struct MyLogDIContainer: MyLogDIContainerProtocol {
         return viewModel
     }
 
-    // MARK: - LogDetailView
     func makeLogDetailView(log: TimeStampLogViewData, onGoBack: @escaping () -> Void) -> LogDetailView {
         let viewModel = makeLogDetailViewModel(log: log, onGoBack: onGoBack)
         return LogDetailView(
             viewModel: viewModel,
+            diContainer: self,
             onGoBack: onGoBack
         )
+    }
+    
+    // MARK: - LogEditorView
+    func makeLogEditorView(onDismiss: @escaping () -> Void) -> LogEditorView {
+        return LogEditorView(onDismiss: onDismiss)
     }
 }
 
@@ -116,8 +122,15 @@ struct MockMyLogDIContainer: MyLogDIContainerProtocol {
         let useCase = MockLogDetailUseCase()
         let viewModel = LogDetailViewModel(log: log, useCase: useCase)
         return LogDetailView(
-            viewModel: viewModel,
+            viewModel: viewModel, diContainer: self,
             onGoBack: onGoBack
         )
+    }
+    
+    
+    // MARK: LogEditorView
+    
+    func makeLogEditorView(onDismiss: @escaping () -> Void) -> LogEditorView {
+        return LogEditorView(onDismiss: onDismiss)
     }
 }
