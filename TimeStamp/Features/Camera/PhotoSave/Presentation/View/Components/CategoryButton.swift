@@ -23,8 +23,7 @@ struct CategoryButton: View {
     
     var body: some View {
         Button(action: action) {
-            VStack(spacing: 8) {
-                
+            VStack(spacing: 4) {
                 
                 // 아이콘
                 Image(type.image)

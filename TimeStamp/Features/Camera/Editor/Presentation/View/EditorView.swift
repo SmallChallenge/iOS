@@ -204,12 +204,6 @@ struct EditorView: View {
         }
     }
     
-    private var templatePlaceholder: some View {
-        Color.clear
-            .frame(width: 90, height: 90)
-    }
-    
-    
     // MARK: - Functions
     
     /// 이미지 렌더해서 뽑아내기

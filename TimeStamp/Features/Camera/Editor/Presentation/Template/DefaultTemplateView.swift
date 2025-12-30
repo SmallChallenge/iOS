@@ -33,9 +33,10 @@ struct DefaultTemplateView: TemplateViewProtocol {
                     Spacer()
                     HStack {
                         Spacer()
-                        Image("TemplateLogo_Stampy")
+                        Image("Logotype")
+                            .renderingMode(.template)
                             .resizable()
-                            .frame(width: 100, height: 27)
+                            .frame(width: 122.8, height: 26)
                             .foregroundColor(.gray50)
                             .padding(16)
                     }

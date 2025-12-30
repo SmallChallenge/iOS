@@ -62,6 +62,7 @@ class NicknameSettingViewModel: ObservableObject {
                 await MainActor.run {
                     isLoading = false
                     isSaved = true
+                    ToastManager.shared.show(AppMessage.welcomeMessage(nickname: nickname).text)
                     Logger.success("닉네임 설정 완료: \(result.nickname)")
                 }
             } catch let error as NetworkError {

@@ -50,7 +50,7 @@ struct PhotoSaveView: View {
                     .padding(.top, 40)
                     .padding(.horizontal, 20)
             }
-        }
+        } // ~ ScrollView
         .mainBackgourndColor()
         .navigationBarTitleDisplayMode(.inline)
         .navigationBarBackButtonHidden(true)

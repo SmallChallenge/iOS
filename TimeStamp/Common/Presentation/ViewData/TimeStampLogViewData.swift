@@ -7,15 +7,15 @@
 
 import Foundation
 
-struct TimeStampLogViewData: Identifiable {
+struct TimeStampLogViewData: Identifiable, Hashable {
     /// id in local
     let id: UUID
-    let category: Category
+    let category: CategoryViewData
     let timeStamp: Date
 
     
     var imageSource: TimeStampLog.ImageSource
     
     /// 공개여부
-    let visibility: VisibilityType
+    let visibility: VisibilityViewData
 }

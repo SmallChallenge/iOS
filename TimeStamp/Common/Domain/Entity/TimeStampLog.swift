@@ -18,15 +18,15 @@ struct TimeStampLog: Identifiable {
     /// 공개여부
     let visibility: VisibilityType
     
-    enum ImageSource {
+    enum ImageSource: Hashable {
         case local(LocalTimeStampImage)
-        case remote(RemoteTimeStampImage) 
+        case remote(RemoteTimeStampImage)
     }
-    
-    struct LocalTimeStampImage {
+
+    struct LocalTimeStampImage: Hashable {
         let imageFileName: String
     }
-    struct RemoteTimeStampImage {
+    struct RemoteTimeStampImage: Hashable {
         /// id in server
         let id: Int
         let imageUrl: String
