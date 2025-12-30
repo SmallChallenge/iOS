@@ -22,6 +22,7 @@ struct LogDetailView: View {
     
     @State private var showDeletePopup: Bool = false
     @State private var showShareSheet: Bool = false
+    @State private var showPopoverMenu: Bool = false
     
     var body: some View {
         ScrollView {
@@ -32,7 +33,7 @@ struct LogDetailView: View {
                         HStack {
                             Spacer()
                             Button {
-                                // TODO: 팝메뉴 띄우기
+                                showPopoverMenu.toggle()
                             } label: {
                                 ellipsisImage
                             }
@@ -90,6 +91,38 @@ struct LogDetailView: View {
         }
         .sheet(isPresented: $showShareSheet) {
             ShareSheet(items: shareItems)
+        }
+        .overlay(alignment: .topTrailing) {
+            if showPopoverMenu {
+                ZStack(alignment: .topTrailing) {
+                    
+                    Color.clear
+                        .ignoresSafeArea()
+                        .contentShape(Rectangle())
+                        .onTapGesture {
+                            showPopoverMenu = false
+                        }
+                    
+                    PopoverMenu(
+                        items: [
+                            .init(title: "기록 수정", icon: "square.and.pencil") {
+                                // TODO: 수정하기
+                            },
+                            .init(title: "기록 삭제", icon: "trash") {
+                                showDeletePopup = true
+                            }
+                        ],
+                        isPresented: $showPopoverMenu
+                    )
+                    .padding(.top, 30)
+                    .padding(.trailing, 20)
+                    .rounded(radius: 12)
+                    
+                }
+                
+                .transition(.opacity)
+                .animation(.easeInOut(duration: 0.2), value: showPopoverMenu)
+            }
         }
     }
     
