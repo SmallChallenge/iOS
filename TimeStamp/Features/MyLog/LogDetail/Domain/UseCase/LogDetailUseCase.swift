@@ -6,6 +6,7 @@
 //
 
 import Foundation
+import UIKit
 
 final class LogDetailUseCase: LogDetailUseCaseProtocol {
     private let repository: LogDetailRepositoryProtocol
@@ -20,5 +21,17 @@ final class LogDetailUseCase: LogDetailUseCaseProtocol {
     
     func deleteLogFromLocal(logId: UUID) async throws {
         try await repository.deleteLogFromLocal(logId: logId)
+    }
+
+    // MARK: - 이미지 준비
+
+    func prepareImageForSharing(imageSource: TimeStampLog.ImageSource) async throws -> UIImage {
+        switch imageSource {
+        case let .remote(remoteImage):
+            return try await repository.downloadRemoteImage(url: remoteImage.imageUrl)
+
+        case let .local(localImage):
+            return try repository.loadLocalImage(fileName: localImage.imageFileName)
+        }
     }
 }

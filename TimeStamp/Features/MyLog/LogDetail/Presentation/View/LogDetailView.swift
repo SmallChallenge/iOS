@@ -62,13 +62,17 @@ struct LogDetailView: View {
                     }
                     
                     // 공유하기 버튼
-                    MainButton(title: "공유하기", colorType: .secondary) {
-                        showShareSheet = true
+                    MainButton(title: viewModel.isPreparingShare ? "준비중..." : "공유하기", colorType: .secondary) {
+                        viewModel.prepareImageForSharing()
+                        if viewModel.shareImage != nil {
+                            showShareSheet = true
+                        }
                     }
                 } // ~Group
                 .padding(.horizontal, 20)
             } //~VStack
         } //~ScrollView
+        .loading(viewModel.isLoading)
         .mainBackgourndColor()
         .navigationBarTitleDisplayMode(.inline)
         .navigationBarBackButtonHidden(true)
@@ -93,7 +97,14 @@ struct LogDetailView: View {
                 }
         }
         .sheet(isPresented: $showShareSheet) {
-            ShareSheet(items: shareItems)
+            if let image = viewModel.shareImage {
+                ShareSheet(items: [image])
+            }
+        }
+        .onChange(of: viewModel.shareImage) { newValue in
+            if newValue != nil {
+                showShareSheet = true
+            }
         }
         .overlay(alignment: .topTrailing) {
             if showPopoverMenu {
@@ -129,27 +140,6 @@ struct LogDetailView: View {
         }
     }
     
-    private var shareItems: [Any] {
-        switch viewModel.log.imageSource {
-        case let .remote(remoteImage):
-            // 원격 이미지는 URL 공유
-            if let url = URL(string: remoteImage.imageUrl) {
-                return [url]
-            }
-            return []
-        case let .local(localImage):
-            // 로컬 이미지는 파일에서 UIImage 로드
-            let documentsPath = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask)[0]
-            let imagePath = documentsPath.appendingPathComponent(localImage.imageFileName)
-
-            if let imageData = try? Data(contentsOf: imagePath),
-               let uiImage = UIImage(data: imageData) {
-                return [uiImage]
-            }
-            return []
-        }
-    }
-
     private var ellipsisImage: some View {
         Image(systemName: "ellipsis")
             .foregroundStyle(Color.gray50)

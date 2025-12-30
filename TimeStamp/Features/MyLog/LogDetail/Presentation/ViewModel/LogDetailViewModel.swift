@@ -7,6 +7,7 @@
 
 import Foundation
 import Combine
+import UIKit
 
 final class LogDetailViewModel: ObservableObject, MessageDisplayable {
 
@@ -19,6 +20,10 @@ final class LogDetailViewModel: ObservableObject, MessageDisplayable {
     @Published var log: TimeStampLogViewData
     @Published var category: CategoryViewData = .food
     @Published var visibility: VisibilityViewData = .privateVisible
+
+    // 공유하기
+    @Published var shareImage: UIImage?
+    @Published var isPreparingShare = false
 
     // MARK: - Dependencies
     private let useCase: LogDetailUseCaseProtocol
@@ -79,6 +84,32 @@ final class LogDetailViewModel: ObservableObject, MessageDisplayable {
                 isLoading = false
                 show(.deleteFailed)
             }
+        }
+    }
+
+    // MARK: - 공유하기
+
+    /// 공유할 이미지 준비
+    func prepareImageForSharing() {
+        guard !isPreparingShare else { return }
+
+        // 이미 이미지가 있으면 재사용
+        if shareImage != nil {
+            return
+        }
+
+        isPreparingShare = true
+        isLoading = true
+
+        Task { @MainActor in
+            do {
+                let image = try await useCase.prepareImageForSharing(imageSource: log.imageSource)
+                shareImage = image
+            } catch {
+                ToastManager.shared.show("이미지를 불러올 수 없습니다")
+            }
+            isPreparingShare = false
+            isLoading = false
         }
     }
 }

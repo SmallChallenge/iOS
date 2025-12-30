@@ -7,6 +7,7 @@
 
 import Foundation
 import Alamofire
+import UIKit
 
 protocol MyLogDIContainerProtocol {
     func makeMyLogView() -> MyLogView
@@ -105,6 +106,9 @@ struct MockMyLogDIContainer: MyLogDIContainerProtocol {
     struct MockLogDetailUseCase: LogDetailUseCaseProtocol {
         func deleteLogFromLocal(logId: UUID) async throws {}
         func deleteLogFromServer(logId: Int) async throws {}
+        func prepareImageForSharing(imageSource: TimeStampLog.ImageSource) async throws -> UIImage {
+            UIImage()
+        }
     }
 
     // MARK: - LogDetailView
