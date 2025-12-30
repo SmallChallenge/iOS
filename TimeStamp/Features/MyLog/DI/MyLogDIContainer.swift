@@ -103,9 +103,8 @@ struct MockMyLogDIContainer: MyLogDIContainerProtocol {
     }
 
     struct MockLogDetailUseCase: LogDetailUseCaseProtocol {
-        func deleteLogFromServer(logId: Int) async throws {
-            // Mock: 성공
-        }
+        func deleteLogFromLocal(logId: UUID) async throws {}
+        func deleteLogFromServer(logId: Int) async throws {}
     }
 
     // MARK: - LogDetailView

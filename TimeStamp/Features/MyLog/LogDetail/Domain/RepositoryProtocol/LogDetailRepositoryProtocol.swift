@@ -9,4 +9,5 @@ import Foundation
 
 protocol LogDetailRepositoryProtocol {
     func deleteLogFromServer(logId: Int) async throws
+    func deleteLogFromLocal(logId: UUID) async throws
 }

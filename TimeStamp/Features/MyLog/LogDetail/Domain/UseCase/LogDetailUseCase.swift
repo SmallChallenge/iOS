@@ -17,4 +17,8 @@ final class LogDetailUseCase: LogDetailUseCaseProtocol {
     func deleteLogFromServer(logId: Int) async throws {
         try await repository.deleteLogFromServer(logId: logId)
     }
+    
+    func deleteLogFromLocal(logId: UUID) async throws {
+        try await repository.deleteLogFromLocal(logId: logId)
+    }
 }

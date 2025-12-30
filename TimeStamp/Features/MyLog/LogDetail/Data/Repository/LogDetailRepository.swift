@@ -26,4 +26,8 @@ final class LogDetailRepository: LogDetailRepositoryProtocol {
             throw error
         }
     }
+    
+    func deleteLogFromLocal(logId: UUID) async throws {
+        try localDataSource.delete(id: logId)
+    }
 }
