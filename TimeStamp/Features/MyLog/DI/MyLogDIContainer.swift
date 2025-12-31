@@ -10,6 +10,7 @@ import Alamofire
 import UIKit
 
 protocol MyLogDIContainerProtocol {
+    func makeMainTabView() -> MainTabView
     func makeMyLogView() -> MyLogView
     func makeLogDetailView(log: TimeStampLogViewData, onGoBack: @escaping () -> Void) -> LogDetailView
     func makeLogEditorView(onDismiss: @escaping () -> Void) -> LogEditorView
@@ -28,6 +29,12 @@ struct MyLogDIContainer: MyLogDIContainerProtocol {
         self.session = session
         self.localDataSource = localDataSource
     }
+    
+    // MARK: - MainTab
+    func makeMainTabView() -> MainTabView {
+        return MainTabView(container: AppDIContainer.shared)
+    }
+    
     
     // MARK: - MyLog
     private func makeMyLogApiClient() -> MyLogApiClientProtocol {
@@ -93,7 +100,14 @@ struct MyLogDIContainer: MyLogDIContainerProtocol {
 
 // MARK: --------------------------------- Mock --------------------------------
 struct MockMyLogDIContainer: MyLogDIContainerProtocol {
+    
+    // MARK: MainTab
+    func makeMainTabView() -> MainTabView {
+        return MainTabView(container: AppDIContainer.shared)
+    }
    
+    
+    // MARK: MyLogView
     func makeMyLogView() -> MyLogView {
         let usecase = MockMyLogUseCase()
         let viewModel = MyLogViewModel(useCase: usecase)
@@ -109,13 +123,7 @@ struct MockMyLogDIContainer: MyLogDIContainerProtocol {
         }
     }
 
-    struct MockLogDetailUseCase: LogDetailUseCaseProtocol {
-        func deleteLogFromLocal(logId: UUID) async throws {}
-        func deleteLogFromServer(logId: Int) async throws {}
-        func prepareImageForSharing(imageSource: TimeStampLog.ImageSource) async throws -> UIImage {
-            UIImage()
-        }
-    }
+   
 
     // MARK: - LogDetailView
     func makeLogDetailView(log: TimeStampLogViewData, onGoBack: @escaping () -> Void) -> LogDetailView {
@@ -127,9 +135,16 @@ struct MockMyLogDIContainer: MyLogDIContainerProtocol {
         )
     }
     
+    struct MockLogDetailUseCase: LogDetailUseCaseProtocol {
+        func deleteLogFromLocal(logId: UUID) async throws {}
+        func deleteLogFromServer(logId: Int) async throws {}
+        func prepareImageForSharing(imageSource: TimeStampLog.ImageSource) async throws -> UIImage {
+            UIImage()
+        }
+    }
+    
     
     // MARK: LogEditorView
-    
     func makeLogEditorView(onDismiss: @escaping () -> Void) -> LogEditorView {
         return LogEditorView(onDismiss: onDismiss)
     }

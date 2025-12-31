@@ -13,8 +13,12 @@ struct MainTabView: View {
     @State private var selectedTab: Int = 0
     @State private var showCamera: Bool = false
     @State private var presentMypage: Bool = false
-    
-    private let container = AppDIContainer.shared
+
+    private let container: AppDIContainer
+
+    init(container: AppDIContainer) {
+        self.container = container
+    }
     
     var body: some View {
         NavigationView {
@@ -82,5 +86,5 @@ struct MainTabView: View {
 }
 
 #Preview {
-    MainTabView()
+    MainTabView(container: AppDIContainer.shared)
 }

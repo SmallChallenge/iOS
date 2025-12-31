@@ -12,11 +12,13 @@ final class LaunchScreenDIContainer {
     // MARK: - Dependencies
 
     private let authApiClient: AuthApiClientProtocol
+    private let appContainer: AppDIContainer
 
     // MARK: - Initializer
 
-    init(authApiClient: AuthApiClientProtocol) {
+    init(authApiClient: AuthApiClientProtocol, appContainer: AppDIContainer) {
         self.authApiClient = authApiClient
+        self.appContainer = appContainer
     }
 
     // MARK: - Repository
@@ -35,6 +37,6 @@ final class LaunchScreenDIContainer {
         // Delegate 설정 (UseCase → ViewModel)
         useCase.delegate = viewModel
 
-        return LaunchScreenView(viewModel: viewModel)
+        return LaunchScreenView(viewModel: viewModel, container: appContainer)
     }
 }

@@ -35,12 +35,16 @@ final class AppDIContainer {
     // MARK: - LaunchScreen Feature
 
     private lazy var launchScreenDIContainer: LaunchScreenDIContainer = {
-        LaunchScreenDIContainer(authApiClient: authApiClient)
+        LaunchScreenDIContainer(
+            authApiClient: authApiClient,
+            appContainer: self
+        )
     }()
 
     func makeLaunchScreenView() -> LaunchScreenView {
         return launchScreenDIContainer.makeLaunchScreenView()
     }
+    
     
     // MARK: - MyLog Feature
 
@@ -49,6 +53,9 @@ final class AppDIContainer {
         return MyLogDIContainer(session: session, localDataSource: localDataSource)
     }()
 
+    func makeMainTabView() -> MainTabView {
+        return myLogDIContainer.makeMainTabView()
+    }
     func makeMyLogView() -> MyLogView {
         return myLogDIContainer.makeMyLogView()
     }
