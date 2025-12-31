@@ -453,7 +453,7 @@
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = TimeStamp/Info.plist;
-				INFOPLIST_KEY_CFBundleDisplayName = Stampy;
+				INFOPLIST_KEY_CFBundleDisplayName = "스탬픽";
 				INFOPLIST_KEY_ITSAppUsesNonExemptEncryption = NO;
 				INFOPLIST_KEY_LSApplicationCategoryType = "public.app-category.lifestyle";
 				INFOPLIST_KEY_NSCameraUsageDescription = "사진 촬영을 위해 카메라 접근 권한을 허용해 주세요.";
@@ -500,7 +500,7 @@
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = TimeStamp/Info.plist;
-				INFOPLIST_KEY_CFBundleDisplayName = Stampy;
+				INFOPLIST_KEY_CFBundleDisplayName = "스탬픽";
 				INFOPLIST_KEY_ITSAppUsesNonExemptEncryption = NO;
 				INFOPLIST_KEY_LSApplicationCategoryType = "public.app-category.lifestyle";
 				INFOPLIST_KEY_NSCameraUsageDescription = "사진 촬영을 위해 카메라 접근 권한을 허용해 주세요.";
