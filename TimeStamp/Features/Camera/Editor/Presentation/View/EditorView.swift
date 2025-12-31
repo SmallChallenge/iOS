@@ -140,7 +140,7 @@ struct EditorView: View {
                     selectedTemplateStyle = type
                 } label: {
                     Text(type.name)
-                        .font(.Btn2_b)
+                        .font(type == selectedTemplateStyle ? .Btn2_b : .Btn2)
                         .foregroundColor(type == selectedTemplateStyle ? Color.gray50 : Color.gray500)
                 }
             }
