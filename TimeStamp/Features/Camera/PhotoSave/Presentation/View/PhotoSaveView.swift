@@ -71,12 +71,12 @@ struct PhotoSaveView: View {
         .loading(viewModel.isLoading)
         // 로그인 팝업 띄우기
         .popup(isPresented: $showLoginPopup, content: {
-            Modal(title: "로그인이 필요합니다.")
+            Modal(title: "로그인이 필요해요.")
                 .buttons {
                     MainButton(title: "취소", colorType: .secondary) {
                         showLoginPopup = false
                     }
-                    MainButton(title: "확인", colorType: .primary) {
+                    MainButton(title: "로그인", colorType: .primary) {
                         // 로그인 화면 띄우기
                         showLoginPopup = false
                         showLoginView = true
