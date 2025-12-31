@@ -118,7 +118,10 @@ struct PhotoSaveView: View {
         // 카테고리, 공개 여부가 선택되었는지 확인
         guard let category = selectedCategory,
         let visibility = selectedVisibility
-        else { return }
+        else {
+            viewModel.show(.requiredSelection)
+            return
+        }
         
         // ViewModel을 통해 저장
         viewModel.savePhoto(

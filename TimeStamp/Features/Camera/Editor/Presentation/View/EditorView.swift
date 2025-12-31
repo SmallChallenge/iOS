@@ -168,7 +168,6 @@ struct EditorView: View {
         }
     }
     
-    
     @ViewBuilder
     private func editedImageView() -> some View {
         ZStack {

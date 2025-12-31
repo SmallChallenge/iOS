@@ -50,6 +50,9 @@ enum AppMessage {
     /// 신고 실패
     case reportFailed
     
+    /// 필수값 입력 필요
+    case requiredSelection
+    
     
     
 
@@ -87,6 +90,9 @@ enum AppMessage {
             return "삭제에 실패했어요.\n다시 시도해 주세요."
         case .maxPhotoLimitReached: 
             return "기록 한도에 도달했어요.\n로그인하면 계속 기록할 수 있어요."
+            
+        case .requiredSelection:
+            return "필수 항목을 선택해 주세요."
 
             // MARK: 성공
         case .photoSaveSuccess:
