@@ -17,4 +17,8 @@ protocol MyLogUseCaseProtocol {
     /// - Parameter page: 가져올 페이지 번호 (0부터 시작)
     /// - Returns: (TimeStampLog Entity 배열, PageInfo Entity) (실패 시 빈 배열과 nil)
     func fetchServerLogs(page: Int) async -> (logs: [TimeStampLog], pageInfo: PageInfo?)
+
+    /// 로컬 타임스탬프 로그의 개수를 조회
+    /// - Returns: 로컬에 저장된 로그의 개수
+    func getLocalLogsCount() -> Int
 }

@@ -10,7 +10,10 @@ import SwiftUI
 
 struct MainTabBar: View {
     @Binding var selectedTab: Int
-    @Binding var showCamera: Bool
+    
+    // 카메라 버튼 클릭 액션
+    let onCameraButtonTapped: () -> Void
+    
 
     var body: some View {
         GeometryReader { geometry in
@@ -26,7 +29,7 @@ struct MainTabBar: View {
 
                     // MARK: 카메라
                     Button {
-                        showCamera = true
+                        onCameraButtonTapped()
                     } label: {
                         AddButtonView()
                     }
@@ -59,5 +62,5 @@ struct MainTabBar: View {
 
 
 #Preview {
-    MainTabBar(selectedTab: .constant(1), showCamera: .constant(false))
+    MainTabBar(selectedTab: .constant(1), onCameraButtonTapped: {})
 }

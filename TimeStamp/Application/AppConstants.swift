@@ -40,5 +40,8 @@ enum AppConstants {
         static let maxNicknameLength = 10
         static let minNicknameLength = 2
         static let maxImageSize = 10 * 1024 * 1024 // 10MB
+        
+        static let maxLogCount: Int = 20
+        static let warningLogCount: Int = 18
     }
 }

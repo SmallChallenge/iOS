@@ -23,6 +23,7 @@ public enum FontStyle {
     case Btn2_b
     case Btn2
     case Caption
+    case Caption_b
     case Label
     
     var name: String {
@@ -52,6 +53,8 @@ public enum FontStyle {
             "Pretendard-Medium"
         case .Caption:
             "Pretendard-Regular"
+        case .Caption_b:
+            "Pretendard-SemiBold"
         case .Label:
             "Pretendard-Medium"
         }
@@ -75,8 +78,13 @@ public enum FontStyle {
         case .Btn2: return 14
 
         case .Caption: return 12
+        case .Caption_b: return 12
         case .Label: return 10
         }
+    }
+    
+    var font: Font {
+        .custom(self.name, size: self.size)
     }
     
     /*

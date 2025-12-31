@@ -22,17 +22,23 @@ struct MyLogDIContainer: MyLogDIContainerProtocol {
 
     private let localDataSource: LocalTimeStampLogDataSourceProtocol
     private let session: Session
+    private let settingsRepository: SettingsDataSourceProtocol
 
     // MARK: - Initializer
 
-    init(session: Session, localDataSource: LocalTimeStampLogDataSourceProtocol) {
+    init(session: Session, localDataSource: LocalTimeStampLogDataSourceProtocol, settingsRepository: SettingsDataSourceProtocol) {
         self.session = session
         self.localDataSource = localDataSource
+        self.settingsRepository = settingsRepository
     }
     
     // MARK: - MainTab
+    private func makeMainTabViewModel() -> MainTabViewModel {
+        return MainTabViewModel(myLogUseCase: makeMyLogUseCase())
+    }
+
     func makeMainTabView() -> MainTabView {
-        return MainTabView(container: AppDIContainer.shared)
+        return MainTabView(container: AppDIContainer.shared, viewModel: makeMainTabViewModel())
     }
     
     
@@ -51,7 +57,7 @@ struct MyLogDIContainer: MyLogDIContainerProtocol {
     }
 
     private func makeMyLogViewModel() -> MyLogViewModel {
-        return MyLogViewModel(useCase: makeMyLogUseCase())
+        return MyLogViewModel(useCase: makeMyLogUseCase(), settingsRepository: settingsRepository)
     }
 
     func makeMyLogView() -> MyLogView {
@@ -103,24 +109,38 @@ struct MockMyLogDIContainer: MyLogDIContainerProtocol {
     
     // MARK: MainTab
     func makeMainTabView() -> MainTabView {
-        return MainTabView(container: AppDIContainer.shared)
+        let useCase = MockMyLogUseCase()
+        let viewModel = MainTabViewModel(myLogUseCase: useCase)
+        return MainTabView(container: AppDIContainer.shared, viewModel: viewModel)
     }
    
     
     // MARK: MyLogView
     func makeMyLogView() -> MyLogView {
         let usecase = MockMyLogUseCase()
-        let viewModel = MyLogViewModel(useCase: usecase)
+        let settingsRepository = MockSettingsRepository()
+        let viewModel = MyLogViewModel(useCase: usecase, settingsRepository: settingsRepository)
         return MyLogView(viewModel: viewModel, diContainer: self)
     }
-    
+
     struct MockMyLogUseCase: MyLogUseCaseProtocol {
+        func getLocalLogsCount() -> Int {
+            return 0
+        }
+
         func fetchAllLogs(isLoggedIn: Bool) async -> (logs: [TimeStampLog], pageInfo: PageInfo?) {
             ([], nil)
         }
         func fetchServerLogs(page: Int) async -> (logs: [TimeStampLog], pageInfo: PageInfo?) {
             ([], nil)
         }
+    }
+
+    struct MockSettingsRepository: SettingsDataSourceProtocol {
+        func getIsLogLimitBannerDismissed() -> Bool {
+            return false
+        }
+        func setIsLogLimitBannerDismissed(_ isDismissed: Bool) {}
     }
 
    

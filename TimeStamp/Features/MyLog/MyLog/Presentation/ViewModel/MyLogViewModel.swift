@@ -16,6 +16,9 @@ final class MyLogViewModel: ObservableObject, MessageDisplayable {
     /// MyLog UseCase
     private let useCase: MyLogUseCaseProtocol
 
+    /// Settings Repository
+    private let settingsRepository: SettingsDataSourceProtocol
+
     // MARK: - Output Properties
 
     @Published var isLoading = false
@@ -26,6 +29,12 @@ final class MyLogViewModel: ObservableObject, MessageDisplayable {
 
     /// 전체 로그 (필터링은 View에서 수행)
     @Published var myLogs: [TimeStampLogViewData] = []
+
+    /// 로컬 기록 개수
+    @Published var localLogsCount: Int = 0
+
+    /// 로그 제한 배너를 닫았는지 여부
+    @Published var isLogLimitBannerDismissed: Bool = false
 
     /// 페이지네이션 상태
     private var currentPage = 0
@@ -48,8 +57,13 @@ final class MyLogViewModel: ObservableObject, MessageDisplayable {
 
     // MARK: - Init
 
-    init(useCase: MyLogUseCaseProtocol) {
+    init(useCase: MyLogUseCaseProtocol, settingsRepository: SettingsDataSourceProtocol) {
         self.useCase = useCase
+        self.settingsRepository = settingsRepository
+
+        // 배너 닫힘 상태 불러오기
+        self.isLogLimitBannerDismissed = settingsRepository.getIsLogLimitBannerDismissed()
+
         loadLogs()
     }
 
@@ -72,6 +86,9 @@ final class MyLogViewModel: ObservableObject, MessageDisplayable {
 
             myLogs = result.logs.map { $0.toViewData() }
 
+            // 로컬 로그 개수 업데이트
+            localLogsCount = useCase.getLocalLogsCount()
+
             // 페이지네이션 정보 업데이트
             if let pageInfo = result.pageInfo {
                 currentPage = pageInfo.currentPage
@@ -79,7 +96,7 @@ final class MyLogViewModel: ObservableObject, MessageDisplayable {
             }
 
             isLoading = false
-            Logger.success("로그 불러오기 성공: \(myLogs.count)개, hasMore: \(hasMorePages)")
+            Logger.success("로그 불러오기 성공: \(myLogs.count)개, 로컬: \(localLogsCount)개, hasMore: \(hasMorePages)")
         }
     }
 
@@ -118,5 +135,11 @@ final class MyLogViewModel: ObservableObject, MessageDisplayable {
             isLoadingMore = false
             Logger.success("추가 로그 불러오기 성공: \(newLogs.count)개, 현재 페이지: \(currentPage), hasMore: \(hasMorePages)")
         }
+    }
+
+    /// 로그 제한 배너 닫기
+    func dismissLogLimitBanner() {
+        isLogLimitBannerDismissed = true
+        settingsRepository.setIsLogLimitBannerDismissed(true)
     }
 }

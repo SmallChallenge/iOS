@@ -32,6 +32,16 @@ final class AppDIContainer {
         AuthApiClient(session: session)
     }()
 
+    // MARK: - Common Dependencies
+
+    private lazy var localTimeStampLogDataSource: LocalTimeStampLogDataSourceProtocol = {
+        LocalTimeStampLogDataSource()
+    }()
+
+    private lazy var settingsDataSource: SettingsDataSourceProtocol = {
+        SettingsDataSource()
+    }()
+
     // MARK: - LaunchScreen Feature
 
     private lazy var launchScreenDIContainer: LaunchScreenDIContainer = {
@@ -49,8 +59,11 @@ final class AppDIContainer {
     // MARK: - MyLog Feature
 
     private lazy var myLogDIContainer: MyLogDIContainer = {
-        let localDataSource = LocalTimeStampLogDataSource()
-        return MyLogDIContainer(session: session, localDataSource: localDataSource)
+        return MyLogDIContainer(
+            session: session,
+            localDataSource: localTimeStampLogDataSource,
+            settingsRepository: settingsDataSource
+        )
     }()
 
     func makeMainTabView() -> MainTabView {
@@ -63,8 +76,7 @@ final class AppDIContainer {
     // MARK: - Camera Feature
 
     private lazy var cameraTabDIContainer: CameraDIContainer = {
-        let localDataSource = LocalTimeStampLogDataSource()
-        return CameraDIContainer(session: session, localDataSource: localDataSource)
+        return CameraDIContainer(session: session, localDataSource: localTimeStampLogDataSource)
     }()
 
     func makeCameraTapView(onDismiss: @escaping () -> Void) -> CameraTabView {

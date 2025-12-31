@@ -14,10 +14,16 @@ struct MainTabView: View {
     @State private var showCamera: Bool = false
     @State private var presentMypage: Bool = false
 
-    private let container: AppDIContainer
 
-    init(container: AppDIContainer) {
+    @State private var showLimitReachedPopup: Bool = false
+    @State private var showLoginView: Bool = false
+
+    private let container: AppDIContainer
+    @StateObject private var viewModel: MainTabViewModel
+
+    init(container: AppDIContainer, viewModel: MainTabViewModel) {
         self.container = container
+        _viewModel = StateObject(wrappedValue: viewModel)
     }
     
     var body: some View {
@@ -47,7 +53,14 @@ struct MainTabView: View {
                 } // ~ VStack
                 
                 // 커스텀 탭바 [내 기록 | 촬영버튼 | 커뮤니티]
-                MainTabBar(selectedTab: $selectedTab, showCamera: $showCamera)
+                MainTabBar(selectedTab: $selectedTab, onCameraButtonTapped: {
+                    // 로컬기록이 20개 이상이면 팝업 띄우기
+                    if viewModel.canTakePhoto() {
+                        showCamera = true
+                    } else {
+                        showLimitReachedPopup = true
+                    }
+                })
                 
                 // 마이페이지 이동
                 NavigationLink(
@@ -61,10 +74,28 @@ struct MainTabView: View {
             .navigationBarHidden(true) // 기본 navigation bar 숨김
             
         } // ~NavigationView
+        .popup(isPresented: $showLimitReachedPopup, content: {
+            Modal(title: "기록 한계에 도달했어요.\n로그인하면 계속 기록할 수 있어요.")
+                .buttons {
+                    MainButton(title: "취소", colorType: .secondary) {
+                        showLimitReachedPopup = false
+                    }
+                    MainButton(title: "로그인") {
+                        showLoginView = true
+                        showLimitReachedPopup = false
+                    }
+                }
+        })
+        // 카메라 촬영화면 띄우기
         .fullScreenCover(isPresented: $showCamera) {
-            // 카메라 촬영화면 띄우기
             container.makeCameraTapView  {
                 showCamera = false
+            }
+        }
+        // 로그인 화면 띄우기
+        .fullScreenCover(isPresented: $showLoginView) {
+            container.makeLoginView {
+                showLoginView = false
             }
         }
         .onAppear {
@@ -86,5 +117,10 @@ struct MainTabView: View {
 }
 
 #Preview {
-    MainTabView(container: AppDIContainer.shared)
+    let container = AppDIContainer.shared
+    let localDataSource = LocalTimeStampLogDataSource()
+    let repository = MyLogRepository(localDataSource: localDataSource, apiClient: MyLogApiClient(session: SessionFactory().makeSession(for: .dev)))
+    let useCase = MyLogUseCase(repository: repository)
+    let viewModel = MainTabViewModel(myLogUseCase: useCase)
+    return MainTabView(container: container, viewModel: viewModel)
 }
