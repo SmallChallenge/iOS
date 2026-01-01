@@ -56,9 +56,11 @@ class NicknameSettingViewModel: ObservableObject {
     }
     
     /// 닉네임 저장하기
-    func saveNickname(_ nickname: String) {
-        guard checkValidateNickname(nickname) && !isLoading else { return }
+    func saveNickname(_ originNickname: String) {
+        guard checkValidateNickname(originNickname) && !isLoading else { return }
 
+        let nickname = originNickname.trim
+        
         Task {
             await MainActor.run { isLoading = true }
             Logger.debug("닉네임 저장하기: \(nickname)")
