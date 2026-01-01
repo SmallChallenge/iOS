@@ -36,7 +36,7 @@ struct NicknameSettingView: View {
                                 .font(.custom("Pretendard-SemiBold", size: 32))
                                 .foregroundStyle(Color.gray50)
                             
-                            Text("STAMPTY에서 사용할 닉네임을 입력해주세요.")
+                            Text("\(AppConstants.AppInfo.appNameEn)에서 사용할 닉네임을 입력해주세요.")
                                 .font(.Body1)
                                 .foregroundStyle(Color.gray400)
                         }
