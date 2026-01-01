@@ -18,15 +18,6 @@ struct UseInfoPageView: View {
     }
     var body: some View {
         ZStack {
-            NavigationLink(isActive: $presentNicknameSetting) {
-                appDiContainer.makeNicknameSettingView(onGoBack: {}, onDismiss: {
-                    needRefresh in
-                        print(">>>>> needRefresh \(needRefresh)")
-                })
-            } label: {
-                EmptyView()
-            }
-
             // Body
             VStack {
                 Button("닉네임설정") {
@@ -35,6 +26,12 @@ struct UseInfoPageView: View {
             }
 
         }// ~ZStack
+        .navigationDestination(isPresented: $presentNicknameSetting) {
+            appDiContainer.makeNicknameSettingView(onGoBack: {}, onDismiss: {
+                needRefresh in
+                    print(">>>>> needRefresh \(needRefresh)")
+            })
+        }
         .mainBackgourndColor()
         
     }

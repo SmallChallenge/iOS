@@ -62,14 +62,10 @@ struct MainTabView: View {
                     }
                 })
 
-                NavigationLink(
-                    destination: container.makeMyPageView(),
-                    isActive: $presentMypage
-                ) {
-                    EmptyView()
-                }
-
             } // ~ZStack
+            .navigationDestination(isPresented: $presentMypage) {
+                container.makeMyPageView()
+            }
             .mainBackgourndColor()
             .navigationBarHidden(true) // 기본 navigation bar 숨김
 

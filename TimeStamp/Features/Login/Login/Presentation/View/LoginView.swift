@@ -89,19 +89,15 @@ struct LoginView: View {
                 .foregroundStyle(Color.gray600)
                 
                 Spacer()
-
-                NavigationLink(
-                    destination: diContainer.makeNicknameSettingView(
-                        onGoBack: { navigateToNicknameSetting = false },
-                        onDismiss: { _ in
-                            onDismiss()
-                        }
-                    ),
-                    isActive: $navigateToNicknameSetting
-                ) {
-                    EmptyView()
-                }
             }// ~Vstack
+            .navigationDestination(isPresented: $navigateToNicknameSetting) {
+                diContainer.makeNicknameSettingView(
+                    onGoBack: { navigateToNicknameSetting = false },
+                    onDismiss: { _ in
+                        onDismiss()
+                    }
+                )
+            }
             .toast(message: $viewModel.toastMessage)
             .popup(message: $viewModel.alertMessage)
             .loading(viewModel.isLoading)

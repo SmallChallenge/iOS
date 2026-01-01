@@ -26,15 +26,6 @@ struct MyPageView: View {
     
     var body: some View {
         ZStack {
-            NavigationLink(isActive: $presentUserInfo) {
-                diContainer.makeUseInfoPageView { needRefresh in
-                    print(">>>>> needRefresh \(needRefresh)")
-                    presentUserInfo = false
-                }
-            } label: {
-                EmptyView()
-            }
-
             VStack(spacing: 10) {
                 if authManager.isLoggedIn {
                     
@@ -55,6 +46,12 @@ struct MyPageView: View {
                 
                 
 
+            }
+        }
+        .navigationDestination(isPresented: $presentUserInfo) {
+            diContainer.makeUseInfoPageView { needRefresh in
+                print(">>>>> needRefresh \(needRefresh)")
+                presentUserInfo = false
             }
         }
         .fullScreenCover(isPresented: $showLoginView) {

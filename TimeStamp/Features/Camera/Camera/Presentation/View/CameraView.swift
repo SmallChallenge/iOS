@@ -78,18 +78,14 @@ struct CameraView: View {
                     navigateToEditor = true
                 }
             }
-
-            if let image = viewModel.capturedImage {
-                NavigationLink(
-                    destination: diContainer.makeEditorView(
+            .navigationDestination(isPresented: $navigateToEditor) {
+                if let image = viewModel.capturedImage {
+                    diContainer.makeEditorView(
                         capturedImage: image,
                         capturedDate: nil,
                         onGoBack: { navigateToEditor = false },
                         onDismiss: onDismiss
-                    ),
-                    isActive: $navigateToEditor
-                ) {
-                    EmptyView()
+                    )
                 }
             }
         } // ~Zstack

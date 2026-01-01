@@ -77,22 +77,18 @@ struct EditorView: View {
 
                 }
             } // ~VStack
-
-            if let editedImage = editedImage {
-                NavigationLink(
-                    destination: diContainer.makePhotoSaveView(
-                        capturedImage: editedImage,
-                        onGoBack: {
-                            navigateToPhotoSave = false
-                        },
-                        onDismiss: onDismiss
-                    ),
-                    isActive: $navigateToPhotoSave
-                ) {
-                    EmptyView()
-                }
-            }
         } // ~ZStack
+        .navigationDestination(isPresented: $navigateToPhotoSave) {
+            if let editedImage = editedImage {
+                diContainer.makePhotoSaveView(
+                    capturedImage: editedImage,
+                    onGoBack: {
+                        navigateToPhotoSave = false
+                    },
+                    onDismiss: onDismiss
+                )
+            }
+        }
         .mainBackgourndColor()
         .navigationBarTitleDisplayMode(.inline)
         .navigationBarBackButtonHidden(true)

@@ -30,19 +30,15 @@ struct GalleryView: View {
             } else {
                 photoGrid
             }
-
+        }
+        .navigationDestination(isPresented: $navigateToPhotoSave) {
             if let image = viewModel.selectedImage {
-                NavigationLink(
-                    destination: diContainer.makeEditorView(
-                        capturedImage: image,
-                        capturedDate: viewModel.selectedImageDate,
-                        onGoBack: { navigateToPhotoSave = false },
-                        onDismiss: onDismiss
-                    ),
-                    isActive: $navigateToPhotoSave
-                ) {
-                    EmptyView()
-                }
+                diContainer.makeEditorView(
+                    capturedImage: image,
+                    capturedDate: viewModel.selectedImageDate,
+                    onGoBack: { navigateToPhotoSave = false },
+                    onDismiss: onDismiss
+                )
             }
         }
         .loading(viewModel.isLoading)
