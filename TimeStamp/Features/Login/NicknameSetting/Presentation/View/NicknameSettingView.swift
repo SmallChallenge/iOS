@@ -70,7 +70,8 @@ struct NicknameSettingView: View {
                     }
                     .frame(minHeight: geometry.size.height - 80)
                 }
-                
+                .scrollDismissesKeyboard(.interactively)
+
                 MainButton(title: "확인", isDisabled: text.isEmpty || viewModel.validateMessage != nil) {
                     viewModel.saveNickname(text)
                 }
