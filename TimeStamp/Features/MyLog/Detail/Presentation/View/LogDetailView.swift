@@ -74,6 +74,7 @@ struct LogDetailView: View {
                 .padding(.horizontal, 20)
             } //~VStack
         } //~ScrollView
+        .scrollDismissesKeyboard(.interactively)
         .loading(viewModel.isLoading)
         .mainBackgourndColor()
         .navigationBarTitleDisplayMode(.inline)

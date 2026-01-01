@@ -101,6 +101,7 @@ struct GalleryView: View {
             }
             .padding(2)
         }
+        .scrollDismissesKeyboard(.interactively)
     }
 }
 

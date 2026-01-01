@@ -94,6 +94,7 @@ struct MyLogView: View {
                         }
                     }
                 }
+                .scrollDismissesKeyboard(.interactively)
                 .background(
                     NavigationLink(
                         destination: Group {
