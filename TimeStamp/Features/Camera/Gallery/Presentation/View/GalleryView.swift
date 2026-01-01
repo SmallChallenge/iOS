@@ -30,20 +30,15 @@ struct GalleryView: View {
             } else {
                 photoGrid
             }
-
-            // NavigationLink (hidden)
+        }
+        .navigationDestination(isPresented: $navigateToPhotoSave) {
             if let image = viewModel.selectedImage {
-                NavigationLink(
-                    destination: diContainer.makeEditorView(
-                        capturedImage: image,
-                        capturedDate: viewModel.selectedImageDate, // 갤러리: PHAsset의 creationDate
-                        onGoBack: { navigateToPhotoSave = false },
-                        onDismiss: onDismiss
-                    ),
-                    isActive: $navigateToPhotoSave
-                ) {
-                    EmptyView()
-                }
+                diContainer.makeEditorView(
+                    capturedImage: image,
+                    capturedDate: viewModel.selectedImageDate,
+                    onGoBack: { navigateToPhotoSave = false },
+                    onDismiss: onDismiss
+                )
             }
         }
         .loading(viewModel.isLoading)
@@ -102,6 +97,7 @@ struct GalleryView: View {
             }
             .padding(2)
         }
+        .scrollDismissesKeyboard(.interactively)
     }
 }
 

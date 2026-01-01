@@ -36,18 +36,18 @@
 
 /* Begin PBXFileReference section */
 		D09119322EF9516C00214271 /* Secrets.xcconfig */ = {isa = PBXFileReference; lastKnownFileType = text.xcconfig; path = Secrets.xcconfig; sourceTree = "<group>"; };
-		D0DAF8782EE149E70040F646 /* TimeStamp.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = TimeStamp.app; sourceTree = BUILT_PRODUCTS_DIR; };
-		D0DAF8852EE149E80040F646 /* TimeStampTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = TimeStampTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
-		D0DAF88F2EE149E80040F646 /* TimeStampUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = TimeStampUITests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
+		D0DAF8782EE149E70040F646 /* Stampic.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Stampic.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		D0DAF8852EE149E80040F646 /* StampicTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = StampicTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
+		D0DAF88F2EE149E80040F646 /* StampicUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = StampicUITests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 /* End PBXFileReference section */
 
 /* Begin PBXFileSystemSynchronizedBuildFileExceptionSet section */
-		D0D4FFE02EEED82900C9C425 /* Exceptions for "TimeStamp" folder in "TimeStamp" target */ = {
+		D0D4FFE02EEED82900C9C425 /* Exceptions for "TimeStamp" folder in "Stampic" target */ = {
 			isa = PBXFileSystemSynchronizedBuildFileExceptionSet;
 			membershipExceptions = (
 				Info.plist,
 			);
-			target = D0DAF8772EE149E70040F646 /* TimeStamp */;
+			target = D0DAF8772EE149E70040F646 /* Stampic */;
 		};
 /* End PBXFileSystemSynchronizedBuildFileExceptionSet section */
 
@@ -55,7 +55,7 @@
 		D0DAF87A2EE149E70040F646 /* TimeStamp */ = {
 			isa = PBXFileSystemSynchronizedRootGroup;
 			exceptions = (
-				D0D4FFE02EEED82900C9C425 /* Exceptions for "TimeStamp" folder in "TimeStamp" target */,
+				D0D4FFE02EEED82900C9C425 /* Exceptions for "TimeStamp" folder in "Stampic" target */,
 			);
 			path = TimeStamp;
 			sourceTree = "<group>";
@@ -118,9 +118,9 @@
 		D0DAF8792EE149E70040F646 /* Products */ = {
 			isa = PBXGroup;
 			children = (
-				D0DAF8782EE149E70040F646 /* TimeStamp.app */,
-				D0DAF8852EE149E80040F646 /* TimeStampTests.xctest */,
-				D0DAF88F2EE149E80040F646 /* TimeStampUITests.xctest */,
+				D0DAF8782EE149E70040F646 /* Stampic.app */,
+				D0DAF8852EE149E80040F646 /* StampicTests.xctest */,
+				D0DAF88F2EE149E80040F646 /* StampicUITests.xctest */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -128,9 +128,9 @@
 /* End PBXGroup section */
 
 /* Begin PBXNativeTarget section */
-		D0DAF8772EE149E70040F646 /* TimeStamp */ = {
+		D0DAF8772EE149E70040F646 /* Stampic */ = {
 			isa = PBXNativeTarget;
-			buildConfigurationList = D0DAF8992EE149E80040F646 /* Build configuration list for PBXNativeTarget "TimeStamp" */;
+			buildConfigurationList = D0DAF8992EE149E80040F646 /* Build configuration list for PBXNativeTarget "Stampic" */;
 			buildPhases = (
 				D0DAF8742EE149E70040F646 /* Sources */,
 				D0DAF8752EE149E70040F646 /* Frameworks */,
@@ -143,7 +143,7 @@
 			fileSystemSynchronizedGroups = (
 				D0DAF87A2EE149E70040F646 /* TimeStamp */,
 			);
-			name = TimeStamp;
+			name = Stampic;
 			packageProductDependencies = (
 				D0DAF8BD2EE150D20040F646 /* Kingfisher */,
 				D0DAF8C02EE150E20040F646 /* Alamofire */,
@@ -154,12 +154,12 @@
 				D0AB7E4D2EF80BA900963A12 /* KakaoSDKAuth */,
 			);
 			productName = TimeStamp;
-			productReference = D0DAF8782EE149E70040F646 /* TimeStamp.app */;
+			productReference = D0DAF8782EE149E70040F646 /* Stampic.app */;
 			productType = "com.apple.product-type.application";
 		};
-		D0DAF8842EE149E80040F646 /* TimeStampTests */ = {
+		D0DAF8842EE149E80040F646 /* StampicTests */ = {
 			isa = PBXNativeTarget;
-			buildConfigurationList = D0DAF89C2EE149E80040F646 /* Build configuration list for PBXNativeTarget "TimeStampTests" */;
+			buildConfigurationList = D0DAF89C2EE149E80040F646 /* Build configuration list for PBXNativeTarget "StampicTests" */;
 			buildPhases = (
 				D0DAF8812EE149E80040F646 /* Sources */,
 				D0DAF8822EE149E80040F646 /* Frameworks */,
@@ -173,16 +173,16 @@
 			fileSystemSynchronizedGroups = (
 				D0DAF8882EE149E80040F646 /* TimeStampTests */,
 			);
-			name = TimeStampTests;
+			name = StampicTests;
 			packageProductDependencies = (
 			);
 			productName = TimeStampTests;
-			productReference = D0DAF8852EE149E80040F646 /* TimeStampTests.xctest */;
+			productReference = D0DAF8852EE149E80040F646 /* StampicTests.xctest */;
 			productType = "com.apple.product-type.bundle.unit-test";
 		};
-		D0DAF88E2EE149E80040F646 /* TimeStampUITests */ = {
+		D0DAF88E2EE149E80040F646 /* StampicUITests */ = {
 			isa = PBXNativeTarget;
-			buildConfigurationList = D0DAF89F2EE149E80040F646 /* Build configuration list for PBXNativeTarget "TimeStampUITests" */;
+			buildConfigurationList = D0DAF89F2EE149E80040F646 /* Build configuration list for PBXNativeTarget "StampicUITests" */;
 			buildPhases = (
 				D0DAF88B2EE149E80040F646 /* Sources */,
 				D0DAF88C2EE149E80040F646 /* Frameworks */,
@@ -196,11 +196,11 @@
 			fileSystemSynchronizedGroups = (
 				D0DAF8922EE149E80040F646 /* TimeStampUITests */,
 			);
-			name = TimeStampUITests;
+			name = StampicUITests;
 			packageProductDependencies = (
 			);
 			productName = TimeStampUITests;
-			productReference = D0DAF88F2EE149E80040F646 /* TimeStampUITests.xctest */;
+			productReference = D0DAF88F2EE149E80040F646 /* StampicUITests.xctest */;
 			productType = "com.apple.product-type.bundle.ui-testing";
 		};
 /* End PBXNativeTarget section */
@@ -247,9 +247,9 @@
 			projectDirPath = "";
 			projectRoot = "";
 			targets = (
-				D0DAF8772EE149E70040F646 /* TimeStamp */,
-				D0DAF8842EE149E80040F646 /* TimeStampTests */,
-				D0DAF88E2EE149E80040F646 /* TimeStampUITests */,
+				D0DAF8772EE149E70040F646 /* Stampic */,
+				D0DAF8842EE149E80040F646 /* StampicTests */,
+				D0DAF88E2EE149E80040F646 /* StampicUITests */,
 			);
 		};
 /* End PBXProject section */
@@ -306,12 +306,12 @@
 /* Begin PBXTargetDependency section */
 		D0DAF8872EE149E80040F646 /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;
-			target = D0DAF8772EE149E70040F646 /* TimeStamp */;
+			target = D0DAF8772EE149E70040F646 /* Stampic */;
 			targetProxy = D0DAF8862EE149E80040F646 /* PBXContainerItemProxy */;
 		};
 		D0DAF8912EE149E80040F646 /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;
-			target = D0DAF8772EE149E70040F646 /* TimeStamp */;
+			target = D0DAF8772EE149E70040F646 /* Stampic */;
 			targetProxy = D0DAF8902EE149E80040F646 /* PBXContainerItemProxy */;
 		};
 /* End PBXTargetDependency section */
@@ -378,6 +378,7 @@
 				ONLY_ACTIVE_ARCH = YES;
 				SDKROOT = iphoneos;
 				SWIFT_ACTIVE_COMPILATION_CONDITIONS = "DEBUG $(inherited)";
+				SWIFT_EMIT_LOC_STRINGS = YES;
 				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
 			};
 			name = Debug;
@@ -436,6 +437,7 @@
 				MTL_FAST_MATH = YES;
 				SDKROOT = iphoneos;
 				SWIFT_COMPILATION_MODE = wholemodule;
+				SWIFT_EMIT_LOC_STRINGS = YES;
 				VALIDATE_PRODUCT = YES;
 			};
 			name = Release;
@@ -464,7 +466,7 @@
 				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
 				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
 				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPhone = "UIInterfaceOrientationPortrait UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
-				IPHONEOS_DEPLOYMENT_TARGET = 15.6;
+				IPHONEOS_DEPLOYMENT_TARGET = 16.2;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
@@ -511,7 +513,7 @@
 				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
 				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
 				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPhone = "UIInterfaceOrientationPortrait UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
-				IPHONEOS_DEPLOYMENT_TARGET = 15.6;
+				IPHONEOS_DEPLOYMENT_TARGET = 16.2;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
@@ -630,7 +632,7 @@
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
 		};
-		D0DAF8992EE149E80040F646 /* Build configuration list for PBXNativeTarget "TimeStamp" */ = {
+		D0DAF8992EE149E80040F646 /* Build configuration list for PBXNativeTarget "Stampic" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
 				D0DAF89A2EE149E80040F646 /* Debug */,
@@ -639,7 +641,7 @@
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
 		};
-		D0DAF89C2EE149E80040F646 /* Build configuration list for PBXNativeTarget "TimeStampTests" */ = {
+		D0DAF89C2EE149E80040F646 /* Build configuration list for PBXNativeTarget "StampicTests" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
 				D0DAF89D2EE149E80040F646 /* Debug */,
@@ -648,7 +650,7 @@
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
 		};
-		D0DAF89F2EE149E80040F646 /* Build configuration list for PBXNativeTarget "TimeStampUITests" */ = {
+		D0DAF89F2EE149E80040F646 /* Build configuration list for PBXNativeTarget "StampicUITests" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
 				D0DAF8A02EE149E80040F646 /* Debug */,

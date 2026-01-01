@@ -22,7 +22,7 @@ struct CameraTabView: View {
     }
 
     var body: some View {
-        NavigationView {
+        NavigationStack {
             VStack(spacing: 0) {
 
                 if selectedTab == .camera {
@@ -60,7 +60,7 @@ struct CameraTabView: View {
                     }
                 }
             }
-        } //~ NavigationView
+        } //~ NavigationStack
         .onAppear {
             // 세로 방향으로 고정
             AppDelegate.orientationLock = .portrait

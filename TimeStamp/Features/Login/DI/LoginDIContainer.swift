@@ -10,7 +10,7 @@ import SwiftUI
 
 protocol LoginDIContainerProtocol {
     func makeLoginView(onDismiss: @escaping () -> Void) -> LoginView
-    func makeNicknameSettingView(onGoBack: @escaping () -> Void, onDismiss: @escaping () -> Void) -> NicknameSettingView
+    func makeNicknameSettingView(onGoBack: @escaping () -> Void, onDismiss: @escaping (_ needRefresh: Bool) -> Void) -> NicknameSettingView
     func makeTermsView(accessToken token: String?, onDismiss: @escaping (_ isActive: Bool) -> Void) -> TermsView
     func makeWebView(url: String, onDismiss: @escaping () -> Void) -> AnyView
 }
@@ -68,7 +68,7 @@ final class LoginDIContainer: LoginDIContainerProtocol {
         return NicknameSettingViewModel(useCase: usecase)
         
     }
-    func makeNicknameSettingView(onGoBack: @escaping () -> Void, onDismiss: @escaping () -> Void) -> NicknameSettingView {
+    func makeNicknameSettingView(onGoBack: @escaping () -> Void, onDismiss: @escaping (_ needRefresh: Bool) -> Void) -> NicknameSettingView {
         let vm = makeNicknameSettingViewModel()
         return NicknameSettingView(
             viewModel: vm,
@@ -100,7 +100,7 @@ final class LoginDIContainer: LoginDIContainerProtocol {
 
     func makeWebView(url: String, onDismiss: @escaping () -> Void) -> AnyView {
         return AnyView(
-            NavigationView {
+            NavigationStack {
                 AdvancedWebView(
                     url: URL(string: url)!,
                     isLoading: .constant(false)
@@ -146,7 +146,7 @@ final class MockLoginDIContainer: LoginDIContainerProtocol {
         return NicknameSettingViewModel(useCase: makeNicknameSettingUseCase())
     }
     
-    func makeNicknameSettingView(onGoBack: @escaping () -> Void, onDismiss: @escaping () -> Void) -> NicknameSettingView {
+    func makeNicknameSettingView(onGoBack: @escaping () -> Void, onDismiss: @escaping (_ needRefresh: Bool) -> Void) -> NicknameSettingView {
         let vm = makeNicknameSettingViewModel()
         return NicknameSettingView(
             viewModel: vm,
@@ -157,7 +157,7 @@ final class MockLoginDIContainer: LoginDIContainerProtocol {
 
     func makeWebView(url: String, onDismiss: @escaping () -> Void) -> AnyView {
         return AnyView(
-            NavigationView {
+            NavigationStack {
                 AdvancedWebView(
                     url: URL(string: url)!,
                     isLoading: .constant(false)
@@ -176,7 +176,7 @@ final class MockLoginDIContainer: LoginDIContainerProtocol {
             }
         )
     }
-    
+
     func makeTermsView(accessToken token: String?, onDismiss: @escaping (_ isActive: Bool) -> Void) -> TermsView {
         let useCase = MockTermsUseCase()
         let vm = TermsViewModel(usecase: useCase)

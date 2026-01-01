@@ -94,23 +94,17 @@ struct MyLogView: View {
                         }
                     }
                 }
-                .background(
-                    NavigationLink(
-                        destination: Group {
-                            if let log = selectedLog {
-                                diContainer.makeLogDetailView(log: log) {
-                                    selectedLog = nil
-                                }
-                            }
-                        },
-                        isActive: Binding(
-                            get: { selectedLog != nil },
-                            set: { if !$0 { selectedLog = nil } }
-                        )
-                    ) {
-                        EmptyView()
-                    }
-                )
+                .scrollDismissesKeyboard(.interactively)
+            }
+        }
+        .navigationDestination(isPresented: Binding(
+            get: { selectedLog != nil },
+            set: { if !$0 { selectedLog = nil } }
+        )) {
+            if let log = selectedLog {
+                diContainer.makeLogDetailView(log: log) {
+                    selectedLog = nil
+                }
             }
         }
         .mainBackgourndColor()

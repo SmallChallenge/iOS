@@ -51,6 +51,7 @@ struct PhotoSaveView: View {
                     .padding(.horizontal, 20)
             }
         } // ~ ScrollView
+        .scrollDismissesKeyboard(.interactively)
         .mainBackgourndColor()
         .navigationBarTitleDisplayMode(.inline)
         .navigationBarBackButtonHidden(true)

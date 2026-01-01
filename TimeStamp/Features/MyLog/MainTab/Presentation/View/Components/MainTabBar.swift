@@ -18,6 +18,10 @@ struct MainTabBar: View {
     var body: some View {
         GeometryReader { geometry in
             VStack(spacing: 0) {
+                Color.gray700
+                    .frame(height: 1)
+                    .frame(maxWidth: .infinity)
+                
                 HStack(spacing: 0) {
 
                     // MARK: 내 기록

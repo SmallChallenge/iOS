@@ -19,19 +19,13 @@ struct LogEditorView: View {
     
     
     var body: some View {
-        NavigationView {
-            ScrollView {
-                VStack {
-                    // 이미지 뷰
-                    logImage
-                    Text("왜 이러는 거야")
-                    Spacer()
-                    
-                    
-                    
-                }// ~Vstack
-                .padding(.horizontal, 20)
-            } //~ScrollView
+
+        NavigationStack {
+            VStack {
+                Text(" 기록 수정 화면")
+                    .font(.Body1)
+                    .foregroundStyle(Color.gray50)
+            }// ~Vstack
             .mainBackgourndColor()
                 .navigationBarTitleDisplayMode(.inline)
 //                .navigationBarBackButtonHidden(true)

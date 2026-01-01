@@ -61,7 +61,7 @@ final class LoginViewModel: ObservableObject, MessageDisplayable {
         // 로그인하기
         useCase.login(entity: entity)
         
-        if entity.needNickname {
+        if entity.nickname == nil {
             // 약관 완료 후 닉네임 필요하면 닉네임 화면으로
             needNickname = true
         } else {
