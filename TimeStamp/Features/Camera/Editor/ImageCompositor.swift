@@ -54,7 +54,8 @@ struct ImageCompositor {
         }
     }
 
-    /// 템플릿 뷰를 UIImage로 렌더링
+    /// 템플릿 뷰를 UIImage로 렌더링 (iOS 16+ ImageRenderer 사용)
+    @MainActor
     private func renderTemplateView<TemplateView: View>(
         template: TemplateView,
         size: CGSize
@@ -63,35 +64,11 @@ struct ImageCompositor {
             .frame(width: size.width, height: size.height, alignment: .center)
             .ignoresSafeArea()
 
-        let controller = UIHostingController(rootView: templateView)
+        let renderer = ImageRenderer(content: templateView)
+        renderer.proposedSize = ProposedViewSize(size)
+        renderer.scale = UIScreen.main.scale
 
-        // Window에 추가하여 정확한 레이아웃 보장
-        let window = UIWindow(frame: CGRect(origin: .zero, size: size))
-        window.rootViewController = controller
-        window.isHidden = false
-
-        controller.view.frame = CGRect(origin: .zero, size: size)
-        controller.view.backgroundColor = .clear
-
-        // 강제 레이아웃
-        controller.view.setNeedsLayout()
-        controller.view.layoutIfNeeded()
-
-        // 약간의 지연으로 SwiftUI 레이아웃 완료 보장
-        Thread.sleep(forTimeInterval: 0.05)
-
-        controller.view.setNeedsLayout()
-        controller.view.layoutIfNeeded()
-
-        let renderer = UIGraphicsImageRenderer(size: size)
-        let image = renderer.image { context in
-            controller.view.drawHierarchy(in: CGRect(origin: .zero, size: size), afterScreenUpdates: true)
-        }
-
-        // Window 정리
-        window.isHidden = true
-
-        return image
+        return renderer.uiImage
     }
 
     /// 배경과 오버레이 합성
