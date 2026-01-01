@@ -60,7 +60,7 @@ struct LogDetailView: View {
                     
                     if !authManager.isLoggedIn {
                         // 로그인 안내 배너
-                        LoginRequiredBanner
+                        NoticeBanner("로그인 전 게시물은 공개 범위를 수정할 수 없어요.")
                     }
                     
                     // 공유하기 버튼

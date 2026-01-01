@@ -12,15 +12,16 @@ import SwiftUI
 // 카테고리, 공개 여부 선택
 // 사진 저장
 struct PhotoSaveView: View {
-
+    @ObservedObject private var authManager = AuthManager.shared
     @StateObject var viewModel: PhotoSaveViewModel
     let capturedImage: UIImage
     let onGoBack: (() -> Void)?
     let onDismiss: () -> Void
     
     
-    @ObservedObject private var authManager = AuthManager.shared
+    
     @State private var selectedCategory: CategoryViewData? = nil
+    @State private var selectedVisibility: VisibilityViewData? = nil
     @State private var didAttemptConfirm: Bool = false
     @State private var showLoginPopup: Bool = false
     @State private var showLoginView: Bool = false
@@ -39,19 +40,30 @@ struct PhotoSaveView: View {
                     .roundedBorder(color: .gray700, radius: 8)
                     .padding(.top, 28)
                     .padding(.horizontal, 20)
-                    .padding(.bottom, 32)
+                    
+                
+                Spacer()
+                    .frame(height: 32)
 
                 // 카테고리 선택
                 categoryPicker
                     .padding(.horizontal, 20)
+                
+                Spacer()
+                    .frame(height: 40)
 
                 // 공개여부 선택
                 visibilityPicker
-                    .padding(.top, 40)
                     .padding(.horizontal, 20)
+                
+                Spacer()
+                    .frame(height: 8)
+                
+                Text("👆전체 공개 설정하고 커뮤니티 활동을 시작해보세요!")
+                    .font(.Body2)
+                    .foregroundStyle(Color.gray500)
             }
         } // ~ ScrollView
-        .scrollDismissesKeyboard(.interactively)
         .mainBackgourndColor()
         .navigationBarTitleDisplayMode(.inline)
         .navigationBarBackButtonHidden(true)
@@ -111,27 +123,7 @@ struct PhotoSaveView: View {
         })
     }
 
-    // MARK: - Actions
-
-    private func savePhoto() {
-        didAttemptConfirm = true
-        
-        // 카테고리, 공개 여부가 선택되었는지 확인
-        guard let category = selectedCategory,
-        let visibility = selectedVisibility
-        else {
-            viewModel.show(.requiredSelection)
-            return
-        }
-        
-        // ViewModel을 통해 저장
-        viewModel.savePhoto(
-            image: capturedImage,
-            category: category,
-            visibility: visibility
-        )
-    }
-    
+ 
     
     // 카테고리 선택
     var categoryPicker: some View {
@@ -171,7 +163,7 @@ struct PhotoSaveView: View {
         }
     }
     
-    @State var selectedVisibility: VisibilityViewData? = nil
+    
     /// 공개여부 선택
     var visibilityPicker: some View {
         VStack(alignment: .leading, spacing: 12) {
@@ -206,12 +198,30 @@ struct PhotoSaveView: View {
                         selectedVisibility = .privateVisible
                     }
             }
-            
-            Text("👆전체 공개 설정하고 커뮤니티 활동을 시작해보세요!")
-                .font(.Body2)
-                .foregroundStyle(Color.gray500)
         }
     }
+    
+    // MARK: - Actions
+
+    private func savePhoto() {
+        didAttemptConfirm = true
+        
+        // 카테고리, 공개 여부가 선택되었는지 확인
+        guard let category = selectedCategory,
+        let visibility = selectedVisibility
+        else {
+            viewModel.show(.requiredSelection)
+            return
+        }
+        
+        // ViewModel을 통해 저장
+        viewModel.savePhoto(
+            image: capturedImage,
+            category: category,
+            visibility: visibility
+        )
+    }
+    
 }
 
 

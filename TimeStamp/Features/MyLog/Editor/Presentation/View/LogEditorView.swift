@@ -7,9 +7,11 @@
 
 import SwiftUI
 import Kingfisher
+import Combine
 
 
 struct LogEditorView: View {
+    @ObservedObject private var authManager = AuthManager.shared
     @StateObject private var viewModel: LogEditorViewModel
     let onDismiss: (_ hasEdited: Bool) -> Void
     init(viewModel: LogEditorViewModel, onDismiss: @escaping (_ hasEdited: Bool) -> Void) {
@@ -17,13 +19,44 @@ struct LogEditorView: View {
         self.onDismiss = onDismiss
     }
     
-    
     var body: some View {
-        VStack {
-            Text(" 기록 수정 화면")
-                .font(.Body1)
-                .foregroundStyle(Color.gray50)
-        }// ~Vstack
+        ScrollView {
+            VStack (alignment: .leading, spacing: 0){
+                // 이미지 뷰
+                logImage
+                    //.aspectRatio(1, contentMode: .fit)
+                    .padding(.top, 20)
+                    
+                Spacer()
+                    .frame(height: 32)
+                
+                // 카테고리 선택
+                categoryPicker
+                    
+                
+                Spacer()
+                    .frame(height: 40)
+
+                // 공개여부 선택
+                visibilityPicker
+                
+                if viewModel.isPublicVisibility() {
+                    Text("👆전체 공개 설정하고 커뮤니티 활동을 시작해보세요!")
+                        .font(.Body2)
+                        .foregroundStyle(Color.gray500)
+                        .padding(.top, 8)
+                }
+                
+                if !authManager.isLoggedIn {
+                    NoticeBanner("전체공개는 로그인 후 이용 가능합니다.")
+                        .padding(.top, 16)
+                }
+                    
+                
+                
+            }// ~Vstack
+            .padding(.horizontal, 20)
+        }
         .mainBackgourndColor()
         .navigationBarTitleDisplayMode(.inline)
         .navigationBarBackButtonHidden(true)
@@ -71,10 +104,72 @@ struct LogEditorView: View {
             } //~switch
         }
         .clipped()
-//        .aspectRatio(1, contentMode: .fit)
-            .aspectRatio(1, contentMode: .fill)
+        .aspectRatio(1, contentMode: .fit)
             .clipShape(RoundedRectangle(cornerRadius: 8))
             .roundedBorder(color: .gray700, radius: 8)
+    }
+    
+    
+    // 카테고리 선택
+    var categoryPicker: some View {
+        VStack(alignment: .leading, spacing: 12) {
+            HStack(spacing: 8) {
+                Text("카테고리 선택")
+                    .font(.SubTitle2)
+                    .foregroundStyle(.gray50)
+            }
+            
+            HStack(alignment: .center, spacing: 8){
+                ForEach(CategoryViewData.allCases, id: \.self) { category in
+                    CategoryButton(
+                        type: category,
+                        state: {
+                            if viewModel.selectedCategory == nil {
+                                return .normal
+                            } else if viewModel.selectedCategory == category {
+                                return .selected
+                            } else {
+                                return .unselected
+                            }
+                        }()
+                    ) {
+                        viewModel.selectedCategory = category
+                    }
+                }
+                
+                Spacer()
+            }
+        }
+    }
+    
+    
+    /// 공개여부 선택
+    var visibilityPicker: some View {
+        VStack(alignment: .leading, spacing: 012) {
+            HStack(spacing: 8){
+                Text("공개 여부 선택")
+                    .font(.SubTitle2)
+                    .foregroundStyle(.gray50)
+            }
+            
+            HStack(spacing: 8){
+                if viewModel.isPublicVisibility() {
+                    // 전체 공개
+                    TagButton(
+                        title: VisibilityViewData.publicVisible.title,
+                        isActive: viewModel.selectedVisibility == .publicVisible) {
+                            viewModel.selectedVisibility = .publicVisible
+                        }
+                }
+                
+                // 비공개
+                TagButton(
+                    title: VisibilityViewData.privateVisible.title,
+                    isActive: viewModel.selectedVisibility == .privateVisible) {
+                        viewModel.selectedVisibility = .privateVisible
+                    }
+            }
+        }
     }
 }
 
@@ -83,23 +178,10 @@ struct LogEditorView: View {
         id: UUID(),
         category: .food,
         timeStamp: Date(),
-        imageSource: .local(.init(imageFileName: "")),
+        imageSource: .remote(TimeStampLog.RemoteTimeStampImage(
+            id: 0,
+            imageUrl: "https://picsum.photos/400/400"
+        )),
         visibility: .privateVisible)), onDismiss: {hasEdited in })
 }
 
-import Foundation
-import Combine
-
-final class LogEditorViewModel: ObservableObject {
-    @Published var log: TimeStampLogViewData
-    
-    // MARK: - Output Properties
-    @Published var isLoading = false
-    @Published var toastMessage: String?
-    @Published var alertMessage: String?
-    
-    init(log: TimeStampLogViewData) {
-        self.log = log
-    }
-
-}
