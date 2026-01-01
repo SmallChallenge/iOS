@@ -9,7 +9,6 @@ import SwiftUI
 
 struct LaunchScreenView: View {
     @StateObject private var viewModel: LaunchScreenViewModel
-    @State private var opacity = 0.0
     private let container: AppDIContainer
 
     init(viewModel: LaunchScreenViewModel, container: AppDIContainer) {
@@ -24,21 +23,11 @@ struct LaunchScreenView: View {
             
         } else {
             ZStack {
-                Color.gray900
+                Color.launch
                     .ignoresSafeArea()
 
-                VStack(spacing: 20) {
-                    // 로고나 앱 이름
-                    Text("Stampy")
-                        .font(.system(size: 48, weight: .bold))
-                        .foregroundStyle(.white)
+                Image("LaunchImage")
 
-                    // 태그라인이나 서브 텍스트
-                    Text("당신의 순간을 기록하다")
-                        .font(.body)
-                        .foregroundStyle(.gray300)
-                }
-                .opacity(opacity)
             }
             .onAppear {
                 // 토큰 갱신 체크
