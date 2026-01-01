@@ -26,8 +26,14 @@ class NicknameSettingViewModel: ObservableObject {
     // Input Method
     func checkValidateNickname(_ nickname: String) -> Bool {
 
-        // 공백 체크
+        // 앞뒤 공백 체크
         let trimmedNickname = nickname.trimmingCharacters(in: .whitespaces)
+
+        // 원본과 trim된 값이 다르면 앞뒤 공백이 있는 것
+        if nickname != trimmedNickname {
+            validateMessage = "닉네임은 공백 없이 한글, 영문, 숫자만 가능해요."
+            return false
+        }
 
         // 2자 미만, 10자 초과
         if trimmedNickname.count < 2 || trimmedNickname.count > 10 {
