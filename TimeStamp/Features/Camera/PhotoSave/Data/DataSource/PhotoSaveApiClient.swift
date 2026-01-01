@@ -71,7 +71,7 @@ protocol PhotoSaveApiClientProtocol {
 
     func saveTimeStamp(fileName: String, size: Int, objectKey: String, category: String, visibility: String, originalTakenAt: String) async -> Result<SaveTimeStampDto, NetworkError>
 }
-class PhotoSaveApiClient: ApiClient<PhotoSaveRouter>, PhotoSaveApiClientProtocol {
+final class PhotoSaveApiClient: ApiClient<PhotoSaveRouter>, PhotoSaveApiClientProtocol {
 
     func presignedUrl(fileName: String, size: Int) async -> Result<PresignedURLDto, NetworkError>{
         await request(PhotoSaveRouter.presignedUrl(fileName: fileName, size: size))
