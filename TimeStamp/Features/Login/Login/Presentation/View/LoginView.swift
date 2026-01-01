@@ -35,7 +35,7 @@ struct LoginView: View {
                 Spacer()
                     .frame(maxHeight: 115)
                 
-                Image("LoginAppIcon")
+                Image("logo_white")
                     .resizable()
                     .frame(width: 90, height: 90)
                 
