@@ -13,7 +13,7 @@ protocol MyLogDIContainerProtocol {
     func makeMainTabView() -> MainTabView
     func makeMyLogView() -> MyLogView
     func makeLogDetailView(log: TimeStampLogViewData, onGoBack: @escaping () -> Void) -> LogDetailView
-    func makeLogEditorView(onDismiss: @escaping () -> Void) -> LogEditorView
+    func makeLogEditorView(log: TimeStampLogViewData, onDismiss: @escaping (_ hasEdited: Bool) -> Void) -> LogEditorView
 
 }
 struct MyLogDIContainer: MyLogDIContainerProtocol {
@@ -99,8 +99,12 @@ struct MyLogDIContainer: MyLogDIContainerProtocol {
     }
     
     // MARK: - LogEditorView
-    func makeLogEditorView(onDismiss: @escaping () -> Void) -> LogEditorView {
-        return LogEditorView(onDismiss: onDismiss)
+    private func makeLogEditorViewModel(log: TimeStampLogViewData) -> LogEditorViewModel {
+        return LogEditorViewModel(log: log)
+    }
+    func makeLogEditorView(log: TimeStampLogViewData, onDismiss: @escaping (_ hasEdited: Bool) -> Void) -> LogEditorView {
+        let vm = makeLogEditorViewModel(log: log)
+        return LogEditorView(viewModel: vm, onDismiss: onDismiss)
     }
 }
 
@@ -165,7 +169,7 @@ struct MockMyLogDIContainer: MyLogDIContainerProtocol {
     
     
     // MARK: LogEditorView
-    func makeLogEditorView(onDismiss: @escaping () -> Void) -> LogEditorView {
-        return LogEditorView(onDismiss: onDismiss)
+    func makeLogEditorView(log: TimeStampLogViewData, onDismiss: @escaping (_ hasEdited: Bool) -> Void) -> LogEditorView {
+        return LogEditorView(viewModel: LogEditorViewModel(log: log), onDismiss: onDismiss)
     }
 }

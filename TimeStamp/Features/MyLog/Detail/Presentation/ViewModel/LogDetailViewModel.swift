@@ -11,16 +11,15 @@ import UIKit
 
 final class LogDetailViewModel: ObservableObject, MessageDisplayable {
 
+    
+    @Published var log: TimeStampLogViewData
+    
     // MARK: - Output Properties
     @Published var isLoading = false
     @Published var toastMessage: String?
     @Published var alertMessage: String?
 
-    // TODO: 데이터 수정하기
-    @Published var log: TimeStampLogViewData
-    @Published var category: CategoryViewData = .food
-    @Published var visibility: VisibilityViewData = .privateVisible
-
+    
     // 공유하기
     @Published var shareImage: UIImage?
     @Published var isPreparingShare = false

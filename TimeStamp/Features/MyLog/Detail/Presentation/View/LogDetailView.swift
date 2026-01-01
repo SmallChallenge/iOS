@@ -38,7 +38,7 @@ struct LogDetailView: View {
                         HStack {
                             Spacer()
                             Button {
-                                showPopoverMenu.toggle()
+                                showPopoverMenu = true
                             } label: {
                                 ellipsisImage
                             }
@@ -99,7 +99,8 @@ struct LogDetailView: View {
                 }
         }
         .fullScreenCover(isPresented: $showEditorView, content: {
-            diContainer.makeLogEditorView {
+            diContainer.makeLogEditorView(log: viewModel.log) { hasEdited in
+                print(">>>>> hasEdited \(hasEdited)")
                 showEditorView = false // (닫기)
             }
         })
@@ -127,9 +128,11 @@ struct LogDetailView: View {
                     PopoverMenu(
                         items: [
                             .init(title: "기록 수정", icon: "square.and.pencil") {
+                                showPopoverMenu = false
                                 showEditorView = true
                             },
                             .init(title: "기록 삭제", icon: "trash") {
+                                showPopoverMenu = false
                                 showDeletePopup = true
                             }
                         ],
