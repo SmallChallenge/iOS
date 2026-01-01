@@ -30,7 +30,7 @@ struct LoginView: View {
     
     
     var body: some View {
-        NavigationView {
+        NavigationStack {
             VStack {
                 Spacer()
                     .frame(maxHeight: 115)
@@ -90,17 +90,16 @@ struct LoginView: View {
                 .foregroundStyle(Color.gray600)
                 
                 Spacer()
-                
-                
-                // 닉네임 설정 화면으로 넘기기
-                NavigationLink(destination:
-                                diContainer.makeNicknameSettingView(
-                                    onGoBack: { navigateToNicknameSetting = false },
-                                    onDismiss: { _ in
-                                        onDismiss()
-                                    }
-                                )
-                               , isActive: $navigateToNicknameSetting) {
+
+                NavigationLink(
+                    destination: diContainer.makeNicknameSettingView(
+                        onGoBack: { navigateToNicknameSetting = false },
+                        onDismiss: { _ in
+                            onDismiss()
+                        }
+                    ),
+                    isActive: $navigateToNicknameSetting
+                ) {
                     EmptyView()
                 }
             }// ~Vstack
@@ -154,7 +153,7 @@ struct LoginView: View {
                 })
                 .frame(height: UIScreen.main.bounds.height * 0.3)
             }
-        } // ~NavigationView
+        } // ~NavigationStack
     }
 }
 

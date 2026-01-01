@@ -27,7 +27,7 @@ struct MainTabView: View {
     }
     
     var body: some View {
-        NavigationView {
+        NavigationStack {
             ZStack(alignment: .bottom) {
                 VStack (spacing: .zero) {
                     
@@ -61,19 +61,19 @@ struct MainTabView: View {
                         showLimitReachedPopup = true
                     }
                 })
-                
-                // 마이페이지 이동
+
                 NavigationLink(
                     destination: container.makeMyPageView(),
-                    isActive: $presentMypage) {
+                    isActive: $presentMypage
+                ) {
                     EmptyView()
                 }
-                
+
             } // ~ZStack
             .mainBackgourndColor()
             .navigationBarHidden(true) // 기본 navigation bar 숨김
-            
-        } // ~NavigationView
+
+        } // ~NavigationStack
         .popup(isPresented: $showLimitReachedPopup, content: {
             Modal(title: "기록 한계에 도달했어요.\n로그인하면 계속 기록할 수 있어요.")
                 .buttons {

@@ -77,8 +77,7 @@ struct EditorView: View {
 
                 }
             } // ~VStack
-            
-            // NavigationLink (저장화면으로 넘기기)
+
             if let editedImage = editedImage {
                 NavigationLink(
                     destination: diContainer.makePhotoSaveView(
@@ -93,7 +92,6 @@ struct EditorView: View {
                     EmptyView()
                 }
             }
-            
         } // ~ZStack
         .mainBackgourndColor()
         .navigationBarTitleDisplayMode(.inline)

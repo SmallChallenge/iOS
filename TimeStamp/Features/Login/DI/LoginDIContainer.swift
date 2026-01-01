@@ -100,7 +100,7 @@ final class LoginDIContainer: LoginDIContainerProtocol {
 
     func makeWebView(url: String, onDismiss: @escaping () -> Void) -> AnyView {
         return AnyView(
-            NavigationView {
+            NavigationStack {
                 AdvancedWebView(
                     url: URL(string: url)!,
                     isLoading: .constant(false)
@@ -157,7 +157,7 @@ final class MockLoginDIContainer: LoginDIContainerProtocol {
 
     func makeWebView(url: String, onDismiss: @escaping () -> Void) -> AnyView {
         return AnyView(
-            NavigationView {
+            NavigationStack {
                 AdvancedWebView(
                     url: URL(string: url)!,
                     isLoading: .constant(false)
@@ -176,7 +176,7 @@ final class MockLoginDIContainer: LoginDIContainerProtocol {
             }
         )
     }
-    
+
     func makeTermsView(accessToken token: String?, onDismiss: @escaping (_ isActive: Bool) -> Void) -> TermsView {
         let useCase = MockTermsUseCase()
         let vm = TermsViewModel(usecase: useCase)

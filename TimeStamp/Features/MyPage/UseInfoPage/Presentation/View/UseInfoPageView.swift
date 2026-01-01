@@ -26,7 +26,7 @@ struct UseInfoPageView: View {
             } label: {
                 EmptyView()
             }
-            
+
             // Body
             VStack {
                 Button("닉네임설정") {

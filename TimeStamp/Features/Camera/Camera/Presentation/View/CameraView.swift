@@ -79,13 +79,11 @@ struct CameraView: View {
                 }
             }
 
-            // NavigationLink (hidden)
             if let image = viewModel.capturedImage {
                 NavigationLink(
-                    destination:
-                    diContainer.makeEditorView(
+                    destination: diContainer.makeEditorView(
                         capturedImage: image,
-                        capturedDate: nil, 
+                        capturedDate: nil,
                         onGoBack: { navigateToEditor = false },
                         onDismiss: onDismiss
                     ),

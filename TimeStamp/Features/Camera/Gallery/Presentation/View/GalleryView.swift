@@ -31,12 +31,11 @@ struct GalleryView: View {
                 photoGrid
             }
 
-            // NavigationLink (hidden)
             if let image = viewModel.selectedImage {
                 NavigationLink(
                     destination: diContainer.makeEditorView(
                         capturedImage: image,
-                        capturedDate: viewModel.selectedImageDate, // 갤러리: PHAsset의 creationDate
+                        capturedDate: viewModel.selectedImageDate,
                         onGoBack: { navigateToPhotoSave = false },
                         onDismiss: onDismiss
                     ),
