@@ -19,33 +19,29 @@ struct LogEditorView: View {
     
     
     var body: some View {
-
-        NavigationStack {
-            VStack {
-                Text(" 기록 수정 화면")
-                    .font(.Body1)
-                    .foregroundStyle(Color.gray50)
-            }// ~Vstack
-            .mainBackgourndColor()
-                .navigationBarTitleDisplayMode(.inline)
-//                .navigationBarBackButtonHidden(true)
-                .toolbar {
-                    // 뒤로가기 버튼
-                    ToolbarItem(placement: .navigationBarLeading) {
-                        BackButton {
-                            onDismiss(false)
-                        }
-                    }
-                    ToolbarItem(placement: .navigationBarTrailing) {
-                        MainButton(title: "완료", size: .small) {
-                            // TODO: 수정하기
-                        }
-                        .disabled(viewModel.isLoading)
-                    }
+        VStack {
+            Text(" 기록 수정 화면")
+                .font(.Body1)
+                .foregroundStyle(Color.gray50)
+        }// ~Vstack
+        .mainBackgourndColor()
+        .navigationBarTitleDisplayMode(.inline)
+        .navigationBarBackButtonHidden(true)
+        .toolbar {
+            // 뒤로가기 버튼
+            ToolbarItem(placement: .navigationBarLeading) {
+                BackButton {
+                    onDismiss(false)
                 }
-            
-            
-        } // ~NavigationView
+            }
+            ToolbarItem(placement: .navigationBarTrailing) {
+                MainButton(title: "완료", size: .small) {
+                    // TODO: 수정하기
+                    onDismiss(true)
+                }
+                .disabled(viewModel.isLoading)
+            }
+        }
     }
     
     private var logImage: some View {

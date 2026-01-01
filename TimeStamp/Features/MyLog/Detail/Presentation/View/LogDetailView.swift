@@ -27,7 +27,7 @@ struct LogDetailView: View {
     @State private var showDeletePopup: Bool = false
     @State private var showShareSheet: Bool = false
     @State private var showPopoverMenu: Bool = false
-    @State private var showEditorView: Bool = false
+    @State private var navigateToEditor: Bool = false
     
     var body: some View {
         ScrollView {
@@ -99,12 +99,12 @@ struct LogDetailView: View {
                     }
                 }
         }
-        .fullScreenCover(isPresented: $showEditorView, content: {
+        .navigationDestination(isPresented: $navigateToEditor) {
             diContainer.makeLogEditorView(log: viewModel.log) { hasEdited in
                 print(">>>>> hasEdited \(hasEdited)")
-                showEditorView = false // (닫기)
+                navigateToEditor = false // (닫기)
             }
-        })
+        }
         .sheet(isPresented: $showShareSheet) {
             if let image = viewModel.shareImage {
                 ShareSheet(items: [image])
@@ -132,7 +132,7 @@ struct LogDetailView: View {
                         items: [
                             .init(title: "기록 수정", icon: "square.and.pencil") {
                                 showPopoverMenu = false
-                                showEditorView = true
+                                navigateToEditor = true
                             },
                             .init(title: "기록 삭제", icon: "trash") {
                                 showPopoverMenu = false
