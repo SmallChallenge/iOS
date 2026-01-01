@@ -76,8 +76,7 @@ struct LoginView: View {
                     
                     // 이용약관 띄우기
                     Button {
-//                         showTermsWebView = true
-                        showTermsSheet = true
+                         showTermsWebView = true
                         
                     } label: {
                         Text(AttributedString("이용약관", attributes: AttributeContainer([.underlineStyle: NSUnderlineStyle.single.rawValue])))
@@ -139,7 +138,7 @@ struct LoginView: View {
                         showTermsWebView = false
                     }
             }
-            .bottomSheet(isPresented: $showTermsSheet, onDismiss: {
+            .sheet(isPresented: $showTermsSheet, onDismiss: {
                 viewModel.needTerms = false
             }) {
                 diContainer.makeTermsView(
@@ -151,7 +150,8 @@ struct LoginView: View {
                     }
                     viewModel.needTerms = false
                 })
-                .frame(height: UIScreen.main.bounds.height * 0.3)
+                .presentationDetents([.fraction(0.3)])
+                .presentationDragIndicator(.visible)
             }
         } // ~NavigationStack
     }
