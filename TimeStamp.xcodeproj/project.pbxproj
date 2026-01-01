@@ -130,7 +130,7 @@
 /* Begin PBXNativeTarget section */
 		D0DAF8772EE149E70040F646 /* TimeStamp */ = {
 			isa = PBXNativeTarget;
-			buildConfigurationList = D0DAF8992EE149E80040F646 /* Build configuration list for PBXNativeTarget "TimeStamp" */;
+			buildConfigurationList = D0DAF8992EE149E80040F646 /* Build configuration list for PBXNativeTarget "Stampic" */;
 			buildPhases = (
 				D0DAF8742EE149E70040F646 /* Sources */,
 				D0DAF8752EE149E70040F646 /* Frameworks */,
@@ -143,7 +143,7 @@
 			fileSystemSynchronizedGroups = (
 				D0DAF87A2EE149E70040F646 /* TimeStamp */,
 			);
-			name = TimeStamp;
+			name = Stampic;
 			packageProductDependencies = (
 				D0DAF8BD2EE150D20040F646 /* Kingfisher */,
 				D0DAF8C02EE150E20040F646 /* Alamofire */,
@@ -159,7 +159,7 @@
 		};
 		D0DAF8842EE149E80040F646 /* TimeStampTests */ = {
 			isa = PBXNativeTarget;
-			buildConfigurationList = D0DAF89C2EE149E80040F646 /* Build configuration list for PBXNativeTarget "TimeStampTests" */;
+			buildConfigurationList = D0DAF89C2EE149E80040F646 /* Build configuration list for PBXNativeTarget "StampicTests" */;
 			buildPhases = (
 				D0DAF8812EE149E80040F646 /* Sources */,
 				D0DAF8822EE149E80040F646 /* Frameworks */,
@@ -173,7 +173,7 @@
 			fileSystemSynchronizedGroups = (
 				D0DAF8882EE149E80040F646 /* TimeStampTests */,
 			);
-			name = TimeStampTests;
+			name = StampicTests;
 			packageProductDependencies = (
 			);
 			productName = TimeStampTests;
@@ -182,7 +182,7 @@
 		};
 		D0DAF88E2EE149E80040F646 /* TimeStampUITests */ = {
 			isa = PBXNativeTarget;
-			buildConfigurationList = D0DAF89F2EE149E80040F646 /* Build configuration list for PBXNativeTarget "TimeStampUITests" */;
+			buildConfigurationList = D0DAF89F2EE149E80040F646 /* Build configuration list for PBXNativeTarget "StampicUITests" */;
 			buildPhases = (
 				D0DAF88B2EE149E80040F646 /* Sources */,
 				D0DAF88C2EE149E80040F646 /* Frameworks */,
@@ -196,7 +196,7 @@
 			fileSystemSynchronizedGroups = (
 				D0DAF8922EE149E80040F646 /* TimeStampUITests */,
 			);
-			name = TimeStampUITests;
+			name = StampicUITests;
 			packageProductDependencies = (
 			);
 			productName = TimeStampUITests;
@@ -378,6 +378,7 @@
 				ONLY_ACTIVE_ARCH = YES;
 				SDKROOT = iphoneos;
 				SWIFT_ACTIVE_COMPILATION_CONDITIONS = "DEBUG $(inherited)";
+				SWIFT_EMIT_LOC_STRINGS = YES;
 				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
 			};
 			name = Debug;
@@ -436,6 +437,7 @@
 				MTL_FAST_MATH = YES;
 				SDKROOT = iphoneos;
 				SWIFT_COMPILATION_MODE = wholemodule;
+				SWIFT_EMIT_LOC_STRINGS = YES;
 				VALIDATE_PRODUCT = YES;
 			};
 			name = Release;
@@ -630,7 +632,7 @@
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
 		};
-		D0DAF8992EE149E80040F646 /* Build configuration list for PBXNativeTarget "TimeStamp" */ = {
+		D0DAF8992EE149E80040F646 /* Build configuration list for PBXNativeTarget "Stampic" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
 				D0DAF89A2EE149E80040F646 /* Debug */,
@@ -639,7 +641,7 @@
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
 		};
-		D0DAF89C2EE149E80040F646 /* Build configuration list for PBXNativeTarget "TimeStampTests" */ = {
+		D0DAF89C2EE149E80040F646 /* Build configuration list for PBXNativeTarget "StampicTests" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
 				D0DAF89D2EE149E80040F646 /* Debug */,
@@ -648,7 +650,7 @@
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
 		};
-		D0DAF89F2EE149E80040F646 /* Build configuration list for PBXNativeTarget "TimeStampUITests" */ = {
+		D0DAF89F2EE149E80040F646 /* Build configuration list for PBXNativeTarget "StampicUITests" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
 				D0DAF8A02EE149E80040F646 /* Debug */,

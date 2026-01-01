@@ -29,8 +29,8 @@ final class PersistenceController {
     /// PersistenceController 초기화
     /// - Parameter environment: 실행 환경 (development: 메모리 저장, production: 디스크 저장)
     init(environment: StorageEnvironment = .production) {
-        // "Stampy.xcdatamodeld" 파일을 기반으로 컨테이너 생성
-        container = NSPersistentContainer(name: "Stampy")
+        // "Stampic.xcdatamodeld" 파일을 기반으로 컨테이너 생성
+        container = NSPersistentContainer(name: "Stampic")
 
         if environment == .development { // 테스트, 개발용
             //디스크에 저장하지 않고 메모리에만 데이터 유지
