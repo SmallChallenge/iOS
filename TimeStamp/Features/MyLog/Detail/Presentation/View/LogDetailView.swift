@@ -107,6 +107,8 @@ struct LogDetailView: View {
         .sheet(isPresented: $showShareSheet) {
             if let image = viewModel.shareImage {
                 ShareSheet(items: [image])
+                    .presentationDetents([.medium, .large])
+                    .presentationDragIndicator(.visible)
             }
         }
         .onChange(of: viewModel.shareImage) { newValue in
