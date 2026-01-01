@@ -194,6 +194,7 @@ struct EditorView: View {
                 }
             }
             .padding(.horizontal, 20)
+            .padding(.vertical, 3)
         }
     }
     
