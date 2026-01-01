@@ -22,7 +22,8 @@ enum AppConstants {
     // MARK: - App Info
 
     enum AppInfo {
-        static let appName = "STAMPY"
+        static let appNameKr = "스탬픽"
+        static let appNameEn = "Stampic"
         static let version = Bundle.main.infoDictionary?["CFBundleShortVersionString"] as? String ?? "1.0.0"
         static let buildNumber = Bundle.main.infoDictionary?["CFBundleVersion"] as? String ?? "1"
     }
@@ -40,5 +41,8 @@ enum AppConstants {
         static let maxNicknameLength = 10
         static let minNicknameLength = 2
         static let maxImageSize = 10 * 1024 * 1024 // 10MB
+        
+        static let maxLogCount: Int = 20
+        static let warningLogCount: Int = 18
     }
 }

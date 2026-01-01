@@ -10,6 +10,7 @@ import Alamofire
 import UIKit
 
 protocol MyLogDIContainerProtocol {
+    func makeMainTabView() -> MainTabView
     func makeMyLogView() -> MyLogView
     func makeLogDetailView(log: TimeStampLogViewData, onGoBack: @escaping () -> Void) -> LogDetailView
     func makeLogEditorView(onDismiss: @escaping () -> Void) -> LogEditorView
@@ -21,13 +22,25 @@ struct MyLogDIContainer: MyLogDIContainerProtocol {
 
     private let localDataSource: LocalTimeStampLogDataSourceProtocol
     private let session: Session
+    private let settingsRepository: SettingsDataSourceProtocol
 
     // MARK: - Initializer
 
-    init(session: Session, localDataSource: LocalTimeStampLogDataSourceProtocol) {
+    init(session: Session, localDataSource: LocalTimeStampLogDataSourceProtocol, settingsRepository: SettingsDataSourceProtocol) {
         self.session = session
         self.localDataSource = localDataSource
+        self.settingsRepository = settingsRepository
     }
+    
+    // MARK: - MainTab
+    private func makeMainTabViewModel() -> MainTabViewModel {
+        return MainTabViewModel(myLogUseCase: makeMyLogUseCase())
+    }
+
+    func makeMainTabView() -> MainTabView {
+        return MainTabView(container: AppDIContainer.shared, viewModel: makeMainTabViewModel())
+    }
+    
     
     // MARK: - MyLog
     private func makeMyLogApiClient() -> MyLogApiClientProtocol {
@@ -44,7 +57,7 @@ struct MyLogDIContainer: MyLogDIContainerProtocol {
     }
 
     private func makeMyLogViewModel() -> MyLogViewModel {
-        return MyLogViewModel(useCase: makeMyLogUseCase())
+        return MyLogViewModel(useCase: makeMyLogUseCase(), settingsRepository: settingsRepository)
     }
 
     func makeMyLogView() -> MyLogView {
@@ -93,14 +106,28 @@ struct MyLogDIContainer: MyLogDIContainerProtocol {
 
 // MARK: --------------------------------- Mock --------------------------------
 struct MockMyLogDIContainer: MyLogDIContainerProtocol {
+    
+    // MARK: MainTab
+    func makeMainTabView() -> MainTabView {
+        let useCase = MockMyLogUseCase()
+        let viewModel = MainTabViewModel(myLogUseCase: useCase)
+        return MainTabView(container: AppDIContainer.shared, viewModel: viewModel)
+    }
    
+    
+    // MARK: MyLogView
     func makeMyLogView() -> MyLogView {
         let usecase = MockMyLogUseCase()
-        let viewModel = MyLogViewModel(useCase: usecase)
+        let settingsRepository = MockSettingsRepository()
+        let viewModel = MyLogViewModel(useCase: usecase, settingsRepository: settingsRepository)
         return MyLogView(viewModel: viewModel, diContainer: self)
     }
-    
+
     struct MockMyLogUseCase: MyLogUseCaseProtocol {
+        func getLocalLogsCount() -> Int {
+            return 0
+        }
+
         func fetchAllLogs(isLoggedIn: Bool) async -> (logs: [TimeStampLog], pageInfo: PageInfo?) {
             ([], nil)
         }
@@ -109,13 +136,14 @@ struct MockMyLogDIContainer: MyLogDIContainerProtocol {
         }
     }
 
-    struct MockLogDetailUseCase: LogDetailUseCaseProtocol {
-        func deleteLogFromLocal(logId: UUID) async throws {}
-        func deleteLogFromServer(logId: Int) async throws {}
-        func prepareImageForSharing(imageSource: TimeStampLog.ImageSource) async throws -> UIImage {
-            UIImage()
+    struct MockSettingsRepository: SettingsDataSourceProtocol {
+        func getIsLogLimitBannerDismissed() -> Bool {
+            return false
         }
+        func setIsLogLimitBannerDismissed(_ isDismissed: Bool) {}
     }
+
+   
 
     // MARK: - LogDetailView
     func makeLogDetailView(log: TimeStampLogViewData, onGoBack: @escaping () -> Void) -> LogDetailView {
@@ -127,9 +155,16 @@ struct MockMyLogDIContainer: MyLogDIContainerProtocol {
         )
     }
     
+    struct MockLogDetailUseCase: LogDetailUseCaseProtocol {
+        func deleteLogFromLocal(logId: UUID) async throws {}
+        func deleteLogFromServer(logId: Int) async throws {}
+        func prepareImageForSharing(imageSource: TimeStampLog.ImageSource) async throws -> UIImage {
+            UIImage()
+        }
+    }
+    
     
     // MARK: LogEditorView
-    
     func makeLogEditorView(onDismiss: @escaping () -> Void) -> LogEditorView {
         return LogEditorView(onDismiss: onDismiss)
     }

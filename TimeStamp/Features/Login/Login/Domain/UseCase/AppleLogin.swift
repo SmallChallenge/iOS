@@ -60,8 +60,17 @@ extension AppleLogin: ASAuthorizationControllerDelegate {
                 delegate?.didLogin(type: .apple, didReceiveToken: token, error: nil)
             }
         default:
+            delegate?.didLogin(type: .apple, didReceiveToken: nil, error: nil)
             break
         }
+    }
+
+    func authorizationController(
+        controller: ASAuthorizationController,
+        didCompleteWithError error: Error
+    ) {
+        // 사용자가 로그인 취소 또는 에러 발생 시
+        delegate?.didLogin(type: .apple, didReceiveToken: nil, error: error)
     }
 }
 

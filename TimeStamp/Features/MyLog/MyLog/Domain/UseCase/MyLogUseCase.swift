@@ -60,4 +60,14 @@ struct MyLogUseCase: MyLogUseCaseProtocol {
             return (logs: [], pageInfo: nil)
         }
     }
+
+    /// 로컬 타임스탬프 로그의 개수를 조회
+    func getLocalLogsCount() -> Int {
+        do {
+            return try repository.fetchLocalLogsCount()
+        } catch {
+            Logger.error("로컬 로그 개수 조회 실패: \(error)")
+            return 0
+        }
+    }
 }

@@ -23,13 +23,14 @@ struct TemplateButton: View {
                     .font(.caption)
                     .foregroundColor(.gray50)
             }
+            .frame(width: 90, height: 90)
             .cornerRadius(8)
             .roundedBorder(
                 color: isSelected ? Color.gray50 : Color.gray700,
                 radius: 8,
-                lineWidth: 1
+                lineWidth: isSelected ? 2 : 1
             )
-            .frame(width: 90, height: 90)
+            
         }
     }
 }

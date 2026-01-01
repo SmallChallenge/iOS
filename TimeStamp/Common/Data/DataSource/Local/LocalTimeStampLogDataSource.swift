@@ -91,6 +91,14 @@ final class LocalTimeStampLogDataSource: LocalTimeStampLogDataSourceProtocol {
         return entities.map { toDto($0) }
     }
 
+    /// 로컬 타임스탬프 로그의 총 개수를 조회
+    /// - Returns: 로컬에 저장된 로그의 개수
+    /// - Throws: Core Data fetch 에러
+    func count() throws -> Int {
+        let fetchRequest = TimeStampLogEntity.fetchRequest()
+        return try context.count(for: fetchRequest)
+    }
+
     // MARK: - Update
 
     /// 기존 타임스탬프 로그를 수정

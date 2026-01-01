@@ -32,23 +32,43 @@ final class AppDIContainer {
         AuthApiClient(session: session)
     }()
 
+    // MARK: - Common Dependencies
+
+    private lazy var localTimeStampLogDataSource: LocalTimeStampLogDataSourceProtocol = {
+        LocalTimeStampLogDataSource()
+    }()
+
+    private lazy var settingsDataSource: SettingsDataSourceProtocol = {
+        SettingsDataSource()
+    }()
+
     // MARK: - LaunchScreen Feature
 
     private lazy var launchScreenDIContainer: LaunchScreenDIContainer = {
-        LaunchScreenDIContainer(authApiClient: authApiClient)
+        LaunchScreenDIContainer(
+            authApiClient: authApiClient,
+            appContainer: self
+        )
     }()
 
     func makeLaunchScreenView() -> LaunchScreenView {
         return launchScreenDIContainer.makeLaunchScreenView()
     }
     
+    
     // MARK: - MyLog Feature
 
     private lazy var myLogDIContainer: MyLogDIContainer = {
-        let localDataSource = LocalTimeStampLogDataSource()
-        return MyLogDIContainer(session: session, localDataSource: localDataSource)
+        return MyLogDIContainer(
+            session: session,
+            localDataSource: localTimeStampLogDataSource,
+            settingsRepository: settingsDataSource
+        )
     }()
 
+    func makeMainTabView() -> MainTabView {
+        return myLogDIContainer.makeMainTabView()
+    }
     func makeMyLogView() -> MyLogView {
         return myLogDIContainer.makeMyLogView()
     }
@@ -56,8 +76,7 @@ final class AppDIContainer {
     // MARK: - Camera Feature
 
     private lazy var cameraTabDIContainer: CameraDIContainer = {
-        let localDataSource = LocalTimeStampLogDataSource()
-        return CameraDIContainer(session: session, localDataSource: localDataSource)
+        return CameraDIContainer(session: session, localDataSource: localTimeStampLogDataSource)
     }()
 
     func makeCameraTapView(onDismiss: @escaping () -> Void) -> CameraTabView {
@@ -89,6 +108,14 @@ final class AppDIContainer {
 
     func makeLoginView(onDismiss: @escaping () -> Void) -> LoginView {
         return loginDIContainer.makeLoginView(onDismiss: onDismiss)
+    }
+    /// 닉네임 설정 화면
+    /// - Parameters:
+    ///   - onGoBack: 로그인 로직에선 그냥 뒤로감, 마이페이지 로직에선 새로고침 여부 보냄
+    ///   - onDismiss: 로그인 로직에서, 로그인 뷰 닫기
+    /// - Returns:
+    func makeNicknameSettingView(onGoBack: @escaping () -> Void, onDismiss: @escaping (_ needRefresh: Bool) -> Void) -> NicknameSettingView {
+        return loginDIContainer.makeNicknameSettingView(onGoBack: onGoBack, onDismiss: onDismiss)
     }
 
 }

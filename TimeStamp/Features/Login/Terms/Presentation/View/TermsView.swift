@@ -125,11 +125,15 @@ struct TermsView: View {
             diContainer.makeWebView(url: AppConstants.URLs.termsOfService) {
                 showTermsOfService = false
             }
+            .presentationDetents([.medium, .large])
+            .presentationDragIndicator(.visible)
         }
         .sheet(isPresented: $showPrivacyPolicy) {
             diContainer.makeWebView(url: AppConstants.URLs.privacyPolicy) {
                 showPrivacyPolicy = false
             }
+            .presentationDetents([.medium, .large])
+            .presentationDragIndicator(.visible)
         }
         .onChange(of: viewModel.isActive) { isActive in
             if isActive {
@@ -163,9 +167,10 @@ struct BottomSheetTestView2: View {
                 showBottomSheet = true
             }
         }
-        .bottomSheet(isPresented: $showBottomSheet) {
+        .sheet(isPresented: $showBottomSheet) {
             MockLoginDIContainer().makeTermsView(accessToken: "", onDismiss: { _ in })
-            .frame(height: UIScreen.main.bounds.height * 0.3)
+                .presentationDetents([.fraction(0.3)])
+                .presentationDragIndicator(.visible)
         }
     }
 }

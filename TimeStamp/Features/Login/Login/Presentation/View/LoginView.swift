@@ -30,12 +30,12 @@ struct LoginView: View {
     
     
     var body: some View {
-        NavigationView {
+        NavigationStack {
             VStack {
                 Spacer()
                     .frame(maxHeight: 115)
                 
-                Image("LoginAppIcon")
+                Image("logo_white")
                     .resizable()
                     .frame(width: 90, height: 90)
                 
@@ -76,8 +76,7 @@ struct LoginView: View {
                     
                     // 이용약관 띄우기
                     Button {
-//                         showTermsWebView = true
-                        showTermsSheet = true
+                         showTermsWebView = true
                         
                     } label: {
                         Text(AttributedString("이용약관", attributes: AttributeContainer([.underlineStyle: NSUnderlineStyle.single.rawValue])))
@@ -90,18 +89,15 @@ struct LoginView: View {
                 .foregroundStyle(Color.gray600)
                 
                 Spacer()
-                
-                
-                // 닉네임 설정 화면으로 넘기기
-                NavigationLink(destination:
-                                diContainer.makeNicknameSettingView(
-                                    onGoBack: { navigateToNicknameSetting = false },
-                                    onDismiss: onDismiss
-                                )
-                               , isActive: $navigateToNicknameSetting) {
-                    EmptyView()
-                }
             }// ~Vstack
+            .navigationDestination(isPresented: $navigateToNicknameSetting) {
+                diContainer.makeNicknameSettingView(
+                    onGoBack: { navigateToNicknameSetting = false },
+                    onDismiss: { _ in
+                        onDismiss()
+                    }
+                )
+            }
             .toast(message: $viewModel.toastMessage)
             .popup(message: $viewModel.alertMessage)
             .loading(viewModel.isLoading)
@@ -138,7 +134,7 @@ struct LoginView: View {
                         showTermsWebView = false
                     }
             }
-            .bottomSheet(isPresented: $showTermsSheet, onDismiss: {
+            .sheet(isPresented: $showTermsSheet, onDismiss: {
                 viewModel.needTerms = false
             }) {
                 diContainer.makeTermsView(
@@ -150,9 +146,10 @@ struct LoginView: View {
                     }
                     viewModel.needTerms = false
                 })
-                .frame(height: UIScreen.main.bounds.height * 0.3)
+                .presentationDetents([.fraction(0.3)])
+                .presentationDragIndicator(.visible)
             }
-        } // ~NavigationView
+        } // ~NavigationStack
     }
 }
 

@@ -13,7 +13,7 @@ struct LogEditorView: View {
     
     
     var body: some View {
-        NavigationView {
+        NavigationStack {
             VStack {
                 Text(" 기록 수정 화면")
                     .font(.Body1)

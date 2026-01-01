@@ -27,8 +27,8 @@ extension MyLogsDto.TimeStampLog {
 
 extension MyLogsDto.PageInfo {
     /// DTO를 Entity로 변환
-    func toEntity() -> TimeStamp.PageInfo {
-        return TimeStamp.PageInfo(
+    func toEntity() -> Stampic.PageInfo {
+        return Stampic.PageInfo(
             
             currentPage: currentPage,
             hasNext: hasNext,

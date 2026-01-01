@@ -93,7 +93,7 @@ final class PhotoSaveRepository: PhotoSaveRepositoryProtocol {
     /// 갤러리에 사진 저장
     func savePhotoToGallery(image: UIImage) {
         // Stampy 앨범 찾기 또는 생성
-        let albumName = "Stampy"
+        let albumName = AppConstants.AppInfo.appNameKr
 
         // 앨범이 존재하는지 확인
         let fetchOptions = PHFetchOptions()
@@ -115,7 +115,7 @@ final class PhotoSaveRepository: PhotoSaveRepositoryProtocol {
                         self.saveImageToAlbum(image: image, album: newAlbum)
                     }
                 } else if let error = error {
-                    Logger.error("Stampy 앨범 생성 실패: \(error)")
+                    Logger.error("\(albumName) 앨범 생성 실패: \(error)")
                 }
             }
         }

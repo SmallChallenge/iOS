@@ -34,6 +34,11 @@ final class MyLogRepository: MyLogRepositoryProtocol {
         let dtos = try localDataSource.readAll()
         return dtos.map { $0.toEntity() }
     }
+
+    /// 로컬 타임스탬프 로그의 개수를 조회
+    func fetchLocalLogsCount() throws -> Int {
+        return try localDataSource.count()
+    }
     
     // MARK: - 서버 로그 가져오기
     

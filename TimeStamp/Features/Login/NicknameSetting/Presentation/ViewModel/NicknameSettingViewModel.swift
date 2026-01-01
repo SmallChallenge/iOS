@@ -26,8 +26,14 @@ class NicknameSettingViewModel: ObservableObject {
     // Input Method
     func checkValidateNickname(_ nickname: String) -> Bool {
 
-        // 공백 체크
+        // 앞뒤 공백 체크
         let trimmedNickname = nickname.trimmingCharacters(in: .whitespaces)
+
+        // 원본과 trim된 값이 다르면 앞뒤 공백이 있는 것
+        if nickname != trimmedNickname {
+            validateMessage = "닉네임은 공백 없이 한글, 영문, 숫자만 가능해요."
+            return false
+        }
 
         // 2자 미만, 10자 초과
         if trimmedNickname.count < 2 || trimmedNickname.count > 10 {
@@ -50,9 +56,11 @@ class NicknameSettingViewModel: ObservableObject {
     }
     
     /// 닉네임 저장하기
-    func saveNickname(_ nickname: String) {
-        guard checkValidateNickname(nickname) && !isLoading else { return }
+    func saveNickname(_ originNickname: String) {
+        guard checkValidateNickname(originNickname) && !isLoading else { return }
 
+        let nickname = originNickname.trim
+        
         Task {
             await MainActor.run { isLoading = true }
             Logger.debug("닉네임 저장하기: \(nickname)")
@@ -71,7 +79,8 @@ class NicknameSettingViewModel: ObservableObject {
                     // 서버 에러 code별 처리
                     switch error {
                     case .serverFailed(let code, let message):
-                        if code == "NICKNAME_ALREADY_EXISTS" {
+                        if [NicknameErrorCode.duplicateNickname.rawValue,
+                            NicknameErrorCode.nicknameAlreadyExists.rawValue].contains(code) {
                             validateMessage = "이미 누군가 사용하고 있어요."
                         }
                         Logger.error("닉네임 설정 실패 [\(code)]: \(message)")
@@ -89,4 +98,9 @@ class NicknameSettingViewModel: ObservableObject {
             }
         }
     }
+}
+
+private enum NicknameErrorCode: String {
+    case nicknameAlreadyExists = "NICKNAME_ALREADY_EXISTS"
+    case duplicateNickname = "DUPLICATE_NICKNAME"
 }

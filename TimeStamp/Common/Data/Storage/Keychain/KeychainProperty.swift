@@ -9,7 +9,7 @@ import Foundation
 
 @propertyWrapper
 public struct Keychain {
-    private let identifier: String = "swyp.stampy"
+    private let identifier: String = "com.swyp.stampic"
     private let key: String
     
     public init(key: String) {

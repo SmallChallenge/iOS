@@ -6,8 +6,12 @@
 //
 
 import Foundation
-
-final class MyPageDIContainer {
+protocol MyPageDIContainerProtocol {
+    func makeMyPageView() -> MyPageView
+    func makeUseInfoPageView(onGoBack: @escaping (_ needRefresh: Bool) -> Void) -> UseInfoPageView
+    
+}
+final class MyPageDIContainer: MyPageDIContainerProtocol {
     
     // MARK: - Dependencies
     private let authApiClient: AuthApiClientProtocol
@@ -18,24 +22,34 @@ final class MyPageDIContainer {
         self.authApiClient = authApiClient
     }
     
-    // MARK: - Repository
+    // MARK: - MyPageView
     private func makeMyPageRepository(){
         
     }
-    
-    // MARK: - UseCase
     private func makeMyPageUseCase() {
         
     }
-    
-    // MARK: - ViewModel
     private func makeMyPageViewModel() -> MyPageViewModel {
         MyPageViewModel()
     }
     
-    // MARK: - View
+    
     func makeMyPageView() -> MyPageView {
         let vm = makeMyPageViewModel()
-        return MyPageView(viewModel: vm)
+        return MyPageView(viewModel: vm, diContainer: self)
+    }
+    // MARK: - UseInfoPageView
+    func makeUseInfoPageView(onGoBack: @escaping (_ needRefresh: Bool) -> Void) -> UseInfoPageView {
+        return UseInfoPageView(onGoBack: onGoBack)
+    }
+}
+struct MockMyPageDIContainer: MyPageDIContainerProtocol{
+    func makeMyPageView() -> MyPageView {
+        let vm = MyPageViewModel()
+        return MyPageView(viewModel: vm, diContainer: self)
+    }
+    
+    func makeUseInfoPageView(onGoBack: @escaping (_ needRefresh: Bool) -> Void) -> UseInfoPageView {
+        return UseInfoPageView(onGoBack: onGoBack)
     }
 }
