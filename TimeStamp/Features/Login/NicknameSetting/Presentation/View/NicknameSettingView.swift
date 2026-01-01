@@ -9,14 +9,14 @@ import SwiftUI
 
 struct NicknameSettingView: View {
     
-    init(viewModel: NicknameSettingViewModel, onGoBack: @escaping () -> Void, onDismiss: @escaping () -> Void) {
+    init(viewModel: NicknameSettingViewModel, onGoBack: @escaping () -> Void, onDismiss: @escaping (_ needRefresh: Bool) -> Void) {
         self.onGoBack = onGoBack
         self.onDismiss = onDismiss
         self._viewModel = StateObject(wrappedValue: viewModel)
     }
     
     let onGoBack: () -> Void
-    let onDismiss: () -> Void
+    let onDismiss: (_ needRefresh: Bool) -> Void
     
     @StateObject private var viewModel: NicknameSettingViewModel
     @State private var text: String = ""
@@ -84,7 +84,7 @@ struct NicknameSettingView: View {
             // 저장 성공 시 로그인뷰 닫기
             .onChange(of: viewModel.isSaved) { isSaved in
                 if isSaved {
-                    onDismiss()
+                    onDismiss(true)
                 }
             }
             .mainBackgourndColor()
@@ -101,7 +101,7 @@ struct NicknameSettingView: View {
                 // 닫기 버튼
                 ToolbarItem(placement: .navigationBarTrailing) {
                     CloseButton {
-                        onDismiss()
+                        onDismiss(false)
                     }
                     .padding(.trailing, -12)
                 }
@@ -111,5 +111,5 @@ struct NicknameSettingView: View {
 }
 
 #Preview {
-    MockLoginDIContainer().makeNicknameSettingView(onGoBack: {}, onDismiss: {})
+    MockLoginDIContainer().makeNicknameSettingView(onGoBack: { }, onDismiss: {_ in})
 }

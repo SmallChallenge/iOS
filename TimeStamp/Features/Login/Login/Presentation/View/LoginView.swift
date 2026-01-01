@@ -96,7 +96,9 @@ struct LoginView: View {
                 NavigationLink(destination:
                                 diContainer.makeNicknameSettingView(
                                     onGoBack: { navigateToNicknameSetting = false },
-                                    onDismiss: onDismiss
+                                    onDismiss: { _ in
+                                        onDismiss()
+                                    }
                                 )
                                , isActive: $navigateToNicknameSetting) {
                     EmptyView()
