@@ -77,7 +77,8 @@ class NicknameSettingViewModel: ObservableObject {
                     // 서버 에러 code별 처리
                     switch error {
                     case .serverFailed(let code, let message):
-                        if code == "NICKNAME_ALREADY_EXISTS" {
+                        if [NicknameErrorCode.duplicateNickname.rawValue,
+                            NicknameErrorCode.nicknameAlreadyExists.rawValue].contains(code) {
                             validateMessage = "이미 누군가 사용하고 있어요."
                         }
                         Logger.error("닉네임 설정 실패 [\(code)]: \(message)")
@@ -95,4 +96,9 @@ class NicknameSettingViewModel: ObservableObject {
             }
         }
     }
+}
+
+private enum NicknameErrorCode: String {
+    case nicknameAlreadyExists = "NICKNAME_ALREADY_EXISTS"
+    case duplicateNickname = "DUPLICATE_NICKNAME"
 }
