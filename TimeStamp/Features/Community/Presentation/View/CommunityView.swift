@@ -34,7 +34,7 @@ struct CommunityView: View {
             }
         } // ~ZStack
         .mainBackgourndColor()
-        .loading(viewModel.isLoading && viewModel.feeds.isEmpty && !viewModel.isRefreshing)
+        .loading(viewModel.isLoading && !viewModel.isRefreshing)
         .toast(message: $viewModel.toastMessage)
         .onAppear {
             if viewModel.feeds.isEmpty {
@@ -56,17 +56,6 @@ struct CommunityView: View {
                             viewModel.loadMore()
                         }
                     }
-            }
-
-            // 하단 로딩 인디케이터 (더 불러오기)
-            if viewModel.isLoading && !viewModel.feeds.isEmpty && !viewModel.isRefreshing {
-                HStack {
-                    Spacer()
-                    ProgressView()
-                    Spacer()
-                }
-                .listRowSeparator(.hidden)
-                .listRowBackground(Color.clear)
             }
         }
         .listStyle(.plain)
