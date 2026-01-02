@@ -80,7 +80,7 @@ struct NicknameSettingView: View {
             } // ~VStack
             .loading(viewModel.isLoading)
             .onChange(of: text){ newValue in
-                viewModel.checkValidateNickname(newValue)
+                let _ = viewModel.checkValidateNickname(newValue)
             }
             // 저장 성공 시 로그인뷰 닫기
             .onChange(of: viewModel.isSaved) { isSaved in
