@@ -114,7 +114,7 @@ final class AppDIContainer {
     ///   - onGoBack: 로그인 로직에선 그냥 뒤로감, 마이페이지 로직에선 새로고침 여부 보냄
     ///   - onDismiss: 로그인 로직에서, 로그인 뷰 닫기
     /// - Returns:
-    func makeNicknameSettingView(onGoBack: @escaping () -> Void, onDismiss: @escaping (_ needRefresh: Bool) -> Void) -> NicknameSettingView {
+    func makeNicknameSettingView(onGoBack: @escaping (_ needRefresh: Bool) -> Void, onDismiss: (()-> Void)?) -> NicknameSettingView {
         return loginDIContainer.makeNicknameSettingView(onGoBack: onGoBack, onDismiss: onDismiss)
     }
 

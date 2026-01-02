@@ -53,7 +53,7 @@ struct MyPageView: View {
             }
         }
         .navigationDestination(isPresented: $presentUserInfo) {
-            diContainer.makeUseInfoPageView { needRefresh in
+            diContainer.makeUserInfoPageView { needRefresh in
                 print(">>>>> needRefresh \(needRefresh)")
                 presentUserInfo = false
             }

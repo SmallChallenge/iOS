@@ -92,10 +92,8 @@ struct LoginView: View {
             }// ~Vstack
             .navigationDestination(isPresented: $navigateToNicknameSetting) {
                 diContainer.makeNicknameSettingView(
-                    onGoBack: { navigateToNicknameSetting = false },
-                    onDismiss: { _ in
-                        onDismiss()
-                    }
+                    onGoBack: { _ in navigateToNicknameSetting = false },
+                    onDismiss: { onDismiss() }
                 )
             }
             .toast(message: $viewModel.toastMessage)

@@ -27,10 +27,12 @@ struct UserInfoPageView: View {
 
         }// ~ZStack
         .navigationDestination(isPresented: $presentNicknameSetting) {
-            appDiContainer.makeNicknameSettingView(onGoBack: {}, onDismiss: {
-                needRefresh in
-                    print(">>>>> needRefresh \(needRefresh)")
-            })
+            appDiContainer.makeNicknameSettingView(onGoBack: { needRefresh in
+                print(">>>>> needRefresh \(needRefresh)")
+            // TODO: 내 정보 갱신
+                presentNicknameSetting = false
+                
+            }, onDismiss: nil)
         }
         .mainBackgourndColor()
         
