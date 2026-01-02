@@ -12,6 +12,7 @@ struct LoginMapper {
         guard let socialType = LoginType(socialType: dto.socialType) else {
             return nil
         }
+        let status = LoginEntity.UserStatus(rawValue: dto.userStatus) ?? .pending
 
         return LoginEntity(
             userId: dto.userId,
@@ -21,6 +22,7 @@ struct LoginMapper {
             accessToken: dto.accessToken,
             refreshToken: dto.refreshToken,
             isNewUser: dto.isNewUser,
+            status: status,
             needNickname: dto.needNickname
         )
     }
