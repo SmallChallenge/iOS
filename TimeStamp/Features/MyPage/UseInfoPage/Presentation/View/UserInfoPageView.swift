@@ -27,7 +27,7 @@ struct UserInfoPageView: View {
 
         }// ~ZStack
         .navigationDestination(isPresented: $presentNicknameSetting) {
-            appDiContainer.makeNicknameSettingView(onGoBack: { needRefresh in
+            appDiContainer.makeNicknameSettingView(loginEntity: nil, onGoBack: { needRefresh in
                 print(">>>>> needRefresh \(needRefresh)")
             // TODO: 내 정보 갱신
                 presentNicknameSetting = false

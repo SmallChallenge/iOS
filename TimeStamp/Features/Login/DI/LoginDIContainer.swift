@@ -10,13 +10,13 @@ import SwiftUI
 
 protocol LoginDIContainerProtocol {
     func makeLoginView(onDismiss: @escaping () -> Void) -> LoginView
-    func makeNicknameSettingView(onGoBack: @escaping (_ needRefresh: Bool) -> Void, onDismiss: (()-> Void)?) -> NicknameSettingView
-    func makeTermsView(accessToken token: String?, onDismiss: @escaping (_ isActive: Bool) -> Void) -> TermsView
+    func makeNicknameSettingView(loginEntity: LoginEntity?, onGoBack: @escaping (_ needRefresh: Bool) -> Void, onDismiss: (()-> Void)?) -> NicknameSettingView
+    func makeTermsView(loginEntity: LoginEntity?, onDismiss: @escaping (_ isActive: Bool) -> Void) -> TermsView
     func makeWebView(url: String, onDismiss: @escaping () -> Void) -> AnyView
 }
 
 final class LoginDIContainer: LoginDIContainerProtocol {
-
+    
     // MARK: - Dependencies
 
     private let authApiClient: AuthApiClientProtocol
@@ -63,13 +63,13 @@ final class LoginDIContainer: LoginDIContainerProtocol {
         return NicknameSettingUseCase(repository: repo)
     }
     
-    private func makeNicknameSettingViewModel() -> NicknameSettingViewModel {
+    private func makeNicknameSettingViewModel(loginEntity: LoginEntity?) -> NicknameSettingViewModel {
         let usecase = makeNicknameSettingUseCase()
-        return NicknameSettingViewModel(useCase: usecase)
+        return NicknameSettingViewModel(useCase: usecase, pendingLoginEntity: loginEntity)
         
     }
-    func makeNicknameSettingView(onGoBack: @escaping (_ needRefresh: Bool) -> Void, onDismiss: (()-> Void)?) -> NicknameSettingView {
-        let vm = makeNicknameSettingViewModel()
+    func makeNicknameSettingView(loginEntity: LoginEntity?, onGoBack: @escaping (_ needRefresh: Bool) -> Void, onDismiss: (()-> Void)?) -> NicknameSettingView {
+        let vm = makeNicknameSettingViewModel(loginEntity: loginEntity)
         return NicknameSettingView(
             viewModel: vm,
             onGoBack: onGoBack,
@@ -86,14 +86,14 @@ final class LoginDIContainer: LoginDIContainerProtocol {
         return TermsUseCase(repository: repo )
     }
     
-    private func makeTermsViewModel() -> TermsViewModel {
+    private func makeTermsViewModel(loginEntity: LoginEntity?) -> TermsViewModel {
         let usecase = makeTermsUseCase()
-        return TermsViewModel(usecase: usecase)
+        return TermsViewModel(usecase: usecase, pendingLoginEntity: loginEntity)
     }
     
-    func makeTermsView(accessToken token: String?, onDismiss: @escaping (_ isActive: Bool) -> Void) -> TermsView {
-        let vm = makeTermsViewModel()
-        return TermsView(viewModel: vm, diContainer: self, accessToken: token, onDismiss: onDismiss)
+    func makeTermsView(loginEntity: LoginEntity?, onDismiss: @escaping (_ isActive: Bool) -> Void) -> TermsView {
+        let vm = makeTermsViewModel(loginEntity: loginEntity)
+        return TermsView(viewModel: vm, diContainer: self, onDismiss: onDismiss)
     }
 
     // MARK: - Terms WebView
@@ -125,6 +125,8 @@ final class LoginDIContainer: LoginDIContainerProtocol {
 
 
 final class MockLoginDIContainer: LoginDIContainerProtocol {
+   
+    // MARK: Login
     private func makeLoginUseCase() -> LoginUseCaseProtocol {
         return MockLoginUseCase()
     }
@@ -141,12 +143,11 @@ final class MockLoginDIContainer: LoginDIContainerProtocol {
     private func makeNicknameSettingUseCase() -> NicknameSettingUseCaseProtocol {
         return MockNicknameSettingUseCase()
     }
-    
     private func makeNicknameSettingViewModel() -> NicknameSettingViewModel {
-        return NicknameSettingViewModel(useCase: makeNicknameSettingUseCase())
+        return NicknameSettingViewModel(useCase: makeNicknameSettingUseCase(), pendingLoginEntity: nil)
     }
     
-    func makeNicknameSettingView(onGoBack: @escaping (_ needRefresh: Bool) -> Void, onDismiss: (()-> Void)?) -> NicknameSettingView {
+    func makeNicknameSettingView(loginEntity: LoginEntity?, onGoBack: @escaping (Bool) -> Void, onDismiss: (() -> Void)?) -> NicknameSettingView {
         let vm = makeNicknameSettingViewModel()
         return NicknameSettingView(
             viewModel: vm,
@@ -154,6 +155,9 @@ final class MockLoginDIContainer: LoginDIContainerProtocol {
             onDismiss: onDismiss
         )
     }
+    
+   
+    // MARK: - web view
 
     func makeWebView(url: String, onDismiss: @escaping () -> Void) -> AnyView {
         return AnyView(
@@ -176,33 +180,35 @@ final class MockLoginDIContainer: LoginDIContainerProtocol {
             }
         )
     }
-
-    func makeTermsView(accessToken token: String?, onDismiss: @escaping (_ isActive: Bool) -> Void) -> TermsView {
+    
+    // MARK:  TermsView
+    func makeTermsView(loginEntity: LoginEntity?, onDismiss: @escaping (Bool) -> Void) -> TermsView {
         let useCase = MockTermsUseCase()
-        let vm = TermsViewModel(usecase: useCase)
-        return TermsView(viewModel: vm, diContainer: self, accessToken: token, onDismiss: {_ in })
+        let entity = LoginEntity(userId: 0, nickname: nil, socialType: .kakao, profileImageUrl: nil, accessToken: "", refreshToken: "", isNewUser: true, status: .pending, needNickname: true)
+        let vm = TermsViewModel(usecase: useCase, pendingLoginEntity: entity)
+        return TermsView(viewModel: vm, diContainer: self, onDismiss: {_ in })
     }
 
     // -------- Mock struct ------ //
     
     struct MockLoginUseCase: LoginUseCaseProtocol {
+        func cancelLogin(entity: LoginEntity) async throws {}
         func login(entity: LoginEntity) {}
-        
         func loginWithApple() async throws -> LoginEntity {
             throw NetworkError.dataNil
         }
-        
         func loginWithKakao() async throws -> LoginEntity {
             throw NetworkError.dataNil
         }
-        
         func loginWithGoogle() async throws -> LoginEntity {
             throw NetworkError.dataNil
         }
     }
     
     struct MockNicknameSettingUseCase: NicknameSettingUseCaseProtocol {
-        func setNickname(nickname: String) async throws -> NicknameEntity {
+        func login(entity: LoginEntity) {}
+        
+        func setNickname(nickname: String ,accessToken: String?) async throws -> NicknameEntity {
             NicknameEntity(userId: 1, nickname: "닉네임", isProfileComplete: true)
         }
     }

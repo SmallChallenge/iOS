@@ -9,12 +9,11 @@ import Foundation
 import Combine
 
 final class TermsViewModel: ObservableObject, MessageDisplayable {
-    
-    
-    
+    private let loginEntity: LoginEntity?
     private let usecase: TermsUseCaseProtocol
-    init(usecase: TermsUseCaseProtocol) {
+    init(usecase: TermsUseCaseProtocol, pendingLoginEntity: LoginEntity?) {
         self.usecase = usecase
+        self.loginEntity = pendingLoginEntity
     }
     
     @Published var isLoading: Bool = false
@@ -24,12 +23,14 @@ final class TermsViewModel: ObservableObject, MessageDisplayable {
     @Published var alertMessage: String?
     
     // Input Method
-    func saveTerms(accessToken token: String?, isCheckedOfService: Bool, isCheckedOfPrivacy: Bool, isCheckedOfMarketing: Bool){
-        guard let token,
-              !isLoading,
+    func saveTerms(isCheckedOfService: Bool, isCheckedOfPrivacy: Bool, isCheckedOfMarketing: Bool){
+        guard !isLoading,
               (isCheckedOfService && isCheckedOfPrivacy)
         else { return }
-        
+        guard let token = loginEntity?.accessToken else {
+            show(.unknownRequestFailed)
+            return
+        }
         isLoading = true
         
         Task {
@@ -54,7 +55,5 @@ final class TermsViewModel: ObservableObject, MessageDisplayable {
                 }
             }
         }
-        
-        
     }
 }

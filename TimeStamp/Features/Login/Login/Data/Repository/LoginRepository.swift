@@ -29,6 +29,17 @@ struct LoginRepository: LoginRepositoryProtocol {
         let result = await authApiClient.googleLogin(accessToken: token)
         return mapToEntity(result)
     }
+    
+    // 가입 취소
+    func cancel(accessToken token: String) async throws -> Void {
+        let result = await authApiClient.cancelRegisteration(accessToken: token)
+        switch result {
+        case let .success(dto):
+            return
+        case let .failure(error):
+            throw error
+        }
+    }
 
     // MARK: - Private Methods
 

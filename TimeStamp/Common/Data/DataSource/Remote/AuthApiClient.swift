@@ -31,7 +31,13 @@ public enum AuthRouter {
     
     // 닉네임 중복 확인
     // 닉네임 설정
-    case setNickname(nickname: String)
+    case setNickname(nickname: String, accessToken: String?)
+    
+    // 가입 취소
+    case cancelRegisteration(accessToken: String)
+    
+    // 회원탈퇴
+    //case withdrawal
     
 }
 extension AuthRouter: Router {
@@ -54,6 +60,9 @@ extension AuthRouter: Router {
             
         case .activeAccount:
             "api/v1/auth/terms-agreement"
+            
+        case .cancelRegisteration:
+            "/api/v1/auth/cancel-registration"
         }
     }
     
@@ -90,7 +99,7 @@ extension AuthRouter: Router {
             ]
             return params
             
-        case let .setNickname(nickname):
+        case let .setNickname(nickname, _):
             let params: Parameters = [
                 "nickname" : nickname,
             ]
@@ -104,12 +113,22 @@ extension AuthRouter: Router {
                 "allRequiredTermsAgreed" : (privacyPolicy && termsOfService),
             ]
             return params
+            
+        case .cancelRegisteration:
+            return nil
         }
     }
     
     public var headers: HTTPHeaders? {
         switch self {
         case let .activeAccount(token, _, _, _):
+            return ["Authorization": "Bearer \(token)"]
+            
+        case let .cancelRegisteration(token):
+            return ["Authorization": "Bearer \(token)"]
+            
+        case let .setNickname(_, token):
+            guard let token else { return nil }
             return ["Authorization": "Bearer \(token)"]
         default:
             return nil
@@ -128,6 +147,8 @@ public protocol AuthApiClientProtocol {
     func kakaoLogin(accessToken token: String) async -> Result<LoginResponseDto, NetworkError>
     func appleLogin(accessToken token: String) async -> Result<LoginResponseDto, NetworkError>
     func googleLogin(accessToken token: String) async -> Result<LoginResponseDto, NetworkError>
+    
+    // 계정활성화 (약관동의)
     func activeAccount(
         accessToken token: String, 
         agreedToPrivacyPolicy: Bool,
@@ -141,7 +162,10 @@ public protocol AuthApiClientProtocol {
 
     // 닉네임 중복확인
     // 닉네임 설정
-    func setNickname(nickname: String) async -> Result<SetNicknameDto, NetworkError>
+    func setNickname(nickname: String, accessToken token: String?) async -> Result<SetNicknameDto, NetworkError>
+    
+    /// 가입 취소
+    func cancelRegisteration(accessToken: String) async -> Result<CancelRegisterationDto, NetworkError>
 
 }
 
@@ -165,13 +189,22 @@ public class AuthApiClient: ApiClient<AuthRouter>, AuthApiClientProtocol {
     }
 
     /// 닉네임 설정
-    public func setNickname(nickname: String) async -> Result<SetNicknameDto, NetworkError> {
-        await request(AuthRouter.setNickname(nickname: nickname))
+    public func setNickname(nickname: String, accessToken token: String?) async -> Result<SetNicknameDto, NetworkError> {
+        await request(AuthRouter.setNickname(nickname: nickname, accessToken: token))
     }
     
     /// 약관 동의 받기 (계정 활성화)
     public func activeAccount(accessToken token: String, agreedToPrivacyPolicy: Bool, agreedToTermsOfService: Bool, agreedToMarketing: Bool) async -> Result<ActiveAccountDto, NetworkError> {
         await request(.activeAccount(accessToken: token, agreedToPrivacyPolicy: agreedToPrivacyPolicy, agreedToTermsOfService: agreedToTermsOfService, agreedToMarketing: agreedToMarketing))
     }
+    
+    /// 가입 취소
+    public func cancelRegisteration(accessToken: String) async -> Result<CancelRegisterationDto, NetworkError> {
+        await request(.cancelRegisteration(accessToken: accessToken))
+    }
 }
 
+public struct CancelRegisterationDto: Codable {
+    let userId: Int
+    let deletedAt: String
+}

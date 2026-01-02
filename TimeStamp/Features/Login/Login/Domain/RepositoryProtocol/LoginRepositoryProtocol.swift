@@ -11,6 +11,9 @@ protocol LoginRepositoryProtocol {
     func kakaoLogin(accessToken token: String) async -> Result<LoginEntity, NetworkError>
     func appleLogin(accessToken token: String) async -> Result<LoginEntity, NetworkError>
     func googleLogin(accessToken token: String) async -> Result<LoginEntity, NetworkError>
+    
+    /// 가입 취소
+    func cancel(accessToken token: String) async throws -> Void
 }
 
 

@@ -7,16 +7,15 @@
 
 import SwiftUI
 
+/// 약관동의 받기 (이용약관, 개인정보처리 방침)
 struct TermsView: View {
     
     @StateObject private var viewModel: TermsViewModel
     private let diContainer: LoginDIContainerProtocol
     private let onDismiss: (_ isActive: Bool) -> Void
-    private let accessToken: String?
-    init(viewModel: TermsViewModel, diContainer: LoginDIContainerProtocol, accessToken token: String?,  onDismiss: @escaping (_ isActive: Bool) -> Void) {
+    init(viewModel: TermsViewModel, diContainer: LoginDIContainerProtocol, onDismiss: @escaping (_ isActive: Bool) -> Void) {
         self._viewModel = StateObject(wrappedValue: viewModel)
         self.diContainer = diContainer
-        self.accessToken = token
         self.onDismiss = onDismiss
     }
     
@@ -145,7 +144,6 @@ struct TermsView: View {
     
     private func checkTerms(){
         viewModel.saveTerms(
-            accessToken: accessToken,
             isCheckedOfService: isCheckedOfService,
             isCheckedOfPrivacy: isCheckedOfPrivacy,
             isCheckedOfMarketing: false
@@ -168,7 +166,7 @@ struct BottomSheetTestView2: View {
             }
         }
         .sheet(isPresented: $showBottomSheet) {
-            MockLoginDIContainer().makeTermsView(accessToken: "", onDismiss: { _ in })
+            MockLoginDIContainer().makeTermsView(loginEntity: nil, onDismiss: { _ in })
                 .presentationDetents([.fraction(0.3)])
                 .presentationDragIndicator(.visible)
         }

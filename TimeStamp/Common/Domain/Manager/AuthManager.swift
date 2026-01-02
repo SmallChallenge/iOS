@@ -80,7 +80,6 @@ final class AuthManager: ObservableObject {
         
         // 4. MyLogView 새로고침 알림
         NotificationCenter.default.post(name: .shouldRefreshMyLog, object: nil)
-
         Logger.success("로그아웃 완료")
     }
 
