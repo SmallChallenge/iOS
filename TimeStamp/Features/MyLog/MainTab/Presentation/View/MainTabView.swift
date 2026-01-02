@@ -31,7 +31,7 @@ struct MainTabView: View {
             ZStack(alignment: .bottom) {
                 VStack (spacing: .zero) {
                     
-                    HeaderView {
+                    HeaderView(selectedTab: $selectedTab) {
                         // 프로필버튼 클릭
                         presentMypage = true
                     }
@@ -46,6 +46,7 @@ struct MainTabView: View {
                         
                         container.makeCommunityView()
                             .tag(2)
+                        
                     } //~TabView
                     .hideTabBar()
                     

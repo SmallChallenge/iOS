@@ -8,17 +8,27 @@
 import SwiftUI
 
 struct HeaderView: View {
+    @Binding var selectedTab: Int
     let onProfileTap: () -> Void
     
     var body: some View {
         HStack (alignment: .center){
-            Image("Logotype")
-                .renderingMode(.template)
-                .resizable()
-                .foregroundStyle(Color.gray50)
-                .frame(width: 122.8, height: 26)
-                .padding(.vertical, 17)
-                .padding(.leading, 20)
+            
+            if selectedTab == 0 {
+                Image("Logotype")
+                    .renderingMode(.template)
+                    .resizable()
+                    .foregroundStyle(Color.gray50)
+                    .frame(width: 122.8, height: 26)
+                    .padding(.vertical, 17)
+                    .padding(.leading, 20)
+            } else {
+                Text("커뮤니티")
+                    .font(.H2)
+                    .foregroundStyle(Color.gray50)
+                    .padding(.leading, 20)
+            }
+           
             
             Spacer()
             
@@ -38,6 +48,6 @@ struct HeaderView: View {
 }
 
 #Preview {
-    HeaderView(onProfileTap: {})
+    HeaderView(selectedTab: .constant(0), onProfileTap: {})
         .background(Color.gray900)
 }

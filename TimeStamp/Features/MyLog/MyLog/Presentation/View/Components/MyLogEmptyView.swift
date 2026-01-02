@@ -38,12 +38,6 @@ struct MyLogEmptyView: View {
                         .foregroundStyle(Color.gray500)
                 }
             }
-            .padding(.bottom)
-            
-            Image("arrow")
-            
-            
-            
         }
         .frame(maxWidth: .infinity, maxHeight: .infinity)
     }

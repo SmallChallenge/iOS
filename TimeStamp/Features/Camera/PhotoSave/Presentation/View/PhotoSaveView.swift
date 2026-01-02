@@ -62,6 +62,7 @@ struct PhotoSaveView: View {
                 Text("👆전체 공개 설정하고 커뮤니티 활동을 시작해보세요!")
                     .font(.Body2)
                     .foregroundStyle(Color.gray500)
+                    .padding(.horizontal, 20)
             }
         } // ~ ScrollView
         .mainBackgourndColor()
