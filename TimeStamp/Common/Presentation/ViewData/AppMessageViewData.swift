@@ -61,6 +61,7 @@ enum AppMessage {
     case editSuccess
     case deleteSuccess
     case welcomeMessage(nickname: String)
+    case reportSuccess
     
 
     var text: String {
@@ -103,6 +104,8 @@ enum AppMessage {
             return "삭제가 완료되었어요."
         case .welcomeMessage(let nickname):
             return "반가워요, \(nickname)님! 이제 기록을 시작해볼까요?"
+        case .reportSuccess:
+            return "신고가 접수되었어요."
         }
     }
 
