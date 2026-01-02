@@ -73,6 +73,7 @@ final class LoginViewModel: ObservableObject, MessageDisplayable {
             do {
                 try await useCase.cancelLogin(entity: pendingLoginEntity)
                 Logger.success("가입 취소 요청 성공")
+                clearData()
             } catch {
                 show(.unknownRequestFailed)
                 Logger.error("가입 취소 요청 실패 \(error)")

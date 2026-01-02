@@ -129,19 +129,21 @@ struct LoginView: View {
             }
             // 약관동의 띄우기
             .sheet(isPresented: $showTermsSheet, onDismiss: {
-                // 그냥 닫아버림
+                // 약관 배경눌러서 닫음
                 viewModel.signOut()
             }) {
                 diContainer.makeTermsView(
                     loginEntity: viewModel.pendingLoginEntity,
                     onDismiss: { isActive in
-                        print(">>>>> 약관 동의 여부: \(isActive)")
-                    if isActive {
                         showTermsSheet = false
-                        // 약관 완료 후 닉네임 필요한지 체크
-                        viewModel.onTermsCompleted()
-                    }
-                })
+                        if isActive {
+                            //약관 완료 후 호출 -> 닉네임화면으로
+                            viewModel.onTermsCompleted()
+                        } else {
+                            // 취소된 경우 (앱 백그라운드 등)
+                            viewModel.signOut()
+                        }
+                    })
                 .presentationDetents([.fraction(0.3)])
                 .presentationDragIndicator(.visible)
             }

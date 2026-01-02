@@ -30,7 +30,9 @@ struct TermsView: View {
     
     /// 개인정보처리방침  띄우기(웹뷰)
     @State private var showPrivacyPolicy: Bool = false
-    
+
+    @Environment(\.scenePhase) private var scenePhase
+
     var body: some View {
         VStack(alignment: .leading, spacing: .zero) {
             
@@ -137,6 +139,12 @@ struct TermsView: View {
         .onChange(of: viewModel.isActive) { isActive in
             if isActive {
                 onDismiss(isActive)
+            }
+        }
+        .onChange(of: scenePhase) { scenePhase in
+            // 앱이 백그라운드로 가면 가입 취소 (LoginView로 전달)
+            if scenePhase == .background {
+                onDismiss(false)
             }
         }
         .toast(message: $viewModel.toastMessage)
