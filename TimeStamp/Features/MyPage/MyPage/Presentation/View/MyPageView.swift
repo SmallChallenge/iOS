@@ -49,8 +49,6 @@ struct MyPageView: View {
                         showLoginView = true
                     }
                 }
-                
-                
 
             }
         }

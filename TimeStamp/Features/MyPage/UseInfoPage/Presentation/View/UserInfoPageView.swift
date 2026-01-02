@@ -1,5 +1,5 @@
 //
-//  UseInfoPageView.swift
+//  UserInfoPageView.swift
 //  Stampic
 //
 //  Created by 임주희 on 1/1/26.
@@ -7,7 +7,7 @@
 
 import SwiftUI
 
-struct UseInfoPageView: View {
+struct UserInfoPageView: View {
     
     private let appDiContainer = AppDIContainer.shared
     @State private var presentNicknameSetting: Bool = false
@@ -38,5 +38,5 @@ struct UseInfoPageView: View {
 }
 
 #Preview {
-    MockMyPageDIContainer().makeUseInfoPageView(onGoBack: { _ in})
+    MockMyPageDIContainer().makeUserInfoPageView(onGoBack: { _ in})
 }
