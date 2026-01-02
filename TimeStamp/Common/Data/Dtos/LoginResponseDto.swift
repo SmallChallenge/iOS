@@ -14,6 +14,7 @@ public struct LoginResponseDto: Codable {
     let accessToken: String
     let refreshToken: String
     let isNewUser: Bool
+    let userStatus: String
     let needNickname: Bool
 }
 

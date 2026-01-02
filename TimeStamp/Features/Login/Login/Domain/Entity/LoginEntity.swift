@@ -15,5 +15,11 @@ struct LoginEntity {
     let accessToken: String
     let refreshToken: String
     let isNewUser: Bool
+    let status: UserStatus
     let needNickname: Bool
+    
+    enum UserStatus: String {
+        case pending = "PENDING"
+        case active = "ACTIVE"
+    }
 }

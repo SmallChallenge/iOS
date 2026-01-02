@@ -93,11 +93,11 @@ final class LoginViewModel: ObservableObject, MessageDisplayable {
             await MainActor.run {
                 isLoading = false
                 // 신규회원, 약관 화면으로 이동
-                if entity.isNewUser {
+                if entity.status == .pending {
                     pendingLoginEntity = entity  // 저장해두고 약관 완료 후 체크
                     needTerms = true
                     return
-                } else if entity.needNickname {
+                } else if entity.nickname == nil {
                     // 닉네임 입력화면으로 보내기.
                     needNickname = true
                     useCase.login(entity: entity) // 로그인성공
