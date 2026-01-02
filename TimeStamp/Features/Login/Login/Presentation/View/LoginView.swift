@@ -90,16 +90,10 @@ struct LoginView: View {
                 
                 Spacer()
             }// ~Vstack
-            .navigationDestination(isPresented: $navigateToNicknameSetting) {
-                diContainer.makeNicknameSettingView(
-                    onGoBack: { _ in navigateToNicknameSetting = false },
-                    onDismiss: { onDismiss() }
-                )
-            }
+            .mainBackgourndColor()
+            .loading(viewModel.isLoading)
             .toast(message: $viewModel.toastMessage)
             .popup(message: $viewModel.alertMessage)
-            .loading(viewModel.isLoading)
-            .mainBackgourndColor()
             .navigationBarTitleDisplayMode(.inline)
             .navigationBarBackButtonHidden(true)
             .toolbar {
@@ -127,25 +121,39 @@ struct LoginView: View {
                     showTermsSheet = true
                 }
             }
+            // 약관보기(웹뷰)
             .sheet(isPresented: $showTermsWebView) {
                 diContainer.makeWebView(url: AppConstants.URLs.termsOfService) {
                         showTermsWebView = false
                     }
             }
+            // 약관동의 띄우기
             .sheet(isPresented: $showTermsSheet, onDismiss: {
-                viewModel.needTerms = false
+                // 약관 배경눌러서 닫음
+                viewModel.signOut()
             }) {
                 diContainer.makeTermsView(
-                    accessToken: viewModel.pendingLoginEntity?.accessToken, onDismiss: { isActive in
-                    if isActive {
+                    loginEntity: viewModel.pendingLoginEntity,
+                    onDismiss: { isActive in
                         showTermsSheet = false
-                        // 약관 완료 후 닉네임 필요한지 체크
-                        viewModel.onTermsCompleted()
-                    }
-                    viewModel.needTerms = false
-                })
+                        if isActive {
+                            //약관 완료 후 호출 -> 닉네임화면으로
+                            viewModel.onTermsCompleted()
+                        } else {
+                            // 취소된 경우 (앱 백그라운드 등)
+                            viewModel.signOut()
+                        }
+                    })
                 .presentationDetents([.fraction(0.3)])
                 .presentationDragIndicator(.visible)
+            }
+            // 닉네임 화면으로 넘기기
+            .navigationDestination(isPresented: $navigateToNicknameSetting) {
+                diContainer.makeNicknameSettingView(
+                    loginEntity: viewModel.pendingLoginEntity,
+                    onGoBack: { _ in navigateToNicknameSetting = false },
+                    onDismiss: { onDismiss() }
+                )
             }
         } // ~NavigationStack
     }

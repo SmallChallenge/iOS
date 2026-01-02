@@ -13,6 +13,9 @@ protocol LoginUseCaseProtocol {
     func loginWithGoogle() async throws -> LoginEntity
     
     func login(entity: LoginEntity)
+    
+    /// 가입 취소
+    func cancelLogin(entity: LoginEntity) async throws
 }
 
 // MARK: LoginUseCase
@@ -40,7 +43,27 @@ final class LoginUseCase: LoginUseCaseProtocol {
     func loginWithGoogle() async throws -> LoginEntity {
         return try await performSocialLogin(type: .google, socialLogin: googleLogin)
     }
-
+    // 로그인 성공 처리 (토큰 + 사용자 정보 저장)
+    func login(entity: LoginEntity){
+        let user = User(
+            userId: entity.userId,
+            nickname: entity.nickname,
+            socialType: entity.socialType,
+            profileImageUrl: entity.profileImageUrl
+        )
+        AuthManager.shared.login(
+            user: user,
+            accessToken: entity.accessToken,
+            refreshToken: entity.refreshToken
+        )
+    }
+    
+    // 가입 취소
+    func cancelLogin(entity: LoginEntity) async throws {
+        try await repository.cancel(accessToken: entity.accessToken)
+    }
+    
+    
     // MARK: - Private Methods
 
     private func performSocialLogin(type: LoginType, socialLogin: SocialLoginProtocol) async throws -> LoginEntity {
@@ -63,21 +86,6 @@ final class LoginUseCase: LoginUseCaseProtocol {
         }
     }
     
-    // 로그인 성공 처리 (토큰 + 사용자 정보 저장)
-    func login(entity: LoginEntity){
-        let user = User(
-            userId: entity.userId,
-            nickname: entity.nickname,
-            socialType: entity.socialType,
-            profileImageUrl: entity.profileImageUrl
-        )
-        AuthManager.shared.login(
-            user: user,
-            accessToken: entity.accessToken,
-            refreshToken: entity.refreshToken
-        )
-    }
-
     private func performLogin(type: LoginType, accessToken: String) async -> Result<LoginEntity, NetworkError> {
         switch type {
         case .apple:

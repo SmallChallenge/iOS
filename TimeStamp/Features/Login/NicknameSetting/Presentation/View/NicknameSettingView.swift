@@ -114,5 +114,5 @@ struct NicknameSettingView: View {
 }
 
 #Preview {
-    MockLoginDIContainer().makeNicknameSettingView(onGoBack: { _ in}, onDismiss: {})
+    MockLoginDIContainer().makeNicknameSettingView(loginEntity: nil, onGoBack: { _ in}, onDismiss: {})
 }

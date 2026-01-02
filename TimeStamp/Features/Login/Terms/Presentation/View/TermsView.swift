@@ -7,16 +7,15 @@
 
 import SwiftUI
 
+/// 약관동의 받기 (이용약관, 개인정보처리 방침)
 struct TermsView: View {
     
     @StateObject private var viewModel: TermsViewModel
     private let diContainer: LoginDIContainerProtocol
     private let onDismiss: (_ isActive: Bool) -> Void
-    private let accessToken: String?
-    init(viewModel: TermsViewModel, diContainer: LoginDIContainerProtocol, accessToken token: String?,  onDismiss: @escaping (_ isActive: Bool) -> Void) {
+    init(viewModel: TermsViewModel, diContainer: LoginDIContainerProtocol, onDismiss: @escaping (_ isActive: Bool) -> Void) {
         self._viewModel = StateObject(wrappedValue: viewModel)
         self.diContainer = diContainer
-        self.accessToken = token
         self.onDismiss = onDismiss
     }
     
@@ -31,7 +30,9 @@ struct TermsView: View {
     
     /// 개인정보처리방침  띄우기(웹뷰)
     @State private var showPrivacyPolicy: Bool = false
-    
+
+    @Environment(\.scenePhase) private var scenePhase
+
     var body: some View {
         VStack(alignment: .leading, spacing: .zero) {
             
@@ -140,12 +141,17 @@ struct TermsView: View {
                 onDismiss(isActive)
             }
         }
+        .onChange(of: scenePhase) { scenePhase in
+            // 앱이 백그라운드로 가면 가입 취소 (LoginView로 전달)
+            if scenePhase == .background {
+                onDismiss(false)
+            }
+        }
         .toast(message: $viewModel.toastMessage)
     }
     
     private func checkTerms(){
         viewModel.saveTerms(
-            accessToken: accessToken,
             isCheckedOfService: isCheckedOfService,
             isCheckedOfPrivacy: isCheckedOfPrivacy,
             isCheckedOfMarketing: false
@@ -168,7 +174,7 @@ struct BottomSheetTestView2: View {
             }
         }
         .sheet(isPresented: $showBottomSheet) {
-            MockLoginDIContainer().makeTermsView(accessToken: "", onDismiss: { _ in })
+            MockLoginDIContainer().makeTermsView(loginEntity: nil, onDismiss: { _ in })
                 .presentationDetents([.fraction(0.3)])
                 .presentationDragIndicator(.visible)
         }

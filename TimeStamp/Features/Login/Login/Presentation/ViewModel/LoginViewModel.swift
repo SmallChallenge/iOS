@@ -56,19 +56,29 @@ final class LoginViewModel: ObservableObject, MessageDisplayable {
 
     /// 약관 완료 후 호출
     func onTermsCompleted() {
-        guard let entity = pendingLoginEntity else { return }
-        
-        // 로그인하기
-        useCase.login(entity: entity)
-        
-        if entity.nickname == nil {
-            // 약관 완료 후 닉네임 필요하면 닉네임 화면으로
-            needNickname = true
-        } else {
-            // 모든 절차 완료
-            isLoggedIn = true
+        needTerms = false
+        guard (pendingLoginEntity != nil) else {
+            show(.unknownRequestFailed)
+            return
         }
-        pendingLoginEntity = nil
+        // 약관 완료 후 닉네임 화면으로
+        needNickname = true
+    }
+    
+    // 가입 취소
+    func signOut(){
+        guard let pendingLoginEntity else { return }
+        Logger.debug("가입 취소")
+        Task {
+            do {
+                try await useCase.cancelLogin(entity: pendingLoginEntity)
+                Logger.success("가입 취소 요청 성공")
+                clearData()
+            } catch {
+                show(.unknownRequestFailed)
+                Logger.error("가입 취소 요청 실패 \(error)")
+            }
+        }
     }
 
     // MARK: - Private Methods
@@ -88,19 +98,18 @@ final class LoginViewModel: ObservableObject, MessageDisplayable {
 
         do {
             let entity = try await loginAction()
-            Logger.success("로그인 성공: \(entity)")
-            
+            pendingLoginEntity = entity
             await MainActor.run {
                 isLoading = false
                 // 신규회원, 약관 화면으로 이동
                 if entity.status == .pending {
-                    pendingLoginEntity = entity  // 저장해두고 약관 완료 후 체크
                     needTerms = true
+                    Logger.debug("신규회원, 약관 화면으로 이동")
                     return
                 } else if entity.nickname == nil {
                     // 닉네임 입력화면으로 보내기.
                     needNickname = true
-                    useCase.login(entity: entity) // 로그인성공
+                    Logger.debug("닉네임 입력화면으로 보내기.")
                     return
                 }
 
@@ -108,6 +117,8 @@ final class LoginViewModel: ObservableObject, MessageDisplayable {
                 // (약관 안받아도 되고, 닉네임도 있음)
                 isLoggedIn = true
                 useCase.login(entity: entity) // 로그인성공
+                pendingLoginEntity = nil
+                Logger.success("로그인 성공: \(entity)")
             }
             
         } catch {

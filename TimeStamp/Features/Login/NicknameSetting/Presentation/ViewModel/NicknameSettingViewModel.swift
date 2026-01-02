@@ -10,11 +10,12 @@ import Combine
 
 class NicknameSettingViewModel: ObservableObject {
     
+    private let loginEntity: LoginEntity?
     private let useCase: NicknameSettingUseCaseProtocol
-    init(useCase: NicknameSettingUseCaseProtocol) {
+    init(useCase: NicknameSettingUseCaseProtocol, pendingLoginEntity: LoginEntity?) {
         self.useCase = useCase
+        self.loginEntity = pendingLoginEntity
     }
-    
     
     // Output Property
     @Published var isLoading = false
@@ -66,12 +67,17 @@ class NicknameSettingViewModel: ObservableObject {
             Logger.debug("닉네임 저장하기: \(nickname)")
 
             do {
-                let result = try await useCase.setNickname(nickname: nickname)
+                let result = try await useCase.setNickname(nickname: nickname, accessToken: loginEntity?.accessToken)
                 await MainActor.run {
                     isLoading = false
                     isSaved = true
                     ToastManager.shared.show(AppMessage.welcomeMessage(nickname: nickname).text)
                     Logger.success("닉네임 설정 완료: \(result.nickname)")
+                    
+                    //  로그인화면에서 넘어온 경우, 로그인 시키기
+                    if let loginEntity {
+                        useCase.login(entity: loginEntity)
+                    }
                 }
             } catch let error as NetworkError {
                 await MainActor.run {

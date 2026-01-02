@@ -14,8 +14,8 @@ struct NicknameSettingRepository: NicknameSettingRepositoryProtocol {
         self.authApiClient = authApiClient
     }
     
-    func setNickname(nickName: String) async -> Result<NicknameEntity, NetworkError> {
-        let result = await authApiClient.setNickname(nickname: nickName)
+    func setNickname(nickName: String, accessToken: String?) async -> Result<NicknameEntity, NetworkError> {
+        let result = await authApiClient.setNickname(nickname: nickName, accessToken: accessToken)
         switch result {
         case let .success(dto):
             let entity = dto.toEntity()
