@@ -27,6 +27,9 @@ final class CommunityViewModel: ObservableObject, MessageDisplayable {
     @Published var toastMessage: String?
     @Published var alertMessage: String?
 
+    /// 메뉴가 열린 피드 ID
+    @Published var selectedFeedIdForMenu: Int?
+
     // MARK: - Private Properties
 
     /// 페이지네이션 정보
@@ -140,6 +143,8 @@ final class CommunityViewModel: ObservableObject, MessageDisplayable {
 
     /// 좋아요 토글
     func toggleLike(imageId: Int) {
+        print(">>>>> 좋아요")
+        return
         guard !isLoading else { return }
 
         Task {
@@ -175,7 +180,7 @@ final class CommunityViewModel: ObservableObject, MessageDisplayable {
     /// 신고하기
     func report(imageId: Int) {
         guard !isLoading else { return }
-
+        Logger.debug("신고하기 \(imageId)")
         Task {
             do {
                 try await useCase.report(imageId: imageId)
@@ -186,7 +191,12 @@ final class CommunityViewModel: ObservableObject, MessageDisplayable {
                 }
             } catch {
                 await MainActor.run {
-                    show(.unknownRequestFailed)
+                    if case let NetworkError.serverFailed(code, _) = error,
+                       code == "SELF_REPORT_NOT_ALLOWED"{
+                        show(.reportToMineFailed)
+                    } else {
+                        show(.unknownRequestFailed)
+                    }
                     Logger.error("신고 실패: \(error)")
                 }
             }
@@ -211,6 +221,11 @@ final class CommunityViewModel: ObservableObject, MessageDisplayable {
                 }
             }
         }
+    }
+
+    /// 메뉴 열기/닫기
+    func selectFeedForMenu(id: Int?) {
+        selectedFeedIdForMenu = id
     }
 
     // MARK: - Private Methods

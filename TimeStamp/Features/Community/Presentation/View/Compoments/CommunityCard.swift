@@ -9,13 +9,20 @@ import SwiftUI
 import Kingfisher
 
 struct CommunityCard: View {
-    
+
     private let viewData: FeedViewData
-    init(viewData: FeedViewData) {
+    @Binding var isMenuOpen: Bool
+    private let onReport: () -> Void
+
+    init(
+        viewData: FeedViewData,
+        isMenuOpen: Binding<Bool>,
+        onReport: @escaping () -> Void
+    ) {
         self.viewData = viewData
+        self._isMenuOpen = isMenuOpen
+        self.onReport = onReport
     }
-    
-    @State private var showPopoverMenu: Bool = true
     
     var body: some View {
         VStack(spacing: 0) {
@@ -34,9 +41,11 @@ struct CommunityCard: View {
                 Spacer()
 
                 Button {
-                    showPopoverMenu = true
+                    isMenuOpen.toggle()
                 } label: {
                     ellipsisImage
+                        .padding(.vertical, 5)
+                        .padding(.horizontal, 20)
                 }
             }
             .padding(.vertical, 12)
@@ -45,8 +54,7 @@ struct CommunityCard: View {
             // 이미지뷰
             logImage
                 .aspectRatio(1, contentMode: .fit)//
-            
-                
+                .padding(.trailing, 20)
             
             // 좋아요
             HStack(spacing: 6) {
@@ -62,6 +70,32 @@ struct CommunityCard: View {
             .padding(.vertical, 12)
             
         } // ~VStack
+        .overlay {
+            if isMenuOpen {
+                ZStack(alignment: .topTrailing) {
+                    // 배경 (카드 영역 탭하면 닫기)
+                    Color.clear
+                        .contentShape(Rectangle())
+                        .onTapGesture {
+                            isMenuOpen = false
+                        }
+
+                    // 팝오버 메뉴
+                    VStack {
+                        PopoverMenu(items: [
+                            .init(title: "신고하기", icon: "exclamationmark.triangle", action: {
+                                onReport()
+                            })
+                            
+                        ], isPresented: $isMenuOpen)
+                            .padding(.top, 50)
+                            .padding(.trailing, 10)
+                        Spacer()
+                    }
+                }
+            }
+        }
+        .zIndex(isMenuOpen ? 999 : 0)
     }
     
     private var ellipsisImage: some View {
@@ -94,17 +128,31 @@ struct CommunityCard: View {
 }
 
 #Preview {
-    VStack{
-        CommunityCard(viewData: .init(
-            imageId: 1,
-            accessURL: "https://picsum.photos/300/300",
-            nickname: "홍길동전이",
-            profileImageURL: nil,
-            isLiked: true,
-            likeCount: 52
-        ))
-            .border(Color.red)
+    struct PreviewWrapper: View {
+        @State private var isMenuOpen = false
+
+        var body: some View {
+            VStack{
+                CommunityCard(
+                    viewData: .init(
+                        imageId: 1,
+                        accessURL: "https://picsum.photos/300/300",
+                        nickname: "홍길동전이",
+                        profileImageURL: nil,
+                        isLiked: true,
+                        likeCount: 52
+                    ),
+                    isMenuOpen: $isMenuOpen,
+                    onReport: {
+                        print("신고하기 클릭")
+                    }
+                )
+                .border(Color.red)
+            }
+            .frame(maxWidth: .infinity, maxHeight: .infinity)
+                .background(Color.gray900)
+        }
     }
-    .frame(maxWidth: .infinity, maxHeight: .infinity)
-        .background(Color.gray900)
+
+    return PreviewWrapper()
 }
