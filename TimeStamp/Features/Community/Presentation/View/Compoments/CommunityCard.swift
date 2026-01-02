@@ -40,13 +40,11 @@ struct CommunityCard: View {
                 }
             }
             .padding(.vertical, 12)
-            .padding(.horizontal, 20)
-            
+
             
             // 이미지뷰
             logImage
                 .aspectRatio(1, contentMode: .fit)//
-                .padding(.horizontal, 20)
             
                 
             
@@ -62,7 +60,6 @@ struct CommunityCard: View {
                 Spacer()
             }
             .padding(.vertical, 12)
-            .padding(.horizontal, 20)
             
         } // ~VStack
     }

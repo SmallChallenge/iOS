@@ -16,47 +16,63 @@ struct CommunityView: View {
     }
 
     var body: some View {
-        ZStack {
+        ZStack(alignment: .top) {
             if viewModel.feeds.isEmpty && !viewModel.isLoading {
                 emptyView
-                    .frame(maxWidth: .infinity, maxHeight: .infinity)
             } else {
-                ScrollView {
-                    LazyVStack(spacing: 10) {
-                        ForEach(viewModel.feeds, id: \.imageId) { feed in
-                            CommunityCard(viewData: feed.toViewData())
-                                .onAppear {
-                                    // 마지막 아이템에 도달하면 다음 페이지 로드
-                                    if feed.imageId == viewModel.feeds.last?.imageId {
-                                        viewModel.loadMore()
-                                    }
-                                }
-                                .onTapGesture {
-                                    viewModel.toggleLike(imageId: feed.imageId)
-                                }
-                        }
-
-                        // 로딩 인디케이터
-                        if viewModel.isLoading {
-                            ProgressView()
-                                .padding()
-                        }
+                feedListView
+                
+                // 당겨서 새로고침 로딩 뷰
+                if viewModel.isRefreshing {
+                    HStack(spacing: 8) {
+                        ProgressView()
+                            .tint(.neon300)
                     }
-                    .padding(.vertical, 10)
-                }
-                .refreshable {
-                    viewModel.refresh()
+                    .frame(maxWidth: .infinity)
+                    .padding(.top, 60)
                 }
             }
-        }
-        .loading(viewModel.isLoading)
-        .frame(maxHeight: .infinity)
+        } // ~ZStack
         .mainBackgourndColor()
+        .loading(viewModel.isLoading && viewModel.feeds.isEmpty && !viewModel.isRefreshing)
         .toast(message: $viewModel.toastMessage)
         .onAppear {
             if viewModel.feeds.isEmpty {
                 viewModel.loadFeeds()
             }
+        }
+    }
+    
+    private var feedListView: some View {
+        List {
+            ForEach(viewModel.feeds, id: \.imageId) { feed in
+                CommunityCard(viewData: feed.toViewData())
+                    .listRowSeparator(.hidden)
+                    .listRowBackground(Color.clear)
+                    .listRowInsets(.init(top: .zero, leading: 20, bottom: .zero, trailing: 20))
+                    .onAppear {
+                        // 마지막 아이템에 도달하면 다음 페이지 로드
+                        if feed.imageId == viewModel.feeds.last?.imageId {
+                            viewModel.loadMore()
+                        }
+                    }
+            }
+
+            // 하단 로딩 인디케이터 (더 불러오기)
+            if viewModel.isLoading && !viewModel.feeds.isEmpty && !viewModel.isRefreshing {
+                HStack {
+                    Spacer()
+                    ProgressView()
+                    Spacer()
+                }
+                .listRowSeparator(.hidden)
+                .listRowBackground(Color.clear)
+            }
+        }
+        .listStyle(.plain)
+        .scrollContentBackground(.hidden)
+        .refreshable {
+            await viewModel.refresh()
         }
     }
 

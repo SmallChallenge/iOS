@@ -20,6 +20,9 @@ final class CommunityViewModel: ObservableObject, MessageDisplayable {
     /// 로딩
     @Published var isLoading: Bool = false
 
+    /// 새로고침 중 (커스텀 로딩뷰용)
+    @Published var isRefreshing: Bool = false
+
     /// 에러 메시지
     @Published var toastMessage: String?
     @Published var alertMessage: String?
@@ -102,8 +105,37 @@ final class CommunityViewModel: ObservableObject, MessageDisplayable {
     }
 
     /// 새로고침
-    func refresh() {
-        loadFeeds(category: currentCategory, isRefresh: true)
+    @MainActor
+    func refresh() async {
+        guard !isLoading else { return }
+
+        resetPagination()
+        isLoading = true
+        isRefreshing = true
+        do {
+            let result = try await useCase.feeds(
+                category: currentCategory,
+                lastPublishedAt: nil,
+                lastImageId: nil
+            )
+
+            feeds = result.feeds
+
+            if let lastFeed = feeds.last {
+                nextCursorId = lastFeed.imageId
+                nextCursorPublishedAt = lastFeed.publishedAt
+            }
+            hasNext = result.sliceInfo.hasNext
+
+            isLoading = false
+            isRefreshing = false
+            Logger.success("새로고침 완료: \(result.feeds.count)개")
+        } catch {
+            isLoading = false
+            isRefreshing = false
+            show(.unknownRequestFailed)
+            Logger.error("새로고침 실패: \(error)")
+        }
     }
 
     /// 좋아요 토글
