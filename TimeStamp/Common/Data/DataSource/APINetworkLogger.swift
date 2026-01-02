@@ -20,10 +20,11 @@ public final class APINetworkLogger: EventMonitor {
         let bodyString = request.request.flatMap { req in
             req.httpBody.flatMap { String(data: $0, encoding: .utf8) }
         } ?? "No Body"
-        print("➡️ [REQUEST] \(request)")
-        print("   Headers: \(request.request?.allHTTPHeaderFields ?? [:])")
-        print("   Body: \(bodyString)")
+        Logger.network("➡️ [REQUEST] \(request)")
+        Logger.network("   Headers: \(request.request?.allHTTPHeaderFields ?? [:])")
+        Logger.network("   Body: \(bodyString)")
         #endif
+    
     }
 
     // Event called whenever a DataRequest has parsed a response.
@@ -36,8 +37,8 @@ public final class APINetworkLogger: EventMonitor {
         }
         // 상태 코드에 따라 이모지 구분
         let emoji = (200..<300).contains(status) ? "✅" : "❌"
-        print("\(emoji) [RESPONSE] status: \(status) for: \(request)")
-        print("   Body: \(bodyString)")
+        Logger.network("\(emoji) [RESPONSE] status: \(status) for: \(request)")
+        Logger.network("   Body: \(bodyString)")
         #endif
     }
 }

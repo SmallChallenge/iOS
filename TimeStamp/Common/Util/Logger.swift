@@ -63,12 +63,13 @@ enum Logger {
         #if DEBUG
         let fileName = (file as NSString).lastPathComponent
         let output = items.map { "\($0)" }.joined(separator: separator)
-        let logMessage = "🌐 [\(fileName):\(line)] \(function) - \(output)"
+        //let logMessage = "🌐 [\(fileName):\(line)] \(function) - \(output)"
+        let logMessage = "🌐 \(output)"
         print(logMessage)
         appendLog(logMessage)
         #endif
     }
-
+    
     /// 일반 정보 로그
     static func info(_ items: Any..., separator: String = " ", file: String = #file, function: String = #function, line: Int = #line) {
         #if DEBUG
