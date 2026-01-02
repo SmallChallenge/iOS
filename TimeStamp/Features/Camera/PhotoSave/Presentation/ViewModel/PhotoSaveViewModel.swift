@@ -76,7 +76,7 @@ final class PhotoSaveViewModel: ObservableObject, MessageDisplayable {
 
             // 저장 성공
             isSaved = true
-            show(.photoSaveSuccess)
+            show(.saveSuccess)
             Logger.success("사진 저장 성공")
 
             // MyLogView에 새로고침 알림
@@ -100,7 +100,7 @@ final class PhotoSaveViewModel: ObservableObject, MessageDisplayable {
             // 저장 성공
             isSaved = true
             isLoading = false
-            show(.photoSaveSuccess)
+            show(.saveSuccess)
             Logger.success("서버에 사진 저장 성공")
 
             // MyLogView에 새로고침 알림

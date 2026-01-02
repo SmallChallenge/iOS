@@ -74,7 +74,7 @@ final class LogEditorViewModel: ObservableObject, MessageDisplayable {
                     Logger.success("로컬 로그 수정 성공")
                 }
                 hasEdited = true
-                show(.photoEditSuccess)
+                show(.editSuccess)
             } catch {
                 Logger.error("로그 수정 실패: \(error)")
                 show(.editFailed)

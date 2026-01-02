@@ -61,7 +61,7 @@ final class LogDetailViewModel: ObservableObject, MessageDisplayable {
                 try await useCase.deleteLogFromServer(logId: remoteImage.id)
                 isLoading = false
                 onDeleteSuccess?()
-                ToastManager.shared.show(AppMessage.photoDeleteSuccess.text)
+                ToastManager.shared.show(AppMessage.deleteSuccess.text)
             } catch {
                 isLoading = false
                 show(.deleteFailed)
@@ -78,7 +78,7 @@ final class LogDetailViewModel: ObservableObject, MessageDisplayable {
                 try await useCase.deleteLogFromLocal(logId: log.id)
                 isLoading = false
                 onDeleteSuccess?()
-                ToastManager.shared.show(AppMessage.photoDeleteSuccess.text)
+                ToastManager.shared.show(AppMessage.deleteSuccess.text)
             } catch {
                 isLoading = false
                 show(.deleteFailed)

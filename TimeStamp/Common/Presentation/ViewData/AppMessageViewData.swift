@@ -57,9 +57,9 @@ enum AppMessage {
     
 
     // MARK: 성공 메시지
-    case photoSaveSuccess
-    case photoEditSuccess
-    case photoDeleteSuccess
+    case saveSuccess
+    case editSuccess
+    case deleteSuccess
     case welcomeMessage(nickname: String)
     
 
@@ -95,11 +95,11 @@ enum AppMessage {
             return "필수 항목을 선택해 주세요."
 
             // MARK: 성공
-        case .photoSaveSuccess:
+        case .saveSuccess:
             return "저장이 완료되었어요."
-        case .photoEditSuccess:
+        case .editSuccess:
             return "수정이 완료되었어요."
-        case .photoDeleteSuccess:
+        case .deleteSuccess:
             return "삭제가 완료되었어요."
         case .welcomeMessage(let nickname):
             return "반가워요, \(nickname)님! 이제 기록을 시작해볼까요?"
