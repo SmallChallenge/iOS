@@ -6,6 +6,7 @@
 //
 
 import SwiftUI
+import UIKit
 
 /// 마이페이지 화면
 struct MyPageView: View {
@@ -26,7 +27,7 @@ struct MyPageView: View {
     
     var body: some View {
         ZStack {
-            VStack(spacing: 10) {
+            VStack(spacing: 30) {
                 if authManager.isLoggedIn {
                     
                     Button {
@@ -38,6 +39,11 @@ struct MyPageView: View {
                     Button("로그아웃"){
                         viewModel.logout()
                     }
+                    
+                    Button("토큰복사"){
+                        copyTokenForTest()
+                    }
+                    
                 } else {
                     Button("로그인") {
                         showLoginView = true
@@ -60,6 +66,19 @@ struct MyPageView: View {
             }
         }
         
+    }
+    
+    private func copyTokenForTest(){
+        guard let token = authManager.getAccessToken() else {
+            ToastManager.shared.show("토큰이 없습니다")
+            return
+        }
+
+        // 클립보드에 복사
+        UIPasteboard.general.string = token
+
+        // 복사 완료 토스트
+        ToastManager.shared.show("토큰이 복사되었습니다")
     }
 }
 
