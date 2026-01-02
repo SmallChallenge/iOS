@@ -69,12 +69,9 @@ struct MyLogDIContainer: MyLogDIContainerProtocol {
     }
 
     // MARK: - LogDetailView
-    private func makeLogDetailApiClient() -> LogDetailApiClientProtocol {
-        return LogDetailApiClient(session: session)
-    }
 
     private func makeLogDetailRepository() -> LogDetailRepositoryProtocol {
-        let apiClient = makeLogDetailApiClient()
+        let apiClient = makeMyLogApiClient()
         return LogDetailRepository(apiClient: apiClient, localDataSource: localDataSource)
     }
 

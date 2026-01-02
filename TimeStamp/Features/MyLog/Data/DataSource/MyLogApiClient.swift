@@ -12,6 +12,7 @@ import Alamofire
 enum MyLogRouter {
     case list(category: String?, page: Int, size: Int)
     case edit(id: Int, category: String, visibility: String)
+    case deleteLog(logId: Int)
     
 }
 extension MyLogRouter: Router {
@@ -23,13 +24,20 @@ extension MyLogRouter: Router {
         switch self {
         case .list: return .get
         case .edit: return .put
+        case .deleteLog: return .delete
         }
     }
     
     var path: String {
         switch self {
-        case .list: return "/api/v1/images"
-        case let .edit(id, _,_): return "/api/v1/images/\(id)"
+        case .list: 
+            return "/api/v1/images"
+            
+        case let .edit(id, _,_):
+            return "/api/v1/images/\(id)"
+            
+        case let .deleteLog(logId):
+            return "/api/v1/images/\(logId)"
         }
     }
     
@@ -54,6 +62,9 @@ extension MyLogRouter: Router {
                 "visibility" : visibility,
             ]
             return params
+            
+        case .deleteLog:
+            return nil
         }
     }
     
@@ -68,6 +79,7 @@ protocol MyLogApiClientProtocol {
 
     func fetchMyLogList(category: String?, page: Int, size: Int) async -> Result<MyLogsDto, NetworkError>
     func editLog(id: Int, category: String, visibility: String) async -> Result<EditLogDto, NetworkError>
+    func deleteLog(logId: Int) async -> Result<DeleteLogDto,NetworkError>
 
 }
 final class MyLogApiClient: ApiClient<MyLogRouter>,MyLogApiClientProtocol {
@@ -76,5 +88,9 @@ final class MyLogApiClient: ApiClient<MyLogRouter>,MyLogApiClientProtocol {
     }
     func editLog(id: Int, category: String, visibility: String) async -> Result<EditLogDto, NetworkError> {
         await request(MyLogRouter.edit(id: id, category: category, visibility: visibility))
+    }
+    
+    func deleteLog(logId: Int) async -> Result<DeleteLogDto,NetworkError> {
+        await request(MyLogRouter.deleteLog(logId: logId))
     }
 }

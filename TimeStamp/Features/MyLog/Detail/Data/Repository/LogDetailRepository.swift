@@ -9,10 +9,10 @@ import Foundation
 import UIKit
 
 final class LogDetailRepository: LogDetailRepositoryProtocol {
-    private let apiClient: LogDetailApiClientProtocol
+    private let apiClient: MyLogApiClientProtocol
     private let localDataSource: LocalTimeStampLogDataSourceProtocol
 
-    init(apiClient: LogDetailApiClientProtocol, localDataSource: LocalTimeStampLogDataSourceProtocol) {
+    init(apiClient: MyLogApiClientProtocol, localDataSource: LocalTimeStampLogDataSourceProtocol) {
         self.apiClient = apiClient
         self.localDataSource = localDataSource
     }
