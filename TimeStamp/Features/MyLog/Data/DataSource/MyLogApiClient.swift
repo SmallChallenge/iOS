@@ -49,7 +49,7 @@ extension MyLogRouter: Router {
             }
             return params
         case let .edit(_, category, visibility):
-            var params: Parameters = [
+            let params: Parameters = [
                 "category" : category,
                 "visibility" : visibility,
             ]
@@ -60,8 +60,6 @@ extension MyLogRouter: Router {
     var encoding: Encoding? {
         nil
     }
-    
-    
 }
 
 

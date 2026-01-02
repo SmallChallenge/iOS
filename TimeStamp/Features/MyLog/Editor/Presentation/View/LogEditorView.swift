@@ -64,13 +64,12 @@ struct LogEditorView: View {
             // 뒤로가기 버튼
             ToolbarItem(placement: .navigationBarLeading) {
                 BackButton {
-                    onDismiss(false)
+                    onDismiss(viewModel.hasEdited)
                 }
             }
             ToolbarItem(placement: .navigationBarTrailing) {
                 MainButton(title: "완료", size: .small) {
-                    // TODO: 수정하기
-                    onDismiss(true)
+                    viewModel.editLog()
                 }
                 .disabled(viewModel.isLoading)
             }
@@ -174,14 +173,38 @@ struct LogEditorView: View {
 }
 
 #Preview {
-    LogEditorView(viewModel: LogEditorViewModel(log: .init(
-        id: UUID(),
-        category: .food,
-        timeStamp: Date(),
-        imageSource: .remote(TimeStampLog.RemoteTimeStampImage(
-            id: 0,
-            imageUrl: "https://picsum.photos/400/400"
-        )),
-        visibility: .privateVisible)), onDismiss: {hasEdited in })
+    class MockLogEditorUseCase: LogEditorUseCaseProtocol {
+        func editLogForServer(logId: Int, category: Category, visibility: VisibilityType) async throws -> EditLog {
+            return EditLog(
+                imageId: logId,
+                category: category,
+                visibility: visibility,
+                visibilityChanged: false,
+                updatedAt: Date(),
+                publishedAt: Date()
+            )
+        }
+
+        func editLogForLocal(logId: UUID, category: Category, visibility: VisibilityType) throws {
+            // Mock: 아무것도 하지 않음
+        }
+    }
+
+    return LogEditorView(
+        viewModel: LogEditorViewModel(
+            log: .init(
+                id: UUID(),
+                category: .food,
+                timeStamp: Date(),
+                imageSource: .remote(TimeStampLog.RemoteTimeStampImage(
+                    id: 0,
+                    imageUrl: "https://picsum.photos/400/400"
+                )),
+                visibility: .privateVisible
+            ),
+            useCase: MockLogEditorUseCase()
+        ),
+        onDismiss: {hasEdited in }
+    )
 }
 

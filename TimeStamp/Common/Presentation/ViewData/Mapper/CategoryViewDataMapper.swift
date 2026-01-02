@@ -7,6 +7,7 @@
 
 import Foundation
 
+/// Entity -> ViewData
 struct CategoryViewDataMapper {
     func toViewData(from entity: Category) -> CategoryViewData {
         switch entity {
@@ -23,6 +24,7 @@ struct CategoryViewDataMapper {
     }
 }
 
+/// ViewData -> Entity
 struct CategoryMapper {
     func toEntity(from viewData: CategoryViewData) -> Category {
         switch viewData {

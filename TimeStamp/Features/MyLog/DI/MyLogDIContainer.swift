@@ -32,6 +32,12 @@ struct MyLogDIContainer: MyLogDIContainerProtocol {
         self.settingsRepository = settingsRepository
     }
     
+    private func makeMyLogApiClient() -> MyLogApiClientProtocol {
+        return MyLogApiClient(session: session)
+    }
+    
+    
+    
     // MARK: - MainTab
     private func makeMainTabViewModel() -> MainTabViewModel {
         return MainTabViewModel(myLogUseCase: makeMyLogUseCase())
@@ -43,10 +49,7 @@ struct MyLogDIContainer: MyLogDIContainerProtocol {
     
     
     // MARK: - MyLog
-    private func makeMyLogApiClient() -> MyLogApiClientProtocol {
-        return MyLogApiClient(session: session)
-    }
-
+    
     private func makeMyLogRepository() -> MyLogRepositoryProtocol {
         let apiClient = makeMyLogApiClient()
         return MyLogRepository(localDataSource: localDataSource, apiClient: apiClient)
@@ -99,8 +102,18 @@ struct MyLogDIContainer: MyLogDIContainerProtocol {
     }
     
     // MARK: - LogEditorView
+    private func makeLogEditorRepository() -> LogEditorRepositoryProtocol {
+        let apiClient = makeMyLogApiClient()
+        return LogEditorRepository(apiClient: apiClient, localDataSource: localDataSource)
+    }
+    
+    private func makeLogEditorUseCase() -> LogEditorUseCaseProtocol {
+        let repo = makeLogEditorRepository()
+        return LogEditorUseCase(repository: repo)
+    }
     private func makeLogEditorViewModel(log: TimeStampLogViewData) -> LogEditorViewModel {
-        return LogEditorViewModel(log: log)
+        let usecase = makeLogEditorUseCase()
+        return LogEditorViewModel(log: log, useCase: usecase)
     }
     func makeLogEditorView(log: TimeStampLogViewData, onDismiss: @escaping (_ hasEdited: Bool) -> Void) -> LogEditorView {
         let vm = makeLogEditorViewModel(log: log)
@@ -170,6 +183,20 @@ struct MockMyLogDIContainer: MyLogDIContainerProtocol {
     
     // MARK: LogEditorView
     func makeLogEditorView(log: TimeStampLogViewData, onDismiss: @escaping (_ hasEdited: Bool) -> Void) -> LogEditorView {
-        return LogEditorView(viewModel: LogEditorViewModel(log: log), onDismiss: onDismiss)
+        let usecase = MockLogEditorUseCase()
+        let vm = LogEditorViewModel(log: log, useCase:usecase)
+        return LogEditorView(viewModel: vm, onDismiss: onDismiss)
+        
+        
+    }
+    
+    struct MockLogEditorUseCase: LogEditorUseCaseProtocol{
+        func editLogForLocal(logId: UUID, category: Category, visibility: VisibilityType) throws {
+            
+        }
+        func editLogForServer(logId: Int, category: Category, visibility: VisibilityType) async throws -> EditLog {
+            EditLog(imageId: 0, category: .etc, visibility: .privateVisible, visibilityChanged: true, updatedAt: Date(), publishedAt: Date())
+        }
+        
     }
 }

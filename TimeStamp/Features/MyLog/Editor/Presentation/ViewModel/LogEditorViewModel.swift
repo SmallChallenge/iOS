@@ -10,22 +10,25 @@ import Foundation
 import Combine
 
 
-final class LogEditorViewModel: ObservableObject {
+final class LogEditorViewModel: ObservableObject, MessageDisplayable {
     private let authManager = AuthManager.shared
+    private let useCase: LogEditorUseCaseProtocol
+    private let categoryMapper = CategoryMapper()
     @Published var log: TimeStampLogViewData
-    
+
     // MARK: - Output Properties
     @Published var isLoading = false
-    
+
     @Published var selectedCategory: CategoryViewData
     @Published var selectedVisibility: VisibilityViewData
-    
-    
+    @Published var hasEdited: Bool = false
+
     @Published var toastMessage: String?
     @Published var alertMessage: String?
-    
-    init(log: TimeStampLogViewData) {
+
+    init(log: TimeStampLogViewData, useCase: LogEditorUseCaseProtocol) {
         self.log = log
+        self.useCase = useCase
         self.selectedCategory = log.category
         self.selectedVisibility = log.visibility
     }
@@ -41,5 +44,43 @@ final class LogEditorViewModel: ObservableObject {
         }
     }
 
+    
+    func editLog() {
+        guard !isLoading else { return }
+        isLoading = true
+        Task {
+            do {
+                // ViewData를 Entity로 변환
+                let categoryEntity = categoryMapper.toEntity(from: selectedCategory)
+                let visibilityEntity = VisibilityTypeMapper().toEntity(from: selectedVisibility)
+                
+                switch log.imageSource {
+                case let .remote(remoteImage):
+                    // 서버 로그 수정
+                    let result = try await useCase.editLogForServer(
+                        logId: remoteImage.id,
+                        category: categoryEntity,
+                        visibility: visibilityEntity
+                    )
+                    Logger.success("서버 로그 수정 성공: \(result)")
+                    
+                case let .local(localImage):
+                    // 로컬 로그 수정
+                    try useCase.editLogForLocal(
+                        logId: log.id,
+                        category: categoryEntity,
+                        visibility: visibilityEntity
+                    )
+                    Logger.success("로컬 로그 수정 성공")
+                }
+                hasEdited = true
+                show(.photoEditSuccess)
+            } catch {
+                Logger.error("로그 수정 실패: \(error)")
+                show(.editFailed)
+            }
+            isLoading = false
+        }
+    }
 }
 
