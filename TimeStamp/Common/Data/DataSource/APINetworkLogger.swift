@@ -24,7 +24,6 @@ public final class APINetworkLogger: EventMonitor {
         Logger.network("   Headers: \(request.request?.allHTTPHeaderFields ?? [:])")
         Logger.network("   Body: \(bodyString)")
         #endif
-    
     }
 
     // Event called whenever a DataRequest has parsed a response.
