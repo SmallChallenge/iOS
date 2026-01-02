@@ -28,6 +28,7 @@ struct LogDetailView: View {
     @State private var showShareSheet: Bool = false
     @State private var showPopoverMenu: Bool = false
     @State private var navigateToEditor: Bool = false
+    @State private var hasAppeared: Bool = false
     
     var body: some View {
         ScrollView {
@@ -79,6 +80,12 @@ struct LogDetailView: View {
         .mainBackgourndColor()
         .navigationBarTitleDisplayMode(.inline)
         .navigationBarBackButtonHidden(true)
+        .task {
+            if !hasAppeared {
+                hasAppeared = true
+                viewModel.fetchDetail()
+            }
+        }
         .toolbar {
             // 뒤로가기 버튼
             ToolbarItem(placement: .navigationBarLeading) {
@@ -100,9 +107,12 @@ struct LogDetailView: View {
                 }
         }
         .navigationDestination(isPresented: $navigateToEditor) {
-            diContainer.makeLogEditorView(log: viewModel.log) { hasEdited in
+            diContainer.makeLogEditorView(log: viewModel.detail) { hasEdited in
                 print(">>>>> hasEdited \(hasEdited)")
                 navigateToEditor = false // (닫기)
+                if hasEdited {
+                    viewModel.fetchDetail()
+                }
             }
         }
         .sheet(isPresented: $showShareSheet) {
@@ -161,7 +171,7 @@ struct LogDetailView: View {
     
     private var logImage: some View {
         Group {
-            switch viewModel.log.imageSource {
+            switch viewModel.detail.imageSource {
 
                 // MARK: 서버이미지
             case let .remote(remoteImage):
@@ -214,8 +224,8 @@ struct LogDetailView: View {
                 .foregroundStyle(Color.gray400)
             
             HStack(alignment: .center, spacing: 9) {
-                Image(viewModel.log.category.image)
-                Text(viewModel.log.category.title)
+                Image(viewModel.detail.category.image)
+                Text(viewModel.detail.category.title)
                     .font(.Btn2_b)
                     .foregroundStyle(Color.gray50)
             }
@@ -230,7 +240,7 @@ struct LogDetailView: View {
                 .font(.SubTitle2)
                 .foregroundStyle(Color.gray400)
             
-            TagView(title: viewModel.log.visibility.title, state: .active)
+            TagView(title: viewModel.detail.visibility.title, state: .active)
             
         }
     }

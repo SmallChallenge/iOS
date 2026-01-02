@@ -11,9 +11,11 @@ import UIKit
 
 final class LogDetailViewModel: ObservableObject, MessageDisplayable {
 
-    
-    @Published var log: TimeStampLogViewData
-    
+    /// origin data
+    private let log: TimeStampLogViewData
+    @Published var detail: TimeStampLogViewData
+
+
     // MARK: - Output Properties
     @Published var isLoading = false
     @Published var toastMessage: String?
@@ -30,15 +32,27 @@ final class LogDetailViewModel: ObservableObject, MessageDisplayable {
 
     init(log: TimeStampLogViewData, useCase: LogDetailUseCaseProtocol) {
         self.log = log
+        self.detail = log
         self.useCase = useCase
     }
+    
 
     // MARK: - Input Methods
+    func fetchDetail() {
+        guard !isLoading else { return }
 
+        // 저장 위치 확인 (로컬, 서버)
+        switch log.imageSource {
+        case .remote:
+            fetchDetailFromServer()
+        case .local:
+            fetchDetailFromLocal()
+        }
+    }
+    
     ///  로그 삭제하기
     func deleteLog() {
         guard !isLoading else { return }
-
         // 저장 위치 확인 (로컬, 서버)
         switch log.imageSource {
         case .remote:
@@ -49,14 +63,54 @@ final class LogDetailViewModel: ObservableObject, MessageDisplayable {
         }
     }
 
+    
+    // MARK: - private Methods
+    
+    private func fetchDetailFromServer() {
+        guard case let .remote(remoteImage) = log.imageSource else {
+            return
+        }
+        isLoading = true
+        let logServerId = remoteImage.id
+        Task { @MainActor in
+            do {
+                let entity = try await useCase.fetchLogDetailFromServer(logId: logServerId)
+                detail = entity.toViewData()
+                Logger.success("로그 상세 정보 가져오기 성공 (서버)")
+            } catch {
+                Logger.error("서버 로그 상세 정보 가져오기 실패: \(error)")
+                show(.unknownRequestFailed)
+            }
+            isLoading = false
+        }
+    }
+
+    private func fetchDetailFromLocal() {
+        guard case .local = log.imageSource else {
+            return
+        }
+        isLoading = true
+        Task { @MainActor in
+            do {
+                let entity = try useCase.fetchLogFromLocal(logId: log.id)
+                detail = entity.toViewData()
+                Logger.success("로그 상세 정보 가져오기 성공 (로컬)")
+            } catch {
+                Logger.error("로컬 로그 상세 정보 가져오기 실패: \(error)")
+                show(.unknownRequestFailed)
+            }
+            isLoading = false
+        }
+    }
+    
+    
     /// 서버의 기록 지우기
     private func deleteLogFromServer() {
         guard case let .remote(remoteImage) = log.imageSource else {
             return
         }
-
+        isLoading = true
         Task { @MainActor in
-            isLoading = true
             do {
                 try await useCase.deleteLogFromServer(logId: remoteImage.id)
                 isLoading = false
@@ -72,6 +126,9 @@ final class LogDetailViewModel: ObservableObject, MessageDisplayable {
 
     /// 로컬 기록 지우기
     private func deleteLogFromLocal() {
+        guard case .local = log.imageSource else {
+            return
+        }
         Task { @MainActor in
             isLoading = true
             do {

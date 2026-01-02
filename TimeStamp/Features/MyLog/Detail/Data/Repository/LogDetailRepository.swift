@@ -17,6 +17,31 @@ final class LogDetailRepository: LogDetailRepositoryProtocol {
         self.localDataSource = localDataSource
     }
 
+    // MARK: - Fetch
+
+    func fetchLogDetailFromServer(logId: Int) async throws -> TimeStampLog {
+        let result = await apiClient.fetchLogDetail(id: logId)
+
+        switch result {
+        case let .success(dto):
+            // TimeStampLogDetail 엔티티 없이 그냥 TimeStampLog를 사용함.
+            return dto.toEntity()
+        case let .failure(error):
+            Logger.error("서버 로그 조회 실패: \(error)")
+            throw error
+        }
+    }
+
+    func fetchLogFromLocal(logId: UUID) throws -> TimeStampLog {
+        guard let dto = try localDataSource.read(id: logId) else {
+            throw RepositoryError.entityNotFound
+        }
+
+        return dto.toEntity()
+    }
+
+    // MARK: - Delete
+
     func deleteLogFromServer(logId: Int) async throws {
         let result = await apiClient.deleteLog(logId: logId)
 

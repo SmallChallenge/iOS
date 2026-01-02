@@ -7,7 +7,7 @@
 
 import Foundation
 
-extension MyLogsDto.TimeStampLog {
+extension MyLogsDto.TimeStampLogDto {
     func toEntity() -> TimeStampLog {
         let category = Category(rawValue: self.category) ?? .etc
         let visibility = VisibilityType(rawValue: self.visibility) ?? .privateVisible

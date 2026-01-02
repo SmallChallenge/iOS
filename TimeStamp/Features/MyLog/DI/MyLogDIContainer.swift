@@ -170,6 +170,12 @@ struct MockMyLogDIContainer: MyLogDIContainerProtocol {
     }
     
     struct MockLogDetailUseCase: LogDetailUseCaseProtocol {
+        func fetchLogDetailFromServer(logId: Int) async throws -> TimeStampLog {
+            return TimeStampLog(id: UUID(), category: .etc, timeStamp: Date(), imageSource: .local(TimeStampLog.LocalTimeStampImage.init(imageFileName: "")), visibility: .privateVisible)
+        }
+        func fetchLogFromLocal(logId: UUID) throws -> TimeStampLog {
+            return TimeStampLog(id: UUID(), category: .etc, timeStamp: Date(), imageSource: .local(TimeStampLog.LocalTimeStampImage.init(imageFileName: "")), visibility: .privateVisible)
+        }
         func deleteLogFromLocal(logId: UUID) async throws {}
         func deleteLogFromServer(logId: Int) async throws {}
         func prepareImageForSharing(imageSource: TimeStampLog.ImageSource) async throws -> UIImage {

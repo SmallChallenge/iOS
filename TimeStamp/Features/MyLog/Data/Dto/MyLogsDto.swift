@@ -8,10 +8,10 @@
 import Foundation
 
 struct MyLogsDto: Codable {
-    let logs: [TimeStampLog]
+    let logs: [TimeStampLogDto]
     let pageInfo: PageInfo
     
-    struct TimeStampLog: Codable {
+    struct TimeStampLogDto: Codable {
         let imageId: Int
         let category: String
         let visibility: String

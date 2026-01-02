@@ -64,6 +64,7 @@ final class LogEditorViewModel: ObservableObject, MessageDisplayable {
                     )
                     Logger.success("서버 로그 수정 성공: \(result)")
                     
+                    
                 case let .local(localImage):
                     // 로컬 로그 수정
                     try useCase.editLogForLocal(

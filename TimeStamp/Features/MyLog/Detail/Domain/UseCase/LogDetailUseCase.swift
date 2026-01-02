@@ -15,6 +15,18 @@ final class LogDetailUseCase: LogDetailUseCaseProtocol {
         self.repository = repository
     }
 
+    // MARK: - Fetch
+
+    func fetchLogDetailFromServer(logId: Int) async throws -> TimeStampLog {
+        return try await repository.fetchLogDetailFromServer(logId: logId)
+    }
+
+    func fetchLogFromLocal(logId: UUID) throws -> TimeStampLog {
+        return try repository.fetchLogFromLocal(logId: logId)
+    }
+
+    // MARK: - Delete
+
     func deleteLogFromServer(logId: Int) async throws {
         try await repository.deleteLogFromServer(logId: logId)
     }

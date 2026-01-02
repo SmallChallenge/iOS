@@ -13,7 +13,7 @@ struct EditLogDto: Codable {
     let visibility: String
     let visibilityChanged: Bool
     let updatedAt: String
-    let publishedAt: String
+    let publishedAt: String?
 }
 
 extension EditLogDto {
@@ -26,7 +26,7 @@ extension EditLogDto {
             visibility: visibility,
             visibilityChanged: self.visibilityChanged,
             updatedAt: self.updatedAt.toDate(.iso8601) ?? Date(),
-            publishedAt: self.publishedAt.toDate(.iso8601) ?? Date()
+            publishedAt: self.publishedAt?.toDate(.iso8601) ?? Date()
         )
     }
 }

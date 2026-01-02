@@ -57,6 +57,7 @@ struct LogEditorView: View {
             }// ~Vstack
             .padding(.horizontal, 20)
         }
+        .toast(message: $viewModel.toastMessage)
         .mainBackgourndColor()
         .navigationBarTitleDisplayMode(.inline)
         .navigationBarBackButtonHidden(true)

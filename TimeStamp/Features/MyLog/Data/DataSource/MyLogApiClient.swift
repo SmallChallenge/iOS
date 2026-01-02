@@ -11,6 +11,7 @@ import Alamofire
 
 enum MyLogRouter {
     case list(category: String?, page: Int, size: Int)
+    case detail(id: Int)
     case edit(id: Int, category: String, visibility: String)
     case deleteLog(logId: Int)
     
@@ -23,6 +24,7 @@ extension MyLogRouter: Router {
     var method: Alamofire.HTTPMethod {
         switch self {
         case .list: return .get
+        case .detail: return .get
         case .edit: return .put
         case .deleteLog: return .delete
         }
@@ -32,6 +34,8 @@ extension MyLogRouter: Router {
         switch self {
         case .list: 
             return "/api/v1/images"
+        case let .detail(id):
+            return "/api/v1/images/\(id)"
             
         case let .edit(id, _,_):
             return "/api/v1/images/\(id)"
@@ -56,6 +60,10 @@ extension MyLogRouter: Router {
                 params["category"] = category
             }
             return params
+            
+        case .detail:
+            return nil
+            
         case let .edit(_, category, visibility):
             let params: Parameters = [
                 "category" : category,
@@ -78,14 +86,23 @@ extension MyLogRouter: Router {
 protocol MyLogApiClientProtocol {
 
     func fetchMyLogList(category: String?, page: Int, size: Int) async -> Result<MyLogsDto, NetworkError>
+    func fetchLogDetail(id: Int) async -> Result<TimeStampLogDetailDto, NetworkError>
     func editLog(id: Int, category: String, visibility: String) async -> Result<EditLogDto, NetworkError>
     func deleteLog(logId: Int) async -> Result<DeleteLogDto,NetworkError>
 
 }
 final class MyLogApiClient: ApiClient<MyLogRouter>,MyLogApiClientProtocol {
+   
+    
     func fetchMyLogList(category: String?, page: Int, size: Int) async -> Result<MyLogsDto, NetworkError> {
         await request(MyLogRouter.list(category: category, page: page, size: size))
     }
+    
+    func fetchLogDetail(id: Int) async -> Result<TimeStampLogDetailDto, NetworkError> {
+        await request(MyLogRouter.detail(id: id))
+        
+    }
+    
     func editLog(id: Int, category: String, visibility: String) async -> Result<EditLogDto, NetworkError> {
         await request(MyLogRouter.edit(id: id, category: category, visibility: visibility))
     }
