@@ -23,17 +23,20 @@ final class MyPageDIContainer: MyPageDIContainerProtocol {
     }
     
     // MARK: - MyPageView
-    private func makeMyPageRepository(){
-        
+    private func makeLogoutRepository() -> LogoutRepositoryProtocol {
+        LogoutRepository(authApiClient: authApiClient)
     }
-    private func makeMyPageUseCase() {
-        
+
+    private func makeLogoutUseCase() -> LogoutUseCaseProtocol {
+        let repository = makeLogoutRepository()
+        return LogoutUseCase(repository: repository)
     }
+
     private func makeMyPageViewModel() -> MyPageViewModel {
-        MyPageViewModel()
+        let useCase = makeLogoutUseCase()
+        return MyPageViewModel(logoutUseCase: useCase)
     }
-    
-    
+
     func makeMyPageView(onGoBack: @escaping () -> Void) -> MyPageView {
         let vm = makeMyPageViewModel()
         return MyPageView(viewModel: vm, diContainer: self, onGoBack: onGoBack)
@@ -60,16 +63,21 @@ final class MyPageDIContainer: MyPageDIContainerProtocol {
 }
 struct MockMyPageDIContainer: MyPageDIContainerProtocol{
     func makeMyPageView(onGoBack: @escaping () -> Void) -> MyPageView {
-        let vm = MyPageViewModel()
+        let logoutUseCase = MockLogoutUseCase()
+        let vm = MyPageViewModel(logoutUseCase: logoutUseCase)
         return MyPageView(viewModel: vm, diContainer: self, onGoBack: onGoBack)
     }
 
     func makeUserInfoPageView(onGoBack: @escaping () -> Void) -> UserInfoPageView {
-        
         let useCase = MockWithdrawalUseCase()
         let viewModel = UserInfoPageViewModel(withdrawalUseCase: useCase)
         return UserInfoPageView(viewModel: viewModel, onGoBack: onGoBack)
     }
+
+    struct MockLogoutUseCase: LogoutUseCaseProtocol {
+        func logout() async throws {}
+    }
+
     struct MockWithdrawalUseCase: WithdrawalUseCaseProtocol {
         func withdrawal() async throws {}
     }

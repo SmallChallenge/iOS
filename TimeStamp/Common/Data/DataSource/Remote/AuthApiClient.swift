@@ -26,10 +26,12 @@ public enum AuthRouter {
     
     // 토큰 재발급
     case refresh(token: String)
-    // 로그아웃
-    // 회원탈퇴
     
-    // 닉네임 중복 확인
+    // 로그아웃
+    case logout
+    
+    
+    
     // 닉네임 설정
     case setNickname(nickname: String, accessToken: String?)
     
@@ -71,6 +73,9 @@ extension AuthRouter: Router {
             
         case .withdrawal:
             "/api/v1/auth/withdrawal"
+            
+        case .logout:
+            "/api/v1/auth/logout"
         }
     }
     
@@ -135,8 +140,16 @@ extension AuthRouter: Router {
             
         case .withdrawal:
             var params: Parameters = [:]
-            if let token = AuthManager.shared.getAccessToken() {
-                params["accessToken"] = token
+            if let token = AuthManager.shared.getRefreshToken() {
+                params["refreshToken"] = token
+            }
+            return params
+            
+        case .logout:
+            var params: Parameters = [
+                "allDevices" : false]
+            if let token = AuthManager.shared.getRefreshToken() {
+                params["refreshToken"] = token
             }
             return params
         }
@@ -187,8 +200,10 @@ public protocol AuthApiClientProtocol {
     ) async -> Result<ActiveAccountDto, NetworkError>
     /// 토큰 재발급
     func refreshToken(refreshToken token: String) async -> Result<RefreshDto, NetworkError>
+    
     // 로그아웃
-    // 회원탈퇴
+    
+    
 
     // 닉네임 중복확인
     // 닉네임 설정
@@ -202,7 +217,11 @@ public protocol AuthApiClientProtocol {
     
     /// 유저정보
     func userInfo()  async -> Result<UserInfoDto, NetworkError>
+    
+    /// 로그아웃
+    func logout()  async -> Result<LogoutDto, NetworkError>
 }
+
 
 // MARK: - API Client
 
@@ -246,6 +265,11 @@ public class AuthApiClient: ApiClient<AuthRouter>, AuthApiClientProtocol {
     /// 유저 정보
     public func userInfo()  async -> Result<UserInfoDto, NetworkError>{
         await request(.userInfo)
+    }
+    
+    /// 로그아웃
+    public func logout()  async -> Result<LogoutDto, NetworkError> {
+        await request(.logout)
     }
     
 }
