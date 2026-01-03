@@ -9,10 +9,13 @@ import Foundation
 import Combine
 
 final class MyPageViewModel: ObservableObject, MessageDisplayable {
-    
-    
+
+    // MARK: - Dependencies
+
+    private let logoutUseCase: LogoutUseCaseProtocol
+
     // MARK: - Output Properties
-    
+
     /// 로딩
     @Published var isLoading: Bool = false
 
@@ -20,12 +23,39 @@ final class MyPageViewModel: ObservableObject, MessageDisplayable {
     @Published var toastMessage: String?
     @Published var alertMessage: String?
 
-    
+    // MARK: - Init
+
+    init(logoutUseCase: LogoutUseCaseProtocol) {
+        self.logoutUseCase = logoutUseCase
+    }
+
     // MARK: - Input Methods
-    
-    func logout(){
-        AuthManager.shared.logout()
-        
-        show(.logoutFailed)
+
+    func logout() {
+        guard !isLoading else { return }
+        Logger.debug("로그아웃 시작")
+
+        Task {
+            await performLogout()
+        }
+    }
+
+    @MainActor
+    private func performLogout() async {
+        isLoading = true
+
+        do {
+            try await logoutUseCase.logout()
+            Logger.success("로그아웃 성공")
+
+            // AuthManager에서 로컬 토큰 삭제
+            AuthManager.shared.logout()
+
+            isLoading = false
+        } catch {
+            isLoading = false
+            show(.logoutFailed)
+            Logger.error("로그아웃 실패: \(error)")
+        }
     }
 }
