@@ -13,16 +13,15 @@ struct DefaultTemplateView: TemplateViewProtocol {
     let displayDate: Date
     let hasLogo: Bool
     
-
     var body: some View {
         ZStack {
             // 중앙: 날짜 + 시계
             VStack(spacing: 8) {
-                Text(displayDate.toString(format: "yyyy.MM.dd"))
+                Text(displayDate.toString(.yyyyMMdd))
                     .font(.system(size: 20, weight: .medium))
                     .foregroundColor(.gray50)
 
-                Text(displayDate.toString(format: "HH:mm"))
+                Text(displayDate.toString(.time_HH_mm))
                     .font(.system(size: 48, weight: .bold))
                     .foregroundColor(.gray50)
             }
@@ -33,12 +32,7 @@ struct DefaultTemplateView: TemplateViewProtocol {
                     Spacer()
                     HStack {
                         Spacer()
-                        Image("Logotype")
-                            .renderingMode(.template)
-                            .resizable()
-                            .frame(width: 122.8, height: 26)
-                            .foregroundColor(.gray50)
-                            .padding(16)
+                        LogotypeImage()
                     }
                 }
             }

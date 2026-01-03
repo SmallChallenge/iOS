@@ -17,15 +17,15 @@ enum TemplateStyle: CaseIterable {
 }
 
 
-/// 템플릿
+/// MARK: 템플릿
 struct Template: Identifiable, Equatable {
-    let id: String
-    let name: String
     let style: TemplateStyle
+    let name: String
     private let viewBuilder: (Date, Bool) -> AnyView
 
-    init(id: String, name: String, style: TemplateStyle, viewBuilder: @escaping (Date, Bool) -> AnyView) {
-        self.id = id
+    var id: String { name }
+
+    init(style: TemplateStyle, name: String, viewBuilder: @escaping (Date, Bool) -> AnyView) {
         self.name = name
         self.style = style
         self.viewBuilder = viewBuilder
@@ -49,75 +49,101 @@ extension Template {
     static let all: [Template] = [
         // MARK: - Basic
         Template(
-            id: "default",
-            name: "베이직",
             style: .basic,
+            name: "Basic1Template",
             viewBuilder: { date, hasLogo in
-                AnyView(DefaultTemplateView(displayDate: date, hasLogo: hasLogo))
+                AnyView(Basic1Template(displayDate: date, hasLogo: hasLogo))
             }
         ),
+        
+        Template(
+            style: .basic,
+            name: "Basic2Template",
+            viewBuilder: { date, hasLogo in
+                AnyView(Basic2Template(displayDate: date, hasLogo: hasLogo))
+            }),
+        
+        Template(
+            style: .basic,
+            name: "Basic3Template",
+            viewBuilder: { date, hasLogo in
+                AnyView(Basic3Template(displayDate: date, hasLogo: hasLogo))
+            }),
+
 
         // MARK:  - Moody
         Template(
-            id: "default2",
-            name: "Moody",
             style: .moody,
-            viewBuilder: { date, hasLogo in
-                AnyView(DefaultTemplateView2(displayDate: date, hasLogo: hasLogo))
+            name: "Moody1Template",
+            viewBuilder: { date, hasLog in
+                AnyView(Moody1Template(displayDate: date, hasLogo: hasLog))
             }
         ),
+        
+        Template(
+            style: .moody,
+            name: "Moody2Template",
+            viewBuilder: { date, hasLogo in
+                AnyView(Moody2Template(displayDate: date, hasLogo: hasLogo))
+            }),
+
+        
+        //        Template(
+        //            style: .moody,
+        //            name: "",
+        //            viewBuilder: { date, hasLogo in
+        //                AnyView()
+        //            }),
 
         // MARK: - Active
         Template(
-            id: "sample1",
-            name: "Active1",
             style: .active,
-            viewBuilder: { _, _ in
-                AnyView(sampleTemplateView())
+            name: "Active1Template",
+            viewBuilder: { date, hasLog in
+                AnyView(Active1Template(displayDate: date, hasLogo: hasLog))
             }
         ),
-        Template(
-            id: "sample2",
-            name: "Active2",
-            style: .active,
-            viewBuilder: { _, _ in
-                AnyView(sampleTemplateView2())
-            }
-        ),
-        Template(
-            id: "sample3",
-            name: "Active3",
-            style: .active,
-            viewBuilder: { _, _ in
-                AnyView(sampleTemplateView3())
-            }
-        ),
+        
+                Template(
+                    style: .active,
+                    name: "Active2Template",
+                    viewBuilder: { date, hasLogo in
+                        AnyView(Active2Template(displayDate: date, hasLogo: hasLogo))
+                    }),
+
+        
+        //        Template(
+        //            style: .active,
+        //            name: "",
+        //            viewBuilder: { date, hasLogo in
+        //                AnyView()
+        //            }),
+
 
         // MARK: - Digital
         Template(
-            id: "sample4",
-            name: "Digital4",
             style: .digital,
-            viewBuilder: { _, _ in
-                AnyView(sampleTemplateView4())
+            name: "Digital1Template",
+            viewBuilder: { date, hasLog in
+                AnyView(Digital1Template(displayDate: date, hasLogo: hasLog))
             }
         ),
-        Template(
-            id: "sample5",
-            name: "심플Digital",
-            style: .digital,
-            viewBuilder: { _, _ in
-                AnyView(sampleTemplateView5())
-            }
-        ),
-        Template(
-            id: "sample6",
-            name: "Digital6",
-            style: .digital,
-            viewBuilder: { _, _ in
-                AnyView(sampleTemplateView6())
-            }
-        )
+        
+                Template(
+                    style: .digital,
+                    name: "Digital2Template",
+                    viewBuilder: { date, hasLogo in
+                        AnyView(Digital2Template(displayDate: date, hasLogo: hasLogo))
+                    }),
+
+        
+        //        Template(
+        //            style: .digital,
+        //            name: "",
+        //            viewBuilder: { date, hasLogo in
+        //                AnyView()
+        //            }),
+
     ]
 }
 

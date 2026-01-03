@@ -8,4 +8,7 @@
 import Foundation
 import SwiftUI
 
-protocol TemplateViewProtocol: View {}
+protocol TemplateViewProtocol: View {
+    var displayDate: Date { get }
+    var hasLogo: Bool { get }
+}
