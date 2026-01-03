@@ -92,17 +92,17 @@ struct MyPageView: View {
                 
                 // 메뉴버튼
                 VStack(spacing: .zero) {
-                    MyPageMenu(title: "이용약관", type: .chevron){
+                    MyPageMenu("이용약관", type: .chevron){
                         showTermsOfService = true
                     }
-                    MyPageMenu(title: "개인정보 처리방침", type: .chevron){
+                    MyPageMenu("개인정보 처리방침", type: .chevron){
                         showPrivacyPolicy = true
                     }
-                    MyPageMenu(title: "오픈소스 라이센스", type: .chevron){
+                    MyPageMenu("오픈소스 라이센스", type: .chevron){
                         showOpenSourceLicense = true
                     }
-                    MyPageMenu(title: "앱 버전", type: .text(text: appVersion)){}
-                    MyPageMenu(title: "로그아웃", type: .none){
+                    MyPageMenu("앱 버전", type: .text(text: appVersion)){}
+                    MyPageMenu("로그아웃", type: .none){
                         showLogoutPopup = true
                     }
                 }
@@ -132,17 +132,19 @@ struct MyPageView: View {
                 }
             }
         }
+        // 유저정보화면 띄우기
         .navigationDestination(isPresented: $presentUserInfo) {
-            diContainer.makeUserInfoPageView { needRefresh in
-                print(">>>>> needRefresh \(needRefresh)")
+            diContainer.makeUserInfoPageView {
                 presentUserInfo = false
             }
         }
+        // 로그인화면띄우기
         .fullScreenCover(isPresented: $showLoginView) {
             appDiContainer.makeLoginView {
                 showLoginView = false
             }
         }
+        // 로그아웃 팝업띄우기
         .popup(isPresented: $showLogoutPopup) {
             Modal(title: "로그아웃하시겠습니까?", content: "로그아웃 후 작성한 기록은 백업되지 않으며, 비로그인 상태 기록은 최대 20개로 제한됩니다.")
                 .buttons {

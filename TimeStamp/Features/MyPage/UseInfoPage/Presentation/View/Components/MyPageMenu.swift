@@ -14,10 +14,11 @@ struct MyPageMenu: View {
     let action: () -> Void
     enum MenuType {
         case chevron
+        case chevronText(text: String)
         case text(text: String)
         case none
     }
-    init(title: String, type: MenuType = .none, action: @escaping () -> Void) {
+    init(_ title: String, type: MenuType = .none, action: @escaping () -> Void) {
         self.title = title
         self.type = type
         self.action = action
@@ -43,6 +44,17 @@ struct MyPageMenu: View {
                     ChevronRight()
                         .foregroundStyle(Color.gray500)
                         .padding(.trailing, 12)
+                    
+                case let .chevronText(text):
+                    HStack(spacing: 4){
+                        Text(text)
+                            .font(.Btn2_b)
+                        ChevronRight()
+                            
+                            .padding(.trailing, 12)
+                    }
+                    .foregroundStyle(Color.gray500)
+                   
                         
                     
                 case let .text(text):
@@ -65,9 +77,9 @@ struct MyPageMenu: View {
 
 #Preview {
     VStack(spacing: 0){
-        MyPageMenu(title: "이용약관", type: .chevron){}
-        MyPageMenu(title: "앱 버전", type: .text(text: "1.0.0")){}
-        MyPageMenu(title: "로그아웃"){}
+        MyPageMenu("이용약관", type: .chevron){}
+        MyPageMenu("앱 버전", type: .text(text: "1.0.0")){}
+        MyPageMenu("로그아웃"){}
     }
         .background(Color.black)
 }
