@@ -78,6 +78,7 @@ struct CommunityCard: View {
                             .foregroundStyle(Color.gray50)
                     }
                 }
+                .buttonStyle(.plain)
                 Spacer()
             }
             .padding(.vertical, 12)
