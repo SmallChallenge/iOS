@@ -20,6 +20,16 @@ struct MyPageView: View {
     @State var showLoginView: Bool = false
     @State var presentUserInfo: Bool = false
     @State var showLogoutPopup: Bool = false
+    
+    /// 이용약관 띄우기(웹뷰)
+    @State private var showTermsOfService: Bool = false
+    
+    /// 개인정보처리방침  띄우기(웹뷰)
+    @State private var showPrivacyPolicy: Bool = false
+    
+    /// 오픈소스라이선스(웹뷰)띄우기
+    @State private var showOpenSourceLicense: Bool = false
+
 
     private let appVersion: String
     
@@ -83,13 +93,13 @@ struct MyPageView: View {
                 // 메뉴버튼
                 VStack(spacing: .zero) {
                     MyPageMenu(title: "이용약관", type: .chevron){
-                        
+                        showTermsOfService = true
                     }
                     MyPageMenu(title: "개인정보 처리방침", type: .chevron){
-                        
+                        showPrivacyPolicy = true
                     }
                     MyPageMenu(title: "오픈소스 라이센스", type: .chevron){
-                        
+                        showOpenSourceLicense = true
                     }
                     MyPageMenu(title: "앱 버전", type: .text(text: appVersion)){}
                     MyPageMenu(title: "로그아웃", type: .none){
@@ -144,6 +154,30 @@ struct MyPageView: View {
                         showLogoutPopup = false
                     }
                 }
+        }
+        // 이용약관(웹뷰)
+        .sheet(isPresented: $showTermsOfService) {
+            appDiContainer.makeWebView(url: AppConstants.URLs.termsOfService) {
+                showTermsOfService = false
+            }
+            .presentationDetents([.medium, .large])
+            .presentationDragIndicator(.visible)
+        }
+        // 개인정보처리방침(웹뷰)
+        .sheet(isPresented: $showPrivacyPolicy) {
+            appDiContainer.makeWebView(url: AppConstants.URLs.privacyPolicy) {
+                showPrivacyPolicy = false
+            }
+            .presentationDetents([.medium, .large])
+            .presentationDragIndicator(.visible)
+        }
+        // 오픈소스라이선스(웹뷰)
+        .sheet(isPresented: $showOpenSourceLicense) {
+            appDiContainer.makeWebView(url: AppConstants.URLs.openSourceLicense) {
+                showOpenSourceLicense = false
+            }
+            .presentationDetents([.medium, .large])
+            .presentationDragIndicator(.visible)
         }
     }
     
