@@ -103,11 +103,9 @@ struct MyLogView: View {
             get: { selectedLog != nil },
             set: { if !$0 { selectedLog = nil } }
         )) {
-            Group {
-                if let log = selectedLog {
-                    diContainer.makeLogDetailView(log: log) {
-                        selectedLog = nil
-                    }
+            if let log = selectedLog {
+                diContainer.makeLogDetailView(log: log) {
+                    selectedLog = nil
                 }
             }
         }
