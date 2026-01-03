@@ -78,10 +78,8 @@ struct TermsView: View {
                     Button {
                         showTermsOfService = true
                     } label: {
-                        Image(systemName: "chevron.right")
+                        ChevronRight()
                             .foregroundStyle(Color.gray900)
-                            .padding([.vertical, .trailing], 5.33)
-                            .padding(.leading, 8.33)
                     }
                 }
                 .padding(.vertical, 11)
@@ -108,10 +106,8 @@ struct TermsView: View {
                     Button {
                         showPrivacyPolicy = true
                     } label: {
-                        Image(systemName: "chevron.right")
+                        ChevronRight()
                             .foregroundStyle(.gray900)
-                            .padding([.vertical, .trailing], 5.33)
-                            .padding(.leading, 8.33)
                     }
                 }
                 .padding(.vertical, 11)

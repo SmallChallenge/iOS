@@ -19,6 +19,8 @@ struct MyPageView: View {
     
     @State var showLoginView: Bool = false
     @State var presentUserInfo: Bool = false
+
+    private let appVersion: String
     
     init(viewModel: MyPageViewModel,
          diContainer: MyPageDIContainerProtocol,
@@ -27,44 +29,96 @@ struct MyPageView: View {
         _viewModel = StateObject(wrappedValue: viewModel)
         self.diContainer = diContainer
         self.onGoBack = onGoBack
+
+        // 앱 버전 정보 가져오기
+        let version = Bundle.main.infoDictionary?["CFBundleShortVersionString"] as? String ?? "1.0.0"
+        let build = Bundle.main.infoDictionary?["CFBundleVersion"] as? String ?? "1"
+        self.appVersion = "\(version)(\(build))"
+
+
+        let appearance = UINavigationBarAppearance()
+        appearance.backgroundColor = UIColor.gray900
+        appearance.titleTextAttributes = [.foregroundColor: UIColor.gray50]
+        appearance.largeTitleTextAttributes = [.foregroundColor: UIColor.gray50]
+
+        UINavigationBar.appearance().standardAppearance = appearance
+        UINavigationBar.appearance().scrollEdgeAppearance = appearance
     }
     
     
     var body: some View {
-        ZStack {
-            VStack(spacing: 30) {
-                if authManager.isLoggedIn {
-                    
-                    Button {
-                        presentUserInfo = true
-                    } label: {
-                        Text("내 정보")
+        ScrollView {
+            VStack(spacing: .zero) {
+               
+                thinLine
+                Spacer()
+                    .frame(height: 24)
+                
+                Button {
+                    presentUserInfo = true
+                } label: {
+                    profile
+                }
+                .padding(.top, 20)
+                .padding(.bottom, 24)
+                
+                
+                // 로그인 유도 배너, 로그인 버튼
+                if !authManager.isLoggedIn {
+                    VStack(spacing: 16){
+                        loginPromptBannerView
+                        
+                        MainButton(title: "로그인") {
+                            showLoginView = true
+                        }
                     }
-
-                    Button("로그아웃"){
-                        viewModel.logout()
-                    }
+                    .padding(.top, 8)
+                    .padding(.bottom, 32)
+                    .padding(.horizontal, 20)
                     
-                    Button("토큰복사"){
-                        copyTokenForTest()
+                }
+                thickLine
+                
+                // 메뉴버튼
+                VStack(spacing: .zero) {
+                    MyPageMenu(title: "이용약관", type: .chevron){
+                        
                     }
-                    
-                } else {
-                    Button("로그인") {
-                        showLoginView = true
+                    MyPageMenu(title: "개인정보 처리방침", type: .chevron){
+                        
+                    }
+                    MyPageMenu(title: "오픈소스 라이센스", type: .chevron){
+                        
+                    }
+                    MyPageMenu(title: "앱 버전", type: .text(text: appVersion)){
+                        
+                    }
+                    MyPageMenu(title: "로그아웃", type: .none){
+                        
                     }
                 }
                 
+                
+                // 아래는 지우기
+               
+
+                Button("로그아웃"){
+                    viewModel.logout()
+                }
+                
+                Button("토큰복사"){
+                    copyTokenForTest()
+                }
                 
                 Button("로그 공유 (\(Logger.getLogCount())개)"){
                     shareLog()
                 }
-
             }
         }
         .mainBackgourndColor()
         .navigationBarTitleDisplayMode(.inline)
         .navigationBarBackButtonHidden(true)
+        .navigationTitle("마이페이지")
         .toolbar {
             ToolbarItem(placement: .navigationBarLeading) {
                 // 뒤로가기 버튼
@@ -84,8 +138,100 @@ struct MyPageView: View {
                 showLoginView = false
             }
         }
-
     }
+    
+    private var profile: some View {
+        HStack(alignment: .center,spacing: 16) {
+            Image("profile")
+                .resizable()
+                .frame(width: 60, height: 60)
+            
+            VStack (alignment: .leading, spacing: 4){
+                Text("이름")
+                    .font(.H3)
+                    .foregroundStyle(Color.gray50)
+                
+                Text("이름")
+                    .font(.Caption)
+                    .foregroundStyle(Color.gray500)
+            }
+            Spacer()
+            
+            ChevronRight()
+                .foregroundStyle(Color.gray50)
+            
+        }
+        .padding(.leading, 20)
+        .padding(.trailing, 12)
+    }
+    
+    private var loginPromptBannerView: some View {
+        VStack(alignment: .leading, spacing: 16) {
+            Text("로그인하고 기록을 계속 이어가세요 ✨")
+                .font(.SubTitle2)
+                .foregroundStyle(Color.gray50)
+            
+            VStack (alignment: .leading, spacing: 12){
+                //자동 백업 및 무제한 기록
+                HStack {
+                    Text("✓")
+                        .font(.Body2)
+                        .foregroundStyle(Color.neon300)
+                    
+                    Text("자동 백업 및 무제한 기록")
+                        .font(.SubTitle2)
+                    
+                    Spacer()
+                }
+                
+                HStack {
+                    Text("✓")
+                        .font(.Body2)
+                        .foregroundStyle(Color.neon300)
+                    
+                    Text("기록 ")
+                        .font(FontStyle.Body2.font)
+                    + Text("전체공개 ")
+                        .font(FontStyle.SubTitle2.font)
+                    + Text("설정 가능")
+                        .font(FontStyle.Body2.font)
+                    
+                    Spacer()
+                }
+                
+                HStack(spacing: 8) {
+                    Image(systemName: "info.circle.fill")
+                        .resizable()
+                        .frame(width: 16, height: 16)
+                    
+                    Text("게스트 기록은 이후에도 백업·공개가 불가해요.")
+                        .font(.Caption)
+                    
+                    Spacer()
+                }
+                .foregroundStyle(Color.gray500)
+                
+            }
+
+            .foregroundStyle(Color.gray50)
+            
+        }
+        .padding(.vertical, 16)
+        .padding(.horizontal, 24)
+        .background(Color.gray800)
+        .rounded(radius: 16)
+    }
+    
+    private var thinLine: some View {
+        Color.gray700
+            .frame(height: 1)
+    }
+    private var thickLine: some View {
+        Color.gray800
+            .frame(height: 16)
+    }
+    
+    // MARK: -
     
     private func copyTokenForTest(){
         guard let token = authManager.getAccessToken() else {
