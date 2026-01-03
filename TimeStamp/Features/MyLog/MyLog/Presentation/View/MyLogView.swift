@@ -8,12 +8,12 @@
 import SwiftUI
 
 struct MyLogView: View {
-    
+
     private let diContainer: MyLogDIContainerProtocol
     @StateObject private var viewModel: MyLogViewModel
     @ObservedObject private var authManager = AuthManager.shared
     @State private var selectedCategory: CategoryFilterViewData = .all
-    @State private var selectedLog: TimeStampLogViewData?
+    @Binding var selectedLog: TimeStampLogViewData?
 
     // 사진 간격
     private let columns = [
@@ -22,10 +22,11 @@ struct MyLogView: View {
         GridItem(.flexible(), spacing: 1)
     ]
 
-    
-    init(viewModel: MyLogViewModel, diContainer: MyLogDIContainerProtocol){
+
+    init(viewModel: MyLogViewModel, diContainer: MyLogDIContainerProtocol, selectedLog: Binding<TimeStampLogViewData?>){
         self.diContainer = diContainer
         _viewModel = StateObject(wrappedValue: viewModel)
+        _selectedLog = selectedLog
     }
 
     /// 선택된 카테고리로 필터링된 로그
@@ -99,16 +100,6 @@ struct MyLogView: View {
                 .scrollDismissesKeyboard(.interactively)
             }
         }
-        .navigationDestination(isPresented: Binding(
-            get: { selectedLog != nil },
-            set: { if !$0 { selectedLog = nil } }
-        )) {
-            if let log = selectedLog {
-                diContainer.makeLogDetailView(log: log) {
-                    selectedLog = nil
-                }
-            }
-        }
         .mainBackgourndColor()
         .loading(viewModel.isLoading)
         .onAppear {
@@ -177,7 +168,16 @@ struct MyLogView: View {
 }
 
 #Preview {
-    MockMyLogDIContainer().makeMyLogView()
+    MockMyLogDIContainer().makeMyLogView(selectedLog: .constant(TimeStampLogViewData(
+        id: UUID(),
+        category: .food,
+        timeStamp: Date.now,
+        imageSource: .remote(TimeStampLog.RemoteTimeStampImage(
+            id: 0,
+            imageUrl: "https://picsum.photos/400/400"
+        )),
+        visibility: .privateVisible
+    )))
 }
 
 

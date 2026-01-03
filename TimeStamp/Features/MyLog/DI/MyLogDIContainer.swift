@@ -7,11 +7,11 @@
 
 import Foundation
 import Alamofire
-import UIKit
+import SwiftUI
 
 protocol MyLogDIContainerProtocol {
     func makeMainTabView() -> MainTabView
-    func makeMyLogView() -> MyLogView
+    func makeMyLogView(selectedLog: Binding<TimeStampLogViewData?>) -> MyLogView
     func makeLogDetailView(log: TimeStampLogViewData, onGoBack: @escaping () -> Void) -> LogDetailView
     func makeLogEditorView(log: TimeStampLogViewData, onDismiss: @escaping (_ hasEdited: Bool) -> Void) -> LogEditorView
 
@@ -63,9 +63,9 @@ struct MyLogDIContainer: MyLogDIContainerProtocol {
         return MyLogViewModel(useCase: makeMyLogUseCase(), settingsRepository: settingsRepository)
     }
 
-    func makeMyLogView() -> MyLogView {
+    func makeMyLogView(selectedLog: Binding<TimeStampLogViewData?>) -> MyLogView {
         let viewModel = makeMyLogViewModel()
-        return MyLogView(viewModel: viewModel, diContainer: self)
+        return MyLogView(viewModel: viewModel, diContainer: self, selectedLog: selectedLog)
     }
 
     // MARK: - LogDetailView
@@ -130,11 +130,11 @@ struct MockMyLogDIContainer: MyLogDIContainerProtocol {
    
     
     // MARK: MyLogView
-    func makeMyLogView() -> MyLogView {
+    func makeMyLogView(selectedLog: Binding<TimeStampLogViewData?>) -> MyLogView {
         let usecase = MockMyLogUseCase()
         let settingsRepository = MockSettingsRepository()
         let viewModel = MyLogViewModel(useCase: usecase, settingsRepository: settingsRepository)
-        return MyLogView(viewModel: viewModel, diContainer: self)
+        return MyLogView(viewModel: viewModel, diContainer: self, selectedLog: selectedLog)
     }
 
     struct MockMyLogUseCase: MyLogUseCaseProtocol {

@@ -73,8 +73,12 @@ final class AppDIContainer {
     func makeMainTabView() -> MainTabView {
         return myLogDIContainer.makeMainTabView()
     }
-    func makeMyLogView() -> MyLogView {
-        return myLogDIContainer.makeMyLogView()
+    func makeMyLogView(selectedLog: Binding<TimeStampLogViewData?>) -> MyLogView {
+        return myLogDIContainer.makeMyLogView(selectedLog: selectedLog)
+    }
+
+    func makeLogDetailView(log: TimeStampLogViewData, onGoBack: @escaping () -> Void) -> LogDetailView {
+        return myLogDIContainer.makeLogDetailView(log: log, onGoBack: onGoBack)
     }
 
     // MARK: - Camera Feature

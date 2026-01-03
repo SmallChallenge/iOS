@@ -13,14 +13,14 @@ struct MainTabView: View {
     @State private var selectedTab: Int = 0
     @State private var showCamera: Bool = false
     @State private var presentMypage: Bool = false
-
-
+    @State private var selectedLog: TimeStampLogViewData? = nil
+    
     @State private var showLimitReachedPopup: Bool = false
     @State private var showLoginView: Bool = false
-
+    
     private let container: AppDIContainer
     @StateObject private var viewModel: MainTabViewModel
-
+    
     init(container: AppDIContainer, viewModel: MainTabViewModel) {
         self.container = container
         _viewModel = StateObject(wrappedValue: viewModel)
@@ -30,14 +30,9 @@ struct MainTabView: View {
         NavigationStack {
             VStack (spacing: .zero) {
                 
-                HeaderView(selectedTab: $selectedTab) {
-                    // 프로필버튼 클릭
-                    presentMypage = true
-                }
-                
                 // content화면 (내기록 | 커뮤니티)
                 TabView (selection: $selectedTab){
-                    container.makeMyLogView()
+                    container.makeMyLogView(selectedLog: $selectedLog)
                         .tag(0)
                     
                     EmptyView()
@@ -56,47 +51,99 @@ struct MainTabView: View {
                         showCamera = true
                     } else {
                         showLimitReachedPopup = true
-                        }
-                    })
-                    
-                } // ~ VStack
+                    }
+                })
                 
+            } // ~ VStack
+            .mainBackgourndColor()
+            .onAppear {
+                // 카메라 권한 받기
+                requestCameraPermission()
+            }
+            
+            .popup(isPresented: $showLimitReachedPopup, content: {
+                Modal(title: "기록 한계에 도달했어요.\n로그인하면 계속 기록할 수 있어요.")
+                    .buttons {
+                        MainButton(title: "취소", colorType: .secondary) {
+                            showLimitReachedPopup = false
+                        }
+                        MainButton(title: "로그인") {
+                            showLoginView = true
+                            showLimitReachedPopup = false
+                        }
+                    }
+            })
+            
+            .navigationBarTitleDisplayMode(.inline)
+            .navigationBarBackButtonHidden(true)
+            .toolbar {
+                ToolbarItem(placement: .navigationBarLeading) {
+                    logoInHeader
+                }
+                
+                // 프로필 버튼
+                ToolbarItem(placement: .navigationBarTrailing) {
+                    profillButtonInHeader
+                }
+            }
+            // 마이페이지 화면으로
             .navigationDestination(isPresented: $presentMypage) {
                 container.makeMyPageView(onGoBack: {
                     presentMypage = false
                 })
             }
-            .mainBackgourndColor()
-            .navigationBarHidden(true) // 기본 navigation bar 숨김
-
-        } // ~NavigationStack
-        .popup(isPresented: $showLimitReachedPopup, content: {
-            Modal(title: "기록 한계에 도달했어요.\n로그인하면 계속 기록할 수 있어요.")
-                .buttons {
-                    MainButton(title: "취소", colorType: .secondary) {
-                        showLimitReachedPopup = false
-                    }
-                    MainButton(title: "로그인") {
-                        showLoginView = true
-                        showLimitReachedPopup = false
+            // 기록 상세보기 화면으로
+            .navigationDestination(isPresented: Binding(
+                get: { selectedLog != nil },
+                set: { if !$0 { selectedLog = nil } }
+            )) {
+                if let log = selectedLog {
+                    container.makeLogDetailView(log: log) {
+                        selectedLog = nil
                     }
                 }
-        })
-        // 카메라 촬영화면 띄우기
-        .fullScreenCover(isPresented: $showCamera) {
-            container.makeCameraTapView  {
-                showCamera = false
+            }
+            // 카메라 촬영화면 띄우기
+            .fullScreenCover(isPresented: $showCamera) {
+                container.makeCameraTapView  {
+                    showCamera = false
+                }
+            }
+            // 로그인 화면 띄우기
+            .fullScreenCover(isPresented: $showLoginView) {
+                container.makeLoginView {
+                    showLoginView = false
+                }
+            }
+            
+            
+        } // ~NavigationStack
+    }
+    private var logoInHeader: some View {
+        Group {
+            if selectedTab == 0 {
+                Image("Logotype")
+                    .renderingMode(.template)
+                    .resizable()
+                    .foregroundStyle(Color.gray50)
+                    .frame(width: 122.8, height: 26)
+                    .padding(.vertical, 17)
+                
+            } else {
+                Text("커뮤니티")
+                    .font(.H2)
+                    .foregroundStyle(Color.gray50)
             }
         }
-        // 로그인 화면 띄우기
-        .fullScreenCover(isPresented: $showLoginView) {
-            container.makeLoginView {
-                showLoginView = false
-            }
-        }
-        .onAppear {
-            // 카메라 권한 받기
-            requestCameraPermission()
+    }
+    
+    private var profillButtonInHeader: some View {
+        Button {
+            presentMypage = true
+        } label: {
+            Image("iconUser_line")
+                .resizable()
+                .frame(width: 24, height: 24)
         }
     }
     
