@@ -13,7 +13,6 @@ struct DefaultTemplateView: TemplateViewProtocol {
     let displayDate: Date
     let hasLogo: Bool
     
-
     var body: some View {
         ZStack {
             // 중앙: 날짜 + 시계

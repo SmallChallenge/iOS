@@ -9,15 +9,36 @@ import Foundation
 
 extension Date {
     public enum DateFormat: String {
+        
+        /// "yyyy-MM-dd'T'HH:mm:ss"
             case iso8601 = "yyyy-MM-dd'T'HH:mm:ss"
+        
+        /// "yyyy-MM-dd'T'HH:mm:ss.SSS"
             case iso8601WithMilliseconds = "yyyy-MM-dd'T'HH:mm:ss.SSS"
+        
+        /// "yyyy-MM-dd'T'HH:mm:ss.SSSSSS"
             case iso8601WithMicroseconds = "yyyy-MM-dd'T'HH:mm:ss.SSSSSS"
+        
+        /// "yyyy-MM-dd'T'HH:mm:ss'Z'"
             case iso8601UTC = "yyyy-MM-dd'T'HH:mm:ss'Z'"
+        
+        /// "yyyy-MM-dd"
             case dateOnly = "yyyy-MM-dd"
+        
+        /// "HH:mm:ss"
             case timeOnly = "HH:mm:ss"
+        
+        /// "yyyy-MM-dd HH:mm:ss"
             case dateTime = "yyyy-MM-dd HH:mm:ss"
+        
+        /// "yyyy년 MM월 dd일"
             case koreanDate = "yyyy년 MM월 dd일"
+        
+        /// "yyyy년 MM월 dd일 HH:mm:ss"
             case koreanDateTime = "yyyy년 MM월 dd일 HH:mm:ss"
+        
+        /// time "HH:mm"
+        case time_HH_mm = "HH:mm"
         }
     
     /// Date를 지정된 형식의 문자열로 변환

@@ -46,7 +46,7 @@ struct CameraView: View {
 
                     // 오버레이 뷰 (타임스탬프, 로고) - 매분 정각에 자동 업데이트
                     TimelineView(.everyMinute) { context in
-                        DefaultTemplateView(displayDate: context.date, hasLogo: true)
+                        Basic1Template(displayDate: context.date, hasLogo: true)
                     }
                 }
                 .aspectRatio(1, contentMode: .fit)
