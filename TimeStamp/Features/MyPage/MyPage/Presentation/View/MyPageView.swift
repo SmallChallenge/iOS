@@ -19,6 +19,7 @@ struct MyPageView: View {
     
     @State var showLoginView: Bool = false
     @State var presentUserInfo: Bool = false
+    @State var showLogoutPopup: Bool = false
 
     private let appVersion: String
     
@@ -90,21 +91,15 @@ struct MyPageView: View {
                     MyPageMenu(title: "오픈소스 라이센스", type: .chevron){
                         
                     }
-                    MyPageMenu(title: "앱 버전", type: .text(text: appVersion)){
-                        
-                    }
+                    MyPageMenu(title: "앱 버전", type: .text(text: appVersion)){}
                     MyPageMenu(title: "로그아웃", type: .none){
-                        
+                        showLogoutPopup = true
                     }
                 }
                 
                 
                 // 아래는 지우기
                
-
-                Button("로그아웃"){
-                    viewModel.logout()
-                }
                 
                 Button("토큰복사"){
                     copyTokenForTest()
@@ -138,6 +133,18 @@ struct MyPageView: View {
                 showLoginView = false
             }
         }
+        .popup(isPresented: $showLogoutPopup) {
+            Modal(title: "로그아웃하시겠습니까?", content: "로그아웃 후 작성한 기록은 백업되지 않으며, 비로그인 상태 기록은 최대 20개로 제한됩니다.")
+                .buttons {
+                    MainButton(title: "취소" , size: .middle, colorType: .secondary){
+                        showLogoutPopup = false
+                    }
+                    MainButton(title: "로그아웃" , size: .middle, colorType: .primary){
+                        viewModel.logout()
+                        showLogoutPopup = false
+                    }
+                }
+        }
     }
     
     private var profile: some View {
@@ -147,13 +154,15 @@ struct MyPageView: View {
                 .frame(width: 60, height: 60)
             
             VStack (alignment: .leading, spacing: 4){
-                Text("이름")
+                Text(authManager.currentUser?.nickname ?? "게스트")
                     .font(.H3)
                     .foregroundStyle(Color.gray50)
                 
-                Text("이름")
-                    .font(.Caption)
-                    .foregroundStyle(Color.gray500)
+                if !authManager.isLoggedIn{
+                    Text("기록 일부 제한")
+                        .font(.Caption)
+                        .foregroundStyle(Color.gray500)
+                }
             }
             Spacer()
             

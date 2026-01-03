@@ -56,7 +56,6 @@ enum AppMessage {
     case requiredSelection
     
     
-    
 
     // MARK: 성공 메시지
     case saveSuccess

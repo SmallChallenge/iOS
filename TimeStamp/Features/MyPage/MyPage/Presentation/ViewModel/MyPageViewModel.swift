@@ -8,13 +8,17 @@
 import Foundation
 import Combine
 
-final class MyPageViewModel: ObservableObject {
+final class MyPageViewModel: ObservableObject, MessageDisplayable {
     
     
     // MARK: - Output Properties
     
-    @Published var isLoading = false
-    @Published var errorMessage: String?
+    /// 로딩
+    @Published var isLoading: Bool = false
+
+    /// 에러 메시지
+    @Published var toastMessage: String?
+    @Published var alertMessage: String?
 
     
     // MARK: - Input Methods
@@ -22,5 +26,6 @@ final class MyPageViewModel: ObservableObject {
     func logout(){
         AuthManager.shared.logout()
         
+        show(.logoutFailed)
     }
 }
