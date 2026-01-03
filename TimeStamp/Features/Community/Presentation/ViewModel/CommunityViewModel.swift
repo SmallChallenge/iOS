@@ -153,10 +153,8 @@ final class CommunityViewModel: ObservableObject, MessageDisplayable {
 
     /// 좋아요 토글
     func toggleLike(imageId: Int) {
-        print(">>>>> 좋아요")
-        return
         guard !isLoading else { return }
-
+        isLoading = true
         Task {
             do {
                 try await useCase.like(imageId: imageId)
@@ -176,10 +174,12 @@ final class CommunityViewModel: ObservableObject, MessageDisplayable {
                         )
                         feeds[index] = updatedFeed
                     }
+                    isLoading = false
                     Logger.success("좋아요 토글 완료")
                 }
             } catch {
                 await MainActor.run {
+                    isLoading = false
                     show(.unknownRequestFailed)
                     Logger.error("좋아요 실패: \(error)")
                 }
@@ -191,6 +191,7 @@ final class CommunityViewModel: ObservableObject, MessageDisplayable {
     func report(imageId: Int) {
         guard !isLoading else { return }
         Logger.debug("신고하기 \(imageId)")
+        isLoading = true
         Task {
             do {
                 try await useCase.report(imageId: imageId)
@@ -198,6 +199,7 @@ final class CommunityViewModel: ObservableObject, MessageDisplayable {
                 await MainActor.run {
                     show(.reportSuccess)
                     Logger.success("신고 완료: \(imageId)")
+                    isLoading = false
                 }
             } catch {
                 await MainActor.run {
@@ -208,6 +210,7 @@ final class CommunityViewModel: ObservableObject, MessageDisplayable {
                         show(.unknownRequestFailed)
                     }
                     Logger.error("신고 실패: \(error)")
+                    isLoading = false
                 }
             }
         }

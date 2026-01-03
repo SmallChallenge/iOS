@@ -108,6 +108,13 @@ struct CommunityView: View {
                         // 신고할 imageId 저장하고 팝업 띄우기
                         selectedImageIdForReport = feed.imageId
                         showReportPopup = true
+                    }, onLike: {
+                        // 좋아요 누름
+                        guard authManager.isLoggedIn else {
+                            showLoginPopup = true
+                            return
+                        }
+                        viewModel.toggleLike(imageId: feed.imageId)
                     }
                 )
                 .listRowSeparator(.hidden)

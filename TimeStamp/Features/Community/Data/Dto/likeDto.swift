@@ -8,4 +8,7 @@
 
 struct likeDto: Codable {
     let isLiked: Bool
+    enum CodingKeys: String, CodingKey {
+        case isLiked = "liked"
+    }
 }

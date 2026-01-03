@@ -13,15 +13,18 @@ struct CommunityCard: View {
     private let viewData: FeedViewData
     @Binding var isMenuOpen: Bool
     private let onReport: () -> Void
+    private let onLike: () -> Void
 
     init(
         viewData: FeedViewData,
         isMenuOpen: Binding<Bool>,
-        onReport: @escaping () -> Void
+        onReport: @escaping () -> Void,
+        onLike: @escaping () -> Void
     ) {
         self.viewData = viewData
         self._isMenuOpen = isMenuOpen
         self.onReport = onReport
+        self.onLike = onLike
     }
     
     var body: some View {
@@ -58,14 +61,23 @@ struct CommunityCard: View {
                 .padding(.trailing, 20)
             
             // 좋아요
-            HStack(spacing: 6) {
-                
-                Image(systemName: viewData.isLiked ? "heart.fill" : "heart")
-                    .foregroundStyle(Color.gray50)
-                
-                Text("\(viewData.likeCount)")
-                    .font(.SubTitle2)
-                    .foregroundStyle(Color.gray50)
+            HStack(spacing: 0) {
+                Button {
+                    onLike()
+                } label: {
+                    HStack(spacing: 6) {
+                        if viewData.isLiked {
+                            Image(systemName: "heart.fill" )
+                                .foregroundStyle(Color.neon300)
+                        } else {
+                            Image(systemName: "heart")
+                                .foregroundStyle(Color.gray50)
+                        }
+                        Text("\(viewData.likeCount)")
+                            .font(.SubTitle2)
+                            .foregroundStyle(Color.gray50)
+                    }
+                }
                 Spacer()
             }
             .padding(.vertical, 12)
@@ -145,7 +157,7 @@ struct CommunityCard: View {
                     isMenuOpen: $isMenuOpen,
                     onReport: {
                         print("신고하기 클릭")
-                    }
+                    }, onLike: {}
                 )
                 .border(Color.red)
             }
