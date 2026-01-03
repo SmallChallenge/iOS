@@ -38,7 +38,7 @@ struct TemplateButton: View {
 #Preview {
     HStack(spacing: 8) {
         TemplateButton(
-            template: Template(id: "1", style: .basic, name: "basic", thumbnailName: "", viewBuilder: { _,_ in AnyView(EmptyView())}
+            template: Template(style: .basic, name: "basic",  viewBuilder: { _,_ in AnyView(EmptyView())}
                               ),
             isSelected: true
         ) {}
