@@ -27,58 +27,49 @@ struct MainTabView: View {
     }
     
     var body: some View {
-        ZStack {
-            if !presentMypage {
-                VStack (spacing: .zero) {
-
-                    HeaderView(selectedTab: $selectedTab) {
-                        // 프로필버튼 클릭
-                        presentMypage = true
-                    }
-
-                    // content화면 (내기록 | 커뮤니티)
-                    TabView (selection: $selectedTab){
-                        NavigationStack {
-                            container.makeMyLogView()
-                        }
-                        .tag(0)
-
-                        EmptyView()
-                            .tag(1)
-
-                        NavigationStack {
-                            container.makeCommunityView()
-                        }
-                        .tag(2)
-
-                    } //~TabView
-                    .hideTabBar()
-
-                    // 커스텀 탭바 [내 기록 | 촬영버튼 | 커뮤니티]
-                    MainTabBar(selectedTab: $selectedTab, onCameraButtonTapped: {
-                        // 로컬기록이 20개 이상이면 팝업 띄우기
-                        if viewModel.canTakePhoto() {
-                            showCamera = true
-                        } else {
-                            showLimitReachedPopup = true
-                            }
-                        })
-
-                } // ~ VStack
-                .mainBackgourndColor()
-                .transition(.move(edge: .leading))
-            }
-
-            if presentMypage {
-                NavigationStack {
-                    container.makeMyPageView(onGoBack: {
-                        presentMypage = false
-                    })
+        NavigationStack {
+            VStack (spacing: .zero) {
+                
+                HeaderView(selectedTab: $selectedTab) {
+                    // 프로필버튼 클릭
+                    presentMypage = true
                 }
-                .transition(.move(edge: .trailing))
+                
+                // content화면 (내기록 | 커뮤니티)
+                TabView (selection: $selectedTab){
+                    container.makeMyLogView()
+                        .tag(0)
+                    
+                    EmptyView()
+                        .tag(1)
+                    
+                    container.makeCommunityView()
+                        .tag(2)
+                    
+                } //~TabView
+                .hideTabBar()
+                
+                // 커스텀 탭바 [내 기록 | 촬영버튼 | 커뮤니티]
+                MainTabBar(selectedTab: $selectedTab, onCameraButtonTapped: {
+                    // 로컬기록이 20개 이상이면 팝업 띄우기
+                    if viewModel.canTakePhoto() {
+                        showCamera = true
+                    } else {
+                        showLimitReachedPopup = true
+                        }
+                    })
+                    
+                } // ~ VStack
+                
+            .navigationDestination(isPresented: $presentMypage) {
+                container.makeMyPageView(onGoBack: {
+                    presentMypage = false
+                })
             }
-        } // ~ZStack
-        .animation(.default, value: presentMypage)
+            .mainBackgourndColor()
+            .navigationBarHidden(true) // 기본 navigation bar 숨김
+
+        } // ~NavigationStack
         .popup(isPresented: $showLimitReachedPopup, content: {
             Modal(title: "기록 한계에 도달했어요.\n로그인하면 계속 기록할 수 있어요.")
                 .buttons {
