@@ -13,20 +13,17 @@ final class AuthManager: ObservableObject {
 
     static let shared = AuthManager()
 
-    // MARK: - Storage (Keychain, UserDefaults)
+    // MARK: - Storage (Keychain only)
 
     @Keychain(key: "accessToken") private var accessToken: String?
     @Keychain(key: "refreshToken") private var refreshToken: String?
 
-    @UserDefaultsWrapper<User>(key: "currentUser") private var storedUser: User?
-    @UserDefaultsValue(key: "isLoggedIn", defaultValue: false) private var storedIsLoggedIn: Bool
-
     // MARK: - Published Properties
 
-    /// 현재 로그인 여부 (View에서 구독 가능)
+    /// 현재 로그인 여부 (토큰 유무로 판단)
     @Published private(set) var isLoggedIn: Bool = false
 
-    /// 현재 사용자 정보 (View에서 구독 가능)
+    /// 현재 사용자 정보 (메모리에만 유지, 스플래시에서 API로 받아옴)
     @Published private(set) var currentUser: User?
 
     // MARK: - Init
@@ -38,23 +35,19 @@ final class AuthManager: ObservableObject {
 
     // MARK: - Public Methods
 
-    /// 로그인 성공 시 호출 (토큰 + 사용자 정보 저장)
+    /// 로그인 성공 시 호출 (토큰만 Keychain에 저장, 유저 정보는 메모리에만)
     func login(user: User, accessToken: String, refreshToken: String) {
         // 1. 토큰 저장 (Keychain)
         self.accessToken = accessToken
         self.refreshToken = refreshToken
 
-        // 2. 사용자 정보 저장 (UserDefaults)
-        storedUser = user
-        storedIsLoggedIn = true
-
-        // 3. 상태 업데이트
+        // 2. 상태 업데이트 (메모리에만)
         currentUser = user
         isLoggedIn = true
 
         Logger.success("로그인 성공: \(user.nickname ?? "익명") (userId: \(user.userId))")
 
-        // 4. MyLogView 새로고침 알림
+        // 3. MyLogView 새로고침 알림
         NotificationCenter.default.post(name: .shouldRefreshMyLog, object: nil)
     }
     
@@ -67,19 +60,15 @@ final class AuthManager: ObservableObject {
 
     /// 로그아웃
     func logout() {
-        // 1. 토큰 삭제
+        // 1. 토큰 삭제 (Keychain)
         accessToken = nil
         refreshToken = nil
 
-        // 2. 사용자 정보 삭제
-        storedUser = nil
-        storedIsLoggedIn = false
-
-        // 3. 상태 업데이트
+        // 2. 상태 업데이트 (메모리)
         currentUser = nil
         isLoggedIn = false
-        
-        // 4. MyLogView 새로고침 알림
+
+        // 3. MyLogView 새로고침 알림
         NotificationCenter.default.post(name: .shouldRefreshMyLog, object: nil)
         Logger.success("로그아웃 완료")
     }
@@ -106,22 +95,23 @@ final class AuthManager: ObservableObject {
         updateUser(updatedUser)
     }
 
-    /// 사용자 정보 업데이트
+    /// 사용자 정보 업데이트 (메모리에만)
     func updateUser(_ user: User) {
-        storedUser = user
         currentUser = user
         Logger.success("사용자 정보 업데이트: \(user.nickname ?? "익명")")
     }
 
     // MARK: - Private Methods
 
-    /// 앱 시작 시 저장된 로그인 상태 복원
+    /// 앱 시작 시 저장된 로그인 상태 복원 (토큰만 확인)
     private func loadLoginState() {
-        isLoggedIn = storedIsLoggedIn
-        currentUser = storedUser
+        // 토큰 유무로 로그인 상태 판단
+        isLoggedIn = accessToken != nil && refreshToken != nil
 
         if isLoggedIn {
-            Logger.success("저장된 로그인 상태 복원: \(currentUser?.nickname ?? "익명")")
+            Logger.info("저장된 토큰 발견 → 스플래시에서 유저 정보 로드 예정")
+        } else {
+            Logger.info("저장된 토큰 없음 → 로그인 필요")
         }
     }
 }

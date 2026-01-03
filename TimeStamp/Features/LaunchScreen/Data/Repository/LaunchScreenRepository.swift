@@ -27,5 +27,16 @@ struct LaunchScreenRepository: LaunchScreenRepositoryProtocol {
             return .failure(error)
         }
     }
-    
+
+    /// 유저 정보 조회
+    func getUserInfo() async throws -> User {
+        let result = await authApiClient.userInfo()
+        switch result {
+        case let .success(dto):
+            return dto.toEntity()
+        case let .failure(error):
+            throw error
+        }
+    }
+
 }

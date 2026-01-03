@@ -33,6 +33,9 @@ public enum AuthRouter {
     // 닉네임 설정
     case setNickname(nickname: String, accessToken: String?)
     
+    // 유저정보 조회
+    case userInfo
+    
     // 가입 취소
     case cancelRegisteration(accessToken: String)
     
@@ -52,6 +55,8 @@ extension AuthRouter: Router {
         case .appleLogin, .googleLogin, .kakaoLogin:
             "api/v1/auth/social-login"
             
+        case .userInfo:
+            "/api/v1/user/me"
         case .refresh:
             "api/v1/auth/refresh"
             
@@ -70,7 +75,12 @@ extension AuthRouter: Router {
     }
     
     public var method: HTTPMethod {
-        .post
+        switch self {
+        case .userInfo:
+            return .get
+        default:
+            return .post
+        }
     }
     
     public var parameters: Parameters? {
@@ -101,6 +111,9 @@ extension AuthRouter: Router {
                 "refreshToken" : token,
             ]
             return params
+            
+        case .userInfo:
+            return nil
             
         case let .setNickname(nickname, _):
             let params: Parameters = [
@@ -141,7 +154,7 @@ extension AuthRouter: Router {
             guard let token else { return nil }
             return ["Authorization": "Bearer \(token)"]
 
-        case .withdrawal:
+        case .withdrawal, .userInfo:
             guard let token = AuthManager.shared.getAccessToken() else {
                 return nil
             }
@@ -186,6 +199,9 @@ public protocol AuthApiClientProtocol {
     
     /// 회원탈퇴
     func withdrawal()  async -> Result<WithdrawalDto, NetworkError>
+    
+    /// 유저정보
+    func userInfo()  async -> Result<UserInfoDto, NetworkError>
 }
 
 // MARK: - API Client
@@ -227,4 +243,11 @@ public class AuthApiClient: ApiClient<AuthRouter>, AuthApiClientProtocol {
         await request(.withdrawal)
     }
     
+    /// 유저 정보
+    public func userInfo()  async -> Result<UserInfoDto, NetworkError>{
+        await request(.userInfo)
+    }
+    
 }
+
+

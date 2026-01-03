@@ -9,4 +9,5 @@ import Foundation
 
 protocol LaunchScreenRepositoryProtocol {
     func refreshToken(token: String) async -> Result<RefreshTokenEntity, NetworkError>
+    func getUserInfo() async throws -> User
 }

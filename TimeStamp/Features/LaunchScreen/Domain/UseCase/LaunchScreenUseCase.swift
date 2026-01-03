@@ -57,18 +57,17 @@ class LaunchScreenUseCase: LaunchScreenUseCaseProtocol {
 
     /// 사용자 정보 가져오기 (비동기 비즈니스 로직)
     func getUserInfo() async {
-        // TODO: 사용자 정보 가져오기 API 구현 필요
-        // 현재는 AuthManager에 저장된 정보만 사용
-        /*
-          let result = await repository.getUserInfo(...)
-          switch result {
-          case .success(let userEntity):
-              // 유저 정보만 저장, Delegate 호출 안함
-              AuthManager.shared.updateUser(user)
-          case .failure(let error):
-              Logger.error("유저 정보 실패: \(error)")
-              // 실패해도 Delegate 호출 안함 (토큰은 갱신됐으니)
-         */
+        do {
+            let user = try await repository.getUserInfo()
+            // 유저 정보만 저장, Delegate 호출 안함
+            await MainActor.run {
+                AuthManager.shared.updateUser(user)
+                Logger.success("유저 정보 갱신 성공: \(user.nickname ?? "익명")")
+            }
+        } catch {
+            Logger.error("유저 정보 갱신 실패: \(error)")
+            // 실패해도 Delegate 호출 안함 (토큰은 갱신됐으니)
+        }
     }
 
     /// Delegate 호출 (메인 스레드로 전환)
