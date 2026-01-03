@@ -41,12 +41,13 @@ struct CommunityCard: View {
                 Spacer()
 
                 Button {
-                    isMenuOpen.toggle()
+                    isMenuOpen = true
                 } label: {
                     ellipsisImage
                         .padding(.vertical, 5)
                         .padding(.horizontal, 20)
                 }
+                .buttonStyle(.plain)
             }
             .padding(.vertical, 12)
 
@@ -95,7 +96,6 @@ struct CommunityCard: View {
                 }
             }
         }
-        .zIndex(isMenuOpen ? 999 : 0)
     }
     
     private var ellipsisImage: some View {
