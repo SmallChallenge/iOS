@@ -12,16 +12,21 @@ import UIKit
 struct MyPageView: View {
     @ObservedObject private var authManager = AuthManager.shared
     @StateObject private var viewModel: MyPageViewModel
+    let onGoBack: () -> Void
+    
     private let appDiContainer = AppDIContainer.shared
     private let diContainer: MyPageDIContainerProtocol
-    
     
     @State var showLoginView: Bool = false
     @State var presentUserInfo: Bool = false
     
-    init(viewModel: MyPageViewModel, diContainer: MyPageDIContainerProtocol){
+    init(viewModel: MyPageViewModel,
+         diContainer: MyPageDIContainerProtocol,
+         onGoBack: @escaping () -> Void
+    ){
         _viewModel = StateObject(wrappedValue: viewModel)
         self.diContainer = diContainer
+        self.onGoBack = onGoBack
     }
     
     
@@ -55,6 +60,17 @@ struct MyPageView: View {
                     shareLog()
                 }
 
+            }
+        }
+        .mainBackgourndColor()
+        .navigationBarTitleDisplayMode(.inline)
+        .navigationBarBackButtonHidden(true)
+        .toolbar {
+            ToolbarItem(placement: .navigationBarLeading) {
+                // 뒤로가기 버튼
+                BackButton {
+                    onGoBack()
+                }
             }
         }
         .navigationDestination(isPresented: $presentUserInfo) {
@@ -129,5 +145,5 @@ struct MyPageView: View {
 }
 
 #Preview {
-    MockMyPageDIContainer().makeMyPageView()
+    MockMyPageDIContainer().makeMyPageView(onGoBack: {})
 }

@@ -28,30 +28,26 @@ struct MainTabView: View {
     
     var body: some View {
         NavigationStack {
-            ZStack(alignment: .bottom) {
-                VStack (spacing: .zero) {
+            VStack (spacing: .zero) {
+                
+                HeaderView(selectedTab: $selectedTab) {
+                    // 프로필버튼 클릭
+                    presentMypage = true
+                }
+                
+                // content화면 (내기록 | 커뮤니티)
+                TabView (selection: $selectedTab){
+                    container.makeMyLogView()
+                        .tag(0)
                     
-                    HeaderView(selectedTab: $selectedTab) {
-                        // 프로필버튼 클릭
-                        presentMypage = true
-                    }
+                    EmptyView()
+                        .tag(1)
                     
-                    // content화면 (내기록 | 커뮤니티)
-                    TabView (selection: $selectedTab){
-                        container.makeMyLogView()
-                            .tag(0)
-                        
-                        EmptyView()
-                            .tag(1)
-                        
-                        container.makeCommunityView()
-                            .tag(2)
-                        
-                    } //~TabView
-                    .hideTabBar()
+                    container.makeCommunityView()
+                        .tag(2)
                     
-                    
-                } // ~ VStack
+                } //~TabView
+                .hideTabBar()
                 
                 // 커스텀 탭바 [내 기록 | 촬영버튼 | 커뮤니티]
                 MainTabBar(selectedTab: $selectedTab, onCameraButtonTapped: {
@@ -60,12 +56,15 @@ struct MainTabView: View {
                         showCamera = true
                     } else {
                         showLimitReachedPopup = true
-                    }
-                })
-
-            } // ~ZStack
+                        }
+                    })
+                    
+                } // ~ VStack
+                
             .navigationDestination(isPresented: $presentMypage) {
-                container.makeMyPageView()
+                container.makeMyPageView(onGoBack: {
+                    presentMypage = false
+                })
             }
             .mainBackgourndColor()
             .navigationBarHidden(true) // 기본 navigation bar 숨김

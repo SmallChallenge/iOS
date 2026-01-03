@@ -32,6 +32,10 @@ final class AppDIContainer {
         AuthApiClient(session: session)
     }()
 
+    private lazy var communityApiClient: CommunityApiClientProtocol = {
+        CommunityApiClient(session: session)
+    }()
+
     // MARK: - Common Dependencies
 
     private lazy var localTimeStampLogDataSource: LocalTimeStampLogDataSourceProtocol = {
@@ -85,9 +89,12 @@ final class AppDIContainer {
    
     // MARK: - Community Feature
 
+    private lazy var communityDIContainer: CommunityDiContainer = {
+        return CommunityDiContainer(communityApiClient: communityApiClient)
+    }()
+
     func makeCommunityView() -> CommunityView {
-        // TODO: ViewModel이 필요하면 여기서 주입
-        return CommunityView()
+        return communityDIContainer.makeCommunityView()
     }
     
     // MARK: - MyPage Feature
@@ -96,8 +103,8 @@ final class AppDIContainer {
         return MyPageDIContainer(authApiClient: authApiClient)
     }()
     
-    func makeMyPageView() -> MyPageView {
-        myPageDIContainer.makeMyPageView()
+    func makeMyPageView(onGoBack: @escaping () -> Void) -> MyPageView {
+        myPageDIContainer.makeMyPageView(onGoBack: onGoBack)
     }
     
     // MARK: - Login Feature

@@ -82,6 +82,8 @@ struct MyLogView: View {
                                 }
                             }
                         }
+//                        Spacer()
+//                            .frame(height: 100)
                        
                         // 추가 로딩 인디케이터
                         if viewModel.isLoadingMore {

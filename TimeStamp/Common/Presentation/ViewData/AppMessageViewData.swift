@@ -49,6 +49,8 @@ enum AppMessage {
     case likeFailed
     /// 신고 실패
     case reportFailed
+    /// 본인껀 신고 불가
+    case reportToMineFailed
     
     /// 필수값 입력 필요
     case requiredSelection
@@ -61,6 +63,7 @@ enum AppMessage {
     case editSuccess
     case deleteSuccess
     case welcomeMessage(nickname: String)
+    case reportSuccess
     
 
     var text: String {
@@ -93,6 +96,9 @@ enum AppMessage {
             
         case .requiredSelection:
             return "필수 항목을 선택해 주세요."
+            
+        case .reportToMineFailed:
+            return "본인 게시물은 신고할 수 없어요."
 
             // MARK: 성공
         case .saveSuccess:
@@ -103,6 +109,8 @@ enum AppMessage {
             return "삭제가 완료되었어요."
         case .welcomeMessage(let nickname):
             return "반가워요, \(nickname)님! 이제 기록을 시작해볼까요?"
+        case .reportSuccess:
+            return "신고가 접수되었어요."
         }
     }
 
