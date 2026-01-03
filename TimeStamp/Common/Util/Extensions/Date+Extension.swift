@@ -11,6 +11,7 @@ extension Date {
     public enum DateFormat: String {
             case iso8601 = "yyyy-MM-dd'T'HH:mm:ss"
             case iso8601WithMilliseconds = "yyyy-MM-dd'T'HH:mm:ss.SSS"
+            case iso8601WithMicroseconds = "yyyy-MM-dd'T'HH:mm:ss.SSSSSS"
             case iso8601UTC = "yyyy-MM-dd'T'HH:mm:ss'Z'"
             case dateOnly = "yyyy-MM-dd"
             case timeOnly = "HH:mm:ss"

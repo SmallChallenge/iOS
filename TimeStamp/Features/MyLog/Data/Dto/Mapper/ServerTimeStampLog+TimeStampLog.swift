@@ -12,10 +12,11 @@ extension MyLogsDto.TimeStampLogDto {
         let category = Category(rawValue: self.category) ?? .etc
         let visibility = VisibilityType(rawValue: self.visibility) ?? .privateVisible
         
+        let timeStamp = self.originalTakenAt.toDate(.iso8601) ?? self.originalTakenAt.toDate(.iso8601WithMicroseconds) ?? Date()
         return TimeStampLog(
             id: UUID(),
             category: category,
-            timeStamp: self.originalTakenAt.toDate(.iso8601) ?? Date(),
+            timeStamp: timeStamp,
             imageSource: TimeStampLog.ImageSource.remote(TimeStampLog.RemoteTimeStampImage(
                 id: self.imageId,
                 imageUrl: self.accessURL

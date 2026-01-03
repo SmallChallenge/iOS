@@ -122,8 +122,8 @@ final class MyLogViewModel: ObservableObject, MessageDisplayable {
 
             // 새로운 로그를 기존 로그와 합치고 정렬(최신순)
             let newLogs = result.logs.map { $0.toViewData() }
-            myLogs = (myLogs + newLogs) //.sorted { $0.timeStamp > $1.timeStamp } // 정렬안해도 될껄?
-
+            myLogs = (myLogs + newLogs).sorted { $0.timeStamp > $1.timeStamp }
+            
             // 페이지네이션 정보 업데이트
             if let pageInfo = result.pageInfo {
                 currentPage = pageInfo.currentPage
