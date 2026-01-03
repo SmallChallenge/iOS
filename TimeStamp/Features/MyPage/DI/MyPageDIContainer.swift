@@ -39,8 +39,23 @@ final class MyPageDIContainer: MyPageDIContainerProtocol {
         return MyPageView(viewModel: vm, diContainer: self, onGoBack: onGoBack)
     }
     // MARK: - UseInfoPageView
+    private func makeUserInfoRepository() -> UserInfoRepositoryProtocol {
+        UserInfoRepository(authApiClient: authApiClient)
+    }
+
+    private func makeWithdrawalUseCase() -> WithdrawalUseCaseProtocol {
+        let repository = makeUserInfoRepository()
+        return WithdrawalUseCase(repository: repository)
+    }
+
+    private func makeUserInfoPageViewModel() -> UserInfoPageViewModel {
+        let useCase = makeWithdrawalUseCase()
+        return UserInfoPageViewModel(withdrawalUseCase: useCase)
+    }
+
     func makeUserInfoPageView(onGoBack: @escaping () -> Void) -> UserInfoPageView {
-        return UserInfoPageView(onGoBack: onGoBack)
+        let viewModel = makeUserInfoPageViewModel()
+        return UserInfoPageView(viewModel: viewModel, onGoBack: onGoBack)
     }
 }
 struct MockMyPageDIContainer: MyPageDIContainerProtocol{
@@ -48,8 +63,14 @@ struct MockMyPageDIContainer: MyPageDIContainerProtocol{
         let vm = MyPageViewModel()
         return MyPageView(viewModel: vm, diContainer: self, onGoBack: onGoBack)
     }
-    
+
     func makeUserInfoPageView(onGoBack: @escaping () -> Void) -> UserInfoPageView {
-        return UserInfoPageView(onGoBack: onGoBack)
+        
+        let useCase = MockWithdrawalUseCase()
+        let viewModel = UserInfoPageViewModel(withdrawalUseCase: useCase)
+        return UserInfoPageView(viewModel: viewModel, onGoBack: onGoBack)
+    }
+    struct MockWithdrawalUseCase: WithdrawalUseCaseProtocol {
+        func withdrawal() async throws {}
     }
 }

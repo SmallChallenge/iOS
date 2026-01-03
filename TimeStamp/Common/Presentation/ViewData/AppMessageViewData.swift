@@ -36,6 +36,8 @@ enum AppMessage {
     case signupFailed
     /// 탈퇴 실패
     case signoutFailed
+    /// 회원탈퇴 실패
+    case withdrawalFailed
     
    
     case saveFailed
@@ -63,6 +65,8 @@ enum AppMessage {
     case deleteSuccess
     case welcomeMessage(nickname: String)
     case reportSuccess
+    /// 회원탈퇴 성공
+    case withdrawalSuccess
     
 
     var text: String {
@@ -80,7 +84,8 @@ enum AppMessage {
             return "회원가입에 실패했어요.\n다시 시도해 주세요."
         case .signoutFailed:
             return "탈퇴에 실패했어요. 다시 시도해 주세요."
-            
+        case .withdrawalFailed:
+            return "회원탈퇴에 실패했어요. 다시 시도해 주세요."
 
         case .nicknameSaveFailed:
             return "닉네임 설정에 실패했어요. 다시 시도해 주세요."
@@ -110,6 +115,8 @@ enum AppMessage {
             return "반가워요, \(nickname)님! 이제 기록을 시작해볼까요?"
         case .reportSuccess:
             return "신고가 접수되었어요."
+        case .withdrawalSuccess:
+            return "회원탈퇴가 완료되었어요."
         }
     }
 
@@ -119,7 +126,8 @@ enum AppMessage {
         case .loginFailed, // 로그인 실패
                 .loginRequired, // 로그인 필요
                 .maxPhotoLimitReached, // 기록초과
-                .signoutFailed: //회원가입 탈퇴
+                .signoutFailed, //회원가입 탈퇴
+                .withdrawalFailed: // 회원탈퇴 실패
             return .alert
 
         // 토스트

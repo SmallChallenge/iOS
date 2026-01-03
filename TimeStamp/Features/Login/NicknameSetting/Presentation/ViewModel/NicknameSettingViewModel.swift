@@ -20,7 +20,7 @@ class NicknameSettingViewModel: ObservableObject {
     // Output Property
     @Published var isLoading = false
     @Published var validateMessage: String? = nil
-    
+
     /// 저장 성공 여부
     @Published var isSaved = false
     
@@ -73,11 +73,14 @@ class NicknameSettingViewModel: ObservableObject {
                     isSaved = true
                     ToastManager.shared.show(AppMessage.welcomeMessage(nickname: nickname).text)
                     Logger.success("닉네임 설정 완료: \(result.nickname)")
-                    
+
                     //  로그인화면에서 넘어온 경우, 로그인 시키기
                     if let loginEntity {
                         useCase.login(entity: loginEntity)
                     }
+                    // 유저정보 업데이트
+                    useCase.updateUserInfo(nickname: nickname)
+
                 }
             } catch let error as NetworkError {
                 await MainActor.run {

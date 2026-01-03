@@ -8,16 +8,23 @@
 import SwiftUI
 
 struct NicknameSettingView: View {
-    
-    init(viewModel: NicknameSettingViewModel, onGoBack: @escaping (_ needRefresh: Bool) -> Void, onDismiss: (() -> Void)?) {
+
+    init(
+        viewModel: NicknameSettingViewModel,
+        onGoBack: @escaping () -> Void,
+        onDismiss: (() -> Void)?,
+        onSuccess: (() -> Void)? = nil
+    ) {
         self.onGoBack = onGoBack
         self.onDismiss = onDismiss
+        self.onSuccess = onSuccess
         self._viewModel = StateObject(wrappedValue: viewModel)
     }
-    
-    let onGoBack: (_ needRefresh: Bool) -> Void
+
+    let onGoBack: () -> Void
     let onDismiss: (() -> Void)?
-    
+    let onSuccess: (() -> Void)?
+
     @StateObject private var viewModel: NicknameSettingViewModel
     @State private var text: String = ""
     @FocusState private var isTextFieldFocused: Bool
@@ -82,10 +89,14 @@ struct NicknameSettingView: View {
             .onChange(of: text){ newValue in
                 let _ = viewModel.checkValidateNickname(newValue)
             }
-            // 저장 성공 시 로그인뷰 닫기
+            // 저장 성공 시 로그인뷰 닫기 및 성공 핸들러 호출
             .onChange(of: viewModel.isSaved) { isSaved in
                 if isSaved {
-                    onDismiss?()
+                    // 다음 런루프에서 실행하여 feedback loop 방지
+                    Task { @MainActor in
+                        onSuccess?()
+                        onDismiss?()
+                    }
                 }
             }
             .mainBackgourndColor()
@@ -95,7 +106,7 @@ struct NicknameSettingView: View {
                 // 뒤로가기 버튼
                 ToolbarItem(placement: .navigationBarLeading) {
                     BackButton {
-                        onGoBack(viewModel.isSaved)
+                        onGoBack()
                     }
                 }
                 
@@ -114,5 +125,5 @@ struct NicknameSettingView: View {
 }
 
 #Preview {
-    MockLoginDIContainer().makeNicknameSettingView(loginEntity: nil, onGoBack: { _ in}, onDismiss: {})
+    MockLoginDIContainer().makeNicknameSettingView(loginEntity: nil, onGoBack: { }, onDismiss: {}, onSuccess: {})
 }

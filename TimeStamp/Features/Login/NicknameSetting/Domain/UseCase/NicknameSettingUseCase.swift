@@ -10,6 +10,7 @@ import Foundation
 protocol NicknameSettingUseCaseProtocol {
     func setNickname(nickname: String, accessToken: String?) async throws -> NicknameEntity
     func login(entity: LoginEntity)
+    func updateUserInfo(nickname: String)
 }
 
 final class NicknameSettingUseCase: NicknameSettingUseCaseProtocol {
@@ -45,5 +46,9 @@ final class NicknameSettingUseCase: NicknameSettingUseCaseProtocol {
             accessToken: entity.accessToken,
             refreshToken: entity.refreshToken
         )
+    }
+    
+    func updateUserInfo(nickname: String){
+        AuthManager.shared.updateNickname(nickname)
     }
 }

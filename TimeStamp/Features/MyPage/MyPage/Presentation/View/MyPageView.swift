@@ -65,17 +65,21 @@ struct MyPageView: View {
                 Spacer()
                     .frame(height: 24)
                 
-                Button {
-                    presentUserInfo = true
-                } label: {
-                    profile
-                }
-                .padding(.top, 20)
-                .padding(.bottom, 24)
-                
-                
-                // 로그인 유도 배너, 로그인 버튼
-                if !authManager.isLoggedIn {
+                if authManager.isLoggedIn {
+                    Button {
+                        presentUserInfo = true
+                    } label: {
+                        userProfile
+                    }
+                    .padding(.top, 20)
+                    .padding(.bottom, 24)
+                    
+                } else {
+                    guestProfile
+                        .padding(.top, 20)
+                        .padding(.bottom, 24)
+                    
+                    // 로그인 유도 배너, 로그인 버튼
                     VStack(spacing: 16){
                         loginPromptBannerView
                         
@@ -182,23 +186,17 @@ struct MyPageView: View {
             .presentationDragIndicator(.visible)
         }
     }
-    
-    private var profile: some View {
+    private var userProfile: some View {
         HStack(alignment: .center,spacing: 16) {
             Image("profile")
                 .resizable()
                 .frame(width: 60, height: 60)
             
             VStack (alignment: .leading, spacing: 4){
-                Text(authManager.currentUser?.nickname ?? "게스트")
+                Text(authManager.currentUser?.nickname ?? "")
                     .font(.H3)
                     .foregroundStyle(Color.gray50)
                 
-                if !authManager.isLoggedIn{
-                    Text("기록 일부 제한")
-                        .font(.Caption)
-                        .foregroundStyle(Color.gray500)
-                }
             }
             Spacer()
             
@@ -209,6 +207,28 @@ struct MyPageView: View {
         .padding(.leading, 20)
         .padding(.trailing, 12)
     }
+    
+    private var guestProfile: some View {
+        HStack(alignment: .center,spacing: 16) {
+            Image("profile")
+                .resizable()
+                .frame(width: 60, height: 60)
+            
+            VStack (alignment: .leading, spacing: 4){
+                Text("게스트")
+                    .font(.H3)
+                    .foregroundStyle(Color.gray50)
+                
+                Text("기록 일부 제한")
+                    .font(.Caption)
+                    .foregroundStyle(Color.gray500)
+            }
+            Spacer()
+        }
+        .padding(.leading, 20)
+        .padding(.trailing, 12)
+    }
+    
     
     private var loginPromptBannerView: some View {
         VStack(alignment: .leading, spacing: 16) {

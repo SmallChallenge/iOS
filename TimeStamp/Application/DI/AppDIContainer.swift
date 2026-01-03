@@ -120,9 +120,10 @@ final class AppDIContainer {
     /// - Parameters:
     ///   - onGoBack: 로그인 로직에선 그냥 뒤로감, 마이페이지 로직에선 새로고침 여부 보냄
     ///   - onDismiss: 로그인 로직에서, 로그인 뷰 닫기
+    ///   - onSuccess: 닉네임 설정 성공 시 호출
     /// - Returns:
-    func makeNicknameSettingView(loginEntity: LoginEntity?, onGoBack: @escaping (_ needRefresh: Bool) -> Void, onDismiss: (()-> Void)?) -> NicknameSettingView {
-        return loginDIContainer.makeNicknameSettingView(loginEntity: loginEntity, onGoBack: onGoBack, onDismiss: onDismiss)
+    func makeNicknameSettingView(loginEntity: LoginEntity?, onGoBack: @escaping () -> Void, onDismiss: (()-> Void)?, onSuccess: (() -> Void)? = nil) -> NicknameSettingView {
+        return loginDIContainer.makeNicknameSettingView(loginEntity: loginEntity, onGoBack: onGoBack, onDismiss: onDismiss, onSuccess: onSuccess)
     }
     // MARK: - Terms WebView
 

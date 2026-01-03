@@ -37,7 +37,7 @@ public enum AuthRouter {
     case cancelRegisteration(accessToken: String)
     
     // 회원탈퇴
-    //case withdrawal
+    case withdrawal
     
 }
 extension AuthRouter: Router {
@@ -63,6 +63,9 @@ extension AuthRouter: Router {
             
         case .cancelRegisteration:
             "/api/v1/auth/cancel-registration"
+            
+        case .withdrawal:
+            "/api/v1/auth/withdrawal"
         }
     }
     
@@ -116,6 +119,9 @@ extension AuthRouter: Router {
             
         case .cancelRegisteration:
             return nil
+            
+        case .withdrawal:
+            return nil
         }
     }
     
@@ -123,13 +129,20 @@ extension AuthRouter: Router {
         switch self {
         case let .activeAccount(token, _, _, _):
             return ["Authorization": "Bearer \(token)"]
-            
+
         case let .cancelRegisteration(token):
             return ["Authorization": "Bearer \(token)"]
-            
+
         case let .setNickname(_, token):
             guard let token else { return nil }
             return ["Authorization": "Bearer \(token)"]
+
+        case .withdrawal:
+            guard let token = AuthManager.shared.getAccessToken() else {
+                return nil
+            }
+            return ["Authorization": "Bearer \(token)"]
+
         default:
             return nil
         }
@@ -166,7 +179,9 @@ public protocol AuthApiClientProtocol {
     
     /// 가입 취소
     func cancelRegisteration(accessToken: String) async -> Result<CancelRegisterationDto, NetworkError>
-
+    
+    /// 회원탈퇴
+    func withdrawal()  async -> Result<WithdrawalDto, NetworkError>
 }
 
 // MARK: - API Client
@@ -202,9 +217,19 @@ public class AuthApiClient: ApiClient<AuthRouter>, AuthApiClientProtocol {
     public func cancelRegisteration(accessToken: String) async -> Result<CancelRegisterationDto, NetworkError> {
         await request(.cancelRegisteration(accessToken: accessToken))
     }
+    
+    
+    public func withdrawal()  async -> Result<WithdrawalDto, NetworkError>{
+        await request(.withdrawal)
+    }
+    
 }
 
 public struct CancelRegisterationDto: Codable {
     let userId: Int
     let deletedAt: String
+}
+
+public struct WithdrawalDto: Codable {
+    let refreshToken: String
 }

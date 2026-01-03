@@ -58,6 +58,7 @@ final class AuthManager: ObservableObject {
         NotificationCenter.default.post(name: .shouldRefreshMyLog, object: nil)
     }
     
+    
     /// 토큰갱신
     func refreshToken(accessToken: String, refreshToken: String){
         self.accessToken = accessToken
@@ -91,6 +92,25 @@ final class AuthManager: ObservableObject {
     /// Refresh Token 가져오기
     func getRefreshToken() -> String? {
         return refreshToken
+    }
+
+    /// 닉네임 업데이트
+    func updateNickname(_ nickname: String) {
+        guard let user = currentUser else { return }
+        let updatedUser = User(
+            userId: user.userId,
+            nickname: nickname,
+            socialType: user.socialType,
+            profileImageUrl: user.profileImageUrl
+        )
+        updateUser(updatedUser)
+    }
+
+    /// 사용자 정보 업데이트
+    func updateUser(_ user: User) {
+        storedUser = user
+        currentUser = user
+        Logger.success("사용자 정보 업데이트: \(user.nickname ?? "익명")")
     }
 
     // MARK: - Private Methods

@@ -8,17 +8,20 @@
 import SwiftUI
 
 struct UserInfoPageView: View {
-    
+
     @ObservedObject private var authManager = AuthManager.shared
-    
+    @StateObject private var viewModel: UserInfoPageViewModel
+
     // 닉네임 설정 화면으로
     @State private var presentNicknameSetting: Bool = false
-    
+
     @State private var showSignOutPopup: Bool = false
-    
+
     private let appDiContainer = AppDIContainer.shared
     private let onGoBack: () -> Void
-    init(onGoBack: @escaping () -> Void) {
+
+    init(viewModel: UserInfoPageViewModel, onGoBack: @escaping () -> Void) {
+        _viewModel = StateObject(wrappedValue: viewModel)
         self.onGoBack = onGoBack
     }
     var body: some View {
@@ -58,14 +61,17 @@ struct UserInfoPageView: View {
                 }
             }
         }
+        // 토스트 메시지
+        .toast(message: $viewModel.toastMessage)
+        .loading(viewModel.isLoading)
         // 닉네임 설정 화면으로
         .navigationDestination(isPresented: $presentNicknameSetting) {
-            appDiContainer.makeNicknameSettingView(loginEntity: nil, onGoBack: { needRefresh in
-                print(">>>>> needRefresh \(needRefresh)")
-            // TODO: 내 정보 갱신
-                presentNicknameSetting = false
-                
-            }, onDismiss: nil)
+            appDiContainer.makeNicknameSettingView(
+                loginEntity: nil,
+                onGoBack: { presentNicknameSetting = false },
+                onDismiss: nil,
+                onSuccess: { presentNicknameSetting = false }
+            )
         }
         // 회원탈퇴 팝업띄우기
         .popup(isPresented: $showSignOutPopup) {
@@ -76,11 +82,20 @@ struct UserInfoPageView: View {
                         showSignOutPopup = false
                     }
                     MainButton(title: "탈퇴" , size: .middle, colorType: .primary){
-                        //viewModel.logout()
+                        viewModel.signout()
                         showSignOutPopup = false
                     }
                 }
         }
+        // 회원탈퇴 성공 시 화면 닫기
+        .onChange(of: viewModel.withdrawalSuccess) { success in
+            if success {
+                Task { @MainActor in
+                    onGoBack()
+                }
+            }
+        }
+        
     }
     
     private var thinLine: some View {
@@ -157,3 +172,4 @@ struct UserInfoPageView: View {
 #Preview {
     MockMyPageDIContainer().makeUserInfoPageView(onGoBack: { })
 }
+

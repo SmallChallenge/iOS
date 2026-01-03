@@ -151,8 +151,9 @@ struct LoginView: View {
             .navigationDestination(isPresented: $navigateToNicknameSetting) {
                 diContainer.makeNicknameSettingView(
                     loginEntity: viewModel.pendingLoginEntity,
-                    onGoBack: { _ in navigateToNicknameSetting = false },
-                    onDismiss: { onDismiss() }
+                    onGoBack: { navigateToNicknameSetting = false },
+                    onDismiss: { onDismiss() },
+                    onSuccess: { onDismiss() }
                 )
             }
         } // ~NavigationStack
