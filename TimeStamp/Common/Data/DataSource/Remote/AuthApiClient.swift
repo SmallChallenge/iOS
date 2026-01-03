@@ -121,7 +121,11 @@ extension AuthRouter: Router {
             return nil
             
         case .withdrawal:
-            return nil
+            var params: Parameters = [:]
+            if let token = AuthManager.shared.getAccessToken() {
+                params["accessToken"] = token
+            }
+            return params
         }
     }
     
@@ -223,13 +227,4 @@ public class AuthApiClient: ApiClient<AuthRouter>, AuthApiClientProtocol {
         await request(.withdrawal)
     }
     
-}
-
-public struct CancelRegisterationDto: Codable {
-    let userId: Int
-    let deletedAt: String
-}
-
-public struct WithdrawalDto: Codable {
-    let refreshToken: String
 }
