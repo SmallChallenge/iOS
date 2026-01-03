@@ -103,8 +103,8 @@ final class AppDIContainer {
         return MyPageDIContainer(authApiClient: authApiClient)
     }()
     
-    func makeMyPageView() -> MyPageView {
-        myPageDIContainer.makeMyPageView()
+    func makeMyPageView(onGoBack: @escaping () -> Void) -> MyPageView {
+        myPageDIContainer.makeMyPageView(onGoBack: onGoBack)
     }
     
     // MARK: - Login Feature

@@ -62,7 +62,9 @@ struct MainTabView: View {
                 } // ~ VStack
                 
             .navigationDestination(isPresented: $presentMypage) {
-                container.makeMyPageView()
+                container.makeMyPageView(onGoBack: {
+                    presentMypage = false
+                })
             }
             .mainBackgourndColor()
             .navigationBarHidden(true) // 기본 navigation bar 숨김

@@ -41,7 +41,7 @@ final class PersistenceController {
         // - 백그라운드에서 비동기로 실행되며, 완료 시 클로저 호출
         container.loadPersistentStores { description, error in
             if let error = error {
-                fatalError(">>>>> [ERROR]Core Data store failed to load: \(error.localizedDescription)")
+                Logger.error("Core Data store failed to load: \(error.localizedDescription)")
             }
         }
 

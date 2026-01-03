@@ -7,7 +7,7 @@
 
 import Foundation
 protocol MyPageDIContainerProtocol {
-    func makeMyPageView() -> MyPageView
+    func makeMyPageView(onGoBack: @escaping () -> Void) -> MyPageView
     func makeUserInfoPageView(onGoBack: @escaping (_ needRefresh: Bool) -> Void) -> UserInfoPageView
     
 }
@@ -34,9 +34,9 @@ final class MyPageDIContainer: MyPageDIContainerProtocol {
     }
     
     
-    func makeMyPageView() -> MyPageView {
+    func makeMyPageView(onGoBack: @escaping () -> Void) -> MyPageView {
         let vm = makeMyPageViewModel()
-        return MyPageView(viewModel: vm, diContainer: self)
+        return MyPageView(viewModel: vm, diContainer: self, onGoBack: onGoBack)
     }
     // MARK: - UseInfoPageView
     func makeUserInfoPageView(onGoBack: @escaping (_ needRefresh: Bool) -> Void) -> UserInfoPageView {
@@ -44,9 +44,9 @@ final class MyPageDIContainer: MyPageDIContainerProtocol {
     }
 }
 struct MockMyPageDIContainer: MyPageDIContainerProtocol{
-    func makeMyPageView() -> MyPageView {
+    func makeMyPageView(onGoBack: @escaping () -> Void) -> MyPageView {
         let vm = MyPageViewModel()
-        return MyPageView(viewModel: vm, diContainer: self)
+        return MyPageView(viewModel: vm, diContainer: self, onGoBack: onGoBack)
     }
     
     func makeUserInfoPageView(onGoBack: @escaping (_ needRefresh: Bool) -> Void) -> UserInfoPageView {

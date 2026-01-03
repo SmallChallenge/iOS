@@ -108,7 +108,6 @@ struct LogDetailView: View {
         }
         .navigationDestination(isPresented: $navigateToEditor) {
             diContainer.makeLogEditorView(log: viewModel.detail) { hasEdited in
-                print(">>>>> hasEdited \(hasEdited)")
                 navigateToEditor = false // (닫기)
                 if hasEdited {
                     viewModel.fetchDetail()
