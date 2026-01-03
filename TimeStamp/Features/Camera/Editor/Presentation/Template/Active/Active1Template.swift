@@ -34,17 +34,12 @@ struct Active1Template: View, TemplateViewProtocol {
         .frame(maxHeight: .infinity)
         .overlay(alignment: .bottom, content: {
             if hasLogo {
-                Image("Logotype")
-                    .resizable()
-                    .renderingMode(.template)
-                    .foregroundStyle(Color.gray50)
-                    .frame(width: 60, height: 13)
-                    .padding(.bottom, 16)
+                LogotypeImage()
             }
         })
         .shadow(
             color: Color.black.opacity(0.45),
-            radius: 5, x: 0, y: 0
+            radius: 5/2, x: 0, y: 0
         )
     }
 }

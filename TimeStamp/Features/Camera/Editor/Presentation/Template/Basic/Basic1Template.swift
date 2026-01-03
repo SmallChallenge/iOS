@@ -25,7 +25,7 @@ struct Basic1Template: View, TemplateViewProtocol {
                 
                 
                 
-                Text("\(displayDate.toString(format: "YYYY.MM.DD")) • Stampic")
+                Text("\(displayDate.toString(.yyyyMMdd)) • Stampic")
                     .font(.pretendard(.medium), size: 15, trackingPercent: -0.02)
                     .foregroundStyle(Color.gray50)
                 
@@ -33,7 +33,7 @@ struct Basic1Template: View, TemplateViewProtocol {
             }
             .shadow(
                 color: Color.black.opacity(0.45),
-                radius: 5, x: 0, y: 0
+                radius: 5/2, x: 0, y: 0
             )
         }
         .overlay(alignment: .bottomTrailing, content: {

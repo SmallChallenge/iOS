@@ -44,7 +44,9 @@
         <string>MoveSans-Light.otf</string>
         <string>MoveSans-Medium.otf</string>
         
-		<string>ClimateCrisisKR-1990.otf</string>
+        <string>ClimateCrisisKR-1990.otf</string>
+        <string>PartialSansKR-Regular.otf</string>
+		<string>DungGeunMo.otf</string>
         
         <string>SUIT-Bold.otf</string>
         <string>SUIT-ExtraBold.otf</string>

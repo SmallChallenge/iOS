@@ -15,11 +15,11 @@ struct DefaultTemplateView2: TemplateViewProtocol{
         ZStack {
             // 중앙: 날짜 + 시계
             VStack(spacing: 8) {
-                Text(displayDate.toString(format: "yyyy.MM.dd"))
+                Text(displayDate.toString(.yyyyMMdd))
                     .font(.H3)
                     .foregroundColor(.gray50)
 
-                Text(displayDate.toString(format: "HH:mm"))
+                Text(displayDate.toString(.time_HH_mm))
                     .font(.H1)
                     .foregroundColor(.gray50)
             }
@@ -30,12 +30,7 @@ struct DefaultTemplateView2: TemplateViewProtocol{
                     Spacer()
                     HStack {
                         Spacer()
-                        Image("Logotype")
-                            .renderingMode(.template)
-                            .resizable()
-                            .frame(width: 122.8, height: 26)
-                            .foregroundColor(.gray50)
-                            .padding(16)
+                        LogotypeImage()
                     }
                 }
             }

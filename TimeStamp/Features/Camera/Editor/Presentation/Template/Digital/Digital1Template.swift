@@ -16,12 +16,8 @@ struct Digital1Template: View, TemplateViewProtocol {
     var body: some View {
         VStack {
             if hasLogo {
-                Image("Logotype")
-                    .resizable()
-                    .renderingMode(.template)
-                    .foregroundStyle(Color.gray50)
-                    .frame(width: 60, height: 13)
-                    .padding(.top, 16)
+                LogotypeImage()
+                    .padding(16)
             }
             
             Spacer()
@@ -46,12 +42,12 @@ struct Digital1Template: View, TemplateViewProtocol {
             
             Spacer()
             
-            Text(displayDate.toString(format: "YYYY.MM.DD"))
+            Text(displayDate.toString(.yyyyMMdd))
                 .font(.suit(.heavy),size: 24, trackingPercent: -0.02)
                 .foregroundColor(.gray50)
                 .shadow(
                     color: Color.black.opacity(0.45),
-                    radius: 5, x: 0, y: 0
+                    radius: 5/2, x: 0, y: 0
                 )
                 .padding(.bottom, 16)
             
@@ -82,7 +78,7 @@ struct Digital1Template: View, TemplateViewProtocol {
 //            .resizable()
 //            .frame(width: 300, height: 300)
 //            .aspectRatio(1, contentMode: .fit)
-        Color.gray400
+//        Color.gray400
         
         Digital1Template(displayDate: Date(), hasLogo: true)
     }
