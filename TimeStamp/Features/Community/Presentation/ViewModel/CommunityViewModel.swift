@@ -7,6 +7,7 @@
 
 import Foundation
 import Combine
+import UIKit
 
 final class CommunityViewModel: ObservableObject, MessageDisplayable {
 
@@ -112,9 +113,18 @@ final class CommunityViewModel: ObservableObject, MessageDisplayable {
     func refresh() async {
         guard !isLoading else { return }
 
+        // Haptic feedback
+        let generator = UIImpactFeedbackGenerator(style: .light)
+        generator.prepare()
+        generator.impactOccurred()
+
         resetPagination()
         isLoading = true
         isRefreshing = true
+
+        // 최소 1초 딜레이 (로딩 UI 표시를 위해)
+        try? await Task.sleep(nanoseconds: 1_000_000_000)
+
         do {
             let result = try await useCase.feeds(
                 category: currentCategory,
