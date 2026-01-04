@@ -68,6 +68,7 @@ struct UserInfoPageView: View {
         }
         // 토스트 메시지
         .toast(message: $viewModel.toastMessage)
+        .popup(message: $viewModel.alertMessage)
         .loading(viewModel.isLoading)
         // 닉네임 설정 화면으로
         .navigationDestination(isPresented: $presentNicknameSetting) {
@@ -92,16 +93,6 @@ struct UserInfoPageView: View {
                     }
                 }
         }
-        /// 회원탈퇴 실패
-        .popup(isPresented: $viewModel.showSignOutFailedPopup, content: {
-            Modal(title: AppMessage.signoutFailed.text)
-                .buttons {
-                    MainButton(title: "확인" , size: .middle, colorType: .primary){
-                        viewModel.showSignOutFailedPopup = false
-                    }
-                }
-            
-        })
         // 회원탈퇴 성공 시 화면 닫기
         .onChange(of: viewModel.withdrawalSuccess) { success in
             if success {
