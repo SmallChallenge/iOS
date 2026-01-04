@@ -28,6 +28,10 @@ struct Basic3Template: View, TemplateViewProtocol {
             .foregroundStyle(Color.gray50)
             Spacer()
         }
+        .shadow(
+            color: Color.black.opacity(0.45),
+            radius: 5/2, x: 0, y: 0
+        )
         .overlay(alignment: .bottom) {
             if hasLogo {
                 LogotypeImage()

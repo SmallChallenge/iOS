@@ -74,11 +74,10 @@ struct Digital1Template: View, TemplateViewProtocol {
 
 #Preview {
     ZStack {
-//        Image("sampleImage")
-//            .resizable()
-//            .frame(width: 300, height: 300)
-//            .aspectRatio(1, contentMode: .fit)
-//        Color.gray400
+        Image("sampleImage")
+            .resizable()
+            .frame(width: 300, height: 300)
+            .aspectRatio(1, contentMode: .fit)
         
         Digital1Template(displayDate: Date(), hasLogo: true)
     }
@@ -105,13 +104,13 @@ struct FlipDigitView: View {
                 .overlay(
                     RoundedRectangle(cornerRadius: 8)
                         .stroke(Color.white.opacity(0.25), lineWidth: 1)
-                        .blur(radius: 1)
+                        .blur(radius: 1/2)
                         .offset(x: 1, y: 1)
                 )
             // Drop shadow
                 .shadow(
                     color: Color.black.opacity(0.4),
-                    radius: 10,
+                    radius: 10/2,
                     x: 3,
                     y: 3
                 )

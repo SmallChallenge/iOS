@@ -15,14 +15,16 @@ struct Moody1Template: View, TemplateViewProtocol {
     
     var body: some View {
         VStack{
-            VStack(spacing: 4) {
+            VStack(spacing: .zero) {
                 Text(displayDate.toString(.edmmm )) //"E, d MMM"
                     .font(.moveSans(.bold), size: 30, trackingPercent: -0.02)
                     .foregroundStyle(Color.gray50)
+                    
                 
                 Text(displayDate.toString(.time_a_HH_mm)) //"a hh:mm"
-                    .font(.moveSans(.bold), size: 1, trackingPercent: -0.02)
+                    .font(.moveSans(.bold), size: 16, trackingPercent: -0.02)
                     .foregroundStyle(Color.gray50)
+                    
             }
             .padding(.top, 16)
             

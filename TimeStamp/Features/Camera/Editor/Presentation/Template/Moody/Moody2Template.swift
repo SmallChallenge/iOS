@@ -40,14 +40,14 @@ struct Moody2Template: View , TemplateViewProtocol {
                 Image("clearCircle")
                     .resizable()
                 // Inner shadow (overlay로 구현)
-//                    .overlay(
-//                        Circle()
-//                            .stroke(Color.white.opacity(0.3), lineWidth: 1)
-//                            .blur(radius: 0.5) // Blur1 / 2
-//                            .offset(x: 1, y: 1)
-//                            .mask(Circle())
-//                            
-//                    )
+                    .overlay(
+                        Circle()
+                            .stroke(Color.white.opacity(0.3), lineWidth: 1)
+                            .blur(radius: 0.5) // Blur1 / 2
+                            .offset(x: 1, y: -2)
+                            .mask(Circle())
+                            .frame(width: 240, height: 236)
+                    )
                 // Drop shadow 1
                     .shadow(
                         color: Color.black.opacity(0.25),
@@ -64,7 +64,7 @@ struct Moody2Template: View , TemplateViewProtocol {
                         .font(.suit(.extraLight), size: 100, trackingPercent: -0.02)
                         .offset(y: 20)
                         
-//                    // 분
+                    // 분
                     Text(minuteString)
                         .font(.suit(.extraLight), size: 100, trackingPercent: -0.02)
                         .offset(y: -20)

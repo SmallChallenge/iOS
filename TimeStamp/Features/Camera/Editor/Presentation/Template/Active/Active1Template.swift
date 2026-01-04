@@ -35,6 +35,7 @@ struct Active1Template: View, TemplateViewProtocol {
         .overlay(alignment: .bottom, content: {
             if hasLogo {
                 LogotypeImage()
+                    .padding(16)
             }
         })
         .shadow(
