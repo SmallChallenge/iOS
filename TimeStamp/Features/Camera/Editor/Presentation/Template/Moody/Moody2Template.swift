@@ -74,10 +74,8 @@ struct Moody2Template: View , TemplateViewProtocol {
                     color: Color.black.opacity(0.3),
                     radius: 10 / 2, x: 0, y: 0
                 )
-            }
-            
+            }   
         }
-        
     }
     
     private var hourString: String {
