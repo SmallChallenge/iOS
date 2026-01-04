@@ -28,7 +28,7 @@ enum TagButtonState {
         case .active:
             return .gray50
         case .inactive:
-            return .gray300
+            return .gray500
         case .pressed:
             return .gray300
         }

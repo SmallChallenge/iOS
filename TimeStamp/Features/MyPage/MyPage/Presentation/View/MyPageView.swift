@@ -46,12 +46,8 @@ struct MyPageView: View {
         let build = Bundle.main.infoDictionary?["CFBundleVersion"] as? String ?? "1"
         self.appVersion = "\(version)(\(build))"
 
-
         let appearance = UINavigationBarAppearance()
         appearance.backgroundColor = UIColor.gray900
-        appearance.titleTextAttributes = [.foregroundColor: UIColor.gray50]
-        appearance.largeTitleTextAttributes = [.foregroundColor: UIColor.gray50]
-
         UINavigationBar.appearance().standardAppearance = appearance
         UINavigationBar.appearance().scrollEdgeAppearance = appearance
     }
@@ -106,34 +102,40 @@ struct MyPageView: View {
                         showOpenSourceLicense = true
                     }
                     MyPageMenu("앱 버전", type: .text(text: appVersion)){}
-                    MyPageMenu("로그아웃", type: .none){
-                        showLogoutPopup = true
+                    
+                    if authManager.isLoggedIn {
+                        MyPageMenu("로그아웃", type: .none){
+                            showLogoutPopup = true
+                        }
                     }
                 }
                 
                 
-                // 아래는 지우기
-               
-                
+                #if DEBUG
                 Button("토큰복사"){
                     copyTokenForTest()
                 }
-                
                 Button("로그 공유 (\(Logger.getLogCount())개)"){
                     shareLog()
                 }
+                #endif
             }
         }
         .mainBackgourndColor()
         .navigationBarTitleDisplayMode(.inline)
         .navigationBarBackButtonHidden(true)
-        .navigationTitle("마이페이지")
         .toolbar {
             ToolbarItem(placement: .navigationBarLeading) {
                 // 뒤로가기 버튼
                 BackButton {
                     onGoBack()
                 }
+            }
+            
+            ToolbarItem(placement: .title) {
+                Text("마이페이지")
+                    .font(.SubTitle1)
+                    .foregroundStyle(Color.gray50)
             }
         }
         // 유저정보화면 띄우기

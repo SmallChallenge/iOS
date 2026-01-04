@@ -41,24 +41,21 @@ struct CategoryButton: View {
     
     var imageOpacity: Double {
         switch state {
-        case .normal: 1.0
         case .selected: 1.0
-        case .unselected: 0.4
+        case .normal, .unselected: 0.4
         }
     }
     var titleFont: FontStyle {
         switch state {
-        case .normal: .Btn2
         case .selected: .Btn2_b
-        case .unselected: .Btn2
+        case .normal,.unselected: .Btn2
         }
     }
     
     var titleColor: Color {
         switch state {
-        case .normal: Color.gray300
         case .selected: Color.gray50
-        case .unselected: Color.gray500
+        case .normal, .unselected: Color.gray500
         }
     }
 }

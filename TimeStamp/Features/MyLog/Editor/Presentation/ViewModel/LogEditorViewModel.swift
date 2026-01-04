@@ -35,13 +35,12 @@ final class LogEditorViewModel: ObservableObject, MessageDisplayable {
     
     
     /// 전체공개버튼 노출 여부
-    /// - note: 로그인 상태여야 하고 로그가 서버데이터 여야함. 로컬데에터는 전체공개 전환 안됨.
+    /// - note: 서버데이터 일 때만 노출
     func isPublicVisibility() ->  Bool {
-        switch log.imageSource {
-        case .remote:
-            return authManager.isLoggedIn
-        default: return false
+        if case .remote = log.imageSource {
+            return true
         }
+        return false
     }
 
     
@@ -75,7 +74,6 @@ final class LogEditorViewModel: ObservableObject, MessageDisplayable {
                     Logger.success("로컬 로그 수정 성공")
                 }
                 hasEdited = true
-                show(.editSuccess)
             } catch {
                 Logger.error("로그 수정 실패: \(error)")
                 show(.editFailed)

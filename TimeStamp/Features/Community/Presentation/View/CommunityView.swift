@@ -22,7 +22,7 @@ struct CommunityView: View {
 
     var body: some View {
         ZStack(alignment: .top) {
-            if viewModel.feeds.isEmpty && !viewModel.isLoading {
+            if viewModel.feedViewDataList.isEmpty && !viewModel.isLoading {
                 emptyView
             } else {
                 feedListView
@@ -87,14 +87,14 @@ struct CommunityView: View {
     
     private var feedListView: some View {
         List {
-            ForEach(viewModel.feeds, id: \.imageId) { feed in
+            ForEach(viewModel.feedViewDataList, id: \.imageId) { feedViewData in
                 CommunityCard(
-                    viewData: feed.toViewData(),
+                    viewData: feedViewData,
                     isMenuOpen: Binding(
-                        get: { viewModel.selectedFeedIdForMenu == feed.imageId },
+                        get: { viewModel.selectedFeedIdForMenu == feedViewData.imageId },
                         set: { isOpen in
                             if isOpen {
-                                viewModel.selectFeedForMenu(id: feed.imageId)
+                                viewModel.selectFeedForMenu(id: feedViewData.imageId)
                             } else {
                                 viewModel.selectFeedForMenu(id: nil)
                             }
@@ -106,7 +106,7 @@ struct CommunityView: View {
                             return
                         }
                         // 신고할 imageId 저장하고 팝업 띄우기
-                        selectedImageIdForReport = feed.imageId
+                        selectedImageIdForReport = feedViewData.imageId
                         showReportPopup = true
                     }, onLike: {
                         // 좋아요 누름
@@ -114,7 +114,7 @@ struct CommunityView: View {
                             showLoginPopup = true
                             return
                         }
-                        viewModel.toggleLike(imageId: feed.imageId)
+                        viewModel.toggleLike(imageId: feedViewData.imageId)
                     }
                 )
                 .listRowSeparator(.hidden)
@@ -122,7 +122,7 @@ struct CommunityView: View {
                 .listRowInsets(.init(top: .zero, leading: 20, bottom: .zero, trailing: .zero))
                 .onAppear {
                     // 마지막 아이템에 도달하면 다음 페이지 로드
-                    if feed.imageId == viewModel.feeds.last?.imageId {
+                    if feedViewData.imageId == viewModel.feedViewDataList.last?.imageId {
                         viewModel.loadMore()
                     }
                 }

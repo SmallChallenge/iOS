@@ -18,6 +18,9 @@ final class CommunityViewModel: ObservableObject, MessageDisplayable {
     /// 피드 목록
     @Published var feeds: [Feed] = []
 
+    /// 피드 ViewData 목록 (View에서 사용)
+    @Published var feedViewDataList: [FeedViewData] = []
+
     /// 로딩
     @Published var isLoading: Bool = false
 
@@ -69,29 +72,25 @@ final class CommunityViewModel: ObservableObject, MessageDisplayable {
 
         Task {
             do {
-                let result = try await useCase.feeds(
+                let (newFeeds, newHasNext) = try await fetchFeeds(
                     category: currentCategory,
                     lastPublishedAt: nextCursorPublishedAt,
-                    lastImageId: nextCursorId,
+                    lastImageId: nextCursorId
                 )
 
                 await MainActor.run {
                     // 피드 업데이트
-                    if isRefresh || feeds.isEmpty {
-                        feeds = result.feeds
-                    } else {
-                        feeds.append(contentsOf: result.feeds)
-                    }
+                    updateFeeds(newFeeds, append: !(isRefresh || feeds.isEmpty))
 
                     // 페이지네이션 정보 업데이트 - 마지막 피드의 정보를 저장
                     if let lastFeed = feeds.last {
                         nextCursorId = lastFeed.imageId
                         nextCursorPublishedAt = lastFeed.publishedAt
                     }
-                    hasNext = result.sliceInfo.hasNext
+                    hasNext = newHasNext
 
                     isLoading = false
-                    Logger.success("피드 로드 완료: \(result.feeds.count)개")
+                    Logger.success("피드 로드 완료: \(newFeeds.count)개")
                 }
             } catch {
                 await MainActor.run {
@@ -126,23 +125,23 @@ final class CommunityViewModel: ObservableObject, MessageDisplayable {
         try? await Task.sleep(nanoseconds: 1_000_000_000)
 
         do {
-            let result = try await useCase.feeds(
+            let (newFeeds, newHasNext) = try await fetchFeeds(
                 category: currentCategory,
                 lastPublishedAt: nil,
                 lastImageId: nil
             )
 
-            feeds = result.feeds
+            updateFeeds(newFeeds)
 
             if let lastFeed = feeds.last {
                 nextCursorId = lastFeed.imageId
                 nextCursorPublishedAt = lastFeed.publishedAt
             }
-            hasNext = result.sliceInfo.hasNext
+            hasNext = newHasNext
 
             isLoading = false
             isRefreshing = false
-            Logger.success("새로고침 완료: \(result.feeds.count)개")
+            Logger.success("새로고침 완료: \(newFeeds.count)개")
         } catch {
             isLoading = false
             isRefreshing = false
@@ -172,7 +171,7 @@ final class CommunityViewModel: ObservableObject, MessageDisplayable {
                             likeCount: updatedFeed.isLiked ? updatedFeed.likeCount - 1 : updatedFeed.likeCount + 1,
                             publishedAt: updatedFeed.publishedAt
                         )
-                        feeds[index] = updatedFeed
+                        updateFeed(at: index, with: updatedFeed)
                     }
                     isLoading = false
                     Logger.success("좋아요 토글 완료")
@@ -199,6 +198,10 @@ final class CommunityViewModel: ObservableObject, MessageDisplayable {
                 await MainActor.run {
                     show(.reportSuccess)
                     Logger.success("신고 완료: \(imageId)")
+
+                    // 신고한 피드를 목록에서 제거
+                    removeFeed(imageId: imageId)
+
                     isLoading = false
                 }
             } catch {
@@ -242,6 +245,43 @@ final class CommunityViewModel: ObservableObject, MessageDisplayable {
     }
 
     // MARK: - Private Methods
+
+    /// 피드 데이터 fetch (공통 로직)
+    private func fetchFeeds(
+        category: String?,
+        lastPublishedAt: String?,
+        lastImageId: Int?
+    ) async throws -> (feeds: [Feed], hasNext: Bool) {
+        let result = try await useCase.feeds(
+            category: category,
+            lastPublishedAt: lastPublishedAt,
+            lastImageId: lastImageId
+        )
+        return (result.feeds, result.sliceInfo.hasNext)
+    }
+
+    /// 피드 목록 업데이트 (교체 또는 추가)
+    private func updateFeeds(_ newFeeds: [Feed], append: Bool = false) {
+        if append {
+            feeds.append(contentsOf: newFeeds)
+            feedViewDataList.append(contentsOf: newFeeds.map { $0.toViewData() })
+        } else {
+            feeds = newFeeds
+            feedViewDataList = newFeeds.map { $0.toViewData() }
+        }
+    }
+
+    /// 특정 인덱스의 피드 업데이트
+    private func updateFeed(at index: Int, with feed: Feed) {
+        feeds[index] = feed
+        feedViewDataList[index] = feed.toViewData()
+    }
+
+    /// 피드 제거
+    private func removeFeed(imageId: Int) {
+        feeds.removeAll { $0.imageId == imageId }
+        feedViewDataList.removeAll { $0.imageId == imageId }
+    }
 
     private func resetPagination() {
         nextCursorId = nil

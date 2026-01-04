@@ -41,7 +41,7 @@ struct UserInfoPageView: View {
                     .padding(.horizontal, 20)
                     .padding(.bottom, 32)
                 
-                thinLine
+                thickLine
                 
                 MyPageMenu("회원탈퇴") {
                     showSignOutPopup = true
@@ -52,13 +52,18 @@ struct UserInfoPageView: View {
         .mainBackgourndColor()
         .navigationBarTitleDisplayMode(.inline)
         .navigationBarBackButtonHidden(true)
-        .navigationTitle("내 정보")
         .toolbar {
             ToolbarItem(placement: .navigationBarLeading) {
                 // 뒤로가기 버튼
                 BackButton {
                     onGoBack()
                 }
+            }
+            
+            ToolbarItem(placement: .title) {
+                Text("내 정보")
+                    .font(.SubTitle1)
+                    .foregroundStyle(Color.gray50)
             }
         }
         // 토스트 메시지
@@ -172,4 +177,3 @@ struct UserInfoPageView: View {
 #Preview {
     MockMyPageDIContainer().makeUserInfoPageView(onGoBack: { })
 }
-
