@@ -199,11 +199,11 @@ final class CommunityViewModel: ObservableObject, MessageDisplayable {
                 await MainActor.run {
                     show(.reportSuccess)
                     Logger.success("신고 완료: \(imageId)")
+
+                    // 신고한 피드를 목록에서 제거
+                    feeds.removeAll { $0.imageId == imageId }
+
                     isLoading = false
-                    
-                    // 목록 새로고침
-                    
-                    
                 }
             } catch {
                 await MainActor.run {
