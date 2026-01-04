@@ -1,17 +1,17 @@
 {
   "images" : [
     {
-      "filename" : "Frame 1597881035-1.png",
+      "filename" : "template_basic_2-1.png",
       "idiom" : "universal",
       "scale" : "1x"
     },
     {
-      "filename" : "Frame 1597881035.png",
+      "filename" : "template_basic_2.png",
       "idiom" : "universal",
       "scale" : "2x"
     },
     {
-      "filename" : "Frame 1597881035@3x.png",
+      "filename" : "template_basic_2@3x.png",
       "idiom" : "universal",
       "scale" : "3x"
     }

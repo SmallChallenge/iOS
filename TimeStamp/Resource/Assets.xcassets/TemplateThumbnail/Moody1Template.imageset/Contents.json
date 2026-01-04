@@ -1,17 +1,17 @@
 {
   "images" : [
     {
-      "filename" : "스탬프.png",
+      "filename" : "template_moody_1.png",
       "idiom" : "universal",
       "scale" : "1x"
     },
     {
-      "filename" : "스탬프@2x.png",
+      "filename" : "template_moody_1@2x.png",
       "idiom" : "universal",
       "scale" : "2x"
     },
     {
-      "filename" : "스탬프@3x.png",
+      "filename" : "template_moody_1@3x.png",
       "idiom" : "universal",
       "scale" : "3x"
     }
