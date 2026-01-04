@@ -18,7 +18,7 @@ struct Basic2Template: View, TemplateViewProtocol {
             HStack {
                 Text(displayDate.toString(
                     format: "\(Date.DateFormat.koreanDate_yyyyM월d일E.rawValue)\n \(Date.DateFormat.time_a_h_mm.rawValue)",
-                    locale: Locale(identifier: "ko_KR")))
+                    locale: .kr))
                 .font(.suit(.heavy), size: 24, trackingPercent: -0.02)
                 .foregroundStyle(Color.gray50)
                 .padding(24)
