@@ -45,20 +45,18 @@ struct LogEditorView: View {
                         .font(.Body2)
                         .foregroundStyle(Color.gray500)
                         .padding(.top, 8)
-                }
-                
-                if !authManager.isLoggedIn {
-                    NoticeBanner("전체공개는 로그인 후 이용 가능합니다.")
+                } else {
+                    NoticeBanner("게스트 게시물은 공개 범위를 수정할 수 없어요.")
                         .padding(.top, 16)
                 }
-                    
+                
                 
                 
             }// ~Vstack
             .padding(.horizontal, 20)
         }
-        .toast(message: $viewModel.toastMessage)
         .mainBackgourndColor()
+        .toast(message: $viewModel.toastMessage)
         .navigationBarTitleDisplayMode(.inline)
         .navigationBarBackButtonHidden(true)
         .toolbar {
@@ -73,6 +71,12 @@ struct LogEditorView: View {
                     viewModel.editLog()
                 }
                 .disabled(viewModel.isLoading)
+            }
+        }
+        .onChange(of: viewModel.hasEdited) { hasEdited in
+            if hasEdited{ // 수정완료
+                ToastManager.shared.show(AppMessage.editSuccess.text)
+                onDismiss(hasEdited)
             }
         }
     }
@@ -124,13 +128,7 @@ struct LogEditorView: View {
                     CategoryButton(
                         type: category,
                         state: {
-                            if viewModel.selectedCategory == nil {
-                                return .normal
-                            } else if viewModel.selectedCategory == category {
-                                return .selected
-                            } else {
-                                return .unselected
-                            }
+                            viewModel.selectedCategory == category ? .selected : .unselected
                         }()
                     ) {
                         viewModel.selectedCategory = category
@@ -154,7 +152,7 @@ struct LogEditorView: View {
             
             HStack(spacing: 8){
                 if viewModel.isPublicVisibility() {
-                    // 전체 공개
+                    // [전체 공개]버튼
                     TagButton(
                         title: VisibilityViewData.publicVisible.title,
                         isActive: viewModel.selectedVisibility == .publicVisible) {
@@ -162,7 +160,7 @@ struct LogEditorView: View {
                         }
                 }
                 
-                // 비공개
+                // [비공개]버튼
                 TagButton(
                     title: VisibilityViewData.privateVisible.title,
                     isActive: viewModel.selectedVisibility == .privateVisible) {
