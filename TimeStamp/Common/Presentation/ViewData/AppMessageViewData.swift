@@ -78,7 +78,7 @@ enum AppMessage {
         case .logoutFailed:
             return "로그아웃에 실패했어요. 다시 시도해 주세요."
         case .loginRequired:
-            return "로그인이 필요해요. 로그인 후 다시 시도해 주세요."
+            return "로그인이 필요해요."
         case .signupFailed:
             return "회원가입에 실패했어요.\n다시 시도해 주세요."
         case .signoutFailed:
