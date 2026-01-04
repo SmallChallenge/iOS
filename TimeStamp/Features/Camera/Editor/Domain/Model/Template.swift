@@ -104,12 +104,12 @@ extension Template {
             }
         ),
         
-                Template(
-                    style: .active,
-                    name: "Active2Template",
-                    viewBuilder: { date, hasLogo in
-                        AnyView(Active2Template(displayDate: date, hasLogo: hasLogo))
-                    }),
+        Template(
+            style: .active,
+            name: "Active2Template",
+            viewBuilder: { date, hasLogo in
+                AnyView(Active2Template(displayDate: date, hasLogo: hasLogo))
+            }),
 
         
         //        Template(
@@ -129,12 +129,12 @@ extension Template {
             }
         ),
         
-                Template(
-                    style: .digital,
-                    name: "Digital2Template",
-                    viewBuilder: { date, hasLogo in
-                        AnyView(Digital2Template(displayDate: date, hasLogo: hasLogo))
-                    }),
+        Template(
+            style: .digital,
+            name: "Digital2Template",
+            viewBuilder: { date, hasLogo in
+                AnyView(Digital2Template(displayDate: date, hasLogo: hasLogo))
+            }),
 
         
         //        Template(

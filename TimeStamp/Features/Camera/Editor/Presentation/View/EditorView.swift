@@ -186,6 +186,7 @@ struct EditorView: View {
             HStack(spacing: 8) {
                 ForEach(filteredTemplates) { template in
                     TemplateButton(
+                        capturedImage: nil,
                         template: template,
                         isSelected: selectedTemplate == template
                     ) {

@@ -7,23 +7,23 @@
 
 import SwiftUI
 
-/// 템플릿 선택 버튼
+/// 템플릿 선택 버튼 (템플릿 썸네일)뷰
 struct TemplateButton: View {
+    let capturedImage: UIImage?
     let template: Template
     let isSelected: Bool
     let action: () -> Void
 
     var body: some View {
         Button(action: action) {
-            // TODO: 템플릿 썸네일 표시
             ZStack {
-                Color.gray300
-
-                Text(template.name)
-                    .font(.caption)
-                    .foregroundColor(.gray50)
+                Image(template.name)
+                    .resizable()
+                    .frame(width: 90, height: 90)
+                    .aspectRatio(1, contentMode: .fit)
+                        
+                //template.makeView(displayDate: Date(), hasLogo: true)
             }
-            .frame(width: 90, height: 90)
             .cornerRadius(8)
             .roundedBorder(
                 color: isSelected ? Color.gray50 : Color.gray700,
@@ -38,8 +38,12 @@ struct TemplateButton: View {
 #Preview {
     HStack(spacing: 8) {
         TemplateButton(
-            template: Template(style: .basic, name: "basic",  viewBuilder: { _,_ in AnyView(EmptyView())}
-                              ),
+            capturedImage: UIImage(named: "Basic3Template"),
+            template: Template(
+                style: .basic,
+                name: "Basic3Template",
+                viewBuilder: { _,_ in AnyView(EmptyView())}
+            ),
             isSelected: true
         ) {}
 
