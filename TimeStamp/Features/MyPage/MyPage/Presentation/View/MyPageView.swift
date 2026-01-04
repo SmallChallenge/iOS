@@ -49,9 +49,6 @@ struct MyPageView: View {
 
         let appearance = UINavigationBarAppearance()
         appearance.backgroundColor = UIColor.gray900
-        appearance.titleTextAttributes = [.foregroundColor: UIColor.gray50]
-        appearance.largeTitleTextAttributes = [.foregroundColor: UIColor.gray50]
-
         UINavigationBar.appearance().standardAppearance = appearance
         UINavigationBar.appearance().scrollEdgeAppearance = appearance
     }
@@ -136,6 +133,12 @@ struct MyPageView: View {
                     onGoBack()
                 }
             }
+            
+//            ToolbarItem(placement: .title) {
+//                Text("마이페이지")
+//                    .font(.SubTitle1)
+//                    .foregroundStyle(Color.gray50)
+//            }
         }
         // 유저정보화면 띄우기
         .navigationDestination(isPresented: $presentUserInfo) {
