@@ -24,7 +24,8 @@ struct EditorView: View {
     // 광고, 로고 여부 //
     @State private var showAdPopup: Bool = false // 광고보기 팝업 띄우기
     @State private var isOnLogo: Bool = true // 로고 여부
-    @State private var hasWatchedAd: Bool  = false // 광고시청여부
+    // 지금 광고 못넣어서 풀어둠
+    @State private var hasWatchedAd: Bool  = true // 광고시청여부
     
     
     @State private var navigateToPhotoSave = false
