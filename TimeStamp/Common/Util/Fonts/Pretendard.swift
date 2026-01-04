@@ -121,8 +121,9 @@ enum Suit: String, FontWeightProtocol {
     }
 }
 
-// MARK: - PartialSans
+// MARK: - PartialSans 파샬산스
 enum PartialSans: String, FontWeightProtocol {
+    // PartialSansKR-Regular.otf
     case regular = "PartialSansKR-Regular"
     var fontName: String {
         return rawValue

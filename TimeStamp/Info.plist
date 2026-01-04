@@ -45,7 +45,6 @@
         <string>MoveSans-Medium.otf</string>
         
         <string>ClimateCrisisKR-1990.otf</string>
-        <string>PartialSansKR-Regular.otf</string>
         <string>DungGeunMo.otf</string>
 		<string>EricaOne-Regular.ttf</string>
         
@@ -58,6 +57,9 @@
         <string>SUIT-Regular.otf</string>
         <string>SUIT-SemiBold.otf</string>
         <string>SUIT-Thin.otf</string>
+        
+        
+        <string>PartialSansKR-Regular.otf</string>
         
         <string></string>
 	</array>
