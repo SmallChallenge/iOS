@@ -18,10 +18,10 @@ struct Digital2Template: View , TemplateViewProtocol {
             
             VStack(spacing: .zero){
                 Text(displayDate.toString(.time_HH_mm_a))
-                    .font(.dungGeunMo(.regular), size: 50, trackingPercent: -0.04)
+                    .font(.dungGeunMo, size: 50, trackingPercent: -0.04)
                     .foregroundColor(.gray50)
                 Text(dateString)
-                    .font(.dungGeunMo(.regular), size: 24, trackingPercent: -0.04)
+                    .font(.dungGeunMo, size: 24, trackingPercent: -0.04)
                     .foregroundColor(.gray50)
             }
             .shadow(

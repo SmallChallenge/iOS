@@ -18,13 +18,13 @@ struct Active1Template: View, TemplateViewProtocol {
             
 
             VStack(spacing: .zero) {
-                Text(displayDate.toString(format: "HH:mm"))
-                    .font(.climateCrisis(._1990), size: 50)
+                Text(displayDate.toString(.time_HH_mm ))
+                    .font(.climateCrisis, size: 50)
                     
                 
                 
-                Text(displayDate.toString(format: "E, d MMM"))
-                    .font(.climateCrisis(._1990), size: 15)
+                Text(displayDate.toString(.edmmm)) //"E, d MMM"
+                    .font(.climateCrisis, size: 15)
                 
             }
             .foregroundStyle(Color.gray50)

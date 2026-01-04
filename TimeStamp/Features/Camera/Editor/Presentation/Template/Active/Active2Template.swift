@@ -24,11 +24,11 @@ struct Active2Template: View ,TemplateViewProtocol {
             
             VStack (spacing: 4){
                 Text(displayDate.toString(.time_HH_mm_a))
-                    .font(.partialSans(.regular), size: 28)
+                    .font(.partialSans, size: 28)
                     .foregroundColor(.gray50)
                 
                 Text(dateString)
-                    .font(.partialSans(.regular), size: 18)
+                    .font(.partialSans, size: 18)
                     .foregroundColor(.gray50)
             }
             .shadow(
