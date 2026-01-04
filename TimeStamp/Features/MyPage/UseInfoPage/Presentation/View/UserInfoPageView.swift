@@ -41,7 +41,7 @@ struct UserInfoPageView: View {
                     .padding(.horizontal, 20)
                     .padding(.bottom, 32)
                 
-                thinLine
+                thickLine
                 
                 MyPageMenu("회원탈퇴") {
                     showSignOutPopup = true
