@@ -14,8 +14,6 @@ struct Basic1Template: View, TemplateViewProtocol {
     var body: some View {
         ZStack {
             
-            Color.black.opacity(0.5)
-            
             VStack(spacing: 8) {
                 // "HH:mm"
                 Text(displayDate.toString(.time_HH_mm))
