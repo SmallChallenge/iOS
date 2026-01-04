@@ -18,6 +18,9 @@ final class CommunityViewModel: ObservableObject, MessageDisplayable {
     /// 피드 목록
     @Published var feeds: [Feed] = []
 
+    /// 피드 ViewData 목록 (View에서 사용)
+    @Published var feedViewDataList: [FeedViewData] = []
+
     /// 로딩
     @Published var isLoading: Bool = false
 
@@ -77,11 +80,7 @@ final class CommunityViewModel: ObservableObject, MessageDisplayable {
 
                 await MainActor.run {
                     // 피드 업데이트
-                    if isRefresh || feeds.isEmpty {
-                        feeds = newFeeds
-                    } else {
-                        feeds.append(contentsOf: newFeeds)
-                    }
+                    updateFeeds(newFeeds, append: !(isRefresh || feeds.isEmpty))
 
                     // 페이지네이션 정보 업데이트 - 마지막 피드의 정보를 저장
                     if let lastFeed = feeds.last {
@@ -132,7 +131,7 @@ final class CommunityViewModel: ObservableObject, MessageDisplayable {
                 lastImageId: nil
             )
 
-            feeds = newFeeds
+            updateFeeds(newFeeds)
 
             if let lastFeed = feeds.last {
                 nextCursorId = lastFeed.imageId
@@ -172,7 +171,7 @@ final class CommunityViewModel: ObservableObject, MessageDisplayable {
                             likeCount: updatedFeed.isLiked ? updatedFeed.likeCount - 1 : updatedFeed.likeCount + 1,
                             publishedAt: updatedFeed.publishedAt
                         )
-                        feeds[index] = updatedFeed
+                        updateFeed(at: index, with: updatedFeed)
                     }
                     isLoading = false
                     Logger.success("좋아요 토글 완료")
@@ -201,7 +200,7 @@ final class CommunityViewModel: ObservableObject, MessageDisplayable {
                     Logger.success("신고 완료: \(imageId)")
 
                     // 신고한 피드를 목록에서 제거
-                    feeds.removeAll { $0.imageId == imageId }
+                    removeFeed(imageId: imageId)
 
                     isLoading = false
                 }
@@ -259,6 +258,29 @@ final class CommunityViewModel: ObservableObject, MessageDisplayable {
             lastImageId: lastImageId
         )
         return (result.feeds, result.sliceInfo.hasNext)
+    }
+
+    /// 피드 목록 업데이트 (교체 또는 추가)
+    private func updateFeeds(_ newFeeds: [Feed], append: Bool = false) {
+        if append {
+            feeds.append(contentsOf: newFeeds)
+            feedViewDataList.append(contentsOf: newFeeds.map { $0.toViewData() })
+        } else {
+            feeds = newFeeds
+            feedViewDataList = newFeeds.map { $0.toViewData() }
+        }
+    }
+
+    /// 특정 인덱스의 피드 업데이트
+    private func updateFeed(at index: Int, with feed: Feed) {
+        feeds[index] = feed
+        feedViewDataList[index] = feed.toViewData()
+    }
+
+    /// 피드 제거
+    private func removeFeed(imageId: Int) {
+        feeds.removeAll { $0.imageId == imageId }
+        feedViewDataList.removeAll { $0.imageId == imageId }
     }
 
     private func resetPagination() {
