@@ -176,9 +176,9 @@ final class PhotoSaveRepository: PhotoSaveRepositoryProtocol {
             albumChangeRequest.addAssets([placeholder] as NSArray)
         }) { success, error in
             if success {
-                Logger.success("Stampy 앨범에 사진 저장 성공")
+                Logger.success("Stampic 앨범에 사진 저장 성공")
             } else if let error = error {
-                Logger.error("Stampy 앨범에 사진 저장 실패: \(error)")
+                Logger.error("Stampic 앨범에 사진 저장 실패: \(error)")
             }
         }
     }

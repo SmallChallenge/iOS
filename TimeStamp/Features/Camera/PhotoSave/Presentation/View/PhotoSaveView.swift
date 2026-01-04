@@ -40,7 +40,6 @@ struct PhotoSaveView: View {
                     .roundedBorder(color: .gray700, radius: 8)
                     .padding(.top, 28)
                     .padding(.horizontal, 20)
-                    
                 
                 Spacer()
                     .frame(height: 32)
@@ -124,7 +123,6 @@ struct PhotoSaveView: View {
         })
     }
 
- 
     
     // 카테고리 선택
     var categoryPicker: some View {

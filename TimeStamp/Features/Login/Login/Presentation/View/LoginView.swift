@@ -42,9 +42,10 @@ struct LoginView: View {
                 Spacer()
                     .frame(maxHeight: 45)
                 
-                Text("자랑하고 싶은 나의 하루,\n스탬피로 기록하세요!")
+                Text("자랑하고 싶은 나의 하루,\n스탬픽로 기록하세요!")
                     .font(.H2)
                     .foregroundStyle(Color.gray50)
+                    .multilineTextAlignment(.center)
                 
                 Spacer()
                     .frame(maxHeight: 60)
