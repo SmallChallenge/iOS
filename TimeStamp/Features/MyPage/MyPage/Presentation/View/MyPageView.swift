@@ -110,7 +110,6 @@ struct MyPageView: View {
                     }
                 }
                 
-                
                 #if DEBUG
                 Button("토큰복사"){
                     copyTokenForTest()
