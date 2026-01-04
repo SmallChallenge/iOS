@@ -69,18 +69,18 @@ final class CommunityViewModel: ObservableObject, MessageDisplayable {
 
         Task {
             do {
-                let result = try await useCase.feeds(
+                let (newFeeds, newHasNext) = try await fetchFeeds(
                     category: currentCategory,
                     lastPublishedAt: nextCursorPublishedAt,
-                    lastImageId: nextCursorId,
+                    lastImageId: nextCursorId
                 )
 
                 await MainActor.run {
                     // 피드 업데이트
                     if isRefresh || feeds.isEmpty {
-                        feeds = result.feeds
+                        feeds = newFeeds
                     } else {
-                        feeds.append(contentsOf: result.feeds)
+                        feeds.append(contentsOf: newFeeds)
                     }
 
                     // 페이지네이션 정보 업데이트 - 마지막 피드의 정보를 저장
@@ -88,10 +88,10 @@ final class CommunityViewModel: ObservableObject, MessageDisplayable {
                         nextCursorId = lastFeed.imageId
                         nextCursorPublishedAt = lastFeed.publishedAt
                     }
-                    hasNext = result.sliceInfo.hasNext
+                    hasNext = newHasNext
 
                     isLoading = false
-                    Logger.success("피드 로드 완료: \(result.feeds.count)개")
+                    Logger.success("피드 로드 완료: \(newFeeds.count)개")
                 }
             } catch {
                 await MainActor.run {
@@ -126,23 +126,23 @@ final class CommunityViewModel: ObservableObject, MessageDisplayable {
         try? await Task.sleep(nanoseconds: 1_000_000_000)
 
         do {
-            let result = try await useCase.feeds(
+            let (newFeeds, newHasNext) = try await fetchFeeds(
                 category: currentCategory,
                 lastPublishedAt: nil,
                 lastImageId: nil
             )
 
-            feeds = result.feeds
+            feeds = newFeeds
 
             if let lastFeed = feeds.last {
                 nextCursorId = lastFeed.imageId
                 nextCursorPublishedAt = lastFeed.publishedAt
             }
-            hasNext = result.sliceInfo.hasNext
+            hasNext = newHasNext
 
             isLoading = false
             isRefreshing = false
-            Logger.success("새로고침 완료: \(result.feeds.count)개")
+            Logger.success("새로고침 완료: \(newFeeds.count)개")
         } catch {
             isLoading = false
             isRefreshing = false
@@ -200,6 +200,10 @@ final class CommunityViewModel: ObservableObject, MessageDisplayable {
                     show(.reportSuccess)
                     Logger.success("신고 완료: \(imageId)")
                     isLoading = false
+                    
+                    // 목록 새로고침
+                    
+                    
                 }
             } catch {
                 await MainActor.run {
@@ -242,6 +246,20 @@ final class CommunityViewModel: ObservableObject, MessageDisplayable {
     }
 
     // MARK: - Private Methods
+
+    /// 피드 데이터 fetch (공통 로직)
+    private func fetchFeeds(
+        category: String?,
+        lastPublishedAt: String?,
+        lastImageId: Int?
+    ) async throws -> (feeds: [Feed], hasNext: Bool) {
+        let result = try await useCase.feeds(
+            category: category,
+            lastPublishedAt: lastPublishedAt,
+            lastImageId: lastImageId
+        )
+        return (result.feeds, result.sliceInfo.hasNext)
+    }
 
     private func resetPagination() {
         nextCursorId = nil
