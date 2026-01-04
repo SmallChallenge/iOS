@@ -31,6 +31,9 @@ extension Date {
         /// "yyyy.MM.dd"
         case yyyyMMdd = "yyyy.MM.dd"
         
+        /// yyyy.MM.dd.E
+        case yyyyMMddE = "yyyy.MM.dd.E"
+        
         case mmmmdoyyyy = "MMMM do yyyy"
         
         /// "HH:mm:ss"
@@ -62,23 +65,40 @@ extension Date {
         /// yyyy년 MM월 dd일 (E)
         case koreanDate_yyyyMM월dd일E = "yyyy년 MM월 dd일 (E)"
         
-       
+
     }
-    
+
+    public enum LocaleType {
+        /// en_US_POSIX (기본값, ISO 8601 표준)
+        case us
+
+        /// ko_KR (한국어 요일, 월 이름)
+        case kr
+
+        var locale: Locale {
+            switch self {
+            case .us:
+                return Locale(identifier: "en_US_POSIX")
+            case .kr:
+                return Locale(identifier: "ko_KR")
+            }
+        }
+    }
+
     /// Date를 지정된 형식의 문자열로 변환
     /// - Parameters:
     ///   - format: 날짜 형식 (예: "yyyy-MM-dd'T'HH:mm:ss")
     ///   - timeZone: 타임존 (기본값: 현재 타임존)
-    ///   - locale: 로케일 (기본값: en_US_POSIX)
+    ///   - locale: 로케일 (기본값: .posix)
     /// - Returns: 형식화된 날짜 문자열
-    /// - NOTE:요일이나 월 이름을 한국어로 표시할 때만 Locale(identifier: "ko_KR") 사용하기
+    /// - NOTE: 요일이나 월 이름을 한국어로 표시할 때는 locale: .korean 사용하기
     public func toString(format: String,
                          timeZone: TimeZone = .current,
-                         locale: Locale = Locale(identifier: "en_US_POSIX")) -> String {
+                         locale: LocaleType = .us) -> String {
         let formatter = DateFormatter()
         formatter.dateFormat = format
         formatter.timeZone = timeZone
-        formatter.locale = locale
+        formatter.locale = locale.locale
         return formatter.string(from: self)
     }
     
@@ -87,12 +107,12 @@ extension Date {
     /// - Parameters:
     ///   - format: 미리 정의된 날짜 형식 (DateFormat enum)
     ///   - timeZone: 타임존 (기본값: 현재 타임존)
-    ///   - locale: 로케일 (기본값: en_US_POSIX)
+    ///   - locale: 로케일 (기본값: .posix)
     /// - Returns: 형식화된 날짜 문자열
-    /// - NOTE:요일이나 월 이름을 한국어로 표시할 때만 Locale(identifier: "ko_KR") 사용하기
+    /// - NOTE: 요일이나 월 이름을 한국어로 표시할 때는 locale: .korean 사용하기
     public func toString(_ format: DateFormat,
                          timeZone: TimeZone = .current,
-                         locale: Locale = Locale(identifier: "en_US_POSIX")) -> String {
+                         locale: LocaleType = .us) -> String {
         return toString(format: format.rawValue, timeZone: timeZone, locale: locale)
     }
 }

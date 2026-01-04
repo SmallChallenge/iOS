@@ -16,7 +16,8 @@ enum AppConstants {
         static let termsOfService = "https://sage-hare-ff7.notion.site/2d5f2907580d80df9a21f95acd343d3f?source=copy_link"
         /// 개인정보 처리방침
         static let privacyPolicy = "https://sage-hare-ff7.notion.site/2d5f2907580d80eda745ccfbda543bc5?source=copy_link"
-        //static let supportEmail = "support@stampy.kr"
+        
+        static let supportEmail = "stampy7373@gmail.com"
         
         /// 오픈소스라이선스
         static let openSourceLicense = "https://sage-hare-ff7.notion.site/2d8f2907580d80e4accee06ce4da69cd?source=copy_link"

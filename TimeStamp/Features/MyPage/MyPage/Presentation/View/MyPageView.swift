@@ -102,6 +102,7 @@ struct MyPageView: View {
                         showOpenSourceLicense = true
                     }
                     MyPageMenu("앱 버전", type: .text(text: appVersion)){}
+                    MyPageMenu("문의방법", type: .text(text: AppConstants.URLs.supportEmail)){}
                     
                     if authManager.isLoggedIn {
                         MyPageMenu("로그아웃", type: .none){
