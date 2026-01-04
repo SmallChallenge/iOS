@@ -23,7 +23,7 @@ public enum NetworkConfig {
         case .dev:
             "https://api.stampy.kr"
         case .prod:
-            "https://api.stampy.kr/"
+            "https://api.stampy.kr"
         }
     }
 }

@@ -37,14 +37,14 @@ extension CommunityRouter: Router {
     var path: String {
         switch self {
         case .feeds:
-            return "/api/v1/community/feeds"
+            return "api/v1/community/feeds"
         case let .report(imageId):
-            return "/api/v1/community/\(imageId)/report"
+            return "api/v1/community/\(imageId)/report"
         case let .cancelReport(imageId):
-            return "/api/v1/community/\(imageId)/report"
+            return "api/v1/community/\(imageId)/report"
         case let .like(imageId):
-            return "/api/v1/community/\(imageId)/like"
-            
+            return "api/v1/community/\(imageId)/like"
+
         }
     }
     

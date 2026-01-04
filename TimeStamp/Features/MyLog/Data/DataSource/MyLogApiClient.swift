@@ -32,16 +32,16 @@ extension MyLogRouter: Router {
     
     var path: String {
         switch self {
-        case .list: 
-            return "/api/v1/images"
+        case .list:
+            return "api/v1/images"
         case let .detail(id):
-            return "/api/v1/images/\(id)"
-            
+            return "api/v1/images/\(id)"
+
         case let .edit(id, _,_):
-            return "/api/v1/images/\(id)"
-            
+            return "api/v1/images/\(id)"
+
         case let .deleteLog(logId):
-            return "/api/v1/images/\(logId)"
+            return "api/v1/images/\(logId)"
         }
     }
     
