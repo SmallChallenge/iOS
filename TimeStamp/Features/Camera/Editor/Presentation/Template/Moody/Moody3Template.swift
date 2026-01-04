@@ -37,6 +37,7 @@ struct Moody3Template: View , TemplateViewProtocol {
                 Spacer()
                 
                 Text(displayDate.toString(.yyyyMMddE, locale: .kr))
+                    .font(.suit(.heavy), size: 14)
             }
             .padding(.top, 7)
             .padding([.horizontal, .bottom], 16)
