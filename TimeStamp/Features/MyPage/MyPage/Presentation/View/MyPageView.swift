@@ -112,16 +112,14 @@ struct MyPageView: View {
                 }
                 
                 
-                // 아래는 지우기
-               
-                
+                #if DEBUG
                 Button("토큰복사"){
                     copyTokenForTest()
                 }
-                
                 Button("로그 공유 (\(Logger.getLogCount())개)"){
                     shareLog()
                 }
+                #endif
             }
         }
         .mainBackgourndColor()
