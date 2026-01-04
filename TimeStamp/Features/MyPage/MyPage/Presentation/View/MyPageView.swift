@@ -46,7 +46,6 @@ struct MyPageView: View {
         let build = Bundle.main.infoDictionary?["CFBundleVersion"] as? String ?? "1"
         self.appVersion = "\(version)(\(build))"
 
-
         let appearance = UINavigationBarAppearance()
         appearance.backgroundColor = UIColor.gray900
         UINavigationBar.appearance().standardAppearance = appearance
@@ -125,7 +124,6 @@ struct MyPageView: View {
         .mainBackgourndColor()
         .navigationBarTitleDisplayMode(.inline)
         .navigationBarBackButtonHidden(true)
-        .navigationTitle("마이페이지")
         .toolbar {
             ToolbarItem(placement: .navigationBarLeading) {
                 // 뒤로가기 버튼
@@ -134,11 +132,11 @@ struct MyPageView: View {
                 }
             }
             
-//            ToolbarItem(placement: .title) {
-//                Text("마이페이지")
-//                    .font(.SubTitle1)
-//                    .foregroundStyle(Color.gray50)
-//            }
+            ToolbarItem(placement: .title) {
+                Text("마이페이지")
+                    .font(.SubTitle1)
+                    .foregroundStyle(Color.gray50)
+            }
         }
         // 유저정보화면 띄우기
         .navigationDestination(isPresented: $presentUserInfo) {
