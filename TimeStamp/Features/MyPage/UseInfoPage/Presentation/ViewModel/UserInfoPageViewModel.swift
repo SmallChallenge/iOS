@@ -26,6 +26,8 @@ final class UserInfoPageViewModel: ObservableObject, MessageDisplayable {
 
     /// 회원탈퇴 성공
     @Published var withdrawalSuccess: Bool = false
+    /// 회원탈퇴 실패
+    @Published var showSignOutFailedPopup: Bool = false
 
     // MARK: - Input Methods
 
@@ -56,7 +58,8 @@ final class UserInfoPageViewModel: ObservableObject, MessageDisplayable {
             
         } catch {
             isLoading = false
-            show(.unknownRequestFailed)
+            //show(.signoutFailed)
+            showSignOutFailedPopup = true
             Logger.error("회원탈퇴 실패: \(error)")
         }
     }
