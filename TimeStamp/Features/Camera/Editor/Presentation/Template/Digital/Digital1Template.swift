@@ -15,11 +15,6 @@ struct Digital1Template: View, TemplateViewProtocol {
     
     var body: some View {
         VStack {
-            if hasLogo {
-                LogotypeImage()
-                    .padding(16)
-            }
-            
             Spacer()
                 .frame(height: 41)
             
@@ -52,6 +47,12 @@ struct Digital1Template: View, TemplateViewProtocol {
                 .padding(.bottom, 16)
             
         }
+        .overlay(alignment: .top) {
+            if hasLogo {
+                LogotypeImage()
+                    .padding(16)
+            }
+        }
     }
     
     private var hourTens: Int {
@@ -73,16 +74,29 @@ struct Digital1Template: View, TemplateViewProtocol {
 }
 
 #Preview {
-    ZStack {
-        Image("sampleImage")
-            .resizable()
-            .frame(width: 300, height: 300)
-            .aspectRatio(1, contentMode: .fit)
+    VStack{
+        ZStack {
+            Image("sampleImage")
+                .resizable()
+                .frame(width: 300, height: 300)
+                .aspectRatio(1, contentMode: .fit)
+            
+            Digital1Template(displayDate: Date(), hasLogo: true)
+        }
+        .frame(width: 300, height: 300)
+        .aspectRatio(1, contentMode: .fit)
         
-        Digital1Template(displayDate: Date(), hasLogo: true)
+        ZStack {
+            Image("sampleImage")
+                .resizable()
+                .frame(width: 300, height: 300)
+                .aspectRatio(1, contentMode: .fit)
+            
+            Digital1Template(displayDate: Date(), hasLogo: false)
+        }
+        .frame(width: 300, height: 300)
+        .aspectRatio(1, contentMode: .fit)
     }
-    .frame(width: 300, height: 300)
-    .aspectRatio(1, contentMode: .fit)
 }
 
 

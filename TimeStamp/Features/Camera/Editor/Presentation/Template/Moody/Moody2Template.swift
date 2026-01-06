@@ -75,7 +75,6 @@ struct Moody2Template: View , TemplateViewProtocol {
                     radius: 10 / 2, x: 0, y: 0
                 )
             }
-            
         }
         
     }
@@ -94,33 +93,28 @@ struct Moody2Template: View , TemplateViewProtocol {
 
 #Preview {
     
-    ZStack {
-        Image("sampleImage")
-            .resizable()
-            .frame(width: 300, height: 300)
-            .aspectRatio(1, contentMode: .fit)
+    VStack{
+        ZStack {
+            Image("sampleImage")
+                .resizable()
+                .frame(width: 300, height: 300)
+                .aspectRatio(1, contentMode: .fit)
+            
+            Moody2Template(displayDate: Date(), hasLogo: true)
+        }
+        .frame(width: 300, height: 300)
+        .aspectRatio(1, contentMode: .fit)
         
-        Moody2Template(displayDate: Date(), hasLogo: true)
-    }
-    .frame(width: 300, height: 300)
-    .aspectRatio(1, contentMode: .fit)
-}
-
-
-
-
-
-import SwiftUI
-import UIKit
-
-struct VisualEffectView: UIViewRepresentable {
-    var effect: UIVisualEffect?
-
-    func makeUIView(context _: Context) -> UIVisualEffectView {
-        UIVisualEffectView()
-    }
-
-    func updateUIView(_ uiView: UIVisualEffectView, context _: Context) {
-        uiView.effect = effect
+        ZStack {
+            Image("sampleImage")
+                .resizable()
+                .frame(width: 300, height: 300)
+                .aspectRatio(1, contentMode: .fit)
+            
+            Moody2Template(displayDate: Date(), hasLogo: false)
+        }
+        .frame(width: 300, height: 300)
+        .aspectRatio(1, contentMode: .fit)
     }
 }
+
