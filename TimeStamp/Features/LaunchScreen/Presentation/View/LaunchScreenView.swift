@@ -29,8 +29,8 @@ struct LaunchScreenView: View {
                 Image("LaunchImage")
 
             }
-            .onAppear {
-                // 토큰 갱신 체크
+            .task {
+                // 토큰 갱신 + 유저 정보 가져오기
                 viewModel.checkAuth()
             }
         }

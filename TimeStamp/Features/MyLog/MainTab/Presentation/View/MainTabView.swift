@@ -58,12 +58,8 @@ struct MainTabView: View {
             .mainBackgourndColor()
             .task {
                 // 추적 권한 요청
-                await TrackingManager.shared.requestTrackingAuthorization()
-
-                // 추적 권한 상태가 결정된 후 Amplitude 초기화
-                AmplitudeManager.shared.loadAmplitude()
+                await viewModel.requestAuthorization()
             }
-
             .popup(isPresented: $showLimitReachedPopup, content: {
                 Modal(title: "기록 한계에 도달했어요.\n로그인하면 계속 기록할 수 있어요.")
                     .buttons {

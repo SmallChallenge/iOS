@@ -20,7 +20,8 @@ final class AmplitudeManager {
     func loadAmplitude() {
         let amplitude = Amplitude(
             configuration: Configuration(
-                apiKey: AMPLITUDE_API_KEY
+                apiKey: AMPLITUDE_API_KEY,
+                
             )
         )
         self.instance = amplitude
@@ -103,10 +104,15 @@ extension AmplitudeManager {
     
     // MARK: - 이벤트 -
     
+    /// Amplitude userId 설정 (로그인 이벤트 없이)
+    func setUserId(_ userId: Int?) {
+        let userIdString = userId.map { "user_\($0)" }
+            instance?.setUserId(userId: userIdString)
+    }
+
     func login(userId: Int, socialType: LoginType){
-        // userId 설정 (Amplitude는 최소 5자 이상 권장)
-        let userIdString = "user_\(userId)"
-        instance?.setUserId(userId: userIdString)
+        // userId 설정
+        setUserId(userId)
 
         // 로그인 이벤트 전송 (eventTrack 내부에서 초기화 확인)
         eventTrack(.login, eventProperties: [
