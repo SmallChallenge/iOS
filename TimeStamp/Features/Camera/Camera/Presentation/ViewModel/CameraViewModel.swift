@@ -42,18 +42,12 @@ final class CameraViewModel: ObservableObject {
             .receive(on: DispatchQueue.main)
             .sink { [weak self] isAuthorized in
                 guard let self = self else { return }
-                Logger.info("카메라 권한 상태 변경: \(isAuthorized)")
 
                 if isAuthorized {
-                    // 권한 허용되면 카메라 시작
-                    Logger.success("카메라 권한 허용됨 - 세션 시작")
                     self.cameraManager.startSession()
                 } else {
-                    // 권한 거부되면 알림 표시 (.notDetermined 제외)
                     let status = AVCaptureDevice.authorizationStatus(for: .video)
-                    Logger.warning("카메라 권한 상태: \(status.rawValue)")
                     if status == .denied || status == .restricted {
-                        Logger.warning("카메라 권한 거부됨 - 설정 알림 표시")
                         self.showPermissionAlert = true
                     }
                 }
@@ -80,7 +74,6 @@ final class CameraViewModel: ObservableObject {
     /// 카메라 전환 (전면 ↔ 후면)
     func switchCamera() {
         guard cameraManager.isAuthorized else {
-            Logger.warning("카메라 권한 없음 - 카메라 전환 불가")
             showPermissionAlert = true
             return
         }
@@ -90,7 +83,6 @@ final class CameraViewModel: ObservableObject {
     /// 플래시 토글
     func toggleFlash() {
         guard cameraManager.isAuthorized else {
-            Logger.warning("카메라 권한 없음 - 플래시 설정 불가")
             showPermissionAlert = true
             return
         }
@@ -99,9 +91,7 @@ final class CameraViewModel: ObservableObject {
 
     /// 사진 촬영
     func capturePhoto() {
-        // 카메라 권한 체크
         guard cameraManager.isAuthorized else {
-            Logger.warning("카메라 권한 없음 - 촬영 불가")
             showPermissionAlert = true
             return
         }

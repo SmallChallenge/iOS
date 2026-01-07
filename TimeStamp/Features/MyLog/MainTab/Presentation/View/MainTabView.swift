@@ -58,13 +58,7 @@ struct MainTabView: View {
             .mainBackgourndColor()
             .task {
                 // 추적 권한 요청
-                let isAuthorized = await TrackingManager.shared.requestTrackingAuthorization()
-
-                if isAuthorized {
-                    Logger.success("추적 권한 허용됨 - 분석 도구 활성화")
-                } else {
-                    Logger.info("추적 권한 거부됨 - 제한된 분석 모드")
-                }
+                await TrackingManager.shared.requestTrackingAuthorization()
 
                 // 추적 권한 상태가 결정된 후 Amplitude 초기화
                 AmplitudeManager.shared.loadAmplitude()
