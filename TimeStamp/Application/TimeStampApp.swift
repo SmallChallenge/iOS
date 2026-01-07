@@ -53,7 +53,7 @@ struct RootViewWithGlobalToast<Content: View>: View {
         content
             .toast(message: $toastManager.message)
     }
-    
+
 }
 
 // MARK: - 화면 회전 제어를 위한 AppDelegate

@@ -60,7 +60,17 @@ struct MainTabView: View {
                 // 카메라 권한 받기
                 requestCameraPermission()
             }
-            
+            .task {
+                // 추적 권한 요청
+                let isAuthorized = await TrackingManager.shared.requestTrackingAuthorization()
+
+                if isAuthorized {
+                    Logger.success("추적 권한 허용됨 - 분석 도구 활성화")
+                } else {
+                    Logger.info("추적 권한 거부됨 - 제한된 분석 모드")
+                }
+            }
+
             .popup(isPresented: $showLimitReachedPopup, content: {
                 Modal(title: "기록 한계에 도달했어요.\n로그인하면 계속 기록할 수 있어요.")
                     .buttons {
