@@ -19,8 +19,8 @@ struct TimeStampApp: App {
         // Kakao SDK 초기화 (환경변수에서 가져옴)
         let kakaoAppKey = Bundle.main.kakaoAppKey
         KakaoSDK.initSDK(appKey: kakaoAppKey)
-        
-        AmplitudeManager.shared.loadAmplitude()
+
+        // Amplitude는 MainTabView에서 추적 권한 받은 후 초기화
     }
     
     var body: some Scene {

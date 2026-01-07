@@ -56,10 +56,6 @@ struct MainTabView: View {
                 
             } // ~ VStack
             .mainBackgourndColor()
-            .onAppear {
-                // 카메라 권한 받기
-                requestCameraPermission()
-            }
             .task {
                 // 추적 권한 요청
                 let isAuthorized = await TrackingManager.shared.requestTrackingAuthorization()
@@ -69,6 +65,9 @@ struct MainTabView: View {
                 } else {
                     Logger.info("추적 권한 거부됨 - 제한된 분석 모드")
                 }
+
+                // 추적 권한 상태가 결정된 후 Amplitude 초기화
+                AmplitudeManager.shared.loadAmplitude()
             }
 
             .popup(isPresented: $showLimitReachedPopup, content: {
@@ -154,17 +153,6 @@ struct MainTabView: View {
             Image("iconUser_line")
                 .resizable()
                 .frame(width: 24, height: 24)
-        }
-    }
-    
-    /// 앱 시작 시 카메라 권한 요청
-    private func requestCameraPermission() {
-        AVCaptureDevice.requestAccess(for: .video) { granted in
-            if granted {
-                Logger.success("카메라 권한 허용됨")
-            } else {
-                Logger.warning("카메라 권한 거부됨")
-            }
         }
     }
 }

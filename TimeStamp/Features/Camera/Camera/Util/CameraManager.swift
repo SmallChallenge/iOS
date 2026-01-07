@@ -81,15 +81,21 @@ final class CameraManager: NSObject, ObservableObject {
 
     /// 카메라 권한 확인 및 요청
     func checkAuthorization() {
-        switch AVCaptureDevice.authorizationStatus(for: .video) {
+        let status = AVCaptureDevice.authorizationStatus(for: .video)
+        Logger.info("카메라 권한 체크: \(status.rawValue)")
+
+        switch status {
         case .authorized:
+            Logger.success("카메라 권한 이미 허용됨")
             isAuthorized = true
             // 카메라 설정되었는지 확인
             if session.inputs.isEmpty {
                 setupCamera()
             }
         case .notDetermined:
+            Logger.info("카메라 권한 미결정 - 팝업 요청 시작")
             AVCaptureDevice.requestAccess(for: .video) { [weak self] granted in
+                Logger.info("카메라 권한 요청 결과: \(granted)")
                 DispatchQueue.main.async {
                     self?.isAuthorized = granted
                     if granted {
@@ -98,6 +104,7 @@ final class CameraManager: NSObject, ObservableObject {
                 }
             }
         default:
+            Logger.warning("카메라 권한 거부됨 또는 제한됨")
             isAuthorized = false
         }
     }

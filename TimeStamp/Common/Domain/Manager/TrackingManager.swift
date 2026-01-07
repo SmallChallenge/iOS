@@ -37,18 +37,20 @@ final class TrackingManager: ObservableObject {
     /// - Returns: 사용자가 허용했는지 여부
     @MainActor
     func requestTrackingAuthorization() async -> Bool {
+        Logger.info("===== 추적 권한 체크 시작 =====")
+        Logger.info("현재 권한 상태: \(trackingStatus.description) (\(trackingStatus.rawValue))")
+
         // 이미 결정된 상태라면 다시 요청하지 않음
         if trackingStatus != .notDetermined {
-            Logger.info("이미 추적 권한이 결정됨: \(trackingStatus.description)")
             return isTrackingAuthorized
         }
 
-        Logger.info("추적 권한 요청 시작")
+        Logger.info("🔔 추적 권한 팝업 표시 중...")
 
         let status = await ATTrackingManager.requestTrackingAuthorization()
         trackingStatus = status
 
-        Logger.success("추적 권한 결과: \(status.description)")
+        Logger.success("✅ 추적 권한 결과: \(status.description)")
 
         return isTrackingAuthorized
     }

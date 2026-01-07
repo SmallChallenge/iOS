@@ -7,6 +7,7 @@
 
 import SwiftUI
 import Combine
+import AVFoundation
 
 /// 카메라 화면의 비즈니스 로직을 관리하는 ViewModel
 @MainActor
@@ -35,6 +36,29 @@ final class CameraViewModel: ObservableObject {
         // CameraManager의 플래시 모드를 ViewModel과 동기화
         cameraManager.$flashMode
             .assign(to: &$flashMode)
+
+        // 카메라 권한 변경 감지
+        cameraManager.$isAuthorized
+            .receive(on: DispatchQueue.main)
+            .sink { [weak self] isAuthorized in
+                guard let self = self else { return }
+                Logger.info("카메라 권한 상태 변경: \(isAuthorized)")
+
+                if isAuthorized {
+                    // 권한 허용되면 카메라 시작
+                    Logger.success("카메라 권한 허용됨 - 세션 시작")
+                    self.cameraManager.startSession()
+                } else {
+                    // 권한 거부되면 알림 표시 (.notDetermined 제외)
+                    let status = AVCaptureDevice.authorizationStatus(for: .video)
+                    Logger.warning("카메라 권한 상태: \(status.rawValue)")
+                    if status == .denied || status == .restricted {
+                        Logger.warning("카메라 권한 거부됨 - 설정 알림 표시")
+                        self.showPermissionAlert = true
+                    }
+                }
+            }
+            .store(in: &cancellables)
     }
 
     // MARK: - Lifecycle
@@ -42,13 +66,8 @@ final class CameraViewModel: ObservableObject {
     /// 뷰가 나타날 때 카메라 시작
     func onAppear() {
         // 권한 상태 확인 (설정에서 돌아왔을 때 반영)
+        // isAuthorized 변경은 init()의 sink에서 자동 처리됨
         cameraManager.checkAuthorization()
-
-        if cameraManager.isAuthorized {
-            cameraManager.startSession()
-        } else {
-            showPermissionAlert = true
-        }
     }
 
     /// 뷰가 사라질 때 카메라 중지
@@ -60,16 +79,33 @@ final class CameraViewModel: ObservableObject {
 
     /// 카메라 전환 (전면 ↔ 후면)
     func switchCamera() {
+        guard cameraManager.isAuthorized else {
+            Logger.warning("카메라 권한 없음 - 카메라 전환 불가")
+            showPermissionAlert = true
+            return
+        }
         cameraManager.switchCamera()
     }
 
     /// 플래시 토글
     func toggleFlash() {
+        guard cameraManager.isAuthorized else {
+            Logger.warning("카메라 권한 없음 - 플래시 설정 불가")
+            showPermissionAlert = true
+            return
+        }
         cameraManager.toggleFlash()
     }
 
     /// 사진 촬영
     func capturePhoto() {
+        // 카메라 권한 체크
+        guard cameraManager.isAuthorized else {
+            Logger.warning("카메라 권한 없음 - 촬영 불가")
+            showPermissionAlert = true
+            return
+        }
+
         #if targetEnvironment(simulator)
         // 시뮬레이터: Color.gray를 UIImage로 변환
         let dummyImage = createDummyImage()
