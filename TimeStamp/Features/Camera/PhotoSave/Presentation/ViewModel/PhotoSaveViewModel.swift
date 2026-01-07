@@ -105,6 +105,15 @@ final class PhotoSaveViewModel: ObservableObject, MessageDisplayable {
 
             // MyLogView에 새로고침 알림
             NotificationCenter.default.post(name: .shouldRefreshMyLog, object: nil)
+            
+            /// 앰플리튜드
+            AmplitudeManager.shared.trackCompletePhotoSave(
+                category: categoryEntity,
+                visibility: visibilityEntity
+            )
+            if visibility == .publicVisible {
+                AmplitudeManager.shared.trackPublicPhotoUpload(category: categoryEntity)
+            }
 
         } catch {
             // 저장 실패

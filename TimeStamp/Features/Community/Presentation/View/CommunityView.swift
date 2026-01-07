@@ -45,6 +45,8 @@ struct CommunityView: View {
             if viewModel.feeds.isEmpty {
                 viewModel.loadFeeds()
             }
+            // 앰플리튜드
+            AmplitudeManager.shared.trackCommunityViewEnter()
         }
         // 로그인 팝업 띄우기
         .popup(isPresented: $showLoginPopup, content: {

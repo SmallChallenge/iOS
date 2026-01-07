@@ -63,8 +63,15 @@ final class LogEditorViewModel: ObservableObject, MessageDisplayable {
                     )
                     Logger.success("서버 로그 수정 성공: \(result)")
                     
+                    // 앰플리튜드
+                    // 비공개 -> 전체공개가 된 경우..
+                    if log.visibility == .privateVisible &&
+                        selectedVisibility == .publicVisible {
+                        AmplitudeManager.shared.trackPublicPhotoUpload(category: categoryEntity)
+                    }
                     
-                case let .local(localImage):
+                    
+                case .local:
                     // 로컬 로그 수정
                     try useCase.editLogForLocal(
                         logId: log.id,
