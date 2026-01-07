@@ -18,28 +18,13 @@ final class AmplitudeManager {
     private let AMPLITUDE_API_KEY = "1f0951318fc0d23dea1fae935c017be9"
 
     func loadAmplitude() {
-        Logger.debug("Amplitude 초기화 시작")
-
-        // Configuration 설정
-        let configuration = Configuration(
-            apiKey: AMPLITUDE_API_KEY,
-            flushQueueSize: 10,
-            flushIntervalMillis: 10000
+        let amplitude = Amplitude(
+            configuration: Configuration(
+                apiKey: AMPLITUDE_API_KEY
+            )
         )
-        
-
-        let amplitude = Amplitude(configuration: configuration)
         self.instance = amplitude
-
-        // 추적 권한 확인 로그
-        let trackingStatus = TrackingManager.shared.checkTrackingStatus()
-        if trackingStatus == .authorized {
-            Logger.success("추적 권한 허용됨 - IDFA 자동 수집")
-        } else {
-            Logger.info("추적 권한 거부됨 - IDFA 수집 제한")
-        }
-
-        Logger.success("Amplitude 초기화 완료")
+        Logger.debug("Amplitude 초기화 완료")
     }
 }
 extension AmplitudeManager {
@@ -91,10 +76,15 @@ extension AmplitudeManager {
             mergedProperties.merge(eventProperties) { (_, new) in new }
         }
 
-        // Amplitude 인스턴스 확인
-        guard let instance = instance else {
-            Logger.error("Amplitude 인스턴스가 초기화되지 않음 - 이벤트 전송 실패: \(event.name)")
+        // Amplitude 인스턴스 확인 및 초기화
+        if instance == nil {
+            Logger.warning("Amplitude 인스턴스가 초기화되지 않음 - 즉시 초기화 시도")
             loadAmplitude()
+        }
+
+        // 초기화 후에도 instance가 없으면 실패
+        guard let instance = instance else {
+            Logger.error("Amplitude 초기화 실패 - 이벤트 전송 불가: \(event.name)")
             return
         }
 
@@ -105,8 +95,8 @@ extension AmplitudeManager {
         )
 
         // 성공 로그
-        Logger.success(">>>>> Amplitude 이벤트 전송: \(event.name), Properties: \(mergedProperties)")
-        
+        Logger.debug("Amplitude 이벤트 전송: \(event.name)")
+
         // 즉시 전송 트리거 (디버그용)
         instance.flush()
     }
@@ -114,17 +104,19 @@ extension AmplitudeManager {
     // MARK: - 이벤트 -
     
     func login(userId: Int, socialType: LoginType){
-        instance?.setUserId(userId: "\(userId)")
+        // userId 설정 (Amplitude는 최소 5자 이상 권장)
+        let userIdString = "user_\(userId)"
+        instance?.setUserId(userId: userIdString)
+
+        // 로그인 이벤트 전송 (eventTrack 내부에서 초기화 확인)
         eventTrack(.login, eventProperties: [
             "login_method" : socialType.rawValue
         ])
-        
     }
-    
+
     func logout(){
         eventTrack(.logout)
         instance?.setUserId(userId: nil)
-        instance?.reset()
     }
     
     /// 카메라 화면 진입
@@ -139,10 +131,12 @@ extension AmplitudeManager {
             "save_scope": visibility.rawValue.lowercased()
         ])
     }
-    
+
     /// 전체공개로 사진 업로드 or 전체공개로 사진을 수정한 경우
     func trackPublicPhotoUpload(category: Category){
-        eventTrack(.photoUploadToPublic)
+        eventTrack(.photoUploadToPublic, eventProperties: [
+            "category" : category.rawValue.lowercased()
+        ])
     }
     
     /// 커뮤니티 화면 진입
