@@ -56,6 +56,7 @@ final class LoginUseCase: LoginUseCaseProtocol {
             accessToken: entity.accessToken,
             refreshToken: entity.refreshToken
         )
+        AmplitudeManager.shared.login(userId: entity.userId, socialType: entity.socialType)
     }
     
     // 가입 취소

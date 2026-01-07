@@ -10,14 +10,6 @@ import KakaoSDKCommon
 import KakaoSDKAuth
 import GoogleSignIn
 
-// 화면 회전 제어를 위한 AppDelegate
-class AppDelegate: NSObject, UIApplicationDelegate {
-    static var orientationLock = UIInterfaceOrientationMask.all
-    
-    func application(_ application: UIApplication, supportedInterfaceOrientationsFor window: UIWindow?) -> UIInterfaceOrientationMask {
-        return AppDelegate.orientationLock
-    }
-}
 
 @main
 struct TimeStampApp: App {
@@ -27,6 +19,8 @@ struct TimeStampApp: App {
         // Kakao SDK 초기화 (환경변수에서 가져옴)
         let kakaoAppKey = Bundle.main.kakaoAppKey
         KakaoSDK.initSDK(appKey: kakaoAppKey)
+        
+        AmplitudeManager.shared.loadAmplitude()
     }
     
     var body: some Scene {
@@ -60,4 +54,13 @@ struct RootViewWithGlobalToast<Content: View>: View {
             .toast(message: $toastManager.message)
     }
     
+}
+
+// MARK: - 화면 회전 제어를 위한 AppDelegate
+class AppDelegate: NSObject, UIApplicationDelegate {
+    static var orientationLock = UIInterfaceOrientationMask.all
+    
+    func application(_ application: UIApplication, supportedInterfaceOrientationsFor window: UIWindow?) -> UIInterfaceOrientationMask {
+        return AppDelegate.orientationLock
+    }
 }
