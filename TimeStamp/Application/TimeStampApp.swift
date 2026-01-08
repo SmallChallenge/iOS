@@ -25,12 +25,8 @@ struct TimeStampApp: App {
         let testDeviceIdentifiers = ["b7d8c698dfeb4cca7dac195cd6991fe3"]
         MobileAds.shared.requestConfiguration.testDeviceIdentifiers = testDeviceIdentifiers
         
-        if TrackingManager.shared.isTrackingAuthorized {
-            // 애드몹 초기화 (Initialize the Google Mobile Ads SDK.)
-            MobileAds.shared.start { status in
-                Logger.debug(">>>>> 애드몹 초기화 \(status.adapterStatusesByClassName)")
-            }
-        }
+        // 애드몹 초기화 (Initialize the Google Mobile Ads SDK.)
+        MobileAds.shared.start()
     }
     
     var body: some Scene {

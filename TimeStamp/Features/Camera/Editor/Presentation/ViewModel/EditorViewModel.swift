@@ -21,11 +21,14 @@ class EditorViewModel: ObservableObject, MessageDisplayable {
     @Published var isOnLogo: Bool  = true
     // 광고보기 팝업 띄우기
     @Published var showAdPopup: Bool  = false
-    
+
     /// 에러 메시지
     @Published var toastMessage: String?
     @Published var alertMessage: String?
-    
+
+    // MARK: - Constants
+    private let maxWaitAttempts = 100 // 최대 대기 시도 횟수
+    private let waitInterval: UInt64 = 100_000_000 // 0.1초 (nanoseconds)
 
     init(useCase: EditorUseCaseProtocol) {
         self.useCase = useCase
@@ -72,9 +75,9 @@ class EditorViewModel: ObservableObject, MessageDisplayable {
             isLoadingAd = true
 
             // 백그라운드에서 이미 로딩 중일 수 있으므로 완료될 때까지 대기
-            for _ in 0..<100 {
+            for _ in 0..<maxWaitAttempts {
                 if isAdReady { break }
-                try? await Task.sleep(nanoseconds: 100_000_000) // 0.1초
+                try? await Task.sleep(nanoseconds: waitInterval)
             }
 
             // 여전히 준비 안됐으면 새로 로드 시도

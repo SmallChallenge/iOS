@@ -63,9 +63,11 @@ extension AdMobRepository: FullScreenContentDelegate {
         }
         
         func adDidDismissFullScreenContent(_ ad: FullScreenPresentingAd) {
-            // 보상을 받지 않고 닫았을 경우 처리
-            showAdContinuation?.resume(throwing: AdError.cancelled)
-            showAdContinuation = nil
+            // 보상을 받지 않고 닫았을 경우에만 에러 처리
+            if showAdContinuation != nil {
+                showAdContinuation?.resume(throwing: AdError.cancelled)
+                showAdContinuation = nil
+            }
             rewardedAd = nil
         }
     
