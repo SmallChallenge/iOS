@@ -21,10 +21,6 @@ struct TimeStampApp: App {
         let kakaoAppKey = Bundle.main.kakaoAppKey
         KakaoSDK.initSDK(appKey: kakaoAppKey)
 
-        
-        let testDeviceIdentifiers = ["b7d8c698dfeb4cca7dac195cd6991fe3"]
-        MobileAds.shared.requestConfiguration.testDeviceIdentifiers = testDeviceIdentifiers
-        
         // 애드몹 초기화 (Initialize the Google Mobile Ads SDK.)
         MobileAds.shared.start()
     }
