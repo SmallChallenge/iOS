@@ -10,16 +10,21 @@ import SwiftUI
 import Combine
 
 @MainActor
-class EditorViewModel: ObservableObject {
+class EditorViewModel: ObservableObject, MessageDisplayable {
     private let useCase: EditorUseCaseProtocol
     @Published var isAdReady = false
-    
+    @Published var isLoadingAd = false
+
     /// 광고시청여부
     @Published var hasWatchedAd: Bool  = false
     /// 로고 있없 여부
     @Published var isOnLogo: Bool  = true
     // 광고보기 팝업 띄우기
     @Published var showAdPopup: Bool  = false
+    
+    /// 에러 메시지
+    @Published var toastMessage: String?
+    @Published var alertMessage: String?
     
 
     init(useCase: EditorUseCaseProtocol) {
@@ -39,6 +44,11 @@ class EditorViewModel: ObservableObject {
             showAdPopup = true
         }
     }
+    
+    // 광고볼래? 팝업 닫기
+    func closeAdPopup() {
+        showAdPopup = false
+    }
 
     func loadAd() async {
         guard !isAdReady else { return }
@@ -50,45 +60,47 @@ class EditorViewModel: ObservableObject {
         }
     }
     
-    func closeAdPopup() {
-        showAdPopup = false
-    }
-    
-    
-
-//    func playAd() async {
-//        guard let rootVC = UIApplication.shared.connectedScenes
-//            .compactMap({ $0 as? UIWindowScene })
-//            .first?.windows.first?.rootViewController else { return }
-//        
-//        do {
-//            let amount = try await useCase.execute(from: rootVC)
-//            print(">>>>> amount: \(amount)")
-//            isAdReady = false // 소진되었으므로 다시 로드 필요
-//            
-//            // 광고봤음.
-//            hasWatchedAd = true
-//        } catch {
-//            Logger.error("광고 표시 실패: \(error)")
-//        }
-//    }
-    
     @MainActor
     func playAd() async {
-        // 1. rootViewController 대신 'TopMost'를 찾습니다.
         guard let topVC = UIApplication.shared.getTopMostViewController() else {
             print("최상단 뷰 컨트롤러를 찾을 수 없습니다.")
             return
         }
 
+        // 광고가 준비되지 않았으면 사용자에게 로딩 표시하며 로드
+        if !isAdReady {
+            isLoadingAd = true
+
+            // 백그라운드에서 이미 로딩 중일 수 있으므로 완료될 때까지 대기
+            for _ in 0..<100 {
+                if isAdReady { break }
+                try? await Task.sleep(nanoseconds: 100_000_000) // 0.1초
+            }
+
+            // 여전히 준비 안됐으면 새로 로드 시도
+            if !isAdReady {
+                await loadAd()
+            }
+
+            isLoadingAd = false
+
+            // 그래도 준비 안됐으면 에러
+            guard isAdReady else {
+                Logger.error("광고 로드 실패")
+                show(.unknownRequestFailed)
+                return
+            }
+        }
+
         do {
-            // 2. 이제 안전하게 이 VC 위에 광고를 띄웁니다.
             let reward = try await useCase.execute(from: topVC)
-            print("보상 지급 성공: \(reward)")
+            Logger.success("보상 지급 성공: \(reward)")
+            isAdReady = false // 소진되었으므로 다시 로드 필요
             hasWatchedAd = true
             isOnLogo = false
         } catch {
-            print("광고 표시 실패: \(error)")
+            Logger.error("광고 표시 실패: \(error)")
+            show(.unknownRequestFailed)
         }
     }
 }

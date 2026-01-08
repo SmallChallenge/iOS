@@ -64,27 +64,43 @@ struct EditorView: View {
 
                 Spacer()
                     .frame(maxHeight: 56)
-                
+
                 // 템플릿 선택 뷰
                 VStack(spacing: 24) {
-                    
+
                     // 템플릿스타일 | 로고 스위치
                     HStack {
                         // 스타일 버튼 목록
                         templateStyleSelectorView
-                        
+
                         Spacer()
-                        
+
                         // 로고 스위치
                         logoToggle
                     }
                     .padding(.horizontal, 20)
-                    
+
                     // 템플릿 목록
                     templateList
 
                 }
             } // ~VStack
+
+            // 광고 로딩 중 오버레이
+            if viewModel.isLoadingAd {
+                Color.black.opacity(0.4)
+                    .ignoresSafeArea()
+
+                VStack(spacing: 16) {
+                    ProgressView()
+                        .scaleEffect(1.5)
+                        .tint(.white)
+
+                    Text("광고를 불러오는 중...")
+                        .font(.Body1)
+                        .foregroundColor(.white)
+                }
+            }
         } // ~ZStack
         .task {
             await viewModel.loadAd()
@@ -118,6 +134,7 @@ struct EditorView: View {
                 }
             }
         }
+        .toast(message: $viewModel.toastMessage)
         // 광고 시청 팝업 띄우기
         .popup(isPresented: $viewModel.showAdPopup, content: {
             Modal(title: "광고 시청 후\n워터마크를 제거하세요.")
