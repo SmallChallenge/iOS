@@ -105,6 +105,8 @@ struct EditorView: View {
         .task {
             await viewModel.loadAd()
         }
+        .mainBackgourndColor()
+        .toast(message: $viewModel.toastMessage)
         .navigationDestination(isPresented: $navigateToPhotoSave) {
             if let editedImage = editedImage {
                 diContainer.makePhotoSaveView(
@@ -116,7 +118,6 @@ struct EditorView: View {
                 )
             }
         }
-        .mainBackgourndColor()
         .navigationBarTitleDisplayMode(.inline)
         .navigationBarBackButtonHidden(true)
         .toolbar {
@@ -134,7 +135,6 @@ struct EditorView: View {
                 }
             }
         }
-        .toast(message: $viewModel.toastMessage)
         // 광고 시청 팝업 띄우기
         .popup(isPresented: $viewModel.showAdPopup, content: {
             Modal(title: "광고 시청 후\n워터마크를 제거하세요.")
