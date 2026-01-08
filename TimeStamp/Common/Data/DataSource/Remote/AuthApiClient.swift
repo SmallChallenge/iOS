@@ -56,26 +56,26 @@ extension AuthRouter: Router {
         switch self {
         case .appleLogin, .googleLogin, .kakaoLogin:
             "api/v1/auth/social-login"
-            
+
         case .userInfo:
-            "/api/v1/user/me"
+            "api/v1/user/me"
         case .refresh:
             "api/v1/auth/refresh"
-            
+
         case .setNickname:
-            "/api/v1/auth/nickname"
-            
+            "api/v1/auth/nickname"
+
         case .activeAccount:
             "api/v1/auth/terms-agreement"
-            
+
         case .cancelRegisteration:
-            "/api/v1/auth/cancel-registration"
-            
+            "api/v1/auth/cancel-registration"
+
         case .withdrawal:
-            "/api/v1/auth/withdrawal"
-            
+            "api/v1/auth/withdrawal"
+
         case .logout:
-            "/api/v1/auth/logout"
+            "api/v1/auth/logout"
         }
     }
     

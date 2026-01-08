@@ -15,19 +15,23 @@ struct Basic3Template: View, TemplateViewProtocol {
             Spacer()
             VStack(spacing: .zero){
                 
-                Text(displayDate.toString(.time_a_HH_mm, locale:  Locale(identifier: "ko_KR")))
+                Text(displayDate.toString(.time_a_HH_mm, locale: .kr))
                 
                     .font(.suit(.heavy), size: 40, trackingPercent: -0.02)
                 
                 
                 Text(displayDate.toString(.koreanDate_yyyyMM월dd일E
-                                          , locale:  Locale(identifier: "ko_KR")))
+                                          , locale: .kr))
                 .font(.suit(.heavy), size: 20, trackingPercent: -0.02)
                 
             }
             .foregroundStyle(Color.gray50)
             Spacer()
         }
+        .shadow(
+            color: Color.black.opacity(0.45),
+            radius: 5/2, x: 0, y: 0
+        )
         .overlay(alignment: .bottom) {
             if hasLogo {
                 LogotypeImage()
@@ -38,16 +42,29 @@ struct Basic3Template: View, TemplateViewProtocol {
 }
 
 #Preview {
-    ZStack {
-        Image("sampleImage")
-            .resizable()
-            .frame(width: 300, height: 300)
-            .aspectRatio(1, contentMode: .fit)
+    VStack {
+        ZStack {
+            Image("sampleImage")
+                .resizable()
+                .frame(width: 300, height: 300)
+                .aspectRatio(1, contentMode: .fit)
+            
+            Basic3Template(displayDate: Date(), hasLogo: true)
+        }
+        .frame(width: 300, height: 300)
+        .aspectRatio(1, contentMode: .fit)
         
-        Basic3Template(displayDate: Date(), hasLogo: true)
+        ZStack {
+            Image("sampleImage")
+                .resizable()
+                .frame(width: 300, height: 300)
+                .aspectRatio(1, contentMode: .fit)
+            
+            Basic3Template(displayDate: Date(), hasLogo: false)
+        }
+        .frame(width: 300, height: 300)
+        .aspectRatio(1, contentMode: .fit)
     }
-    .frame(width: 300, height: 300)
-    .aspectRatio(1, contentMode: .fit)
 }
 
 

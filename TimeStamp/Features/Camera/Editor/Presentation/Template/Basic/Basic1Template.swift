@@ -12,28 +12,26 @@ struct Basic1Template: View, TemplateViewProtocol {
     let hasLogo: Bool
     
     var body: some View {
-        ZStack {
+        VStack(spacing: 8) {
+            // "HH:mm"
+            Text(displayDate.toString(.time_HH_mm))
+                .font(.pretendard(.medium), size: 55, trackingPercent: -0.02)
+                .foregroundStyle(Color.gray50)
+                .padding(.top, 24)
             
-            VStack(spacing: 8) {
-                // "HH:mm"
-                Text(displayDate.toString(.time_HH_mm))
-                    .font(.pretendard(.medium), size: 55, trackingPercent: -0.02)
-                    .foregroundStyle(Color.gray50)
-                    .padding(.top, 24)
-                
-                
-                
-                Text("\(displayDate.toString(.yyyyMMdd)) • Stampic")
-                    .font(.pretendard(.medium), size: 15, trackingPercent: -0.02)
-                    .foregroundStyle(Color.gray50)
-                
-                Spacer()
-            }
-            .shadow(
-                color: Color.black.opacity(0.45),
-                radius: 5/2, x: 0, y: 0
-            )
+            
+            
+            Text("\(displayDate.toString(.yyyyMMdd)) • Stampic")
+                .font(.pretendard(.medium), size: 15, trackingPercent: -0.02)
+                .foregroundStyle(Color.gray50)
+            
+            Spacer()
         }
+        .frame(maxWidth: .infinity)
+        .shadow(
+            color: Color.black.opacity(0.45),
+            radius: 5/2, x: 0, y: 0
+        )
         .overlay(alignment: .bottomTrailing, content: {
             if hasLogo {
                 Image("logo_normal")
@@ -45,16 +43,30 @@ struct Basic1Template: View, TemplateViewProtocol {
     }
 }
 
+
 #Preview {
-    ZStack {
-        Image("sampleImage")
-            .resizable()
-            .frame(width: 300, height: 300)
-            .aspectRatio(1, contentMode: .fit)
+    VStack {
+        ZStack {
+            Image("sampleImage")
+                .resizable()
+                .frame(width: 300, height: 300)
+                .aspectRatio(1, contentMode: .fit)
+            
+            Basic1Template(displayDate: Date(), hasLogo: true)
+        }
+        .frame(width: 300, height: 300)
+        .aspectRatio(1, contentMode: .fit)
         
-        Basic1Template(displayDate: Date(), hasLogo: true)
+        ZStack {
+            Image("sampleImage")
+                .resizable()
+                .frame(width: 300, height: 300)
+                .aspectRatio(1, contentMode: .fit)
+            
+            Basic1Template(displayDate: Date(), hasLogo: false)
+        }
+        .frame(width: 300, height: 300)
+        .aspectRatio(1, contentMode: .fit)
     }
-    .frame(width: 300, height: 300)
-    .aspectRatio(1, contentMode: .fit)
     
 }

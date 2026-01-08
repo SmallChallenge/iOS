@@ -88,12 +88,12 @@ extension Template {
             }),
 
         
-        //        Template(
-        //            style: .moody,
-        //            name: "",
-        //            viewBuilder: { date, hasLogo in
-        //                AnyView()
-        //            }),
+        Template(
+            style: .moody,
+            name: "Moody3Template",
+            viewBuilder: { date, hasLogo in
+                AnyView(Moody3Template(displayDate: date, hasLogo: hasLogo))
+            }),
 
         // MARK: - Active
         Template(
@@ -104,20 +104,20 @@ extension Template {
             }
         ),
         
-                Template(
-                    style: .active,
-                    name: "Active2Template",
-                    viewBuilder: { date, hasLogo in
-                        AnyView(Active2Template(displayDate: date, hasLogo: hasLogo))
-                    }),
+        Template(
+            style: .active,
+            name: "Active2Template",
+            viewBuilder: { date, hasLogo in
+                AnyView(Active2Template(displayDate: date, hasLogo: hasLogo))
+            }),
 
         
-        //        Template(
-        //            style: .active,
-        //            name: "",
-        //            viewBuilder: { date, hasLogo in
-        //                AnyView()
-        //            }),
+        Template(
+            style: .active,
+            name: "Active3Template",
+            viewBuilder: { date, hasLogo in
+                AnyView(Active3Template(displayDate: date, hasLogo: hasLogo))
+            }),
 
 
         // MARK: - Digital
@@ -129,21 +129,21 @@ extension Template {
             }
         ),
         
-                Template(
-                    style: .digital,
-                    name: "Digital2Template",
-                    viewBuilder: { date, hasLogo in
-                        AnyView(Digital2Template(displayDate: date, hasLogo: hasLogo))
-                    }),
+        Template(
+            style: .digital,
+            name: "Digital2Template",
+            viewBuilder: { date, hasLogo in
+                AnyView(Digital2Template(displayDate: date, hasLogo: hasLogo))
+            }),
 
         
-        //        Template(
-        //            style: .digital,
-        //            name: "",
-        //            viewBuilder: { date, hasLogo in
-        //                AnyView()
-        //            }),
-
+        Template(
+            style: .digital,
+            name: "Digital3Template",
+            viewBuilder: { date, hasLogo in
+                AnyView(Digital3Template(displayDate: date, hasLogo: hasLogo))
+            }),
+        
     ]
 }
 

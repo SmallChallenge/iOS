@@ -16,7 +16,8 @@ enum AppConstants {
         static let termsOfService = "https://sage-hare-ff7.notion.site/2d5f2907580d80df9a21f95acd343d3f?source=copy_link"
         /// 개인정보 처리방침
         static let privacyPolicy = "https://sage-hare-ff7.notion.site/2d5f2907580d80eda745ccfbda543bc5?source=copy_link"
-        //static let supportEmail = "support@stampy.kr"
+        
+        static let supportEmail = "stampy7373@gmail.com"
         
         /// 오픈소스라이선스
         static let openSourceLicense = "https://sage-hare-ff7.notion.site/2d8f2907580d80e4accee06ce4da69cd?source=copy_link"
@@ -47,5 +48,17 @@ enum AppConstants {
         
         static let maxLogCount: Int = 20
         static let warningLogCount: Int = 18
+    }
+    
+    // MARK: SDK key
+    enum SDKKeys {
+        //  TODO: 앰플리튜드 키 옮기기
+        #if DEBUG
+        static let ad_banner = "ca-app-pub-3940256099942544/2435281174"
+        static let ad_reward = "ca-app-pub-3940256099942544/1712485313"
+        #else
+        static let ad_banner = "ca-app-pub-7896890737820919/2318652866"
+        static let ad_reward = "ca-app-pub-7896890737820919/7532361228"
+        #endif
     }
 }

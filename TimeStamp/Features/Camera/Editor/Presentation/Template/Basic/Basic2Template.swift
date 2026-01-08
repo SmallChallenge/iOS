@@ -17,9 +17,10 @@ struct Basic2Template: View, TemplateViewProtocol {
             Spacer()
             HStack {
                 Text(displayDate.toString(
-                    format: "\(Date.DateFormat.koreanDate_yyyyM월d일E.rawValue)\n \(Date.DateFormat.time_a_h_mm.rawValue)",
-                    locale: Locale(identifier: "ko_KR")))
+                    format: "\(Date.DateFormat.koreanDate_yyyyM월d일E.rawValue)\n\(Date.DateFormat.time_a_h_mm.rawValue)",
+                    locale: .kr))
                 .font(.suit(.heavy), size: 24, trackingPercent: -0.02)
+                .multilineTextAlignment(.leading)
                 .foregroundStyle(Color.gray50)
                 .padding(24)
                 
@@ -43,14 +44,27 @@ struct Basic2Template: View, TemplateViewProtocol {
 }
 
 #Preview {
-    ZStack {
-        Image("sampleImage")
-            .resizable()
-            .frame(width: 300, height: 300)
-            .aspectRatio(1, contentMode: .fit)
+    VStack {
+        ZStack {
+            Image("sampleImage")
+                .resizable()
+                .frame(width: 300, height: 300)
+                .aspectRatio(1, contentMode: .fit)
+            
+            Basic2Template(displayDate: Date(), hasLogo: true)
+        }
+        .frame(width: 300, height: 300)
+        .aspectRatio(1, contentMode: .fit)
         
-        Basic2Template(displayDate: Date(), hasLogo: true)
+        ZStack {
+            Image("sampleImage")
+                .resizable()
+                .frame(width: 300, height: 300)
+                .aspectRatio(1, contentMode: .fit)
+            
+            Basic2Template(displayDate: Date(), hasLogo: false)
+        }
+        .frame(width: 300, height: 300)
+        .aspectRatio(1, contentMode: .fit)
     }
-    .frame(width: 300, height: 300)
-    .aspectRatio(1, contentMode: .fit)
 }

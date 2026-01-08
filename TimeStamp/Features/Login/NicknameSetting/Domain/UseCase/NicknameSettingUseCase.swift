@@ -46,6 +46,7 @@ final class NicknameSettingUseCase: NicknameSettingUseCaseProtocol {
             accessToken: entity.accessToken,
             refreshToken: entity.refreshToken
         )
+        AmplitudeManager.shared.login(userId: entity.userId, socialType: entity.socialType)
     }
     
     func updateUserInfo(nickname: String){

@@ -36,8 +36,7 @@ enum AppMessage {
     case signupFailed
     /// 탈퇴 실패
     case signoutFailed
-    /// 회원탈퇴 실패
-    case withdrawalFailed
+ 
     
    
     case saveFailed
@@ -79,13 +78,11 @@ enum AppMessage {
         case .logoutFailed:
             return "로그아웃에 실패했어요. 다시 시도해 주세요."
         case .loginRequired:
-            return "로그인이 필요해요. 로그인 후 다시 시도해 주세요."
+            return "로그인이 필요해요."
         case .signupFailed:
             return "회원가입에 실패했어요.\n다시 시도해 주세요."
         case .signoutFailed:
             return "탈퇴에 실패했어요. 다시 시도해 주세요."
-        case .withdrawalFailed:
-            return "회원탈퇴에 실패했어요. 다시 시도해 주세요."
 
         case .nicknameSaveFailed:
             return "닉네임 설정에 실패했어요. 다시 시도해 주세요."
@@ -126,8 +123,7 @@ enum AppMessage {
         case .loginFailed, // 로그인 실패
                 .loginRequired, // 로그인 필요
                 .maxPhotoLimitReached, // 기록초과
-                .signoutFailed, //회원가입 탈퇴
-                .withdrawalFailed: // 회원탈퇴 실패
+                .signoutFailed: //회원가입 탈퇴 실패
             return .alert
 
         // 토스트

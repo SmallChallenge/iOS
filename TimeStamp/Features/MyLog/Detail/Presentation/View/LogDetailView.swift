@@ -76,8 +76,9 @@ struct LogDetailView: View {
             } //~VStack
         } //~ScrollView
         .scrollDismissesKeyboard(.interactively)
-        .loading(viewModel.isLoading)
         .mainBackgourndColor()
+        .loading(viewModel.isLoading)
+        .toast(message: $viewModel.toastMessage)
         .navigationBarTitleDisplayMode(.inline)
         .navigationBarBackButtonHidden(true)
         .task {

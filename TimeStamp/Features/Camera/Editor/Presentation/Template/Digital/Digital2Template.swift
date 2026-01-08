@@ -18,10 +18,10 @@ struct Digital2Template: View , TemplateViewProtocol {
             
             VStack(spacing: .zero){
                 Text(displayDate.toString(.time_HH_mm_a))
-                    .font(.dungGeunMo(.regular), size: 50, trackingPercent: -0.04)
+                    .font(.dungGeunMo, size: 50, trackingPercent: -0.04)
                     .foregroundColor(.gray50)
                 Text(dateString)
-                    .font(.dungGeunMo(.regular), size: 24, trackingPercent: -0.04)
+                    .font(.dungGeunMo, size: 24, trackingPercent: -0.04)
                     .foregroundColor(.gray50)
             }
             .shadow(
@@ -73,15 +73,29 @@ struct Digital2Template: View , TemplateViewProtocol {
 }
 
 #Preview {
-    ZStack {
-        Image("sampleImage")
-            .resizable()
-            .frame(width: 300, height: 300)
-            .aspectRatio(1, contentMode: .fit)
-        Color.gray400
+    VStack {
+        ZStack {
+            Image("sampleImage")
+                .resizable()
+                .frame(width: 300, height: 300)
+                .aspectRatio(1, contentMode: .fit)
+            Color.gray400
+            
+            Digital2Template(displayDate: Date(), hasLogo: true)
+        }
+        .frame(width: 300, height: 300)
+        .aspectRatio(1, contentMode: .fit)
         
-        Digital2Template(displayDate: Date(), hasLogo: true)
+        ZStack {
+            Image("sampleImage")
+                .resizable()
+                .frame(width: 300, height: 300)
+                .aspectRatio(1, contentMode: .fit)
+            Color.gray400
+            
+            Digital2Template(displayDate: Date(), hasLogo: false)
+        }
+        .frame(width: 300, height: 300)
+        .aspectRatio(1, contentMode: .fit)
     }
-    .frame(width: 300, height: 300)
-    .aspectRatio(1, contentMode: .fit)
 }

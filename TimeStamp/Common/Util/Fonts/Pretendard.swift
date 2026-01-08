@@ -24,16 +24,18 @@ enum AppFont {
     case moveSans(MoveSans)
     
     /// 기후위기
-    case climateCrisis(ClimateCrisis)
+    case climateCrisis
     
     case suit(Suit)
     
-    case partialSans(PartialSans)
+    case partialSans
     // 다른 폰트 추가 예시:
     // case roboto(Roboto)
     // case notoSans(NotoSans)
     
-    case dungGeunMo(DungGeunMo)
+    case dungGeunMo
+    
+    case ericaOne
 
     var fontName: String {
         switch self {
@@ -45,17 +47,20 @@ enum AppFont {
         case .moveSans(let weight):
             return weight.fontName
             
-        case let .climateCrisis(weight):
-            return weight.fontName
+        case .climateCrisis:
+            return ClimateCrisis._1990.fontName
             
         case let .suit(weight):
             return weight.fontName
             
-        case let .partialSans(weight):
-            return weight.fontName
+        case .partialSans:
+            return PartialSans.regular.fontName
             
-        case let .dungGeunMo(weight):
-            return weight.fontName
+        case .dungGeunMo:
+            return DungGeunMo.regular.fontName
+            
+        case .ericaOne:
+            return EricaOne.regular.fontName
         }
     }
 }
@@ -116,9 +121,10 @@ enum Suit: String, FontWeightProtocol {
     }
 }
 
-// MARK: - PartialSans
+// MARK: - PartialSans 파샬산스
 enum PartialSans: String, FontWeightProtocol {
-    case regular = "PartialSansKR-Regular"
+    // PartialSansKR-Regular.otf
+    case regular = "Partial-Sans-KR"
     var fontName: String {
         return rawValue
     }
@@ -127,6 +133,14 @@ enum PartialSans: String, FontWeightProtocol {
 // MARK: - DungGeunMo
 enum DungGeunMo: String, FontWeightProtocol {
     case regular = "DungGeunMo"
+    var fontName: String {
+        return rawValue
+    }
+}
+
+// MARK: - DungGeunMo
+enum EricaOne: String, FontWeightProtocol {
+    case regular = "EricaOne-Regular"
     var fontName: String {
         return rawValue
     }

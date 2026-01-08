@@ -9,23 +9,31 @@ import SwiftUI
 import Combine
 
 struct EditorView: View {
-
+    @StateObject private var viewModel: EditorViewModel
     let capturedImage: UIImage
     let capturedDate: Date? // 갤러리에서 가져온 경우 PHAsset의 날짜, nil이면 Date()생성
     let diContainer: CameraDIContainerProtocol
     let onGoBack: (() -> Void)?
     let onDismiss: () -> Void
     
+    init(viewModel: EditorViewModel,
+         capturedImage: UIImage,
+         capturedDate: Date?,
+         diContainer: CameraDIContainerProtocol,
+         onGoBack: (() -> Void)?,
+         onDismiss: @escaping () -> Void) {
+        self._viewModel = StateObject(wrappedValue: viewModel)
+        self.capturedImage = capturedImage
+        self.capturedDate = capturedDate
+        self.diContainer = diContainer
+        self.onGoBack = onGoBack
+        self.onDismiss = onDismiss
+    }
+    
     // MARK: prevate property
 
     @State private var selectedTemplateStyle: TemplateStyleViewData = .basic
     @State private var selectedTemplate: Template = Template.all[0]
-    
-    // 광고, 로고 여부 //
-    @State private var showAdPopup: Bool = false // 광고보기 팝업 띄우기
-    @State private var isOnLogo: Bool = true // 로고 여부
-    @State private var hasWatchedAd: Bool  = false // 광고시청여부
-    
     
     @State private var navigateToPhotoSave = false
     @State private var editedImage: UIImage?
@@ -56,28 +64,49 @@ struct EditorView: View {
 
                 Spacer()
                     .frame(maxHeight: 56)
-                
+
                 // 템플릿 선택 뷰
                 VStack(spacing: 24) {
-                    
+
                     // 템플릿스타일 | 로고 스위치
                     HStack {
                         // 스타일 버튼 목록
                         templateStyleSelectorView
-                        
+
                         Spacer()
-                        
+
                         // 로고 스위치
                         logoToggle
                     }
                     .padding(.horizontal, 20)
-                    
+
                     // 템플릿 목록
                     templateList
 
                 }
             } // ~VStack
+
+            // 광고 로딩 중 오버레이
+            if viewModel.isLoadingAd {
+                Color.black.opacity(0.4)
+                    .ignoresSafeArea()
+
+                VStack(spacing: 16) {
+                    ProgressView()
+                        .scaleEffect(1.5)
+                        .tint(.white)
+
+                    Text("광고를 불러오는 중...")
+                        .font(.Body1)
+                        .foregroundColor(.white)
+                }
+            }
         } // ~ZStack
+        .task {
+            await viewModel.loadAd()
+        }
+        .mainBackgourndColor()
+        .toast(message: $viewModel.toastMessage)
         .navigationDestination(isPresented: $navigateToPhotoSave) {
             if let editedImage = editedImage {
                 diContainer.makePhotoSaveView(
@@ -89,7 +118,6 @@ struct EditorView: View {
                 )
             }
         }
-        .mainBackgourndColor()
         .navigationBarTitleDisplayMode(.inline)
         .navigationBarBackButtonHidden(true)
         .toolbar {
@@ -108,18 +136,20 @@ struct EditorView: View {
             }
         }
         // 광고 시청 팝업 띄우기
-        .popup(isPresented: $showAdPopup, content: {
+        .popup(isPresented: $viewModel.showAdPopup, content: {
             Modal(title: "광고 시청 후\n워터마크를 제거하세요.")
                 .buttons {
                     MainButton(title: "취소", colorType: .secondary) {
-                        showAdPopup = false
+                        viewModel.closeAdPopup()
                     }
                     MainButton(title: "광고 시청", colorType: .primary) {
-                        // TODO: 광고 시청
-                        hasWatchedAd = true
-                        isOnLogo = false
-                        showAdPopup = false
-                        
+                        //광고 시청
+                        viewModel.closeAdPopup()
+                        Task {
+                            // 팝업이 사라질 시간을 아주 잠깐(0.1초) 줍니다.
+                            try? await Task.sleep(nanoseconds: 100_000_000)
+                            await viewModel.playAd()
+                        }
                     }
                 }
         })
@@ -148,7 +178,7 @@ struct EditorView: View {
                 .foregroundStyle(Color.gray300)
             
             
-            Toggle("Logo", isOn: $isOnLogo)
+            Toggle("Logo", isOn: $viewModel.isOnLogo)
                 .labelsHidden()
                 .fixedSize()
                 .allowsHitTesting(false)
@@ -156,7 +186,7 @@ struct EditorView: View {
                     Color.clear
                         .contentShape(Rectangle())
                         .onTapGesture {
-                            handleLogoToggleTap()
+                            viewModel.handleLogoToggleTap()
                         }
                 }
         }
@@ -175,7 +205,7 @@ struct EditorView: View {
                 .clipShape(Rectangle())
 
             // 템플릿 (타임스탬프, 로고)
-            selectedTemplate.makeView(displayDate: photoDate, hasLogo: isOnLogo)
+            selectedTemplate.makeView(displayDate: photoDate, hasLogo: viewModel.isOnLogo)
         }
         .aspectRatio(1, contentMode: .fit)
     }
@@ -186,6 +216,7 @@ struct EditorView: View {
             HStack(spacing: 8) {
                 ForEach(filteredTemplates) { template in
                     TemplateButton(
+                        capturedImage: nil,
                         template: template,
                         isSelected: selectedTemplate == template
                     ) {
@@ -208,7 +239,7 @@ struct EditorView: View {
 
         guard let composedImage = imageCompositor.composeImage(
             background: capturedImage,
-            template: selectedTemplate.makeView(displayDate: photoDate, hasLogo: isOnLogo),
+            template: selectedTemplate.makeView(displayDate: photoDate, hasLogo: viewModel.isOnLogo),
             templateSize: targetSize
         ) else {
             return
@@ -218,29 +249,8 @@ struct EditorView: View {
         navigateToPhotoSave = true
     }
     
-    /// 로고 토글 탭 이벤트 처리
-    private func handleLogoToggleTap() {
-        // 광고 시청 완료: 자유롭게 설정가능
-        guard !hasWatchedAd else {
-            isOnLogo = !isOnLogo
-            return
-        }
-        
-        // 광고 미시청: 로고 없애려면 광고보기 팝업띄우기
-        if isOnLogo {
-            showAdPopup = true
-        }
-    }
-    
-
 }
 
 #Preview {
-    EditorView(
-        capturedImage: UIImage(named: "sampleImage")!,
-        capturedDate: Date(),
-        diContainer: MockCameraDIContainer(),
-        onGoBack: nil,
-        onDismiss: {}
-    )
+    MockCameraDIContainer().makeEditorView(capturedImage: UIImage(named: "sampleImage")!, capturedDate: Date(), onGoBack: {}, onDismiss: {})
 }

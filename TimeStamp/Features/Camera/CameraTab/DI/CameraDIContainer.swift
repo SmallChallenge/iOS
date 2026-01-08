@@ -93,6 +93,18 @@ final class CameraDIContainer: CameraDIContainerProtocol {
     }
     
     // MARK: - EditorView
+    private func makeEditorRepository() -> AdRepositoryProtocol {
+        return AdMobRepository()
+    }
+    private func makeEditorUseCase() -> EditorUseCaseProtocol {
+        let repo = makeEditorRepository()
+        return EditorUseCase(repository: repo)
+    }
+    
+    private func makeEditorViewModel() -> EditorViewModel {
+        let useCase = makeEditorUseCase()
+        return EditorViewModel(useCase: useCase)
+    }
     
     func makeEditorView(
         capturedImage: UIImage,
@@ -100,7 +112,9 @@ final class CameraDIContainer: CameraDIContainerProtocol {
         onGoBack: (() -> Void)?,
         onDismiss: @escaping () -> Void
     ) -> EditorView {
+        let vm = makeEditorViewModel()
         return EditorView(
+            viewModel: vm,
             capturedImage: capturedImage,
             capturedDate: capturedDate,
             diContainer: self,
@@ -185,13 +199,18 @@ struct MockCameraDIContainer: CameraDIContainerProtocol {
         )
     }
     
+    // MARK: - EditorView
+    
     func makeEditorView(
         capturedImage: UIImage,
         capturedDate: Date?,
         onGoBack: (() -> Void)?,
         onDismiss: @escaping () -> Void
     ) -> EditorView {
+        let useCase = MockEditorUsecase()
+        let viewModel = EditorViewModel(useCase: useCase)
         return EditorView(
+            viewModel: viewModel,
             capturedImage: capturedImage,
             capturedDate: capturedDate,
             diContainer: self,
@@ -199,6 +218,14 @@ struct MockCameraDIContainer: CameraDIContainerProtocol {
             onDismiss: onDismiss
         )
     }
+    struct MockEditorUsecase: EditorUseCaseProtocol {
+        func execute(from: UIViewController) async throws -> Int {
+            return 1
+        }
+        func load() async throws {}
+    }
+    
+    // MARK: - PhotoSave
 
     struct MockPhotoSaveUseCase: PhotoSaveUseCaseProtocol {
         func savePhotoToGallery(image: UIImage) {}
@@ -223,3 +250,4 @@ struct MockCameraDIContainer: CameraDIContainerProtocol {
         )
     }
 }
+

@@ -68,6 +68,7 @@ struct UserInfoPageView: View {
         }
         // 토스트 메시지
         .toast(message: $viewModel.toastMessage)
+        .popup(message: $viewModel.alertMessage)
         .loading(viewModel.isLoading)
         // 닉네임 설정 화면으로
         .navigationDestination(isPresented: $presentNicknameSetting) {

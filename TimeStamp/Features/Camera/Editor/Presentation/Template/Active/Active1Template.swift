@@ -18,13 +18,13 @@ struct Active1Template: View, TemplateViewProtocol {
             
 
             VStack(spacing: .zero) {
-                Text(displayDate.toString(format: "HH:mm"))
-                    .font(.climateCrisis(._1990), size: 50)
+                Text(displayDate.toString(.time_HH_mm ))
+                    .font(.climateCrisis, size: 50)
                     
                 
                 
-                Text(displayDate.toString(format: "E, d MMM"))
-                    .font(.climateCrisis(._1990), size: 15)
+                Text(displayDate.toString(.edmmm)) //"E, d MMM"
+                    .font(.climateCrisis, size: 15)
                 
             }
             .foregroundStyle(Color.gray50)
@@ -35,6 +35,7 @@ struct Active1Template: View, TemplateViewProtocol {
         .overlay(alignment: .bottom, content: {
             if hasLogo {
                 LogotypeImage()
+                    .padding(16)
             }
         })
         .shadow(
@@ -45,14 +46,27 @@ struct Active1Template: View, TemplateViewProtocol {
 }
 
 #Preview {
-    ZStack {
-        Image("sampleImage")
-            .resizable()
-            .frame(width: 300, height: 300)
-            .aspectRatio(1, contentMode: .fit)
+    VStack {
+        ZStack {
+            Image("sampleImage")
+                .resizable()
+                .frame(width: 300, height: 300)
+                .aspectRatio(1, contentMode: .fit)
+            
+            Active1Template(displayDate: Date(), hasLogo: true)
+        }
+        .frame(width: 300, height: 300)
+        .aspectRatio(1, contentMode: .fit)
         
-        Active1Template(displayDate: Date(), hasLogo: true)
+        ZStack {
+            Image("sampleImage")
+                .resizable()
+                .frame(width: 300, height: 300)
+                .aspectRatio(1, contentMode: .fit)
+            
+            Active1Template(displayDate: Date(), hasLogo: false)
+        }
+        .frame(width: 300, height: 300)
+        .aspectRatio(1, contentMode: .fit)
     }
-    .frame(width: 300, height: 300)
-    .aspectRatio(1, contentMode: .fit)
 }

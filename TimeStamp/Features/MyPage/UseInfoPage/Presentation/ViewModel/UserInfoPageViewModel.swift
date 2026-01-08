@@ -56,7 +56,7 @@ final class UserInfoPageViewModel: ObservableObject, MessageDisplayable {
             
         } catch {
             isLoading = false
-            show(.unknownRequestFailed)
+            show(.signoutFailed)
             Logger.error("회원탈퇴 실패: \(error)")
         }
     }

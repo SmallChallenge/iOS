@@ -162,7 +162,7 @@ final class LogDetailViewModel: ObservableObject, MessageDisplayable {
                 let image = try await useCase.prepareImageForSharing(imageSource: log.imageSource)
                 shareImage = image
             } catch {
-                ToastManager.shared.show("이미지를 불러올 수 없습니다")
+                toastMessage = "공유에 실패했어요. 다시 시도해 주세요."
             }
             isPreparingShare = false
             isLoading = false
