@@ -16,7 +16,7 @@ class EditorViewModel: ObservableObject, MessageDisplayable {
     @Published var isLoadingAd = false
 
     /// 광고시청여부
-    @Published var hasWatchedAd: Bool  = false
+    @Published var hasWatchedAd: Bool  = true // 광고보기 스킵
     /// 로고 있없 여부
     @Published var isOnLogo: Bool  = true
     // 광고보기 팝업 띄우기
