@@ -17,6 +17,7 @@ struct CameraView: View {
 
     // 다음화면으로 (에디터)
     @State private var navigateToEditor = false
+    @State private var didLog = false
 
     // MARK: - Initialization
 
@@ -89,6 +90,11 @@ struct CameraView: View {
                 }
             }
         } // ~Zstack
+        .onAppear {
+            guard !didLog else { return }
+            didLog = true
+            AmplitudeManager.shared.trackCameraViewEnter()
+        }
     }
     
     // MARK: - Controller

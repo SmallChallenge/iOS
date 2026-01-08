@@ -14,7 +14,7 @@ protocol LaunchScreenUseCaseProtocol {
 
 // usecase -> viewModel
 protocol LaunchScreenUseCaseDelegate: AnyObject {
-    func didRefreshToken(success: Bool)
+    func didRefreshToken(user: User?)
 }
 
 class LaunchScreenUseCase: LaunchScreenUseCaseProtocol {
@@ -30,7 +30,7 @@ class LaunchScreenUseCase: LaunchScreenUseCaseProtocol {
         // 1. 저장된 Refresh Token 확인
         guard let refreshToken = AuthManager.shared.getRefreshToken() else {
             // 토큰 없음 → 로그인 필요
-            await notifyDelegate(success: false)
+            await notifyDelegate(user: nil)
             return
         }
 
@@ -47,11 +47,9 @@ class LaunchScreenUseCase: LaunchScreenUseCaseProtocol {
 
             // 유저정보 갱신
             await getUserInfo()
-            
-            await notifyDelegate(success: true)
 
         case .failure:
-            await notifyDelegate(success: false)
+            await notifyDelegate(user: nil)
         }
     }
 
@@ -60,20 +58,17 @@ class LaunchScreenUseCase: LaunchScreenUseCaseProtocol {
         do {
             let user = try await repository.getUserInfo()
             // 유저 정보만 저장, Delegate 호출 안함
-            await MainActor.run {
-                AuthManager.shared.updateUser(user)
-                Logger.success("유저 정보 갱신 성공: \(user.nickname ?? "익명")")
-            }
+            await notifyDelegate(user: user)
         } catch {
             Logger.error("유저 정보 갱신 실패: \(error)")
-            // 실패해도 Delegate 호출 안함 (토큰은 갱신됐으니)
+            await notifyDelegate(user: nil)
         }
     }
 
     /// Delegate 호출 (메인 스레드로 전환)
-    private func notifyDelegate(success: Bool) async {
+    private func notifyDelegate(user: User?) async {
         await MainActor.run {
-            delegate?.didRefreshToken(success: success)
+            delegate?.didRefreshToken(user: user)
         }
     }
 }

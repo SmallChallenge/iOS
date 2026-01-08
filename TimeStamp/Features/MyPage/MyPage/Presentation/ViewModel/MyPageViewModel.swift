@@ -50,6 +50,7 @@ final class MyPageViewModel: ObservableObject, MessageDisplayable {
 
             // AuthManager에서 로컬 토큰 삭제
             AuthManager.shared.logout()
+            AmplitudeManager.shared.logout()
 
             isLoading = false
         } catch {

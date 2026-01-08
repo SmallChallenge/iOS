@@ -7,6 +7,7 @@
 
 import Foundation
 import Combine
+import GoogleMobileAds
 
 @MainActor
 final class MainTabViewModel: ObservableObject {
@@ -34,5 +35,20 @@ final class MainTabViewModel: ObservableObject {
     /// - Returns: 촬영 가능하면 true, 제한에 도달하면 false
     func canTakePhoto() -> Bool {
         return authManager.isLoggedIn || getLocalLogsCount() < AppConstants.Limits.maxLogCount
+    }
+    
+    /// 추적허용 권한 받기
+    func requestAuthorization() async {
+        guard !TrackingManager.shared.isTrackingAuthorized else {
+            // 이미 추적허용받음
+            return }
+        
+        // 추적 권한 요청
+        let _ = await TrackingManager.shared.requestTrackingAuthorization()
+
+        // 추적 권한 상태가 결정된 후 Amplitude 초기화
+        AmplitudeManager.shared.loadAmplitude()
+        let userId = authManager.currentUser?.userId
+        AmplitudeManager.shared.setUserId(userId)
     }
 }

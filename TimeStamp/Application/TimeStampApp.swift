@@ -9,15 +9,8 @@ import SwiftUI
 import KakaoSDKCommon
 import KakaoSDKAuth
 import GoogleSignIn
+import GoogleMobileAds
 
-// 화면 회전 제어를 위한 AppDelegate
-class AppDelegate: NSObject, UIApplicationDelegate {
-    static var orientationLock = UIInterfaceOrientationMask.all
-    
-    func application(_ application: UIApplication, supportedInterfaceOrientationsFor window: UIWindow?) -> UIInterfaceOrientationMask {
-        return AppDelegate.orientationLock
-    }
-}
 
 @main
 struct TimeStampApp: App {
@@ -27,6 +20,13 @@ struct TimeStampApp: App {
         // Kakao SDK 초기화 (환경변수에서 가져옴)
         let kakaoAppKey = Bundle.main.kakaoAppKey
         KakaoSDK.initSDK(appKey: kakaoAppKey)
+
+        
+        let testDeviceIdentifiers = ["b7d8c698dfeb4cca7dac195cd6991fe3"]
+        MobileAds.shared.requestConfiguration.testDeviceIdentifiers = testDeviceIdentifiers
+        
+        // 애드몹 초기화 (Initialize the Google Mobile Ads SDK.)
+        MobileAds.shared.start()
     }
     
     var body: some Scene {
@@ -59,5 +59,32 @@ struct RootViewWithGlobalToast<Content: View>: View {
         content
             .toast(message: $toastManager.message)
     }
+
+}
+
+// MARK: - 화면 회전 제어를 위한 AppDelegate
+class AppDelegate: NSObject, UIApplicationDelegate {
+    static var orientationLock = UIInterfaceOrientationMask.all
     
+    func application(_ application: UIApplication, supportedInterfaceOrientationsFor window: UIWindow?) -> UIInterfaceOrientationMask {
+        return AppDelegate.orientationLock
+    }
+}
+
+// MARK: - 
+import UIKit
+
+extension UIApplication {
+    /// 현재 앱에서 실제로 사용자 눈에 보이는 가장 최상단의 뷰 컨트롤러를 찾습니다.
+    @MainActor
+    func getTopMostViewController() -> UIViewController? {
+        let scene = self.connectedScenes.first as? UIWindowScene
+        var topController = scene?.windows.first(where: { $0.isKeyWindow })?.rootViewController
+        
+        while let presented = topController?.presentedViewController {
+            topController = presented
+        }
+        
+        return topController
+    }
 }

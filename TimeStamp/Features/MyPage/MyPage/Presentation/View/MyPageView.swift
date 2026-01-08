@@ -54,74 +54,87 @@ struct MyPageView: View {
     
     
     var body: some View {
-        ScrollView {
-            VStack(spacing: .zero) {
-               
-                thinLine
-                Spacer()
-                    .frame(height: 24)
-                
-                if authManager.isLoggedIn {
-                    Button {
-                        presentUserInfo = true
-                    } label: {
-                        userProfile
-                    }
-                    .padding(.top, 20)
-                    .padding(.bottom, 24)
-                    
-                } else {
-                    guestProfile
-                        .padding(.top, 20)
-                        .padding(.bottom, 24)
-                    
-                    // 로그인 유도 배너, 로그인 버튼
-                    VStack(spacing: 16){
-                        loginPromptBannerView
-                        
-                        MainButton(title: "로그인") {
-                            showLoginView = true
-                        }
-                    }
-                    .padding(.top, 8)
-                    .padding(.bottom, 32)
-                    .padding(.horizontal, 20)
-                    
-                }
-                thickLine
-                
-                // 메뉴버튼
+        ZStack(alignment: .bottom) {
+            ScrollView {
                 VStack(spacing: .zero) {
-                    MyPageMenu("이용약관", type: .chevron){
-                        showTermsOfService = true
-                    }
-                    MyPageMenu("개인정보 처리방침", type: .chevron){
-                        showPrivacyPolicy = true
-                    }
-                    MyPageMenu("오픈소스 라이센스", type: .chevron){
-                        showOpenSourceLicense = true
-                    }
-                    MyPageMenu("앱 버전", type: .text(text: appVersion)){}
-                    MyPageMenu("문의방법", type: .text(text: AppConstants.URLs.supportEmail)){}
+                    
+                    thinLine
+                    Spacer()
+                        .frame(height: 24)
                     
                     if authManager.isLoggedIn {
-                        MyPageMenu("로그아웃", type: .none){
-                            showLogoutPopup = true
+                        Button {
+                            presentUserInfo = true
+                        } label: {
+                            userProfile
+                        }
+                        .padding(.top, 20)
+                        .padding(.bottom, 24)
+                        
+                    } else {
+                        guestProfile
+                            .padding(.top, 20)
+                            .padding(.bottom, 24)
+                        
+                        // 로그인 유도 배너, 로그인 버튼
+                        VStack(spacing: 16){
+                            loginPromptBannerView
+                            
+                            MainButton(title: "로그인") {
+                                showLoginView = true
+                            }
+                        }
+                        .padding(.top, 8)
+                        .padding(.bottom, 32)
+                        .padding(.horizontal, 20)
+                        
+                    }
+                    thickLine
+                    
+                    // 메뉴버튼
+                    VStack(spacing: .zero) {
+                        MyPageMenu("이용약관", type: .chevron){
+                            showTermsOfService = true
+                        }
+                        MyPageMenu("개인정보 처리방침", type: .chevron){
+                            showPrivacyPolicy = true
+                        }
+                        MyPageMenu("오픈소스 라이센스", type: .chevron){
+                            showOpenSourceLicense = true
+                        }
+                        MyPageMenu("앱 버전", type: .text(text: appVersion)){}
+                        MyPageMenu("문의방법", type: .text(text: AppConstants.URLs.supportEmail)){}
+                        
+                        if authManager.isLoggedIn {
+                            MyPageMenu("로그아웃", type: .none){
+                                showLogoutPopup = true
+                            }
                         }
                     }
+                    
+#if DEBUG
+                    Button("토큰복사"){
+                        copyTokenForTest()
+                    }
+                    Button("로그 공유 (\(Logger.getLogCount())개)"){
+                        shareLog()
+                    }
+#endif
+                    
+                    Spacer()
+                    
+                   
                 }
-                
-                
-                #if DEBUG
-                Button("토큰복사"){
-                    copyTokenForTest()
-                }
-                Button("로그 공유 (\(Logger.getLogCount())개)"){
-                    shareLog()
-                }
-                #endif
-            }
-        }
+            } // ~ScrollView
+            
+            // 하단 배너 광고
+            BannerAd()
+                .frame(maxWidth: .infinity)
+                .frame(height: 50)
+                .padding(.horizontal, 30)
+                .ignoresSafeArea(edges: .bottom)
+            
+        } //~ ZStack
         .mainBackgourndColor()
         .navigationBarTitleDisplayMode(.inline)
         .navigationBarBackButtonHidden(true)
