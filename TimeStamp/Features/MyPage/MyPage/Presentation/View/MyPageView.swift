@@ -127,12 +127,17 @@ struct MyPageView: View {
                 }
             } // ~ScrollView
             
+            #if DEBUG
             // 하단 배너 광고
             BannerAd()
                 .frame(maxWidth: .infinity)
                 .frame(height: 50)
                 .padding(.horizontal, 30)
                 .ignoresSafeArea(edges: .bottom)
+            
+            #endif
+
+            
             
         } //~ ZStack
         .mainBackgourndColor()
