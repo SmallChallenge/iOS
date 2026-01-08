@@ -49,5 +49,8 @@ final class MainTabViewModel: ObservableObject {
         AmplitudeManager.shared.loadAmplitude()
         let userId = authManager.currentUser?.userId
         AmplitudeManager.shared.setUserId(userId)
+        
+        // 애드몹 초기화 (Initialize the Google Mobile Ads SDK.)
+//        MobileAds.shared.start()
     }
 }

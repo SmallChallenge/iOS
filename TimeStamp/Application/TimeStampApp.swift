@@ -9,6 +9,7 @@ import SwiftUI
 import KakaoSDKCommon
 import KakaoSDKAuth
 import GoogleSignIn
+import GoogleMobileAds
 
 
 @main
@@ -20,7 +21,16 @@ struct TimeStampApp: App {
         let kakaoAppKey = Bundle.main.kakaoAppKey
         KakaoSDK.initSDK(appKey: kakaoAppKey)
 
-        // Amplitude는 MainTabView에서 추적 권한 받은 후 초기화
+        
+        let testDeviceIdentifiers = ["b7d8c698dfeb4cca7dac195cd6991fe3"]
+        MobileAds.shared.requestConfiguration.testDeviceIdentifiers = testDeviceIdentifiers
+        
+        if TrackingManager.shared.isTrackingAuthorized {
+            // 애드몹 초기화 (Initialize the Google Mobile Ads SDK.)
+            MobileAds.shared.start { status in
+                Logger.debug(">>>>> 애드몹 초기화 \(status.adapterStatusesByClassName)")
+            }
+        }
     }
     
     var body: some Scene {
@@ -62,5 +72,23 @@ class AppDelegate: NSObject, UIApplicationDelegate {
     
     func application(_ application: UIApplication, supportedInterfaceOrientationsFor window: UIWindow?) -> UIInterfaceOrientationMask {
         return AppDelegate.orientationLock
+    }
+}
+
+// MARK: - 
+import UIKit
+
+extension UIApplication {
+    /// 현재 앱에서 실제로 사용자 눈에 보이는 가장 최상단의 뷰 컨트롤러를 찾습니다.
+    @MainActor
+    func getTopMostViewController() -> UIViewController? {
+        let scene = self.connectedScenes.first as? UIWindowScene
+        var topController = scene?.windows.first(where: { $0.isKeyWindow })?.rootViewController
+        
+        while let presented = topController?.presentedViewController {
+            topController = presented
+        }
+        
+        return topController
     }
 }
