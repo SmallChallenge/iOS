@@ -85,6 +85,10 @@ struct CommunityView: View {
                     }
                 }
         }
+        .onReceive(NotificationCenter.default.publisher(for: .shouldRefresh)) { _ in
+            // 로그인 후 목록 새로고침
+            viewModel.loadFeeds(isRefresh: true)
+        }
     }
     
     private var feedListView: some View {
@@ -132,7 +136,10 @@ struct CommunityView: View {
                     }
 
                 case .banner(let bannerData):
-                    CommunityBannerView(viewData: bannerData)
+                    CommunityBannerView(viewData: bannerData,
+                                        loginAction: {
+                        showLoginPopup = true
+                    })
                         .listRowSeparator(.hidden)
                         .listRowBackground(Color.clear)
                         .listRowInsets(.init(top: 8, leading: 20, bottom: 8, trailing: 20))

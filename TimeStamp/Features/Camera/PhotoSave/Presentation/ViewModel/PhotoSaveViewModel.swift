@@ -12,6 +12,7 @@ import Combine
 // MARK: - Notification Names
 
 extension Notification.Name {
+    static let shouldRefresh = Notification.Name("shouldRefres")
     static let shouldRefreshMyLog = Notification.Name("shouldRefreshMyLog")
 }
 

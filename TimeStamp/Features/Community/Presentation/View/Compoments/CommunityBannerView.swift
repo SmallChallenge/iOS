@@ -9,6 +9,7 @@ import SwiftUI
 
 struct CommunityBannerView: View {
     let viewData: BannerViewData
+    let loginAction: ()->Void
 
     var body: some View {
         VStack(spacing: 12) {
@@ -32,14 +33,14 @@ struct CommunityBannerView: View {
             
             if viewData.type == .guest {
                 Button(action: {
-                    
+                    loginAction()
                 }) {
                     Text("3초 만에 로그인하기")
                         .font(.SubTitle2)
                         .foregroundColor(.gray50)
+                        .frame(maxWidth: .infinity)
                         .padding(.vertical, 12)
                 }
-                .frame(maxWidth: .infinity)
                 .background(Color.gray900)
                 .cornerRadius(8)
             }
@@ -56,11 +57,11 @@ struct CommunityBannerView: View {
     VStack {
 //        CommunityBannerView(viewData: BannerViewData.create(sequence: 0, isLoggedIn: true))
 //        CommunityBannerView(viewData: BannerViewData.create(sequence: 1, isLoggedIn: true))
-        CommunityBannerView(viewData: BannerViewData.create(sequence: 2, isLoggedIn: true))
-        CommunityBannerView(viewData: BannerViewData.create(sequence: 3, isLoggedIn: true))
+        CommunityBannerView(viewData: BannerViewData.create(sequence: 2, isLoggedIn: true), loginAction: {})
+        CommunityBannerView(viewData: BannerViewData.create(sequence: 3, isLoggedIn: true), loginAction: {})
         
-        CommunityBannerView(viewData: BannerViewData.create(sequence: 0, isLoggedIn: false))
-        CommunityBannerView(viewData: BannerViewData.create(sequence: 1, isLoggedIn: false))
+        CommunityBannerView(viewData: BannerViewData.create(sequence: 0, isLoggedIn: false), loginAction: {})
+        CommunityBannerView(viewData: BannerViewData.create(sequence: 1, isLoggedIn: false), loginAction: {})
 //        CommunityBannerView(viewData: BannerViewData.create(sequence: 2, isLoggedIn: false))
 //        CommunityBannerView(viewData: BannerViewData.create(sequence: 3, isLoggedIn: false))
         
