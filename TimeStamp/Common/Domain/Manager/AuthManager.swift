@@ -48,7 +48,7 @@ final class AuthManager: ObservableObject {
         Logger.success("로그인 성공: \(user.nickname ?? "익명") (userId: \(user.userId))")
 
         // 3. MyLogView 새로고침 알림
-        NotificationCenter.default.post(name: .shouldRefreshMyLog, object: nil)
+        NotificationCenter.default.post(name: .shouldRefresh, object: nil)
     }
     
     
@@ -69,7 +69,7 @@ final class AuthManager: ObservableObject {
         isLoggedIn = false
 
         // 3. MyLogView 새로고침 알림
-        NotificationCenter.default.post(name: .shouldRefreshMyLog, object: nil)
+        NotificationCenter.default.post(name: .shouldRefresh, object: nil)
         Logger.success("로그아웃 완료")
     }
 

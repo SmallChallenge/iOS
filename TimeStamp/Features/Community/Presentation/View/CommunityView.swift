@@ -22,7 +22,7 @@ struct CommunityView: View {
 
     var body: some View {
         ZStack(alignment: .top) {
-            if viewModel.feedViewDataList.isEmpty && !viewModel.isLoading {
+            if viewModel.feedList.isEmpty && !viewModel.isLoading {
                 emptyView
             } else {
                 feedListView
@@ -42,7 +42,7 @@ struct CommunityView: View {
         .loading(viewModel.isLoading && !viewModel.isRefreshing)
         .toast(message: $viewModel.toastMessage)
         .onAppear {
-            if viewModel.feeds.isEmpty {
+            if viewModel.feedList.isEmpty {
                 viewModel.loadFeeds()
             }
             // 앰플리튜드
@@ -85,48 +85,64 @@ struct CommunityView: View {
                     }
                 }
         }
+        .onReceive(NotificationCenter.default.publisher(for: .shouldRefresh)) { _ in
+            // 로그인 후 목록 새로고침
+            viewModel.loadFeeds(isRefresh: true)
+        }
     }
     
     private var feedListView: some View {
         List {
-            ForEach(viewModel.feedViewDataList, id: \.imageId) { feedViewData in
-                CommunityCard(
-                    viewData: feedViewData,
-                    isMenuOpen: Binding(
-                        get: { viewModel.selectedFeedIdForMenu == feedViewData.imageId },
-                        set: { isOpen in
-                            if isOpen {
-                                viewModel.selectFeedForMenu(id: feedViewData.imageId)
-                            } else {
-                                viewModel.selectFeedForMenu(id: nil)
+            ForEach(viewModel.communityListItems) { item in
+                switch item {
+                case .feed(let feedViewData):
+                    CommunityCard(
+                        viewData: feedViewData,
+                        isMenuOpen: Binding(
+                            get: { viewModel.selectedFeedIdForMenu == feedViewData.imageId },
+                            set: { isOpen in
+                                if isOpen {
+                                    viewModel.selectFeedForMenu(id: feedViewData.imageId)
+                                } else {
+                                    viewModel.selectFeedForMenu(id: nil)
+                                }
                             }
+                        ),
+                        onReport: {
+                            guard authManager.isLoggedIn else {
+                                showLoginPopup = true
+                                return
+                            }
+                            // 신고할 imageId 저장하고 팝업 띄우기
+                            selectedImageIdForReport = feedViewData.imageId
+                            showReportPopup = true
+                        }, onLike: {
+                            // 좋아요 누름
+                            guard authManager.isLoggedIn else {
+                                showLoginPopup = true
+                                return
+                            }
+                            viewModel.toggleLike(imageId: feedViewData.imageId)
                         }
-                    ),
-                    onReport: {
-                        guard authManager.isLoggedIn else {
-                            showLoginPopup = true
-                            return
+                    )
+                    .listRowSeparator(.hidden)
+                    .listRowBackground(Color.clear)
+                    .listRowInsets(.init(top: .zero, leading: 20, bottom: .zero, trailing: .zero))
+                    .onAppear {
+                        // 마지막 피드에 도달하면 다음 페이지 로드
+                        if feedViewData.imageId == viewModel.feedList.last?.imageId {
+                            viewModel.loadMore()
                         }
-                        // 신고할 imageId 저장하고 팝업 띄우기
-                        selectedImageIdForReport = feedViewData.imageId
-                        showReportPopup = true
-                    }, onLike: {
-                        // 좋아요 누름
-                        guard authManager.isLoggedIn else {
-                            showLoginPopup = true
-                            return
-                        }
-                        viewModel.toggleLike(imageId: feedViewData.imageId)
                     }
-                )
-                .listRowSeparator(.hidden)
-                .listRowBackground(Color.clear)
-                .listRowInsets(.init(top: .zero, leading: 20, bottom: .zero, trailing: .zero))
-                .onAppear {
-                    // 마지막 아이템에 도달하면 다음 페이지 로드
-                    if feedViewData.imageId == viewModel.feedViewDataList.last?.imageId {
-                        viewModel.loadMore()
-                    }
+
+                case .banner(let bannerData):
+                    CommunityBannerView(viewData: bannerData,
+                                        loginAction: {
+                        showLoginPopup = true
+                    })
+                        .listRowSeparator(.hidden)
+                        .listRowBackground(Color.clear)
+                        .listRowInsets(.init(top: 8, leading: 20, bottom: 8, trailing: 20))
                 }
             }
         }

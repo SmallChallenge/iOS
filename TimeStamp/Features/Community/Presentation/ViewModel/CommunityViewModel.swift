@@ -15,11 +15,11 @@ final class CommunityViewModel: ObservableObject, MessageDisplayable {
 
     // MARK: - Output Properties
 
-    /// 피드 목록
-    @Published var feeds: [Feed] = []
+    /// 피드와 배너가 섞인 리스트 (5개마다 배너 삽입)
+    @Published var communityListItems: [CommunityListItem] = []
 
-    /// 피드 ViewData 목록 (View에서 사용)
-    @Published var feedViewDataList: [FeedViewData] = []
+    /// 피드 ViewData 목록 (View에서 isEmpty, last 체크용)
+    @Published var feedList: [FeedViewData] = []
 
     /// 로딩
     @Published var isLoading: Bool = false
@@ -35,6 +35,9 @@ final class CommunityViewModel: ObservableObject, MessageDisplayable {
     @Published var selectedFeedIdForMenu: Int?
 
     // MARK: - Private Properties
+
+    /// 피드 목록 (내부 데이터 관리용)
+    private var feeds: [Feed] = []
 
     /// 페이지네이션 정보
     private var nextCursorId: Int?
@@ -264,28 +267,59 @@ final class CommunityViewModel: ObservableObject, MessageDisplayable {
     private func updateFeeds(_ newFeeds: [Feed], append: Bool = false) {
         if append {
             feeds.append(contentsOf: newFeeds)
-            feedViewDataList.append(contentsOf: newFeeds.map { $0.toViewData() })
+            feedList.append(contentsOf: newFeeds.map { $0.toViewData() })
         } else {
             feeds = newFeeds
-            feedViewDataList = newFeeds.map { $0.toViewData() }
+            feedList = newFeeds.map { $0.toViewData() }
         }
+        buildCommunityListItems()
     }
 
     /// 특정 인덱스의 피드 업데이트
     private func updateFeed(at index: Int, with feed: Feed) {
         feeds[index] = feed
-        feedViewDataList[index] = feed.toViewData()
+        feedList[index] = feed.toViewData()
+
+        // communityListItems에서 해당 feed만 찾아서 업데이트 (배너는 영향 없음)
+        if let itemIndex = communityListItems.firstIndex(where: {
+            if case .feed(let feedData) = $0, feedData.imageId == feed.imageId {
+                return true
+            }
+            return false
+        }) {
+            communityListItems[itemIndex] = .feed(feed.toViewData())
+        }
     }
 
     /// 피드 제거
     private func removeFeed(imageId: Int) {
         feeds.removeAll { $0.imageId == imageId }
-        feedViewDataList.removeAll { $0.imageId == imageId }
+        feedList.removeAll { $0.imageId == imageId }
+        buildCommunityListItems()
     }
 
     private func resetPagination() {
         nextCursorId = nil
         nextCursorPublishedAt = nil
         hasNext = true
+    }
+
+    /// feedList로부터 배너가 삽입된 communityListItems 생성
+    private func buildCommunityListItems() {
+        var items: [CommunityListItem] = []
+        let isLoggedIn = AuthManager.shared.isLoggedIn
+
+        for (index, feed) in feedList.enumerated() {
+            items.append(.feed(feed))
+
+            // 5개마다 배너 삽입 (0, 1, 2, 3, 4 다음에 배너, 즉 5번째마다)
+            if (index + 1) % 5 == 0 {
+                let bannerSequence = (index + 1) / 5 - 1  // 0, 1, 2, 3, ...
+                let bannerData = BannerViewData.create(sequence: bannerSequence, isLoggedIn: isLoggedIn)
+                items.append(.banner(bannerData))
+            }
+        }
+
+        communityListItems = items
     }
 }
