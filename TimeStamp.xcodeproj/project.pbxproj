@@ -16,7 +16,6 @@
 		D0D5DDA02F0D113F005A1E72 /* AmplitudeSwift in Frameworks */ = {isa = PBXBuildFile; productRef = D0D5DD9F2F0D113F005A1E72 /* AmplitudeSwift */; };
 		D0DAF8BE2EE150D20040F646 /* Kingfisher in Frameworks */ = {isa = PBXBuildFile; productRef = D0DAF8BD2EE150D20040F646 /* Kingfisher */; };
 		D0DAF8C12EE150E20040F646 /* Alamofire in Frameworks */ = {isa = PBXBuildFile; productRef = D0DAF8C02EE150E20040F646 /* Alamofire */; };
-		D0DAF8C42EE150EE0040F646 /* Then in Frameworks */ = {isa = PBXBuildFile; productRef = D0DAF8C32EE150EE0040F646 /* Then */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -85,7 +84,6 @@
 				D0B6FD492F0F8E4700D12F34 /* GoogleMobileAds in Frameworks */,
 				D0DAF8BE2EE150D20040F646 /* Kingfisher in Frameworks */,
 				D0AB7D342EF8092700963A12 /* GoogleSignIn in Frameworks */,
-				D0DAF8C42EE150EE0040F646 /* Then in Frameworks */,
 				D0DAF8C12EE150E20040F646 /* Alamofire in Frameworks */,
 				D0AB7E4C2EF80BA900963A12 /* KakaoSDK in Frameworks */,
 			);
@@ -151,7 +149,6 @@
 			packageProductDependencies = (
 				D0DAF8BD2EE150D20040F646 /* Kingfisher */,
 				D0DAF8C02EE150E20040F646 /* Alamofire */,
-				D0DAF8C32EE150EE0040F646 /* Then */,
 				D0AB7D332EF8092700963A12 /* GoogleSignIn */,
 				D0AB7D352EF8092700963A12 /* GoogleSignInSwift */,
 				D0AB7E4B2EF80BA900963A12 /* KakaoSDK */,
@@ -244,7 +241,6 @@
 			packageReferences = (
 				D0DAF8BC2EE150D20040F646 /* XCRemoteSwiftPackageReference "Kingfisher" */,
 				D0DAF8BF2EE150E20040F646 /* XCRemoteSwiftPackageReference "Alamofire" */,
-				D0DAF8C22EE150EE0040F646 /* XCRemoteSwiftPackageReference "Then" */,
 				D0AB7D322EF8092700963A12 /* XCRemoteSwiftPackageReference "GoogleSignIn-iOS" */,
 				D0AB7E4A2EF80BA900963A12 /* XCRemoteSwiftPackageReference "kakao-ios-sdk" */,
 				D0D5DD9E2F0D113F005A1E72 /* XCRemoteSwiftPackageReference "Amplitude-Swift" */,
@@ -720,14 +716,6 @@
 				minimumVersion = 5.10.2;
 			};
 		};
-		D0DAF8C22EE150EE0040F646 /* XCRemoteSwiftPackageReference "Then" */ = {
-			isa = XCRemoteSwiftPackageReference;
-			repositoryURL = "https://github.com/devxoul/Then";
-			requirement = {
-				kind = upToNextMajorVersion;
-				minimumVersion = 3.0.0;
-			};
-		};
 /* End XCRemoteSwiftPackageReference section */
 
 /* Begin XCSwiftPackageProductDependency section */
@@ -770,11 +758,6 @@
 			isa = XCSwiftPackageProductDependency;
 			package = D0DAF8BF2EE150E20040F646 /* XCRemoteSwiftPackageReference "Alamofire" */;
 			productName = Alamofire;
-		};
-		D0DAF8C32EE150EE0040F646 /* Then */ = {
-			isa = XCSwiftPackageProductDependency;
-			package = D0DAF8C22EE150EE0040F646 /* XCRemoteSwiftPackageReference "Then" */;
-			productName = Then;
 		};
 /* End XCSwiftPackageProductDependency section */
 	};
