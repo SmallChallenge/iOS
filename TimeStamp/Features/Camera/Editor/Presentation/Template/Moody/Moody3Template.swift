@@ -32,11 +32,11 @@ struct Moody3Template: View , TemplateViewProtocol {
             }
             
             HStack(alignment: .bottom){
-                Text(displayDate.toString(.time_a_HH_mm))
+                Text(displayDate.toString(.time_a_hh_mm).lowercased())
                     .font(.partialSans, size: 30)
                 Spacer()
                 
-                Text(displayDate.toString(.yyyyMMddE, locale: .kr))
+                Text(displayDate.toString(.yyyyMMddE).uppercased())
                     .font(.suit(.heavy), size: 14)
             }
             .padding(.top, 7)
@@ -56,8 +56,8 @@ struct Moody3Template: View , TemplateViewProtocol {
             
             Moody3Template(displayDate: Date(), hasLogo: true)
         }
-        .frame(width: 300, height: 300)
         .aspectRatio(1, contentMode: .fit)
+        .border(.red)
         
         ZStack {
             Image("sampleImage")
@@ -67,7 +67,7 @@ struct Moody3Template: View , TemplateViewProtocol {
             
             Moody3Template(displayDate: Date(), hasLogo: false)
         }
-        .frame(width: 300, height: 300)
         .aspectRatio(1, contentMode: .fit)
+        .border(.red)
     }
 }

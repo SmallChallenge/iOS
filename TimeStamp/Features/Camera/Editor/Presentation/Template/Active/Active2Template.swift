@@ -23,7 +23,7 @@ struct Active2Template: View ,TemplateViewProtocol {
             Spacer()
             
             VStack (spacing: 4){
-                Text(displayDate.toString(.time_HH_mm_a))
+                Text(displayDate.toString(.time_hh_mm_a))
                     .font(.partialSans, size: 28)
                     .foregroundColor(.gray50)
                 

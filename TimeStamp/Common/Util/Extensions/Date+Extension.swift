@@ -52,8 +52,14 @@ extension Date {
         /// "a HH:mm"
         case time_a_HH_mm = "a HH:mm"
         
+        /// "a hh:mm"
+        case time_a_hh_mm = "a hh:mm"
+        
         /// H:mm a
         case time_HH_mm_a = "HH:mm a"
+        
+        /// hh:mm a
+        case time_hh_mm_a = "hh:mm a"
         
         
         

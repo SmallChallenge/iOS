@@ -15,12 +15,12 @@ struct Basic3Template: View, TemplateViewProtocol {
             Spacer()
             VStack(spacing: .zero){
                 
-                Text(displayDate.toString(.time_a_HH_mm, locale: .kr))
+                Text(displayDate.toString(.time_a_hh_mm, locale: .kr))
                 
                     .font(.suit(.heavy), size: 40, trackingPercent: -0.02)
                 
                 
-                Text(displayDate.toString(.koreanDate_yyyyMM월dd일E
+                Text(displayDate.toString(.koreanDate_yyyyM월d일E
                                           , locale: .kr))
                 .font(.suit(.heavy), size: 20, trackingPercent: -0.02)
                 
