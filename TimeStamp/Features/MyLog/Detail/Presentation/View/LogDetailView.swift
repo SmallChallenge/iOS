@@ -59,15 +59,7 @@ struct LogDetailView: View {
                         visibility
                         Spacer()
                     }
-                    
-                    
-                    if case .local = viewModel.detail.imageSource {
-                        // 로그인 안내 배너
-                        NoticeBanner("로그인 전 게시물은 공개 범위를 수정할 수 없어요.")
-                    } else {
-                        Spacer()
-                            .frame(height: 20)
-                    }
+                    .padding(.bottom, 20)
                     
                     // 공유하기 버튼
                     MainButton(title: viewModel.isPreparingShare ? "준비중..." : "공유하기", colorType: .secondary) {
