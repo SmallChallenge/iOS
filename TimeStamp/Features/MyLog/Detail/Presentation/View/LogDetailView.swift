@@ -19,7 +19,7 @@ struct LogDetailView: View {
         self._viewModel = StateObject(wrappedValue: viewModel)
         self.onGoBack = onGoBack
         self.diContainer = diContainer
-
+        
         // 삭제 성공 시 뒤로가기 (이미 DIContainer에서 설정되어 있음)
         // viewModel.onDeleteSuccess는 DIContainer에서 설정됨
     }
@@ -34,6 +34,7 @@ struct LogDetailView: View {
         ScrollView {
             VStack(spacing: 20) {
                 Group {
+                    
                     // 메뉴버튼 + 이미지뷰
                     VStack(spacing: 16) {
                         HStack {
@@ -50,7 +51,7 @@ struct LogDetailView: View {
                     }
                     
                     // 카테고리 + 공개여부
-                    HStack(spacing: 20) {
+                    HStack(alignment: .top, spacing: 20) {
                         // 카테고리
                         category
                         
@@ -59,9 +60,13 @@ struct LogDetailView: View {
                         Spacer()
                     }
                     
-                    if !authManager.isLoggedIn {
+                    
+                    if case .local = viewModel.detail.imageSource {
                         // 로그인 안내 배너
                         NoticeBanner("로그인 전 게시물은 공개 범위를 수정할 수 없어요.")
+                    } else {
+                        Spacer()
+                            .frame(height: 20)
                     }
                     
                     // 공유하기 버튼
@@ -71,9 +76,11 @@ struct LogDetailView: View {
                             showShareSheet = true
                         }
                     }
+                    
                 } // ~Group
-                .padding(.horizontal, 20)
+            .padding(.horizontal, 20)
             } //~VStack
+            
         } //~ScrollView
         .scrollDismissesKeyboard(.interactively)
         .mainBackgourndColor()
@@ -172,7 +179,7 @@ struct LogDetailView: View {
     private var logImage: some View {
         Group {
             switch viewModel.detail.imageSource {
-
+                
                 // MARK: 서버이미지
             case let .remote(remoteImage):
                 
@@ -188,7 +195,7 @@ struct LogDetailView: View {
                     .fade(duration: 0.25)
                     .resizable()
                     .scaledToFill()
-
+                
                 // MARK: 로컬 이미지
             case let .local(localImage):
                 LocalImageView(imageFileName: localImage.imageFileName)
@@ -196,10 +203,10 @@ struct LogDetailView: View {
             } //~switch
         }
         .clipped()
-//        .aspectRatio(1, contentMode: .fit)
-            .aspectRatio(1, contentMode: .fill)
-            .clipShape(RoundedRectangle(cornerRadius: 8))
-            .roundedBorder(color: .gray700, radius: 8)
+        //        .aspectRatio(1, contentMode: .fit)
+        .aspectRatio(1, contentMode: .fill)
+        .clipShape(RoundedRectangle(cornerRadius: 8))
+        .roundedBorder(color: .gray700, radius: 8)
     }
     
     private var LoginRequiredBanner: some View {
@@ -256,5 +263,5 @@ struct LogDetailView: View {
             visibility: .privateVisible),
         onGoBack: {}
     )
-
+    
 }

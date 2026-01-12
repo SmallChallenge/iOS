@@ -127,11 +127,13 @@ struct MainTabView: View {
                     .foregroundStyle(Color.gray50)
                     .frame(width: 122.8, height: 26)
                     .padding(.vertical, 17)
+                    .padding(.leading, 5)
                 
             } else {
                 Text("커뮤니티")
                     .font(.H2)
                     .foregroundStyle(Color.gray50)
+                    .padding(.trailing, 5)
             }
         }
     }
@@ -143,6 +145,7 @@ struct MainTabView: View {
             Image("iconUser_line")
                 .resizable()
                 .frame(width: 24, height: 24)
+                .padding(.trailing, 5)
         }
     }
 }
