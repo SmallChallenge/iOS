@@ -25,10 +25,15 @@ struct GalleryView: View {
 
     var body: some View {
         ZStack {
-            if viewModel.photos.isEmpty {
-                emptyView
+            
+            if let photos = viewModel.photos {
+                if photos.isEmpty {
+                    emptyView
+                } else {
+                    photoGrid
+                }
             } else {
-                photoGrid
+                Spacer()
             }
         }
         .navigationDestination(isPresented: $navigateToPhotoSave) {
@@ -87,7 +92,7 @@ struct GalleryView: View {
     private var photoGrid: some View {
         ScrollView {
             LazyVGrid(columns: columns, spacing: 1) {
-                ForEach(viewModel.photos, id: \.localIdentifier) { asset in
+                ForEach(viewModel.photos ?? [], id: \.localIdentifier) { asset in
                     PhotoGridCell(asset: asset, useCase: viewModel.useCase) {
                         Task {
                             await viewModel.loadFullImage(from: asset)

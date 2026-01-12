@@ -18,7 +18,7 @@ final class GalleryViewModel: ObservableObject {
     let useCase: GalleryUseCaseProtocol
 
     /// 사진 목록
-    @Published var photos: [PHAsset] = []
+    @Published var photos: [PHAsset]? = nil
 
     /// 선택된 이미지
     @Published var selectedImage: UIImage? = nil
