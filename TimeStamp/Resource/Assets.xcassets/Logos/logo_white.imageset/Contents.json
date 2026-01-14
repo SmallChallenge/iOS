@@ -1,11 +1,11 @@
 {
   "images" : [
     {
-      "filename" : "ic_white.svg",
       "idiom" : "universal",
       "scale" : "1x"
     },
     {
+      "filename" : "white.svg",
       "idiom" : "universal",
       "scale" : "2x"
     },
