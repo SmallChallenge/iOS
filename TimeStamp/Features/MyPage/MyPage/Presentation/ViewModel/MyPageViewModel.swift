@@ -15,6 +15,9 @@ final class MyPageViewModel: ObservableObject, MessageDisplayable {
     private let logoutUseCase: LogoutUseCaseProtocol
 
     // MARK: - Output Properties
+    
+    /// 로그아웃 성공 여부
+    @Published var didLogout: Bool = false
 
     /// 로딩
     @Published var isLoading: Bool = false
@@ -47,10 +50,13 @@ final class MyPageViewModel: ObservableObject, MessageDisplayable {
         do {
             try await logoutUseCase.logout()
             Logger.success("로그아웃 성공")
+            ToastManager.shared.show(AppMessage.logoutSuccess.text)
 
             // AuthManager에서 로컬 토큰 삭제
             AuthManager.shared.logout()
             AmplitudeManager.shared.logout()
+            
+            didLogout = true
 
             isLoading = false
         } catch {

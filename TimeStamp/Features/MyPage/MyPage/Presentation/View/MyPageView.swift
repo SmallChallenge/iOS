@@ -157,6 +157,11 @@ struct MyPageView: View {
                     .foregroundStyle(Color.gray50)
             }
         }
+        .onChange(of: viewModel.didLogout) { didLogout in
+            if didLogout {
+                onGoBack()
+            }
+        }
         // 유저정보화면 띄우기
         .navigationDestination(isPresented: $presentUserInfo) {
             diContainer.makeUserInfoPageView(onGoBack: {

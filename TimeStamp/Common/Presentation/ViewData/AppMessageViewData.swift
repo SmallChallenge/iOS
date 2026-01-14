@@ -74,6 +74,7 @@ enum AppMessage {
     case blockSuccess
     /// 회원탈퇴 성공
     case withdrawalSuccess
+    case logoutSuccess
     
 
     var text: String {
@@ -125,7 +126,9 @@ enum AppMessage {
         case .blockSuccess:
             return "게시자를 차단했습니다."
         case .withdrawalSuccess:
-            return "회원탈퇴가 완료되었어요."
+            return "탈퇴가 완료되었어요."
+        case .logoutSuccess:
+            return "로그아웃이 완료되었어요."
         }
     }
 

@@ -47,6 +47,7 @@ final class UserInfoPageViewModel: ObservableObject, MessageDisplayable {
         do {
             try await withdrawalUseCase.withdrawal()
             Logger.success("회원탈퇴 성공")
+            ToastManager.shared.show(AppMessage.withdrawalSuccess.text)
 
             // 로그아웃 처리
             AuthManager.shared.logout()
