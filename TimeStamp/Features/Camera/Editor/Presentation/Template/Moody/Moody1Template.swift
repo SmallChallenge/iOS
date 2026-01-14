@@ -21,7 +21,7 @@ struct Moody1Template: View, TemplateViewProtocol {
                     .foregroundStyle(Color.gray50)
                     
                 
-                Text(displayDate.toString(.time_a_HH_mm)) //"a hh:mm"
+                Text(displayDate.toString(.time_a_hh_mm)) //"a hh:mm"
                     .font(.moveSans(.bold), size: 16, trackingPercent: -0.02)
                     .foregroundStyle(Color.gray50)
                     

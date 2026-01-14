@@ -58,7 +58,7 @@ struct Moody2Template: View , TemplateViewProtocol {
                     .frame(width: 280, height: 280)
 
                 // 시간 텍스트 (중앙 정렬)
-                VStack(spacing: 0) {
+                VStack(alignment: .center, spacing: 0) {
                     // 시
                     Text(hourString)
                         .font(.suit(.extraLight), size: 100, trackingPercent: -0.02)
