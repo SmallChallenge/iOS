@@ -177,7 +177,7 @@ struct LogDetailView: View {
                 
                 KFImage(URL(string: remoteImage.imageUrl))
                     .placeholder {
-                        Placeholder()
+                        Placeholder(width: 48, height: 48)
                     }
                     .retry(maxCount: 3, interval: .seconds(2))
                     .cacheMemoryOnly()

@@ -127,7 +127,7 @@ struct CommunityCard: View {
         Group {
             KFImage(URL(string: viewData.accessURL))
                 .placeholder {
-                    Placeholder()
+                    Placeholder(width: 48, height: 48)
                 }
                 .retry(maxCount: 3, interval: .seconds(2))
                 .cacheMemoryOnly()
