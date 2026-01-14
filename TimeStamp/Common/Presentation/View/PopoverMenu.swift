@@ -56,6 +56,11 @@ struct PopoverMenu: View {
                 }
             }
         }
+        .frame(maxWidth: 180)
+        .background(Color.gray600)
+        .cornerRadius(12)
+        .shadow(color: Color.black.opacity(0.3), radius: 8, x: 0, y: 2)
+
     }
 }
 

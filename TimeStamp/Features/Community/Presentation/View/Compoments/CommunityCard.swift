@@ -98,32 +98,19 @@ struct CommunityCard: View {
                         }
 
                     // 팝오버 메뉴
-                    VStack(spacing: 0) {
+                    VStack {
                         PopoverMenu(items: [
                             .init(title: "게시물 신고", icon: "IconReport", action: {
                                 onReport()
-                            })
-                            
-                        ], isPresented: $isMenuOpen)
-                        
-                        Color.gray300
-                            .frame(height: 1)
-                        
-                        PopoverMenu(items: [
+                            }),
                             .init(title: "게시자 차단", icon: "IconBlock", action: {
                                 onBlock()
                             })
-                            
                         ], isPresented: $isMenuOpen)
-                           
-                        
+                        .padding(.top, 50)
+                        .padding(.trailing, 10)
+                        Spacer()
                     }
-                    .frame(maxWidth: 180)
-                    .background(Color.gray600)
-                    .cornerRadius(12)
-                    .shadow(color: Color.black.opacity(0.3), radius: 8, x: 0, y: 2)
-                    .padding(.top, 50)
-                    .padding(.trailing, 10)
                 }
             }
         }
