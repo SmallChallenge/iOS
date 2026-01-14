@@ -8,7 +8,7 @@
 import Foundation
 protocol MyPageDIContainerProtocol {
     func makeMyPageView(onGoBack: @escaping () -> Void) -> MyPageView
-    func makeUserInfoPageView(onGoBack: @escaping () -> Void) -> UserInfoPageView
+    func makeUserInfoPageView(onGoBack: @escaping () -> Void, onSignOutCompleted: @escaping () -> Void) -> UserInfoPageView
     
 }
 final class MyPageDIContainer: MyPageDIContainerProtocol {
@@ -56,9 +56,9 @@ final class MyPageDIContainer: MyPageDIContainerProtocol {
         return UserInfoPageViewModel(withdrawalUseCase: useCase)
     }
 
-    func makeUserInfoPageView(onGoBack: @escaping () -> Void) -> UserInfoPageView {
+    func makeUserInfoPageView(onGoBack: @escaping () -> Void, onSignOutCompleted: @escaping () -> Void) -> UserInfoPageView {
         let viewModel = makeUserInfoPageViewModel()
-        return UserInfoPageView(viewModel: viewModel, onGoBack: onGoBack)
+        return UserInfoPageView(viewModel: viewModel, onGoBack: onGoBack, onSignOutCompleted: onSignOutCompleted)
     }
 }
 struct MockMyPageDIContainer: MyPageDIContainerProtocol{
@@ -68,10 +68,10 @@ struct MockMyPageDIContainer: MyPageDIContainerProtocol{
         return MyPageView(viewModel: vm, diContainer: self, onGoBack: onGoBack)
     }
 
-    func makeUserInfoPageView(onGoBack: @escaping () -> Void) -> UserInfoPageView {
+    func makeUserInfoPageView(onGoBack: @escaping () -> Void, onSignOutCompleted: @escaping () -> Void) -> UserInfoPageView {
         let useCase = MockWithdrawalUseCase()
         let viewModel = UserInfoPageViewModel(withdrawalUseCase: useCase)
-        return UserInfoPageView(viewModel: viewModel, onGoBack: onGoBack)
+        return UserInfoPageView(viewModel: viewModel, onGoBack: onGoBack, onSignOutCompleted: onSignOutCompleted)
     }
 
     struct MockLogoutUseCase: LogoutUseCaseProtocol {

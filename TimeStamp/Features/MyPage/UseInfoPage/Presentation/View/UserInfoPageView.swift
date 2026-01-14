@@ -19,10 +19,13 @@ struct UserInfoPageView: View {
 
     private let appDiContainer = AppDIContainer.shared
     private let onGoBack: () -> Void
+    /// 탈퇴완료
+    private let onSignOutCompleted: () -> Void
 
-    init(viewModel: UserInfoPageViewModel, onGoBack: @escaping () -> Void) {
+    init(viewModel: UserInfoPageViewModel, onGoBack: @escaping () -> Void, onSignOutCompleted: @escaping () -> Void ) {
         _viewModel = StateObject(wrappedValue: viewModel)
         self.onGoBack = onGoBack
+        self.onSignOutCompleted = onSignOutCompleted
     }
     var body: some View {
         ScrollView {
@@ -98,6 +101,7 @@ struct UserInfoPageView: View {
             if success {
                 Task { @MainActor in
                     onGoBack()
+                    onSignOutCompleted()
                 }
             }
         }
@@ -176,5 +180,5 @@ struct UserInfoPageView: View {
 }
 
 #Preview {
-    MockMyPageDIContainer().makeUserInfoPageView(onGoBack: { })
+    MockMyPageDIContainer().makeUserInfoPageView(onGoBack: { }, onSignOutCompleted: {})
 }

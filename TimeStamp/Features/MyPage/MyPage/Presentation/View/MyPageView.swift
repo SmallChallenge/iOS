@@ -112,14 +112,14 @@ struct MyPageView: View {
                         }
                     }
                     
-#if DEBUG
+                    #if DEBUG
                     Button("토큰복사"){
                         copyTokenForTest()
                     }
                     Button("로그 공유 (\(Logger.getLogCount())개)"){
                         shareLog()
                     }
-#endif
+                    #endif
                     
                     Spacer()
                     
@@ -159,9 +159,13 @@ struct MyPageView: View {
         }
         // 유저정보화면 띄우기
         .navigationDestination(isPresented: $presentUserInfo) {
-            diContainer.makeUserInfoPageView {
+            diContainer.makeUserInfoPageView(onGoBack: {
                 presentUserInfo = false
-            }
+            }, onSignOutCompleted: {
+                // 회원탈퇴 완료 시 메인으로 복귀
+                presentUserInfo = false
+                onGoBack()
+            })
         }
         // 로그인화면띄우기
         .fullScreenCover(isPresented: $showLoginView) {
