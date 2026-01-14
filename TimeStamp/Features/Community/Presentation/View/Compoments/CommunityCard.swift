@@ -13,17 +13,20 @@ struct CommunityCard: View {
     private let viewData: FeedViewData
     @Binding var isMenuOpen: Bool
     private let onReport: () -> Void
+    private let onBlock: () -> Void
     private let onLike: () -> Void
 
     init(
         viewData: FeedViewData,
         isMenuOpen: Binding<Bool>,
         onReport: @escaping () -> Void,
+        onBlock: @escaping () -> Void,
         onLike: @escaping () -> Void
     ) {
         self.viewData = viewData
         self._isMenuOpen = isMenuOpen
         self.onReport = onReport
+        self.onBlock = onBlock
         self.onLike = onLike
     }
     
@@ -95,17 +98,32 @@ struct CommunityCard: View {
                         }
 
                     // 팝오버 메뉴
-                    VStack {
+                    VStack(spacing: 0) {
                         PopoverMenu(items: [
-                            .init(title: "신고하기", icon: "exclamationmark.triangle", action: {
+                            .init(title: "게시물 신고", icon: "IconReport", action: {
                                 onReport()
                             })
                             
                         ], isPresented: $isMenuOpen)
-                            .padding(.top, 50)
-                            .padding(.trailing, 10)
-                        Spacer()
+                        
+                        Color.gray300
+                            .frame(height: 1)
+                        
+                        PopoverMenu(items: [
+                            .init(title: "게시자 차단", icon: "IconBlock", action: {
+                                onBlock()
+                            })
+                            
+                        ], isPresented: $isMenuOpen)
+                           
+                        
                     }
+                    .frame(maxWidth: 180)
+                    .background(Color.gray600)
+                    .cornerRadius(12)
+                    .shadow(color: Color.black.opacity(0.3), radius: 8, x: 0, y: 2)
+                    .padding(.top, 50)
+                    .padding(.trailing, 10)
                 }
             }
         }
@@ -158,7 +176,7 @@ struct CommunityCard: View {
                     isMenuOpen: $isMenuOpen,
                     onReport: {
                         print("신고하기 클릭")
-                    }, onLike: {}
+                    }, onBlock: {}, onLike: {}
                 )
                 .border(Color.red)
             }

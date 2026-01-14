@@ -241,6 +241,13 @@ final class CommunityViewModel: ObservableObject, MessageDisplayable {
             }
         }
     }
+    
+    /// 차단하기
+    func block(nickname: String){
+        guard !isLoading else { return }
+        Logger.debug("차단하기 \(nickname)")
+        isLoading = true
+    }
 
     /// 메뉴 열기/닫기
     func selectFeedForMenu(id: Int?) {

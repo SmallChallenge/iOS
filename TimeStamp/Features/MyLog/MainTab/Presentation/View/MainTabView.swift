@@ -32,12 +32,15 @@ struct MainTabView: View {
                 
                 // content화면 (내기록 | 커뮤니티)
                 TabView (selection: $selectedTab){
+                    
+                    // 내기록
                     container.makeMyLogView(selectedLog: $selectedLog)
                         .tag(0)
                     
                     EmptyView()
                         .tag(1)
                     
+                    // 커뮤니티 화면
                     container.makeCommunityView()
                         .tag(2)
                     

@@ -29,6 +29,7 @@ struct Modal: View {
                     Text(content)
                         .font(.Body2)
                         .foregroundStyle(Color.gray300)
+                        .multilineTextAlignment(.center)
                 }
             }
         }
