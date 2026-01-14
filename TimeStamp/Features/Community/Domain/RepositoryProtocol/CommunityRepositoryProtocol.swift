@@ -16,7 +16,12 @@ protocol CommunityRepositoryProtocol {
 
     /// 신고 취소하기
     func cancelReport(imageId: Int) async throws
+    
+    /// 차단하기
+    func block(nickname: String) async throws
 
     /// 좋아요
     func like(imageId: Int) async throws
+    
+    
 }

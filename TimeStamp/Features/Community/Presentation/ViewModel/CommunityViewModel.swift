@@ -182,7 +182,7 @@ final class CommunityViewModel: ObservableObject, MessageDisplayable {
             } catch {
                 await MainActor.run {
                     isLoading = false
-                    show(.unknownRequestFailed)
+                    show(.likeFailed)
                     Logger.error("좋아요 실패: \(error)")
                 }
             }
@@ -213,7 +213,7 @@ final class CommunityViewModel: ObservableObject, MessageDisplayable {
                        code == "SELF_REPORT_NOT_ALLOWED"{
                         show(.reportToMineFailed)
                     } else {
-                        show(.unknownRequestFailed)
+                        show(.reportFailed)
                     }
                     Logger.error("신고 실패: \(error)")
                     isLoading = false
@@ -247,6 +247,31 @@ final class CommunityViewModel: ObservableObject, MessageDisplayable {
         guard !isLoading else { return }
         Logger.debug("차단하기 \(nickname)")
         isLoading = true
+        Task {
+            do {
+                try await useCase.block(nickname: nickname)
+                await MainActor.run {
+                    show(.blockSuccess)
+                    Logger.success("차단 완료: \(nickname)")
+
+                    // 차단한 사용자의 모든 피드를 목록에서 제거
+                    removeFeedsByNickname(nickname: nickname)
+
+                    isLoading = false
+                }
+            } catch {
+                await MainActor.run {
+                    Logger.error("차단 실패: \(error)")
+                    if case let NetworkError.serverFailed(code, _) = error,
+                     code == "SELF_BLOCK_NOT_ALLOWED" {
+                        show(.blockToMineFailed)
+                    } else {
+                        show(.blockFailed)
+                    }
+                    isLoading = false
+                }
+            }
+        }
     }
 
     /// 메뉴 열기/닫기
@@ -302,6 +327,13 @@ final class CommunityViewModel: ObservableObject, MessageDisplayable {
     private func removeFeed(imageId: Int) {
         feeds.removeAll { $0.imageId == imageId }
         feedList.removeAll { $0.imageId == imageId }
+        buildCommunityListItems()
+    }
+
+    /// 특정 닉네임의 모든 피드 제거
+    private func removeFeedsByNickname(nickname: String) {
+        feeds.removeAll { $0.nickname == nickname }
+        feedList.removeAll { $0.nickname == nickname }
         buildCommunityListItems()
     }
 

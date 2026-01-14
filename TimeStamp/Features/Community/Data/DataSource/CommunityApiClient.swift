@@ -17,6 +17,9 @@ enum CommunityRouter {
     // 신고하기를 취소하기
     case cancelReport(imageId: Int)
     
+    /// 차단하기
+    case block(nickname: String)
+    
     case like(imageId: Int)
     
 }
@@ -31,6 +34,7 @@ extension CommunityRouter: Router {
         case .report: .post
         case .cancelReport: .delete
         case .like: .post
+        case .block: .post
         }
     }
     
@@ -44,6 +48,8 @@ extension CommunityRouter: Router {
             return "api/v1/community/\(imageId)/report"
         case let .like(imageId):
             return "api/v1/community/\(imageId)/like"
+        case let .block(nickname):
+            return "/api/v1/community/\(nickname)/block"
 
         }
     }
@@ -76,6 +82,7 @@ extension CommunityRouter: Router {
         case .report: return nil
         case .cancelReport: return nil
         case .like: return nil
+        case .block: return nil
             
         }
     }
@@ -107,6 +114,10 @@ protocol CommunityApiClientProtocol {
     /// 로그 좋아요
     func like(imageId: Int) async -> Result<likeDto, NetworkError>
     
+    /// 차단하기
+    func block(nickname: String) async -> Result<BlockUserDto, NetworkError>
+    
+    
 }
 final class CommunityApiClient: ApiClient<CommunityRouter>,CommunityApiClientProtocol {
     func feeds(category: String?, size: Int?, lastPublishedAt: String?, lastImageId: Int?, sort: String?) async -> Result<feedsDto, NetworkError> {
@@ -125,5 +136,9 @@ final class CommunityApiClient: ApiClient<CommunityRouter>,CommunityApiClientPro
     
     func like(imageId: Int) async -> Result<likeDto, NetworkError> {
         await request(.like(imageId: imageId))
+    }
+    
+    func block(nickname: String) async -> Result<BlockUserDto, NetworkError> {
+        await request(.block(nickname: nickname))
     }
 }

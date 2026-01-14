@@ -68,5 +68,6 @@ struct MockCommunityUseCase: CommunityUseCaseProtocol {
     }
     func report(imageId: Int) async throws {}
     func cancelReport(imageId: Int) async throws {}
+    func block(nickname: String) async throws {}
     func like(imageId: Int) async throws {}
 }

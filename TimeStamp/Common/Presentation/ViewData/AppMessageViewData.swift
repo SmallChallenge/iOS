@@ -50,8 +50,15 @@ enum AppMessage {
     case likeFailed
     /// 신고 실패
     case reportFailed
+    /// 차단 실패
+    case blockFailed
+    
     /// 본인껀 신고 불가
     case reportToMineFailed
+    /// 본인껀 차단 불가
+    case blockToMineFailed
+    
+    /// 차단
     
     /// 필수값 입력 필요
     case requiredSelection
@@ -64,6 +71,7 @@ enum AppMessage {
     case deleteSuccess
     case welcomeMessage(nickname: String)
     case reportSuccess
+    case blockSuccess
     /// 회원탈퇴 성공
     case withdrawalSuccess
     
@@ -71,7 +79,7 @@ enum AppMessage {
     var text: String {
         switch self {
         // MARK: 에러
-        case .unknownRequestFailed, .likeFailed, .reportFailed:
+        case .unknownRequestFailed, .likeFailed, .reportFailed, .blockFailed:
             return "요청을 처리하지 못했어요.\n잠시 후 다시 시도해 주세요."
         case .loginFailed:
             return "로그인에 실패했어요. 다시 시도해 주세요."
@@ -100,6 +108,8 @@ enum AppMessage {
             
         case .reportToMineFailed:
             return "본인 게시물은 신고할 수 없어요."
+        case .blockToMineFailed:
+            return "본인 게시물은 차단할 수 없어요."
 
             // MARK: 성공
         case .saveSuccess:
@@ -112,6 +122,8 @@ enum AppMessage {
             return "반가워요, \(nickname)님! 이제 기록을 시작해볼까요?"
         case .reportSuccess:
             return "신고가 접수되었어요."
+        case .blockSuccess:
+            return "게시자를 차단했습니다."
         case .withdrawalSuccess:
             return "회원탈퇴가 완료되었어요."
         }
