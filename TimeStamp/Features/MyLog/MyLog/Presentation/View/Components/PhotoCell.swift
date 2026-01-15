@@ -29,7 +29,6 @@ struct PhotoCell: View {
                         }
                         .setProcessor(DownsamplingImageProcessor(size: CGSize(width: cellSize * UIScreen.main.scale, height: cellSize * UIScreen.main.scale)))
                         .retry(maxCount: 3, interval: .seconds(2))
-                        .cacheMemoryOnly()
                         .onFailure { error in
                             Logger.error("Image load failed: \(error.localizedDescription)")
                         }
