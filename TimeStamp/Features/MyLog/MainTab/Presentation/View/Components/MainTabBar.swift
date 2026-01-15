@@ -10,9 +10,12 @@ import SwiftUI
 
 struct MainTabBar: View {
     @Binding var selectedTab: Int
-    
+
     // 카메라 버튼 클릭 액션
     let onCameraButtonTapped: () -> Void
+
+    // 커뮤니티 탭 재선택 액션
+    let onCommunityReselected: () -> Void
     
 
     var body: some View {
@@ -44,6 +47,10 @@ struct MainTabBar: View {
                     TabButton(
                         type: .community,
                         isSelected: selectedTab == 2) {
+                            if selectedTab == 2 {
+                                // 이미 커뮤니티 탭인데 다시 눌렀을 때
+                                onCommunityReselected()
+                            }
                             selectedTab = 2
                         }
 
@@ -66,5 +73,5 @@ struct MainTabBar: View {
 
 
 #Preview {
-    MainTabBar(selectedTab: .constant(1), onCameraButtonTapped: {})
+    MainTabBar(selectedTab: .constant(1), onCameraButtonTapped: {}, onCommunityReselected: {})
 }

@@ -14,9 +14,11 @@ struct MainTabView: View {
     @State private var showCamera: Bool = false
     @State private var presentMypage: Bool = false
     @State private var selectedLog: TimeStampLogViewData? = nil
-    
+
     @State private var showLimitReachedPopup: Bool = false
     @State private var showLoginView: Bool = false
+
+    @State private var triggerCommunityRefresh: Bool = false
     
     private let container: AppDIContainer
     @StateObject private var viewModel: MainTabViewModel
@@ -41,21 +43,28 @@ struct MainTabView: View {
                         .tag(1)
                     
                     // 커뮤니티 화면
-                    container.makeCommunityView()
+                    container.makeCommunityView(triggerRefresh: $triggerCommunityRefresh)
                         .tag(2)
                     
                 } //~TabView
                 .hideTabBar()
                 
                 // 커스텀 탭바 [내 기록 | 촬영버튼 | 커뮤니티]
-                MainTabBar(selectedTab: $selectedTab, onCameraButtonTapped: {
-                    // 로컬기록이 20개 이상이면 팝업 띄우기
-                    if viewModel.canTakePhoto() {
-                        showCamera = true
-                    } else {
-                        showLimitReachedPopup = true
+                MainTabBar(
+                    selectedTab: $selectedTab,
+                    onCameraButtonTapped: {
+                        // 로컬기록이 20개 이상이면 팝업 띄우기
+                        if viewModel.canTakePhoto() {
+                            showCamera = true
+                        } else {
+                            showLimitReachedPopup = true
+                        }
+                    },
+                    onCommunityReselected: {
+                        // 커뮤니티 탭 재선택 시 새로고침 트리거
+                        triggerCommunityRefresh = true
                     }
-                })
+                )
                 
             } // ~ VStack
             .mainBackgourndColor()
