@@ -76,6 +76,7 @@ struct MyLogView: View {
                                     PhotoCell(log: log)
                                         .aspectRatio(1, contentMode: .fill)
                                 })
+                                .id(log.id)
                                 .onAppear {
                                     if index == filteredLogs.count - 1 {
                                         viewModel.loadMore()

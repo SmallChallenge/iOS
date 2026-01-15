@@ -98,6 +98,7 @@ struct GalleryView: View {
                             await viewModel.loadFullImage(from: asset)
                         }
                     }
+                    .id(asset.localIdentifier)
                     .onAppear {
                         // 끝에서 10개 전에 추가 로드
                         if let photos = viewModel.photos, index == photos.count - 10 {
