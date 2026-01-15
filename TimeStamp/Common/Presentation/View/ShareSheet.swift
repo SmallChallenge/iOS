@@ -14,10 +14,12 @@ import LinkPresentation
 class ShareActivityItemSource: NSObject, UIActivityItemSource {
     let image: UIImage
     let title: String
+    let showImagePreview: Bool
 
-    init(title: String, image: UIImage) {
+    init(title: String, image: UIImage, showImagePreview: Bool) {
         self.title = title
         self.image = image
+        self.showImagePreview = showImagePreview
         super.init()
     }
 
@@ -40,8 +42,10 @@ class ShareActivityItemSource: NSObject, UIActivityItemSource {
         let metadata = LPLinkMetadata()
         metadata.title = title
 
-        // 공유하려는 이미지를 미리보기 이미지로 설정
-        metadata.imageProvider = NSItemProvider(object: image)
+        // showImagePreview가 true일 때만 이미지를 미리보기로 설정
+        if showImagePreview {
+            metadata.imageProvider = NSItemProvider(object: image)
+        }
 
         return metadata
     }
@@ -52,10 +56,12 @@ class ShareActivityItemSource: NSObject, UIActivityItemSource {
 struct ShareSheet: UIViewControllerRepresentable {
     let items: [Any]
     let title: String?
+    let showImagePreview: Bool
 
-    init(items: [Any], title: String? = nil) {
+    init(items: [Any], title: String? = nil, showImagePreview: Bool = false) {
         self.items = items
         self.title = title
+        self.showImagePreview = showImagePreview
     }
 
     func makeUIViewController(context: Context) -> UIActivityViewController {
@@ -65,7 +71,8 @@ struct ShareSheet: UIViewControllerRepresentable {
         if let firstImage = items.first as? UIImage, let title = title {
             let customItem = ShareActivityItemSource(
                 title: title,
-                image: firstImage
+                image: firstImage,
+                showImagePreview: showImagePreview
             )
             activityItems = [customItem]
         } else {

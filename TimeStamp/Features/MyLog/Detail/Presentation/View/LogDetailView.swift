@@ -116,7 +116,7 @@ struct LogDetailView: View {
         }
         .sheet(isPresented: $showShareSheet) {
             if let image = viewModel.shareImage {
-                ShareSheet(items: [image], title: "스탬픽")
+                ShareSheet(items: [image], title: "스탬픽 ㅣ 오늘 하루 인증 완료!")
                     .presentationDetents([.medium, .large])
                     .presentationDragIndicator(.visible)
             }
