@@ -41,6 +41,7 @@ extension LaunchScreenViewModel: LaunchScreenUseCaseDelegate {
             Logger.success("유저 정보 갱신 성공: \(user.nickname ?? "익명")")
         } else {
             Logger.warning("토큰 갱신 실패 → 메인 화면으로 (로그인 필요)")
+            AuthManager.shared.logout()
         }
         
         // Amplitude userId 설정 (로그인 이벤트는 발생시키지 않음)
