@@ -13,6 +13,8 @@ import Foundation
 struct PhotoCell: View {
     let log: TimeStampLogViewData
 
+    private let cellSize = UIScreen.main.bounds.width / 3
+
     var body: some View {
         GeometryReader { geometry in
             Group {
@@ -25,6 +27,7 @@ struct PhotoCell: View {
                         .placeholder {
                             Placeholder()
                         }
+                        .setProcessor(DownsamplingImageProcessor(size: CGSize(width: cellSize * UIScreen.main.scale, height: cellSize * UIScreen.main.scale)))
                         .retry(maxCount: 3, interval: .seconds(2))
                         .cacheMemoryOnly()
                         .onFailure { error in
@@ -36,7 +39,10 @@ struct PhotoCell: View {
 
                     // MARK: 로컬 이미지
                 case let .local(localImage):
-                    LocalImageView(imageFileName: localImage.imageFileName)
+                    LocalImageView(
+                        imageFileName: localImage.imageFileName,
+                        targetSize: CGSize(width: cellSize, height: cellSize)
+                    )
                     
                 } //~switch
             } //~Group
