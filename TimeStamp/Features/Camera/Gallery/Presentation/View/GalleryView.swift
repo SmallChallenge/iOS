@@ -92,15 +92,30 @@ struct GalleryView: View {
     private var photoGrid: some View {
         ScrollView {
             LazyVGrid(columns: columns, spacing: 1) {
-                ForEach(viewModel.photos ?? [], id: \.localIdentifier) { asset in
+                ForEach(Array((viewModel.photos ?? []).enumerated()), id: \.element.localIdentifier) { index, asset in
                     PhotoGridCell(asset: asset, useCase: viewModel.useCase) {
                         Task {
                             await viewModel.loadFullImage(from: asset)
                         }
                     }
+                    .id(asset.localIdentifier)
+                    .onAppear {
+                        // 끝에서 10개 전에 추가 로드
+                        if let photos = viewModel.photos, index == photos.count - 10 {
+                            viewModel.loadMore()
+                        }
+                    }
                 }
             }
             .padding(2)
+
+            // 추가 로딩 인디케이터
+            if viewModel.isLoadingMore {
+                ProgressView()
+                    .tint(.neon300)
+                    .frame(maxWidth: .infinity)
+                    .padding()
+            }
         }
         .scrollDismissesKeyboard(.interactively)
     }

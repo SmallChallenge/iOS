@@ -97,8 +97,8 @@ final class AppDIContainer {
         return CommunityDiContainer(communityApiClient: communityApiClient)
     }()
 
-    func makeCommunityView() -> CommunityView {
-        return communityDIContainer.makeCommunityView()
+    func makeCommunityView(triggerRefresh: Binding<Bool> = .constant(false)) -> CommunityView {
+        return communityDIContainer.makeCommunityView(triggerRefresh: triggerRefresh)
     }
     
     // MARK: - MyPage Feature

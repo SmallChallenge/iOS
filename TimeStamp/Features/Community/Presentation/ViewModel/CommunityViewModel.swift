@@ -115,11 +115,6 @@ final class CommunityViewModel: ObservableObject, MessageDisplayable {
     func refresh() async {
         guard !isLoading else { return }
 
-        // Haptic feedback
-        let generator = UIImpactFeedbackGenerator(style: .light)
-        generator.prepare()
-        generator.impactOccurred()
-
         resetPagination()
         isLoading = true
         isRefreshing = true

@@ -103,7 +103,10 @@ struct LogEditorView: View {
 
                 // MARK: 로컬 이미지
             case let .local(localImage):
-                LocalImageView(imageFileName: localImage.imageFileName)
+                LocalImageView(
+                    imageFileName: localImage.imageFileName,
+                    targetSize: CGSize(width: UIScreen.main.bounds.width, height: UIScreen.main.bounds.width)
+                )
                 
             } //~switch
         }

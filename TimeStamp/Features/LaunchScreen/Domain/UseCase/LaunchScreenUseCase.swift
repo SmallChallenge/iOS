@@ -57,7 +57,6 @@ class LaunchScreenUseCase: LaunchScreenUseCaseProtocol {
     func getUserInfo() async {
         do {
             let user = try await repository.getUserInfo()
-            // 유저 정보만 저장, Delegate 호출 안함
             await notifyDelegate(user: user)
         } catch {
             Logger.error("유저 정보 갱신 실패: \(error)")

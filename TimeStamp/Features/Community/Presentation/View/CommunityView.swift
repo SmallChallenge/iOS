@@ -19,9 +19,11 @@ struct CommunityView: View {
     @StateObject private var viewModel: CommunityViewModel
     @State private var activePopup: PopupType?
     @State private var showLoginView: Bool = false
+    @Binding var triggerRefresh: Bool
 
-    init(viewModel: CommunityViewModel) {
+    init(viewModel: CommunityViewModel, triggerRefresh: Binding<Bool> = .constant(false)) {
         _viewModel = StateObject(wrappedValue: viewModel)
+        _triggerRefresh = triggerRefresh
     }
 
     var body: some View {
@@ -30,16 +32,6 @@ struct CommunityView: View {
                 emptyView
             } else {
                 feedListView
-
-                // 당겨서 새로고침 로딩 뷰
-                if viewModel.isRefreshing {
-                    HStack(spacing: 8) {
-                        ProgressView()
-                            .tint(.neon300)
-                    }
-                    .frame(maxWidth: .infinity)
-                    .padding(.top, 60)
-                }
             }
         } // ~ZStack
         .mainBackgourndColor()
@@ -68,6 +60,15 @@ struct CommunityView: View {
         .onReceive(NotificationCenter.default.publisher(for: .shouldRefresh)) { _ in
             // 로그인 후 목록 새로고침
             viewModel.loadFeeds(isRefresh: true)
+        }
+        .onChange(of: triggerRefresh) { shouldRefresh in
+            if shouldRefresh {
+                // 프로그래밍 방식으로 refresh 트리거
+                Task {
+                    await triggerProgrammaticRefresh()
+                    triggerRefresh = false
+                }
+            }
         }
     }
     
@@ -194,6 +195,65 @@ struct CommunityView: View {
                     .foregroundStyle(Color.gray500)
             }
         }
+    }
+
+    // MARK: - Programmatic Refresh
+
+
+    /// 프로그래밍 방식으로 pull-to-refresh 트리거
+    @MainActor
+    private func triggerProgrammaticRefresh() async {
+        // UIScrollView 찾기
+        guard let windowScene = UIApplication.shared.connectedScenes.first as? UIWindowScene,
+              let window = windowScene.windows.first,
+              let scrollView = findScrollView(in: window) else {
+            // ScrollView를 찾지 못하면 직접 refresh만 호출
+            await viewModel.refresh()
+            return
+        }
+
+        // 1. 먼저 맨 위로 스크롤 (네비게이션 바 고려)
+        let targetY = -scrollView.adjustedContentInset.top
+
+        // UIView.animate로 직접 애니메이션
+        await withCheckedContinuation { (continuation: CheckedContinuation<Void, Never>) in
+            UIView.animate(withDuration: 0.3, animations: {
+                scrollView.contentOffset = CGPoint(x: 0, y: targetY)
+            }, completion: { _ in
+                continuation.resume()
+            })
+        }
+
+        // 3. refresh control 시작 (있으면)
+        if let refreshControl = scrollView.refreshControl {
+            // 색상이 확실히 적용되도록 직접 설정
+            refreshControl.tintColor = UIColor(Color.neon300)
+            
+            refreshControl.beginRefreshing()
+            // refresh control이 보이도록 약간 아래로
+            scrollView.setContentOffset(CGPoint(x: 0, y: -200), animated: true)
+        }
+
+        // 4. 실제 새로고침 실행
+        await viewModel.refresh()
+
+        // 5. refresh control 종료
+        scrollView.refreshControl?.endRefreshing()
+    }
+
+    /// 뷰 계층에서 UIScrollView 찾기
+    private func findScrollView(in view: UIView) -> UIScrollView? {
+        if let scrollView = view as? UIScrollView {
+            return scrollView
+        }
+
+        for subview in view.subviews {
+            if let scrollView = findScrollView(in: subview) {
+                return scrollView
+            }
+        }
+
+        return nil
     }
 }
 

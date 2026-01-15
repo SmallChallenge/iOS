@@ -116,7 +116,7 @@ struct LogDetailView: View {
         }
         .sheet(isPresented: $showShareSheet) {
             if let image = viewModel.shareImage {
-                ShareSheet(items: [image])
+                ShareSheet(items: [image], title: "스탬픽 ㅣ 오늘 하루 인증 완료!")
                     .presentationDetents([.medium, .large])
                     .presentationDragIndicator(.visible)
             }
@@ -190,12 +190,14 @@ struct LogDetailView: View {
                 
                 // MARK: 로컬 이미지
             case let .local(localImage):
-                LocalImageView(imageFileName: localImage.imageFileName)
+                LocalImageView(
+                    imageFileName: localImage.imageFileName,
+                    targetSize: CGSize(width: UIScreen.main.bounds.width, height: UIScreen.main.bounds.width)
+                )
                 
             } //~switch
         }
         .clipped()
-        //        .aspectRatio(1, contentMode: .fit)
         .aspectRatio(1, contentMode: .fill)
         .clipShape(RoundedRectangle(cornerRadius: 8))
         .roundedBorder(color: .gray700, radius: 8)
