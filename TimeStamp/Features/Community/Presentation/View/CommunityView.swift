@@ -213,10 +213,16 @@ struct CommunityView: View {
         }
 
         // 1. 먼저 맨 위로 스크롤 (네비게이션 바 고려)
-        scrollView.setContentOffset(CGPoint(x: 0, y: -scrollView.adjustedContentInset.top), animated: true)
+        let targetY = -scrollView.adjustedContentInset.top
 
-        // 2. 애니메이션이 끝날 때까지 대기
-        try? await Task.sleep(nanoseconds: 300_000_000) // 0.3초
+        // UIView.animate로 직접 애니메이션
+        await withCheckedContinuation { (continuation: CheckedContinuation<Void, Never>) in
+            UIView.animate(withDuration: 0.3, animations: {
+                scrollView.contentOffset = CGPoint(x: 0, y: targetY)
+            }, completion: { _ in
+                continuation.resume()
+            })
+        }
 
         // 3. refresh control 시작 (있으면)
         if let refreshControl = scrollView.refreshControl {
@@ -225,7 +231,7 @@ struct CommunityView: View {
             
             refreshControl.beginRefreshing()
             // refresh control이 보이도록 약간 아래로
-            scrollView.setContentOffset(CGPoint(x: 0, y: -200), animated: false)
+            scrollView.setContentOffset(CGPoint(x: 0, y: -200), animated: true)
         }
 
         // 4. 실제 새로고침 실행
