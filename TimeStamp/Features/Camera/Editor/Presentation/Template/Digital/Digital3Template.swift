@@ -7,7 +7,7 @@
 
 import SwiftUI
 
-struct Digital3Template: View  ,TemplateViewProtocol {
+struct Digital3Template: View ,TemplateViewProtocol {
     
     let displayDate: Date
     let hasLogo: Bool

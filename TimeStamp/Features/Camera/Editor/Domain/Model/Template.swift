@@ -102,12 +102,12 @@ extension Template {
                 AnyView(Moody3Template(displayDate: date, hasLogo: hasLogo))
             }),
         
-        Template(
-            style: .moody,
-            name: "Moody4Template",
-            viewBuilder: { date, hasLogo in
-                AnyView(Moody4Template(displayDate: date, hasLogo: hasLogo))
-            }),
+//        Template(
+//            style: .moody,
+//            name: "Moody4Template",
+//            viewBuilder: { date, hasLogo in
+//                AnyView(Moody4Template(displayDate: date, hasLogo: hasLogo))
+//            }),
 
         // MARK: - Active
         Template(
@@ -165,6 +165,15 @@ extension Template {
             viewBuilder: { date, hasLogo in
                 AnyView(Digital3Template(displayDate: date, hasLogo: hasLogo))
             }),
+        
+        
+        Template(
+            style: .digital,
+            name: "Digital4Template",
+            viewBuilder: { date, hasLogo in
+                AnyView(Digital4Template(displayDate: date, hasLogo: hasLogo))
+            }),
+        
         
     ]
 }
