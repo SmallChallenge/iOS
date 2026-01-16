@@ -67,7 +67,8 @@ extension Date {
         /// hh:mm a
         case time_hh_mm_a = "hh:mm a"
         
-        case time_h_m_a = "h:m a"
+        /// h:mm a
+        case time_h_mm_a = "h:mm a"
         
         
         // 년 월 일

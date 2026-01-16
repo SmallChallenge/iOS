@@ -19,7 +19,7 @@ struct Basic4Template: View, TemplateViewProtocol {
                 .font(.shipporiMincho(.bold), size: 20)
                 .foregroundStyle(Color.gray50)
             
-            Text(displayDate.toString(.time_h_m_a).lowercased())
+            Text(displayDate.toString(.time_h_mm_a).lowercased())
                 .font(.shipporiMincho(.bold), size: 16)
                 .foregroundStyle(Color.gray50)
         }
