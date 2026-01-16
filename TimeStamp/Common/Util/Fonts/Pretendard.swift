@@ -36,6 +36,10 @@ enum AppFont {
     case dungGeunMo
     
     case ericaOne
+    
+    case shipporiMincho(ShipporiMincho)
+    
+    case bMKkubulim
 
     var fontName: String {
         switch self {
@@ -61,6 +65,12 @@ enum AppFont {
             
         case .ericaOne:
             return EricaOne.regular.fontName
+            
+        case let .shipporiMincho(weight):
+            return weight.fontName
+            
+        case .bMKkubulim:
+            return BMKkubulim.regular.fontName
         }
     }
 }
@@ -146,6 +156,25 @@ enum EricaOne: String, FontWeightProtocol {
     }
 }
 
+// MARK: - ShipporiMincho
+enum ShipporiMincho: String, FontWeightProtocol {
+    case bold = "ShipporiMincho-Bold"
+    case extraBold = "ShipporiMincho-ExtraBold"
+    case medium = "ShipporiMincho-Medium"
+    case regular = "ShipporiMincho-Regular"
+    case semiBold = "ShipporiMincho-SemiBold"
+    var fontName: String {
+        return rawValue
+    }
+}
+
+// MARK: - BMKkubulim
+enum BMKkubulim: String, FontWeightProtocol {
+    case regular = "BMkkubulim-Regular"
+    var fontName: String {
+        return rawValue
+    }
+}
 // MARK: - 다른 폰트 추가 예시
 /*
 enum Roboto: String, FontWeightProtocol {

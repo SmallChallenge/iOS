@@ -55,6 +55,12 @@
 		<string>SUIT-Regular.otf</string>
 		<string>SUIT-SemiBold.otf</string>
 		<string>SUIT-Thin.otf</string>
+        <string>ShipporiMincho-Bold.ttf</string>
+        <string>ShipporiMincho-ExtraBold.ttf</string>
+        <string>ShipporiMincho-Medium.ttf</string>
+        <string>ShipporiMincho-Regular.ttf</string>
+        <string>ShipporiMincho-SemiBold.ttf</string>
+        <string>BMKkubulim.otf</string>
 	</array>
 	<key>UIDesignRequiresCompatibility</key>
 	<true/>
