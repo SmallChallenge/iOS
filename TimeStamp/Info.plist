@@ -28,8 +28,6 @@
 	<array>
 		<string>kakaokompassauth</string>
 	</array>
-	<key>NSUserTrackingUsageDescription</key>
-	<string>앱 기능 개선 및 서비스 분석을 위해 추적 권한이 필요합니다.</string>
 	<key>UIAppFonts</key>
 	<array>
 		<string>Pretendard-Black.otf</string>
@@ -57,6 +55,12 @@
 		<string>SUIT-Regular.otf</string>
 		<string>SUIT-SemiBold.otf</string>
 		<string>SUIT-Thin.otf</string>
+        <string>ShipporiMincho-Bold.ttf</string>
+        <string>ShipporiMincho-ExtraBold.ttf</string>
+        <string>ShipporiMincho-Medium.ttf</string>
+        <string>ShipporiMincho-Regular.ttf</string>
+        <string>ShipporiMincho-SemiBold.ttf</string>
+        <string>BMKkubulim.otf</string>
 	</array>
 	<key>UIDesignRequiresCompatibility</key>
 	<true/>

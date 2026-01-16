@@ -25,20 +25,18 @@ struct Basic2Template: View, TemplateViewProtocol {
                 .padding(24)
                 
                 Spacer()
-            }
-            .shadow(
-                color: Color.black.opacity(0.45),
-                radius: 5/2, x: 0, y: 0
-            )
+            } 
         }
         .overlay(alignment: .topTrailing) {
             if hasLogo {
-                Image("logo_white")
-                    .resizable()
-                    .frame(width: 38, height: 38)
+                TimeStampWhiteLogo()
                     .padding(16)
             }
         }
+        .shadow(
+            color: Color.black.opacity(0.45),
+            radius: 5/2, x: 0, y: 0
+        )
         
     }
 }

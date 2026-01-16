@@ -84,8 +84,6 @@ struct MyLogView: View {
                                 }
                             }
                         }
-//                        Spacer()
-//                            .frame(height: 100)
                        
                         // 추가 로딩 인디케이터
                         if viewModel.isLoadingMore {
@@ -108,6 +106,7 @@ struct MyLogView: View {
         }
         .onReceive(NotificationCenter.default.publisher(for: .shouldRefreshMyLog)) { _ in
             // 사진 저장 후 목록 새로고침
+            selectedCategory = .all
             viewModel.loadLogs()
         }
         .onReceive(NotificationCenter.default.publisher(for: .shouldRefresh)) { _ in

@@ -84,7 +84,10 @@ struct MainTabView: View {
                         }
                     }
             })
-            
+            .onReceive(NotificationCenter.default.publisher(for: .shouldRefreshMyLog)) { _ in
+                // 사진 저장 후 탭바 '내기록'으로 이동
+                selectedTab = 0
+            }
             .navigationBarTitleDisplayMode(.inline)
             .navigationBarBackButtonHidden(true)
             .toolbar {
