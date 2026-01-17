@@ -77,6 +77,13 @@ extension Template {
                 AnyView(Basic4Template(displayDate: date, hasLogo: hasLogo))
             }),
 
+        Template(
+            style: .basic,
+            name: "Basic5Template",
+            viewBuilder: { date, hasLogo in
+                AnyView(Basic5Template(displayDate: date, hasLogo: hasLogo))
+            }),
+
 
         // MARK:  - Moody
         Template(
