@@ -14,36 +14,33 @@ struct Moody4Template: View, TemplateViewProtocol {
     
     var body: some View {
         
-        VStack {
+        VStack(spacing: .zero) {
+            
+            Text(displayDate.toString(.time_a_h_mm, locale: .kr))
+                .font(.bMKkubulim, size: 34)
+                
+            Text(displayDate.toString(.yyyyMMdd_E, locale: .kr))
+                .font(.bMKkubulim, size: 18)
             
             Spacer()
             
-            HStack(alignment: .center) {
-                VStack(alignment: .leading, spacing: .zero) {
-                    Text(displayDate.toString(.time_a_h_mm, locale: .kr))
-                        .font(.bMKkubulim, size: 34)
-                        
-                    Text(displayDate.toString(.yyyyMMdd_E, locale: .kr))
-                        .font(.bMKkubulim, size: 18)
-                }
-                
-                Spacer()
-                
-                if hasLogo {
-                    TimeStampWhiteLogo()
-                }
-            }
-            .shadow(
-                color: Color.black.opacity(0.45),
-                radius: 5/2, x: 0, y: 0
-            )
-            .padding(.horizontal, 20)
-            .padding(.vertical, 10)
-            .foregroundStyle(.gray50)
-            .frame(maxWidth: .infinity)
-            .background(Color.black.opacity(0.2))
-            .background(.ultraThinMaterial.opacity(0.9))
+           Text("\"수고했어 오늘도\"")
+                .font(.bMKkubulim, size: 20)
+            
         }
+        .foregroundStyle(.gray50)
+        .frame(maxWidth: .infinity)
+        .overlay(alignment: .bottomTrailing) {
+            if hasLogo {
+                TimeStampWhiteLogo()
+            }
+        }
+        .padding(.top, 24)
+        .padding([.bottom, .horizontal], 16)
+        .shadow(
+            color: Color.black.opacity(0.45),
+            radius: 5/2, x: 0, y: 0
+        )
     }
 }
 

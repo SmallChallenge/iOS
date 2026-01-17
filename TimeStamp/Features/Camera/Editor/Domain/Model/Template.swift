@@ -102,12 +102,12 @@ extension Template {
                 AnyView(Moody3Template(displayDate: date, hasLogo: hasLogo))
             }),
         
-//        Template(
-//            style: .moody,
-//            name: "Moody4Template",
-//            viewBuilder: { date, hasLogo in
-//                AnyView(Moody4Template(displayDate: date, hasLogo: hasLogo))
-//            }),
+        Template(
+            style: .moody,
+            name: "Moody4Template",
+            viewBuilder: { date, hasLogo in
+                AnyView(Moody4Template(displayDate: date, hasLogo: hasLogo))
+            }),
 
         // MARK: - Active
         Template(
