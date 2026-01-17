@@ -40,6 +40,8 @@ enum AppFont {
     case shipporiMincho(ShipporiMincho)
     
     case bMKkubulim
+    
+    case ownglyph
 
     var fontName: String {
         switch self {
@@ -71,6 +73,9 @@ enum AppFont {
             
         case .bMKkubulim:
             return BMKkubulim.regular.fontName
+            
+        case .ownglyph:
+            return Ownglyph.regular.fontName
         }
     }
 }
@@ -171,6 +176,13 @@ enum ShipporiMincho: String, FontWeightProtocol {
 // MARK: - BMKkubulim
 enum BMKkubulim: String, FontWeightProtocol {
     case regular = "BMkkubulim-Regular"
+    var fontName: String {
+        return rawValue
+    }
+}
+
+enum Ownglyph: String, FontWeightProtocol {
+    case regular = "Ownglyph_PDH-Rg"
     var fontName: String {
         return rawValue
     }

@@ -26,6 +26,18 @@ struct TimeStampApp: App {
 
         // Refresh Control 색상 설정
         UIRefreshControl.appearance().tintColor = UIColor(Color.neon300)
+
+        // 사용 가능한 폰트 이름 출력
+        #if DEBUG
+        print("===== Available Fonts =====")
+        for family in UIFont.familyNames.sorted() {
+            print("Family: \(family)")
+            for name in UIFont.fontNames(forFamilyName: family) {
+                print("  - \(name)")
+            }
+        }
+        print("===========================")
+        #endif
     }
     
     var body: some Scene {

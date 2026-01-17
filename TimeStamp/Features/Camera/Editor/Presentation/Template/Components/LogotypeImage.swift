@@ -16,3 +16,13 @@ struct LogotypeImage: View {
             .frame(width: 60, height: 13)
     }
 }
+
+struct RoundedLogotype: View {
+    var body: some View {
+        Image("RoundedLogotype")
+            .resizable()
+            .renderingMode(.template)
+            .foregroundStyle(Color.gray50)
+            .frame(width: 70.98, height: 16)
+    }
+}
