@@ -44,6 +44,16 @@ struct CommunityRepository: CommunityRepositoryProtocol {
             throw error
         }
     }
+    
+    func block(nickname: String) async throws {
+        let result = await apiClient.block(nickname: nickname)
+        switch result {
+        case .success:
+            return
+        case .failure(let error):
+            throw error
+        }
+    }
 
     func like(imageId: Int) async throws {
         let result = await apiClient.like(imageId: imageId)

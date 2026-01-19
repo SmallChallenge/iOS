@@ -16,6 +16,9 @@ protocol CommunityUseCaseProtocol {
 
     /// 신고 취소하기
     func cancelReport(imageId: Int) async throws
+    
+    /// 차단하기
+    func block(nickname: String) async throws
 
     /// 좋아요
     func like(imageId: Int) async throws
@@ -49,6 +52,10 @@ struct CommunityUseCase: CommunityUseCaseProtocol {
 
     func cancelReport(imageId: Int) async throws {
         try await repository.cancelReport(imageId: imageId)
+    }
+    
+    func block(nickname: String) async throws {
+        try await repository.block(nickname: nickname)
     }
 
     func like(imageId: Int) async throws {

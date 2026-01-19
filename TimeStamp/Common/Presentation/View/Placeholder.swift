@@ -8,9 +8,24 @@
 import SwiftUI
 
 struct Placeholder: View {
+    let width: CGFloat
+    let height: CGFloat
+    init(width: CGFloat = 24, height: CGFloat = 24) {
+        self.width = width
+        self.height = height
+    }
     var body: some View {
-        Image("placeholder")
-            .resizable()    }
+        ZStack(alignment: .center) {
+            
+            Color.gray800
+                
+            Image("IconPic")
+                .renderingMode(.template)
+                .resizable()
+                .foregroundStyle(Color.gray600)
+                .frame(width: width, height: height)
+        }
+    }
 }
 
 #Preview {

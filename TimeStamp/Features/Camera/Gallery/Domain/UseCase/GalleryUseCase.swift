@@ -42,7 +42,12 @@ final class GalleryUseCase: GalleryUseCaseProtocol {
     // MARK: - Load Images
 
     func loadThumbnail(from asset: PHAsset) async -> UIImage? {
-        let thumbnailSize = CGSize(width: 300, height: 300)
+        // 그리드 셀 크기에 맞춘 썸네일 (화면 너비의 1/3)
+        let cellSize = UIScreen.main.bounds.width / 3
+        let thumbnailSize = CGSize(
+            width: cellSize * UIScreen.main.scale,
+            height: cellSize * UIScreen.main.scale
+        )
         return await repository.loadImage(from: asset, targetSize: thumbnailSize)
     }
 

@@ -1,5 +1,5 @@
 {
-  "originHash" : "4d02c3d605525739dbeacb3572e60fa6e0e0f262d28b2062f9525fa1c00bf3a1",
+  "originHash" : "1db57b1f22fb89529b7dbafa6d1a2ebc8bf8d50286ebad849817aa8102da8141",
   "pins" : [
     {
       "identity" : "alamofire",
@@ -134,15 +134,6 @@
       "state" : {
         "revision" : "13b248eaa73b7826f0efb1bcf455e251d65ecb1b",
         "version" : "3.1.0"
-      }
-    },
-    {
-      "identity" : "then",
-      "kind" : "remoteSourceControl",
-      "location" : "https://github.com/devxoul/Then",
-      "state" : {
-        "revision" : "d41ef523faef0f911369f79c0b96815d9dbb6d7a",
-        "version" : "3.0.0"
       }
     }
   ],

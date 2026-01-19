@@ -13,17 +13,20 @@ struct CommunityCard: View {
     private let viewData: FeedViewData
     @Binding var isMenuOpen: Bool
     private let onReport: () -> Void
+    private let onBlock: () -> Void
     private let onLike: () -> Void
 
     init(
         viewData: FeedViewData,
         isMenuOpen: Binding<Bool>,
         onReport: @escaping () -> Void,
+        onBlock: @escaping () -> Void,
         onLike: @escaping () -> Void
     ) {
         self.viewData = viewData
         self._isMenuOpen = isMenuOpen
         self.onReport = onReport
+        self.onBlock = onBlock
         self.onLike = onLike
     }
     
@@ -97,13 +100,15 @@ struct CommunityCard: View {
                     // 팝오버 메뉴
                     VStack {
                         PopoverMenu(items: [
-                            .init(title: "신고하기", icon: "exclamationmark.triangle", action: {
+                            .init(title: "게시물 신고", icon: "IconReport", action: {
                                 onReport()
+                            }),
+                            .init(title: "게시자 차단", icon: "IconBlock", action: {
+                                onBlock()
                             })
-                            
                         ], isPresented: $isMenuOpen)
-                            .padding(.top, 50)
-                            .padding(.trailing, 10)
+                        .padding(.top, 50)
+                        .padding(.trailing, 10)
                         Spacer()
                     }
                 }
@@ -122,7 +127,7 @@ struct CommunityCard: View {
         Group {
             KFImage(URL(string: viewData.accessURL))
                 .placeholder {
-                    Placeholder()
+                    Placeholder(width: 48, height: 48)
                 }
                 .retry(maxCount: 3, interval: .seconds(2))
                 .cacheMemoryOnly()
@@ -158,7 +163,7 @@ struct CommunityCard: View {
                     isMenuOpen: $isMenuOpen,
                     onReport: {
                         print("신고하기 클릭")
-                    }, onLike: {}
+                    }, onBlock: {}, onLike: {}
                 )
                 .border(Color.red)
             }

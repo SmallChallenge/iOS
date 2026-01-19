@@ -34,6 +34,9 @@ extension Date {
         /// yyyy.MM.dd.E
         case yyyyMMddE = "yyyy.MM.dd.E"
         
+        /// yyyy.MM.dd (E)
+        case yyyyMMdd_E = "yyyy.MM.dd (E)"
+        
         /// "MMMM do yyyy"
         case mmmmdoyyyy = "MMMM do yyyy"
         
@@ -52,10 +55,23 @@ extension Date {
         /// "a HH:mm"
         case time_a_HH_mm = "a HH:mm"
         
+        /// "a hh:mm"
+        case time_a_hh_mm = "a hh:mm"
+        
+        /// "ahh:mm"
+        case time_ahh_mm = "ahh:mm"
+        
         /// H:mm a
         case time_HH_mm_a = "HH:mm a"
         
+        /// hh:mm a
+        case time_hh_mm_a = "hh:mm a"
         
+        /// h:mm a
+        case time_h_mm_a = "h:mm a"
+        
+        
+        // 년 월 일
         
         /// "yyyy년 MM월 dd일"
         case koreanDate = "yyyy년 MM월 dd일"
@@ -71,6 +87,16 @@ extension Date {
         
         /// yyyy년MM월dd일(E) _띄어쓰기 없음
         case krDate_yyyyMM월dd일E = "yyyy년MM월dd일(E)"
+        
+        /// yyyy년 MM월 dd일 (E) 띄어쓰기 있음
+        case koreanDate_yyMM월dd일E = "yy년 MM월 dd일 (E)"
+        
+        // 한자
+        
+        /// yyyy年M月d日
+        case yyyy年M月d日 = "yyyy年M月d日"
+        
+        
         
 
     }

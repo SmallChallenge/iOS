@@ -34,9 +34,7 @@ struct Basic1Template: View, TemplateViewProtocol {
         )
         .overlay(alignment: .bottomTrailing, content: {
             if hasLogo {
-                Image("logo_normal")
-                    .resizable()
-                    .frame(width: 38, height: 38)
+                TimeStampLogo()
                     .padding(16)
             }
         })

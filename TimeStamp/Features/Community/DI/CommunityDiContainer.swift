@@ -9,7 +9,7 @@ import Foundation
 import SwiftUI
 
 protocol CommunityDiContainerProtocol {
-    func makeCommunityView() -> CommunityView
+    func makeCommunityView(triggerRefresh: Binding<Bool>) -> CommunityView
 }
 
 final class CommunityDiContainer: CommunityDiContainerProtocol {
@@ -44,18 +44,18 @@ final class CommunityDiContainer: CommunityDiContainerProtocol {
 
     // MARK: - View
 
-    func makeCommunityView() -> CommunityView {
+    func makeCommunityView(triggerRefresh: Binding<Bool> = .constant(false)) -> CommunityView {
         let viewModel = makeCommunityViewModel()
-        return CommunityView(viewModel: viewModel)
+        return CommunityView(viewModel: viewModel, triggerRefresh: triggerRefresh)
     }
 }
 
 //MARK: - MOCK
 struct MockCommunityDiContainer: CommunityDiContainerProtocol {
-    func makeCommunityView() -> CommunityView {
+    func makeCommunityView(triggerRefresh: Binding<Bool> = .constant(false)) -> CommunityView {
         let usecase = MockCommunityUseCase()
         let vm = CommunityViewModel(useCase: usecase)
-        return CommunityView(viewModel: vm)
+        return CommunityView(viewModel: vm, triggerRefresh: triggerRefresh)
     }
 }
 
@@ -68,5 +68,6 @@ struct MockCommunityUseCase: CommunityUseCaseProtocol {
     }
     func report(imageId: Int) async throws {}
     func cancelReport(imageId: Int) async throws {}
+    func block(nickname: String) async throws {}
     func like(imageId: Int) async throws {}
 }

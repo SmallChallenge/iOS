@@ -22,15 +22,17 @@ struct Active2Template: View ,TemplateViewProtocol {
             
             Spacer()
             
-            VStack (spacing: 4){
-                Text(displayDate.toString(.time_HH_mm_a))
+            VStack (alignment: .center, spacing: 4){
+                Text(displayDate.toString(.time_hh_mm_a))
                     .font(.partialSans, size: 28)
                     .foregroundColor(.gray50)
-                
+
                 Text(dateString)
                     .font(.partialSans, size: 18)
+                    .baselineOffset(4)
                     .foregroundColor(.gray50)
             }
+            .offset(y: 4)
             .shadow(
                 color: Color.black.opacity(0.45),
                 radius: 5/2, x: 0, y: 0

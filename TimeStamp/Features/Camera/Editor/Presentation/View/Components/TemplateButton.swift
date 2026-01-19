@@ -15,23 +15,20 @@ struct TemplateButton: View {
     let action: () -> Void
 
     var body: some View {
-        Button(action: action) {
-            ZStack {
-                Image(template.name)
-                    .resizable()
-                    .frame(width: 90, height: 90)
-                    .aspectRatio(1, contentMode: .fit)
-                        
-                //template.makeView(displayDate: Date(), hasLogo: true)
-            }
+        Image(template.name)
+            .resizable()
+            .frame(width: 90, height: 90)
+            .aspectRatio(1, contentMode: .fit)
             .cornerRadius(8)
             .roundedBorder(
                 color: isSelected ? Color.gray50 : Color.gray700,
                 radius: 8,
                 lineWidth: isSelected ? 2 : 1
             )
-            
-        }
+            .onTapGesture {
+                action()
+            }
+        
     }
 }
 

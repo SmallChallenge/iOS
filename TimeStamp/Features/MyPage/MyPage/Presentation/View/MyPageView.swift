@@ -122,7 +122,6 @@ struct MyPageView: View {
                     #endif
                     
                     Spacer()
-                    
                    
                 }
             } // ~ScrollView
@@ -157,11 +156,20 @@ struct MyPageView: View {
                     .foregroundStyle(Color.gray50)
             }
         }
+        .onChange(of: viewModel.didLogout) { didLogout in
+            if didLogout {
+                onGoBack()
+            }
+        }
         // 유저정보화면 띄우기
         .navigationDestination(isPresented: $presentUserInfo) {
-            diContainer.makeUserInfoPageView {
+            diContainer.makeUserInfoPageView(onGoBack: {
                 presentUserInfo = false
-            }
+            }, onSignOutCompleted: {
+                // 회원탈퇴 완료 시 메인으로 복귀
+                presentUserInfo = false
+                onGoBack()
+            })
         }
         // 로그인화면띄우기
         .fullScreenCover(isPresented: $showLoginView) {

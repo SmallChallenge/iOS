@@ -14,12 +14,32 @@ struct Moody4Template: View, TemplateViewProtocol {
     
     var body: some View {
         
-        ZStack {
-            Color.blue.opacity(0.2)
+        VStack(spacing: .zero) {
+            
+            Text(displayDate.toString(.time_a_h_mm, locale: .kr))
+                .font(.bMKkubulim, size: 34)
+                
+            Text(displayDate.toString(.yyyyMMdd_E, locale: .kr))
+                .font(.bMKkubulim, size: 18)
+            
+            Spacer()
+            
+           Text("\"수고했어 오늘도\"")
+                .font(.bMKkubulim, size: 20)
+            
         }
-        .background(
-            VisualEffectView(effect: UIBlurEffect(style: .systemUltraThinMaterial))
-                .opacity(0.5)
+        .foregroundStyle(.gray50)
+        .frame(maxWidth: .infinity)
+        .overlay(alignment: .bottomTrailing) {
+            if hasLogo {
+                TimeStampWhiteLogo()
+            }
+        }
+        .padding(.top, 24)
+        .padding([.bottom, .horizontal], 16)
+        .shadow(
+            color: Color.black.opacity(0.45),
+            radius: 5/2, x: 0, y: 0
         )
     }
 }
@@ -54,16 +74,14 @@ struct Moody4Template: View, TemplateViewProtocol {
 import UIKit
 
 
-struct VisualEffectView: UIViewRepresentable {
-    var effect: UIVisualEffect?
+struct BlurView: UIViewRepresentable {
+    let style: UIBlurEffect.Style
 
-    func makeUIView(context _: Context) -> UIVisualEffectView {
-        UIVisualEffectView()
+    func makeUIView(context: Context) -> UIVisualEffectView {
+        UIVisualEffectView(effect: UIBlurEffect(style: style))
     }
 
-    func updateUIView(_ uiView: UIVisualEffectView, context _: Context) {
-        uiView.effect = effect
+    func updateUIView(_ uiView: UIVisualEffectView, context: Context) {
+        uiView.effect = UIBlurEffect(style: style)
     }
 }
-
-
