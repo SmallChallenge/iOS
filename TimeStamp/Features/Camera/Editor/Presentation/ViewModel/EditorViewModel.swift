@@ -58,6 +58,7 @@ class EditorViewModel: ObservableObject, MessageDisplayable {
     }
 
     func loadAd() async {
+        #if DEBUG
         guard !isAdReady else { return }
         do {
             try await useCase.load()
@@ -65,6 +66,7 @@ class EditorViewModel: ObservableObject, MessageDisplayable {
         } catch {
             print("광고 로드 실패: \(error)")
         }
+        #endif
     }
     
     @MainActor
