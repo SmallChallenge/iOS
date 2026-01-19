@@ -67,6 +67,9 @@
         <string>LINESeedKR-Rg.otf</string>
         <string>LINESeedKR-Th.otf</string>
         <string>Monofett-Regular.ttf</string>
+        <string>KERISKEDU_B.otf</string>
+        <string>KERISKEDU_Line.otf</string>
+        <string>KERISKEDU_R.otf</string>
 	</array>
 	<key>UIDesignRequiresCompatibility</key>
 	<true/>

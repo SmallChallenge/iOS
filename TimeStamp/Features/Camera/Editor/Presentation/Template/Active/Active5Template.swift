@@ -46,7 +46,6 @@ struct Active5Template: View, TemplateViewProtocol {
         ZStack {
             Image("sampleImage")
                 .resizable()
-            
             Active5Template(displayDate: Date(), hasLogo: true)
         }
         .aspectRatio(1, contentMode: .fit)

@@ -49,6 +49,8 @@ enum AppFont {
     
     case monofett
 
+    case keriskedu(KERISKEDU)
+
     var fontName: String {
         switch self {
         case .pretendard(let weight):
@@ -91,6 +93,9 @@ enum AppFont {
             
         case .monofett:
             return Monofett.regular.fontName
+            
+        case let .keriskedu(weight):
+            return weight.fontName
         }
     }
 }
@@ -225,6 +230,16 @@ enum LINESeedKR: String, FontWeightProtocol {
 // MARK: - Monofett
 enum Monofett: String, FontWeightProtocol {
     case regular = "Monofett-Regular"
+    var fontName: String {
+        return rawValue
+    }
+}
+
+// MARK: - KERISKEDU
+enum KERISKEDU: String, FontWeightProtocol {
+    case regular = "KERISKEDUOTF_R"
+    case line = "KERISKEDUOTF_Line"
+    case bold = "KERISKEDUOTF_B"
     var fontName: String {
         return rawValue
     }

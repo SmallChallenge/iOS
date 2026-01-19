@@ -177,6 +177,13 @@ extension Template {
             viewBuilder: { date, hasLogo in
                 AnyView(Active5Template(displayDate: date, hasLogo: hasLogo))
             }),
+        
+        Template(
+            style: .active,
+            name: "Active6Template",
+            viewBuilder: { date, hasLogo in
+                AnyView(Active6Template(displayDate: date, hasLogo: hasLogo))
+            }),
 
 
         // MARK: - Digital
