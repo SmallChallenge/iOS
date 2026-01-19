@@ -77,6 +77,20 @@ extension Template {
                 AnyView(Basic4Template(displayDate: date, hasLogo: hasLogo))
             }),
 
+        Template(
+            style: .basic,
+            name: "Basic5Template",
+            viewBuilder: { date, hasLogo in
+                AnyView(Basic5Template(displayDate: date, hasLogo: hasLogo))
+            }),
+        
+        Template(
+            style: .basic,
+            name: "Basic6Template",
+            viewBuilder: { date, hasLogo in
+                AnyView(Basic6Template(displayDate: date, hasLogo: hasLogo))
+            }),
+
 
         // MARK:  - Moody
         Template(
@@ -102,13 +116,28 @@ extension Template {
                 AnyView(Moody3Template(displayDate: date, hasLogo: hasLogo))
             }),
         
-//        Template(
-//            style: .moody,
-//            name: "Moody4Template",
-//            viewBuilder: { date, hasLogo in
-//                AnyView(Moody4Template(displayDate: date, hasLogo: hasLogo))
-//            }),
+        Template(
+            style: .moody,
+            name: "Moody4Template",
+            viewBuilder: { date, hasLogo in
+                AnyView(Moody4Template(displayDate: date, hasLogo: hasLogo))
+            }),
 
+        Template(
+            style: .moody,
+            name: "Moody5Template",
+            viewBuilder: { date, hasLogo in
+                AnyView(Moody5Template(displayDate: date, hasLogo: hasLogo))
+            }),
+        
+        Template(
+            style: .moody,
+            name: "Moody6Template",
+            viewBuilder: { date, hasLogo in
+                AnyView(Moody6Template(displayDate: date, hasLogo: hasLogo))
+            }),
+
+        
         // MARK: - Active
         Template(
             style: .active,
@@ -139,6 +168,21 @@ extension Template {
             name: "Active4Template",
             viewBuilder: { date, hasLogo in
                 AnyView(Active4Template(displayDate: date, hasLogo: hasLogo))
+            }),
+
+        
+        Template(
+            style: .active,
+            name: "Active5Template",
+            viewBuilder: { date, hasLogo in
+                AnyView(Active5Template(displayDate: date, hasLogo: hasLogo))
+            }),
+        
+        Template(
+            style: .active,
+            name: "Active6Template",
+            viewBuilder: { date, hasLogo in
+                AnyView(Active6Template(displayDate: date, hasLogo: hasLogo))
             }),
 
 
@@ -172,6 +216,20 @@ extension Template {
             name: "Digital4Template",
             viewBuilder: { date, hasLogo in
                 AnyView(Digital4Template(displayDate: date, hasLogo: hasLogo))
+            }),
+        
+        Template(
+            style: .digital,
+            name: "Digital5Template",
+            viewBuilder: { date, hasLogo in
+                AnyView(Digital5Template(displayDate: date, hasLogo: hasLogo))
+            }),
+        
+        Template(
+            style: .digital,
+            name: "Digital6Template",
+            viewBuilder: { date, hasLogo in
+                AnyView(Digital6Template(displayDate: date, hasLogo: hasLogo))
             }),
         
         

@@ -61,6 +61,15 @@
         <string>ShipporiMincho-Regular.ttf</string>
         <string>ShipporiMincho-SemiBold.ttf</string>
         <string>BMKkubulim.otf</string>
+        <string>Ownglyph.ttf</string>
+        <string>Cafe24PROUP.otf</string>
+        <string>LINESeedKR-Bd.otf</string>
+        <string>LINESeedKR-Rg.otf</string>
+        <string>LINESeedKR-Th.otf</string>
+        <string>Monofett-Regular.ttf</string>
+        <string>KERISKEDU_B.otf</string>
+        <string>KERISKEDU_Line.otf</string>
+        <string>KERISKEDU_R.otf</string>
 	</array>
 	<key>UIDesignRequiresCompatibility</key>
 	<true/>

@@ -40,6 +40,16 @@ enum AppFont {
     case shipporiMincho(ShipporiMincho)
     
     case bMKkubulim
+    
+    case ownglyph
+    
+    case cafe24PROUP
+    
+    case lineSeedKR(LINESeedKR)
+    
+    case monofett
+
+    case keriskedu(KERISKEDU)
 
     var fontName: String {
         switch self {
@@ -71,6 +81,21 @@ enum AppFont {
             
         case .bMKkubulim:
             return BMKkubulim.regular.fontName
+            
+        case .ownglyph:
+            return Ownglyph.regular.fontName
+            
+        case .cafe24PROUP:
+            return Cafe24PROUP.regular.fontName
+            
+        case let .lineSeedKR(weight):
+            return weight.fontName
+            
+        case .monofett:
+            return Monofett.regular.fontName
+            
+        case let .keriskedu(weight):
+            return weight.fontName
         }
     }
 }
@@ -175,6 +200,52 @@ enum BMKkubulim: String, FontWeightProtocol {
         return rawValue
     }
 }
+
+// MARK: - Ownglyph
+enum Ownglyph: String, FontWeightProtocol {
+    case regular = "Ownglyph_PDH-Rg"
+    var fontName: String {
+        return rawValue
+    }
+}
+
+// MARK: - Cafe24PROUP
+enum Cafe24PROUP: String, FontWeightProtocol {
+    case regular = "Cafe24PROUP"
+    var fontName: String {
+        return rawValue
+    }
+}
+
+// MARK: - LINESeedKR
+enum LINESeedKR: String, FontWeightProtocol {
+    case regular = "LINESeedSansKR-Regular"
+    case bold = "LINESeedSansKR-Bold"
+    case thin = "LINESeedSansKR-Thin"
+    var fontName: String {
+        return rawValue
+    }
+}
+
+// MARK: - Monofett
+enum Monofett: String, FontWeightProtocol {
+    case regular = "Monofett-Regular"
+    var fontName: String {
+        return rawValue
+    }
+}
+
+// MARK: - KERISKEDU
+enum KERISKEDU: String, FontWeightProtocol {
+    case regular = "KERISKEDUOTF_R"
+    case line = "KERISKEDUOTF_Line"
+    case bold = "KERISKEDUOTF_B"
+    var fontName: String {
+        return rawValue
+    }
+}
+
+
 // MARK: - 다른 폰트 추가 예시
 /*
 enum Roboto: String, FontWeightProtocol {

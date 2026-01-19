@@ -122,7 +122,6 @@ struct MyPageView: View {
                     #endif
                     
                     Spacer()
-                    
                    
                 }
             } // ~ScrollView

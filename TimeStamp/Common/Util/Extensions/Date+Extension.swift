@@ -67,7 +67,8 @@ extension Date {
         /// hh:mm a
         case time_hh_mm_a = "hh:mm a"
         
-        case time_h_m_a = "h:m a"
+        /// h:mm a
+        case time_h_mm_a = "h:mm a"
         
         
         // 년 월 일
@@ -86,6 +87,9 @@ extension Date {
         
         /// yyyy년MM월dd일(E) _띄어쓰기 없음
         case krDate_yyyyMM월dd일E = "yyyy년MM월dd일(E)"
+        
+        /// yyyy년 MM월 dd일 (E) 띄어쓰기 있음
+        case koreanDate_yyMM월dd일E = "yy년 MM월 dd일 (E)"
         
         // 한자
         
