@@ -7,9 +7,8 @@
 
 import Foundation
 
-
-
 public enum NetworkConfig {
+    
     public static var environment: NetworkEnvironment {
         #if DEBUG
         return .dev
