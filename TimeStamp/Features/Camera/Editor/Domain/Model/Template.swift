@@ -83,6 +83,13 @@ extension Template {
             viewBuilder: { date, hasLogo in
                 AnyView(Basic5Template(displayDate: date, hasLogo: hasLogo))
             }),
+        
+        Template(
+            style: .basic,
+            name: "Basic6Template",
+            viewBuilder: { date, hasLogo in
+                AnyView(Basic6Template(displayDate: date, hasLogo: hasLogo))
+            }),
 
 
         // MARK:  - Moody
@@ -195,6 +202,13 @@ extension Template {
             name: "Digital4Template",
             viewBuilder: { date, hasLogo in
                 AnyView(Digital4Template(displayDate: date, hasLogo: hasLogo))
+            }),
+        
+        Template(
+            style: .digital,
+            name: "Digital5Template",
+            viewBuilder: { date, hasLogo in
+                AnyView(Digital5Template(displayDate: date, hasLogo: hasLogo))
             }),
         
         

@@ -44,6 +44,8 @@ enum AppFont {
     case ownglyph
     
     case cafe24PROUP
+    
+    case lineSeedKR(LINESeedKR)
 
     var fontName: String {
         switch self {
@@ -81,6 +83,9 @@ enum AppFont {
             
         case .cafe24PROUP:
             return Cafe24PROUP.regular.fontName
+            
+        case let .lineSeedKR(weight):
+            return weight.fontName
         }
     }
 }
@@ -197,6 +202,16 @@ enum Ownglyph: String, FontWeightProtocol {
 // MARK: - Cafe24PROUP
 enum Cafe24PROUP: String, FontWeightProtocol {
     case regular = "Cafe24PROUP"
+    var fontName: String {
+        return rawValue
+    }
+}
+
+// MARK: - LINESeedKR
+enum LINESeedKR: String, FontWeightProtocol {
+    case regular = "LINESeedSansKR-Regular"
+    case bold = "LINESeedSansKR-Bold"
+    case thin = "LINESeedSansKR-Thin"
     var fontName: String {
         return rawValue
     }

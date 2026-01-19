@@ -63,6 +63,9 @@
         <string>BMKkubulim.otf</string>
         <string>Ownglyph.ttf</string>
         <string>Cafe24PROUP.otf</string>
+        <string>LINESeedKR-Bd.otf</string>
+        <string>LINESeedKR-Rg.otf</string>
+        <string>LINESeedKR-Th.otf</string>
 	</array>
 	<key>UIDesignRequiresCompatibility</key>
 	<true/>

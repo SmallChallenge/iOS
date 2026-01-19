@@ -7,7 +7,7 @@
 
 import SwiftUI
 
-struct Moody5Template: View , TemplateViewProtocol {
+struct Moody5Template: View, TemplateViewProtocol {
     let displayDate: Date
     let hasLogo: Bool
     
