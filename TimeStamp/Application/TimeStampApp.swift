@@ -31,14 +31,14 @@ struct TimeStampApp: App {
 
         // 사용 가능한 폰트 이름 출력
         #if DEBUG
-        print("===== Available Fonts =====")
-        for family in UIFont.familyNames.sorted() {
-            print("Family: \(family)")
-            for name in UIFont.fontNames(forFamilyName: family) {
-                print("  - \(name)")
-            }
-        }
-        print("===========================")
+//        print("===== Available Fonts =====")
+//        for family in UIFont.familyNames.sorted() {
+//            print("Family: \(family)")
+//            for name in UIFont.fontNames(forFamilyName: family) {
+//                print("  - \(name)")
+//            }
+//        }
+//        print("===========================")
         #endif
     }
     
