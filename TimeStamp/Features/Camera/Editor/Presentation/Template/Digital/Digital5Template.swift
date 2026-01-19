@@ -7,7 +7,7 @@
 
 import SwiftUI
 
-struct Digital5Template: View ,TemplateViewProtocol {
+struct Digital5Template: View, TemplateViewProtocol {
     let displayDate: Date
     let hasLogo: Bool
 

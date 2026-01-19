@@ -88,6 +88,9 @@ extension Date {
         /// yyyy년MM월dd일(E) _띄어쓰기 없음
         case krDate_yyyyMM월dd일E = "yyyy년MM월dd일(E)"
         
+        /// yyyy년 MM월 dd일 (E) 띄어쓰기 있음
+        case koreanDate_yyMM월dd일E = "yy년 MM월 dd일 (E)"
+        
         // 한자
         
         /// yyyy年M月d日
