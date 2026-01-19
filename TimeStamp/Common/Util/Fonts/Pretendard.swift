@@ -42,6 +42,8 @@ enum AppFont {
     case bMKkubulim
     
     case ownglyph
+    
+    case cafe24PROUP
 
     var fontName: String {
         switch self {
@@ -76,6 +78,9 @@ enum AppFont {
             
         case .ownglyph:
             return Ownglyph.regular.fontName
+            
+        case .cafe24PROUP:
+            return Cafe24PROUP.regular.fontName
         }
     }
 }
@@ -181,12 +186,23 @@ enum BMKkubulim: String, FontWeightProtocol {
     }
 }
 
+// MARK: - Ownglyph
 enum Ownglyph: String, FontWeightProtocol {
     case regular = "Ownglyph_PDH-Rg"
     var fontName: String {
         return rawValue
     }
 }
+
+// MARK: - Cafe24PROUP
+enum Cafe24PROUP: String, FontWeightProtocol {
+    case regular = "Cafe24PROUP"
+    var fontName: String {
+        return rawValue
+    }
+}
+
+
 // MARK: - 다른 폰트 추가 예시
 /*
 enum Roboto: String, FontWeightProtocol {

@@ -26,3 +26,11 @@ struct RoundedLogotype: View {
             .frame(width: 70.98, height: 16)
     }
 }
+
+struct BordedRoundedLogotype: View {
+    var body: some View {
+        Image("BordedRoundedLogotype")
+            .resizable()
+            .frame(width: 60, height: 13)
+    }
+}
