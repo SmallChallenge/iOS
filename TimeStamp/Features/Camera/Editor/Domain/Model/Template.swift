@@ -129,6 +129,13 @@ extension Template {
             viewBuilder: { date, hasLogo in
                 AnyView(Moody5Template(displayDate: date, hasLogo: hasLogo))
             }),
+        
+        Template(
+            style: .moody,
+            name: "Moody6Template",
+            viewBuilder: { date, hasLogo in
+                AnyView(Moody6Template(displayDate: date, hasLogo: hasLogo))
+            }),
 
         
         // MARK: - Active

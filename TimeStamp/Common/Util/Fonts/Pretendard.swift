@@ -46,6 +46,8 @@ enum AppFont {
     case cafe24PROUP
     
     case lineSeedKR(LINESeedKR)
+    
+    case monofett
 
     var fontName: String {
         switch self {
@@ -86,6 +88,9 @@ enum AppFont {
             
         case let .lineSeedKR(weight):
             return weight.fontName
+            
+        case .monofett:
+            return Monofett.regular.fontName
         }
     }
 }
@@ -212,6 +217,14 @@ enum LINESeedKR: String, FontWeightProtocol {
     case regular = "LINESeedSansKR-Regular"
     case bold = "LINESeedSansKR-Bold"
     case thin = "LINESeedSansKR-Thin"
+    var fontName: String {
+        return rawValue
+    }
+}
+
+// MARK: - Monofett
+enum Monofett: String, FontWeightProtocol {
+    case regular = "Monofett-Regular"
     var fontName: String {
         return rawValue
     }
