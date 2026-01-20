@@ -56,6 +56,8 @@ enum AppFont {
     case notable
     
     case montserrat(Montserrat)
+    
+    case rixInooAriDuri
 
     var fontName: String {
         switch self {
@@ -111,6 +113,10 @@ enum AppFont {
             
         case let .montserrat(weight):
             return weight.fontName
+            
+        case .rixInooAriDuri:
+            return RixInooAriDuri.regular.fontName
+            
         }
     }
 }
@@ -292,6 +298,14 @@ enum Montserrat: String, FontWeightProtocol {
     case medium = "Montserrat-Medium"
     case semiBold = "Montserrat-SemiBold"
     case thin = "Montserrat-Thin"
+    var fontName: String {
+        return rawValue
+    }
+}
+
+// MARK: - RixInooAriDuri
+enum RixInooAriDuri: String, FontWeightProtocol {
+    case regular = "RixInooAriDuriPR"
     var fontName: String {
         return rawValue
     }

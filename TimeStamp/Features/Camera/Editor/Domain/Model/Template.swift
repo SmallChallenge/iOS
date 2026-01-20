@@ -220,7 +220,13 @@ extension Template {
             viewBuilder: { date, hasLogo in
                 AnyView(Active7Template(displayDate: date, hasLogo: hasLogo))
             }),
-
+        
+        Template(
+            style: .active,
+            name: "Active8Template",
+            viewBuilder: { date, hasLogo in
+                AnyView(Active8Template(displayDate: date, hasLogo: hasLogo))
+            }),
 
         // MARK: - Digital
         Template(
