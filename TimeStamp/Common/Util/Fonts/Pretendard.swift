@@ -52,6 +52,8 @@ enum AppFont {
     case keriskedu(KERISKEDU)
     
     case spaceMono(SpaceMono)
+    
+    case notable
 
     var fontName: String {
         switch self {
@@ -101,6 +103,9 @@ enum AppFont {
             
         case let .spaceMono(weight):
             return weight.fontName
+            
+        case .notable:
+            return Notable.regular.fontName
         }
     }
 }
@@ -256,6 +261,14 @@ enum SpaceMono: String, FontWeightProtocol {
     case boldItalic = "SpaceMono-BoldItalic"
     case italic = "SpaceMono-Italic"
     
+    var fontName: String {
+        return rawValue
+    }
+}
+
+// MARK: - Notable
+enum Notable: String, FontWeightProtocol {
+    case regular = "Notable-Regular"
     var fontName: String {
         return rawValue
     }
