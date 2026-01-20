@@ -58,6 +58,8 @@ enum AppFont {
     case montserrat(Montserrat)
     
     case rixInooAriDuri
+    
+    case galmuriMono11
 
     var fontName: String {
         switch self {
@@ -116,6 +118,9 @@ enum AppFont {
             
         case .rixInooAriDuri:
             return RixInooAriDuri.regular.fontName
+            
+        case .galmuriMono11:
+            return GalmuriMono11.regular.fontName
             
         }
     }
@@ -311,6 +316,13 @@ enum RixInooAriDuri: String, FontWeightProtocol {
     }
 }
 
+// MARK: - GalmuriMono11
+enum GalmuriMono11: String, FontWeightProtocol {
+    case regular = "GalmuriMono11-Regular"
+    var fontName: String {
+        return rawValue
+    }
+}
 
 
 // MARK: - 다른 폰트 추가 예시

@@ -55,8 +55,11 @@ extension Date {
         /// "HH:mm"
         case time_HH_mm = "HH:mm"
         
-        /// "a h:mm"
+        /// "a h:mm" 띄어쓰기있음
         case time_a_h_mm = "a h:mm"
+        
+        /// "ah:mm" 띄어쓰기 없음
+        case time_ah_mm = "ah:mm"
         
         /// "a HH:mm"
         case time_a_HH_mm = "a HH:mm"

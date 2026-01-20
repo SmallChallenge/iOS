@@ -281,7 +281,12 @@ extension Template {
                 AnyView(Digital7Template(displayDate: date, hasLogo: hasLogo))
             }),
         
-        
+        Template(
+            style: .digital,
+            name: "Digital8Template",
+            viewBuilder: { date, hasLogo in
+                AnyView(Digital8Template(displayDate: date, hasLogo: hasLogo))
+            }),
     ]
 }
 
