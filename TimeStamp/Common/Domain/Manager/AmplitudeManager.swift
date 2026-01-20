@@ -15,13 +15,18 @@ final class AmplitudeManager {
     private init(){}
     private var instance: Amplitude?
 
-    private let AMPLITUDE_API_KEY = "1f0951318fc0d23dea1fae935c017be9"
+    private var AMPLITUDE_API_KEY: String {
+        guard let apiKey = Bundle.main.infoDictionary?["AMPLITUDE_API_KEY"] as? String else {
+            Logger.error("AMPLITUDE_API_KEY를 찾을 수 없습니다")
+            return ""
+        }
+        return apiKey
+    }
 
     func loadAmplitude() {
         let amplitude = Amplitude(
             configuration: Configuration(
                 apiKey: AMPLITUDE_API_KEY,
-                
             )
         )
         self.instance = amplitude

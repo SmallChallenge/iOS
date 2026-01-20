@@ -82,6 +82,8 @@
 	</dict>
 	<key>GADApplicationIdentifier</key>
 	<string>$(GAD_APP_ID)</string>
+	<key>AMPLITUDE_API_KEY</key>
+	<string>$(AMPLITUDE_API_KEY)</string>
 	<key>SKAdNetworkItems</key>
 	<array>
 		<dict>
