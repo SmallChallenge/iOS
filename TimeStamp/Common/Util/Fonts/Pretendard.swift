@@ -33,7 +33,7 @@ enum AppFont {
     // case roboto(Roboto)
     // case notoSans(NotoSans)
     
-    case dungGeunMo
+    case dungGeunMo(DungGeunMo)
     
     case ericaOne
     
@@ -74,8 +74,8 @@ enum AppFont {
         case .partialSans:
             return PartialSans.regular.fontName
             
-        case .dungGeunMo:
-            return DungGeunMo.regular.fontName
+        case let .dungGeunMo(weight):
+            return weight.fontName
             
         case .ericaOne:
             return EricaOne.regular.fontName
@@ -178,6 +178,7 @@ enum PartialSans: String, FontWeightProtocol {
 // MARK: - DungGeunMo
 enum DungGeunMo: String, FontWeightProtocol {
     case regular = "DungGeunMo"
+    case bold = "BoldDunggeunmo"
     var fontName: String {
         return rawValue
     }

@@ -45,7 +45,7 @@ struct Digital6Template: View, TemplateViewProtocol {
             + Text(", ")
             + Text(displayDate.toString(.time_a_h_mm))
         }
-        .font(.dungGeunMo, size: 16, trackingPercent: -0.02)
+        .font(.dungGeunMo(.regular), size: 16, trackingPercent: -0.02)
     }
     
     

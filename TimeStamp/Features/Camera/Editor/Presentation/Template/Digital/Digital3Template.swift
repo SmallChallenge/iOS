@@ -25,9 +25,9 @@ struct Digital3Template: View ,TemplateViewProtocol {
             Spacer()
             
             Text(displayDate.toString(.krDate_yyyyMM월dd일E, locale: .kr))
-                .font(.dungGeunMo, size: 28)
+                .font(.dungGeunMo(.regular), size: 28)
             Text(displayDate.toString(.time_ahh_mm, locale: .kr))
-                .font(.dungGeunMo, size: 28)
+                .font(.dungGeunMo(.regular), size: 28)
             
             
         }
