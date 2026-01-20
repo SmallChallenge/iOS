@@ -50,6 +50,8 @@ enum AppFont {
     case monofett
 
     case keriskedu(KERISKEDU)
+    
+    case spaceMono(SpaceMono)
 
     var fontName: String {
         switch self {
@@ -95,6 +97,9 @@ enum AppFont {
             return Monofett.regular.fontName
             
         case let .keriskedu(weight):
+            return weight.fontName
+            
+        case let .spaceMono(weight):
             return weight.fontName
         }
     }
@@ -244,6 +249,18 @@ enum KERISKEDU: String, FontWeightProtocol {
         return rawValue
     }
 }
+
+enum SpaceMono: String, FontWeightProtocol {
+    case regular = "SpaceMono-Regular"
+    case bold = "SpaceMono-Bold"
+    case boldItalic = "SpaceMono-BoldItalic"
+    case italic = "SpaceMono-Italic"
+    
+    var fontName: String {
+        return rawValue
+    }
+}
+
 
 
 // MARK: - 다른 폰트 추가 예시

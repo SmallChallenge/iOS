@@ -90,6 +90,13 @@ extension Template {
             viewBuilder: { date, hasLogo in
                 AnyView(Basic6Template(displayDate: date, hasLogo: hasLogo))
             }),
+        
+        Template(
+            style: .basic,
+            name: "Basic7Template",
+            viewBuilder: { date, hasLogo in
+                AnyView(Basic7Template(displayDate: date, hasLogo: hasLogo))
+            }),
 
 
         // MARK:  - Moody

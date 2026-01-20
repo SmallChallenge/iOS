@@ -70,6 +70,10 @@
         <string>KERISKEDU_B.otf</string>
         <string>KERISKEDU_Line.otf</string>
         <string>KERISKEDU_R.otf</string>
+        <string>SpaceMono-Bold.ttf</string>
+        <string>SpaceMono-BoldItalic.ttf</string>
+        <string>SpaceMono-Italic.ttf</string>
+        <string>SpaceMono-Regular.ttf</string>
 	</array>
 	<key>UIDesignRequiresCompatibility</key>
 	<true/>
