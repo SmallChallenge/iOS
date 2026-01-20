@@ -118,9 +118,6 @@ extension AmplitudeManager {
 
         // 성공 로그
         Logger.debug("Amplitude 이벤트 전송: \(event.name)")
-
-        // 즉시 전송 트리거
-        // instance.flush()
     }
     
     // MARK: - 이벤트 -
