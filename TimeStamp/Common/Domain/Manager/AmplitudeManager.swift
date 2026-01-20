@@ -23,14 +23,26 @@ final class AmplitudeManager {
         return apiKey
     }
 
+    /// Production 환경인지 확인 (Release 빌드)
+    private var isProduction: Bool {
+        #if DEBUG
+        return false
+        #else
+        return true
+        #endif
+    }
+
     func loadAmplitude() {
+        guard isProduction else {
+            return
+        }
+
         let amplitude = Amplitude(
             configuration: Configuration(
                 apiKey: AMPLITUDE_API_KEY,
             )
         )
         self.instance = amplitude
-        Logger.debug("Amplitude 초기화 완료")
     }
 }
 extension AmplitudeManager {
@@ -74,6 +86,10 @@ extension AmplitudeManager {
     
     /// 공통으로 사용할 이벤트 트래킹 메서드, 모든 이벤트가 이걸 사용해서 보내야함.
     private func eventTrack(_ event: AmpliEvent, eventProperties: [String: Any]? = nil){
+        guard isProduction else { // 운영에서만 보내기
+            return
+        }
+        
         // commonProperties와 merge
         var mergedProperties = commonProperties ?? [:]
 
@@ -81,7 +97,7 @@ extension AmplitudeManager {
         if let eventProperties = eventProperties {
             mergedProperties.merge(eventProperties) { (_, new) in new }
         }
-
+       
         // Amplitude 인스턴스 확인 및 초기화
         if instance == nil {
             Logger.warning("Amplitude 인스턴스가 초기화되지 않음 - 즉시 초기화 시도")
@@ -94,7 +110,7 @@ extension AmplitudeManager {
             return
         }
 
-        // 이벤트 전송
+        // 이벤트 전송 (Production only)
         instance.track(
             eventType: event.name,
             eventProperties: mergedProperties
@@ -103,16 +119,20 @@ extension AmplitudeManager {
         // 성공 로그
         Logger.debug("Amplitude 이벤트 전송: \(event.name)")
 
-        // 즉시 전송 트리거 (디버그용)
-        instance.flush()
+        // 즉시 전송 트리거
+        // instance.flush()
     }
     
     // MARK: - 이벤트 -
     
     /// Amplitude userId 설정 (로그인 이벤트 없이)
     func setUserId(_ userId: Int?) {
+        guard isProduction else {
+            return
+        }
+        
         let userIdString = userId.map { "user_\($0)" }
-            instance?.setUserId(userId: userIdString)
+        instance?.setUserId(userId: userIdString)
     }
 
     func login(userId: Int, socialType: LoginType){
