@@ -54,6 +54,8 @@ enum AppFont {
     case spaceMono(SpaceMono)
     
     case notable
+    
+    case montserrat(Montserrat)
 
     var fontName: String {
         switch self {
@@ -106,6 +108,9 @@ enum AppFont {
             
         case .notable:
             return Notable.regular.fontName
+            
+        case let .montserrat(weight):
+            return weight.fontName
         }
     }
 }
@@ -256,6 +261,7 @@ enum KERISKEDU: String, FontWeightProtocol {
     }
 }
 
+// MARK: - SpaceMono
 enum SpaceMono: String, FontWeightProtocol {
     case regular = "SpaceMono-Regular"
     case bold = "SpaceMono-Bold"
@@ -270,6 +276,22 @@ enum SpaceMono: String, FontWeightProtocol {
 // MARK: - Notable
 enum Notable: String, FontWeightProtocol {
     case regular = "Notable-Regular"
+    var fontName: String {
+        return rawValue
+    }
+}
+
+// MARK: - Montserrat
+enum Montserrat: String, FontWeightProtocol {
+    case regular = "Montserrat-Regular"
+    case black = "Montserrat-Black"
+    case bold = "Montserrat-Bold"
+    case extraBold = "Montserrat-ExtraBold"
+    case extraLight = "Montserrat-ExtraLight"
+    case light = "Montserrat-Light"
+    case medium = "Montserrat-Medium"
+    case semiBold = "Montserrat-SemiBold"
+    case thin = "Montserrat-Thin"
     var fontName: String {
         return rawValue
     }

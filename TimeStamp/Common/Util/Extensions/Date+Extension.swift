@@ -31,6 +31,9 @@ extension Date {
         /// "yyyy.MM.dd"
         case yyyyMMdd = "yyyy.MM.dd"
         
+        /// "yy.MM.dd"
+        case yyMMdd = "yy.MM.dd"
+        
         /// yyyy.MM.dd a hh:mm
         case yyyyMMddahhmm = "yyyy.MM.dd a hh:mm"
         

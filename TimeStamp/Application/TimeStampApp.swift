@@ -30,16 +30,16 @@ struct TimeStampApp: App {
         UIRefreshControl.appearance().tintColor = UIColor(Color.neon300)
 
         // 사용 가능한 폰트 이름 출력
-//        #if DEBUG
-//        print("===== Available Fonts =====")
-//        for family in UIFont.familyNames.sorted() {
-//            print("Family: \(family)")
-//            for name in UIFont.fontNames(forFamilyName: family) {
-//                print("  - \(name)")
-//            }
-//        }
-//        print("===========================")
-//        #endif
+        #if DEBUG
+        print("===== Available Fonts =====")
+        for family in UIFont.familyNames.sorted() {
+            print("Family: \(family)")
+            for name in UIFont.fontNames(forFamilyName: family) {
+                print("  - \(name)")
+            }
+        }
+        print("===========================")
+        #endif
     }
     
     var body: some Scene {
