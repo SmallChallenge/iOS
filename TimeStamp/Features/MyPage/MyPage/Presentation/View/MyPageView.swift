@@ -119,6 +119,9 @@ struct MyPageView: View {
                     Button("로그 공유 (\(Logger.getLogCount())개)"){
                         shareLog()
                     }
+                    
+                    Spacer()
+                        .frame(height: 100)
                     #endif
                     
                     Spacer()
