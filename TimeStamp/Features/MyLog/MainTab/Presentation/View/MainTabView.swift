@@ -32,7 +32,7 @@ struct MainTabView: View {
         NavigationStack {
             VStack (spacing: .zero) {
                 // 커스텀 헤더
-                MainHeader(selectedTab: $selectedTab) {
+                MainHeaderView(selectedTab: $selectedTab) {
                         presentMypage = true
                     }
                 
