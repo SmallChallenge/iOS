@@ -54,19 +54,41 @@ struct EditorView: View {
     
     var body: some View {
         ZStack {
-            VStack (alignment: .leading, spacing: 0){
-
-                Spacer()
-                    .frame(maxHeight: 40)
-
-                // 이미지뷰
-                editedImageView()
-
-                Spacer()
-                    .frame(maxHeight: 56)
+            VStack (alignment: .center, spacing: .zero){
+                
+                // 헤더
+                HeaderView(leadingView: {
+                    // 뒤로가기 버튼
+                    BackButton {
+                        onGoBack?()
+                    }
+                }, trailingView: {
+                    // 다음 버튼 (사진저장화면으로)
+                    MainButton(title: "다음", size: .small) {
+                        captureEditedImage()
+                    }
+                    .padding(.trailing, 20)
+                })
+                
+                
+                // 사진 화면
+                VStack (alignment: .center, spacing: .zero){
+                    
+                    Spacer()
+                        .frame(maxHeight: 40)
+                        .layoutPriority(-2)
+                    
+                    // 이미지뷰
+                    editedImageView()
+                        .layoutPriority(1)
+                    
+                    Spacer()
+                        .frame(maxHeight: 56)
+                        .layoutPriority(-2)
+                }
 
                 // 템플릿 선택 뷰
-                VStack(spacing: 24) {
+                VStack(alignment: .leading, spacing: 24) {
 
                     // 템플릿스타일 | 로고 스위치
                     HStack {
@@ -84,6 +106,11 @@ struct EditorView: View {
                     templateList
 
                 }
+                .frame(maxWidth: .infinity)
+                
+                Spacer()
+                    .layoutPriority(-1)
+                
             } // ~VStack
 
             // 광고 로딩 중 오버레이
@@ -102,10 +129,12 @@ struct EditorView: View {
                 }
             }
         } // ~ZStack
+        .mainBackgourndColor()
+        .navigationBarHidden(true)
+        .toolbar(.hidden, for: .navigationBar)
         .task {
             await viewModel.loadAd()
         }
-        .mainBackgourndColor()
         .toast(message: $viewModel.toastMessage)
         .navigationDestination(isPresented: $navigateToPhotoSave) {
             if let editedImage = editedImage {
@@ -118,23 +147,7 @@ struct EditorView: View {
                 )
             }
         }
-        .navigationBarTitleDisplayMode(.inline)
-        .navigationBarBackButtonHidden(true)
-        .toolbar {
-            ToolbarItem(placement: .navigationBarLeading) {
-                // 뒤로가기 버튼
-                BackButton {
-                    onGoBack?()
-                }
-            }
-            
-            // 다음 버튼 (사진저장화면으로)
-            ToolbarItem(placement: .navigationBarTrailing) {
-                MainButton(title: "다음", size: .small) {
-                    captureEditedImage()
-                }
-            }
-        }
+       
         // 광고 시청 팝업 띄우기
         .popup(isPresented: $viewModel.showAdPopup, content: {
             Modal(title: "광고 시청 후\n워터마크를 제거하세요.")

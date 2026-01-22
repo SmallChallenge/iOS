@@ -24,15 +24,18 @@ struct CameraTabView: View {
     var body: some View {
         NavigationStack {
             VStack(spacing: 0) {
+                
+                HeaderView(leadingView: {
+                    // 뒤로가기 버튼
+                    BackButton {
+                        onDismiss()
+                    }
+                })
 
-                if selectedTab == .camera {
-
-                    // 카메라 화면
+                if selectedTab == .camera { // 카메라 화면
                     diContainer.makeCameraView(onDismiss: onDismiss)
 
-                } else {
-
-                    // 갤러리 화면
+                } else { // 갤러리 화면
                     diContainer.makeGalleryView(onDismiss: onDismiss)
                 }
 
@@ -47,19 +50,10 @@ struct CameraTabView: View {
                         }
                     }
                 }
-
-
             } // ~VStack
             .mainBackgourndColor()
-            .navigationBarTitleDisplayMode(.inline)
-            .toolbar {
-                ToolbarItem(placement: .navigationBarLeading) {
-                    // 뒤로가기 버튼
-                    BackButton {
-                        onDismiss()
-                    }
-                }
-            }
+            .navigationBarHidden(true)
+            .toolbar(.hidden, for: .navigationBar)
         } //~ NavigationStack
         .onAppear {
             // 세로 방향으로 고정
@@ -70,8 +64,6 @@ struct CameraTabView: View {
             AppDelegate.orientationLock = .all
         }
     }
-    
-
 }
 
 #Preview {

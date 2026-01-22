@@ -20,7 +20,7 @@ struct CameraTabButton: View {
                 .font(.Btn1)
                 .foregroundStyle(isSelected ? .gray50 : .gray500)
                 .frame(maxWidth: .infinity)
-                .padding(.top, 18.5)
+                .padding(.vertical, 18.5)
         }
     }
 }
