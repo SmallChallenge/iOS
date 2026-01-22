@@ -31,6 +31,10 @@ struct MainTabView: View {
     var body: some View {
         NavigationStack {
             VStack (spacing: .zero) {
+                // 커스텀 헤더
+                MainHeader(selectedTab: $selectedTab) {
+                        presentMypage = true
+                    }
                 
                 // content화면 (내기록 | 커뮤니티)
                 TabView (selection: $selectedTab){
@@ -67,6 +71,8 @@ struct MainTabView: View {
                 )
                 
             } // ~ VStack
+            .navigationBarHidden(true)
+            .toolbar(.hidden, for: .navigationBar)
             .mainBackgourndColor()
             .task {
                 // 추적 권한 요청
@@ -87,18 +93,6 @@ struct MainTabView: View {
             .onReceive(NotificationCenter.default.publisher(for: .shouldRefreshMyLog)) { _ in
                 // 사진 저장 후 탭바 '내기록'으로 이동
                 selectedTab = 0
-            }
-            .navigationBarTitleDisplayMode(.inline)
-            .navigationBarBackButtonHidden(true)
-            .toolbar {
-                ToolbarItem(placement: .navigationBarLeading) {
-                    logoInHeader
-                }
-                
-                // 프로필 버튼
-                ToolbarItem(placement: .navigationBarTrailing) {
-                    profillButtonInHeader
-                }
             }
             // 마이페이지 화면으로
             .navigationDestination(isPresented: $presentMypage) {
@@ -129,39 +123,7 @@ struct MainTabView: View {
                     showLoginView = false
                 }
             }
-            
-            
         } // ~NavigationStack
-    }
-    private var logoInHeader: some View {
-        Group {
-            if selectedTab == 0 {
-                Image("Logotype")
-                    .renderingMode(.template)
-                    .resizable()
-                    .foregroundStyle(Color.gray50)
-                    .frame(width: 122.8, height: 26)
-                    .padding(.vertical, 17)
-                    .padding(.leading, 5)
-                
-            } else {
-                Text("커뮤니티")
-                    .font(.H2)
-                    .foregroundStyle(Color.gray50)
-                    .padding(.trailing, 5)
-            }
-        }
-    }
-    
-    private var profillButtonInHeader: some View {
-        Button {
-            presentMypage = true
-        } label: {
-            Image("iconUser_line")
-                .resizable()
-                .frame(width: 24, height: 24)
-                .padding(.trailing, 5)
-        }
     }
 }
 
