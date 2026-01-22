@@ -35,7 +35,10 @@ struct CameraView: View {
 
     var body: some View {
         ZStack {
-            VStack(spacing: 0) {
+            VStack(alignment: .center, spacing: .zero) {
+            
+                Spacer()
+
                 // 카메라 프리뷰 + 오버레이
                 ZStack {
                     // 카메라 프리뷰
@@ -51,12 +54,11 @@ struct CameraView: View {
                     }
                 }
                 .aspectRatio(1, contentMode: .fit)
-                .padding(.top, 40)
-
-
+                
                 Spacer()
                 controller
                 Spacer()
+                
             } // ~VStack
             .onAppear {
                 viewModel.onAppear()
