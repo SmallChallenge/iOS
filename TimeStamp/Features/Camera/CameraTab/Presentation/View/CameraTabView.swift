@@ -14,6 +14,11 @@ struct CameraTabView: View {
 
     @State var selectedTab: CameraViewTab = .camera
 
+    // 에디터 네비게이션 상태
+    @State private var navigateToEditor = false
+    @State private var selectedImage: UIImage?
+    @State private var capturedDate: Date?
+
     // 카메라 탭
     enum CameraViewTab: String, CaseIterable, Identifiable {
         case gallery = "갤러리"
@@ -33,10 +38,22 @@ struct CameraTabView: View {
                 })
 
                 if selectedTab == .camera { // 카메라 화면
-                    diContainer.makeCameraView(onDismiss: onDismiss)
+                    diContainer.makeCameraView(
+                        onCaptured: { image in
+                            selectedImage = image
+                            capturedDate = nil
+                            navigateToEditor = true
+                        }
+                    )
 
                 } else { // 갤러리 화면
-                    diContainer.makeGalleryView(onDismiss: onDismiss)
+                    diContainer.makeGalleryView(
+                        onImageSelected: { image, date in
+                            selectedImage = image
+                            capturedDate = date
+                            navigateToEditor = true
+                        }
+                    )
                 }
 
                 //갤러리, 카메라 버튼
@@ -54,6 +71,16 @@ struct CameraTabView: View {
             .mainBackgourndColor()
             .navigationBarHidden(true)
             .toolbar(.hidden, for: .navigationBar)
+            .navigationDestination(isPresented: $navigateToEditor) {
+                if let image = selectedImage {
+                    diContainer.makeEditorView(
+                        capturedImage: image,
+                        capturedDate: capturedDate,
+                        onGoBack: { navigateToEditor = false },
+                        onComplete: onDismiss
+                    )
+                }
+            }
         } //~ NavigationStack
         .onAppear {
             // 세로 방향으로 고정

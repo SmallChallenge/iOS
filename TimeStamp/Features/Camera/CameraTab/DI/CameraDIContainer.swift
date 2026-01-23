@@ -11,21 +11,31 @@ import Alamofire
 
 protocol CameraDIContainerProtocol {
     func makeCameraTabView(onDismiss: @escaping () -> Void) -> CameraTabView
-    func makeCameraView(onDismiss: @escaping () -> Void) -> CameraView
-    func makeGalleryView(onDismiss: @escaping () -> Void) -> GalleryView
     
-    func makePhotoSaveView(
-        capturedImage: UIImage,
-        onGoBack: (() -> Void)?,
-        onComplete: @escaping () -> Void
-    ) -> PhotoSaveView
+    // 카메라 화면
+    func makeCameraView(
+        onCaptured: @escaping (UIImage) -> Void
+    ) -> CameraView
     
+    // 갤러리
+    func makeGalleryView(
+        onImageSelected: @escaping (UIImage, Date?) -> Void
+    ) -> GalleryView
+    
+    // 사진 수정
     func makeEditorView(
         capturedImage: UIImage,
         capturedDate: Date?,
         onGoBack: (() -> Void)?,
         onComplete: @escaping () -> Void
     ) -> EditorView
+    
+    // 사진 저장
+    func makePhotoSaveView(
+        capturedImage: UIImage,
+        onGoBack: (() -> Void)?,
+        onComplete: @escaping () -> Void
+    ) -> PhotoSaveView
 }
 
 final class CameraDIContainer: CameraDIContainerProtocol {
@@ -62,12 +72,13 @@ final class CameraDIContainer: CameraDIContainerProtocol {
         return CameraViewModel()
     }
     
-    func makeCameraView(onDismiss: @escaping () -> Void) -> CameraView {
+    func makeCameraView(
+        onCaptured: @escaping (UIImage) -> Void
+    ) -> CameraView {
         let viewModel = makeCameraViewModel()
         return CameraView(
             viewModel: viewModel,
-            diContainer: self,
-            onDismiss: onDismiss
+            onCaptured: onCaptured
         )
     }
 
@@ -85,15 +96,16 @@ final class CameraDIContainer: CameraDIContainerProtocol {
         return GalleryViewModel(useCase: makeGalleryUseCase())
     }
 
-    func makeGalleryView(onDismiss: @escaping () -> Void) -> GalleryView {
+    func makeGalleryView(
+        onImageSelected: @escaping (UIImage, Date?) -> Void
+    ) -> GalleryView {
         let viewModel = makeGalleryViewModel()
         return GalleryView(
             viewModel: viewModel,
-            diContainer: self,
-            onDismiss: onDismiss
+            onImageSelected: onImageSelected
         )
     }
-    
+
     // MARK: - EditorView
     private func makeEditorRepository() -> AdRepositoryProtocol {
         return AdMobRepository()
@@ -170,13 +182,14 @@ struct MockCameraDIContainer: CameraDIContainerProtocol {
     func makeCameraTabView(onDismiss: @escaping () -> Void) -> CameraTabView {
         CameraTabView(diContainer: self, onDismiss: {})
     }
-    
-    func makeCameraView(onDismiss: @escaping () -> Void) -> CameraView {
+
+    func makeCameraView(
+        onCaptured: @escaping (UIImage) -> Void
+    ) -> CameraView {
         let viewModel = CameraViewModel()
         return CameraView(
             viewModel: viewModel,
-            diContainer: self,
-            onDismiss: onDismiss
+            onCaptured: onCaptured
         )
     }
 
@@ -192,17 +205,18 @@ struct MockCameraDIContainer: CameraDIContainerProtocol {
         return GalleryViewModel(useCase: makeGalleryUseCase())
     }
 
-    func makeGalleryView(onDismiss: @escaping () -> Void) -> GalleryView {
+    func makeGalleryView(
+        onImageSelected: @escaping (UIImage, Date?) -> Void
+    ) -> GalleryView {
         let viewModel = makeGalleryViewModel()
         return GalleryView(
             viewModel: viewModel,
-            diContainer: self,
-            onDismiss: onDismiss
+            onImageSelected: onImageSelected
         )
     }
-    
+
     // MARK: - EditorView
-    
+
     func makeEditorView(
         capturedImage: UIImage,
         capturedDate: Date?,

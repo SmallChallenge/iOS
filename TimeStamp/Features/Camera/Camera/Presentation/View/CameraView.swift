@@ -10,25 +10,20 @@ import SwiftUI
 /// 사진 촬영 화면(탭뷰)에서 카메라 화면
 struct CameraView: View {
     @StateObject var viewModel: CameraViewModel
-    let diContainer: CameraDIContainerProtocol
-    let onDismiss: () -> Void
+    let onCaptured: (UIImage) -> Void
 
     // MARK: - Private property
 
-    // 다음화면으로 (에디터)
-    @State private var navigateToEditor = false
     @State private var didLog = false
 
     // MARK: - Initialization
 
     init(
         viewModel: CameraViewModel,
-        diContainer: CameraDIContainerProtocol,
-        onDismiss: @escaping () -> Void
+        onCaptured: @escaping (UIImage) -> Void
     ) {
         _viewModel = StateObject(wrappedValue: viewModel)
-        self.onDismiss = onDismiss
-        self.diContainer = diContainer
+        self.onCaptured = onCaptured
     }
     
     // MARK: - body
@@ -77,18 +72,8 @@ struct CameraView: View {
                 Text("카메라를 사용하려면 설정에서 권한을 허용해주세요.")
             }
             .onChange(of: viewModel.capturedImage) { newImage in
-                if newImage != nil {
-                    navigateToEditor = true
-                }
-            }
-            .navigationDestination(isPresented: $navigateToEditor) {
-                if let image = viewModel.capturedImage {
-                    diContainer.makeEditorView(
-                        capturedImage: image,
-                        capturedDate: nil,
-                        onGoBack: { navigateToEditor = false },
-                        onComplete: onDismiss
-                    )
+                if let image = newImage {
+                    onCaptured(image)
                 }
             }
         } // ~Zstack
@@ -158,11 +143,8 @@ struct CameraView: View {
 }
 
 #Preview {
-    
     CameraView(
-        viewModel: CameraViewModel(),
-        diContainer: MockCameraDIContainer(),
-        onDismiss: {}
+       viewModel: CameraViewModel(), onCaptured: { _ in}
     )
     .background(Color.black)
 }

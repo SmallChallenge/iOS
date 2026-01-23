@@ -11,10 +11,7 @@ import Combine
 
 struct GalleryView: View {
     @StateObject var viewModel: GalleryViewModel
-    let diContainer: CameraDIContainerProtocol
-    let onDismiss: () -> Void
-
-    @State private var navigateToPhotoSave = false
+    let onImageSelected: (UIImage, Date?) -> Void
 
     // 그리드 레이아웃 설정
     private let columns = [
@@ -36,16 +33,6 @@ struct GalleryView: View {
                 Spacer()
             }
         }
-        .navigationDestination(isPresented: $navigateToPhotoSave) {
-            if let image = viewModel.selectedImage {
-                diContainer.makeEditorView(
-                    capturedImage: image,
-                    capturedDate: viewModel.selectedImageDate,
-                    onGoBack: { navigateToPhotoSave = false },
-                    onComplete: onDismiss
-                )
-            }
-        }
         .loading(viewModel.isLoading)
         .onAppear {
             Task {
@@ -63,8 +50,8 @@ struct GalleryView: View {
             Text("앨범의 사진을 불러오려면 설정에서 사진 접근 권한을 허용해주세요.")
         }
         .onChange(of: viewModel.selectedImage) { image in
-            if image != nil {
-                navigateToPhotoSave = true
+            if let image = image {
+                onImageSelected(image, viewModel.selectedImageDate)
             }
         }
     }
