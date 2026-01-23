@@ -86,16 +86,10 @@ final class CameraManager: NSObject, ObservableObject {
         switch status {
         case .authorized:
             isAuthorized = true
-            if session.inputs.isEmpty {
-                setupCamera()
-            }
         case .notDetermined:
             AVCaptureDevice.requestAccess(for: .video) { [weak self] granted in
                 DispatchQueue.main.async {
                     self?.isAuthorized = granted
-                    if granted {
-                        self?.setupCamera()
-                    }
                 }
             }
         default:
@@ -150,6 +144,12 @@ final class CameraManager: NSObject, ObservableObject {
     /// 카메라 세션 시작
     func startSession() {
         guard !session.isRunning else { return }
+
+        // 세션이 비어있으면 먼저 설정
+        if session.inputs.isEmpty {
+            setupCamera()
+        }
+
         DispatchQueue.global(qos: .userInitiated).async { [weak self] in
             self?.session.startRunning()
         }
