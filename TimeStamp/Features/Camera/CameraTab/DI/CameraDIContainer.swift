@@ -13,16 +13,18 @@ protocol CameraDIContainerProtocol {
     func makeCameraTabView(onDismiss: @escaping () -> Void) -> CameraTabView
     func makeCameraView(onDismiss: @escaping () -> Void) -> CameraView
     func makeGalleryView(onDismiss: @escaping () -> Void) -> GalleryView
+    
     func makePhotoSaveView(
         capturedImage: UIImage,
         onGoBack: (() -> Void)?,
-        onDismiss: @escaping () -> Void
+        onComplete: @escaping () -> Void
     ) -> PhotoSaveView
+    
     func makeEditorView(
         capturedImage: UIImage,
         capturedDate: Date?,
         onGoBack: (() -> Void)?,
-        onDismiss: @escaping () -> Void
+        onComplete: @escaping () -> Void
     ) -> EditorView
 }
 
@@ -110,7 +112,7 @@ final class CameraDIContainer: CameraDIContainerProtocol {
         capturedImage: UIImage,
         capturedDate: Date?,
         onGoBack: (() -> Void)?,
-        onDismiss: @escaping () -> Void
+        onComplete: @escaping () -> Void
     ) -> EditorView {
         let vm = makeEditorViewModel()
         return EditorView(
@@ -119,7 +121,7 @@ final class CameraDIContainer: CameraDIContainerProtocol {
             capturedDate: capturedDate,
             diContainer: self,
             onGoBack: onGoBack,
-            onDismiss: onDismiss
+            onComplete: onComplete
         )
     }
     
@@ -148,14 +150,14 @@ final class CameraDIContainer: CameraDIContainerProtocol {
     func makePhotoSaveView(
         capturedImage: UIImage,
         onGoBack: (() -> Void)? = nil,
-        onDismiss: @escaping () -> Void
+        onComplete: @escaping () -> Void
     ) -> PhotoSaveView {
         let viewModel = makePhotoSaveViewModel()
         return PhotoSaveView(
             viewModel: viewModel,
             capturedImage: capturedImage,
             onGoBack: onGoBack,
-            onDismiss: onDismiss
+            onComplete: onComplete
         )
     }
     
@@ -205,7 +207,7 @@ struct MockCameraDIContainer: CameraDIContainerProtocol {
         capturedImage: UIImage,
         capturedDate: Date?,
         onGoBack: (() -> Void)?,
-        onDismiss: @escaping () -> Void
+        onComplete: @escaping () -> Void
     ) -> EditorView {
         let useCase = MockEditorUsecase()
         let viewModel = EditorViewModel(useCase: useCase)
@@ -215,7 +217,7 @@ struct MockCameraDIContainer: CameraDIContainerProtocol {
             capturedDate: capturedDate,
             diContainer: self,
             onGoBack: onGoBack,
-            onDismiss: onDismiss
+            onComplete: onComplete
         )
     }
     struct MockEditorUsecase: EditorUseCaseProtocol {
@@ -239,14 +241,14 @@ struct MockCameraDIContainer: CameraDIContainerProtocol {
     func makePhotoSaveView(
         capturedImage: UIImage,
         onGoBack: (() -> Void)?,
-        onDismiss: @escaping () -> Void
+        onComplete: @escaping () -> Void
     ) -> PhotoSaveView {
         let viewModel = makePhotoSaveViewModel()
         return PhotoSaveView(
             viewModel: viewModel,
             capturedImage: capturedImage,
             onGoBack: onGoBack,
-            onDismiss: onDismiss
+            onComplete: onComplete
         )
     }
 }

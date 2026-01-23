@@ -12,11 +12,12 @@ import SwiftUI
 // 카테고리, 공개 여부 선택
 // 사진 저장
 struct PhotoSaveView: View {
+    @Environment(\.dismiss) var goBack
     @ObservedObject private var authManager = AuthManager.shared
     @StateObject var viewModel: PhotoSaveViewModel
     let capturedImage: UIImage
-    let onGoBack: (() -> Void)?
-    let onDismiss: () -> Void
+    let onGoBack: (() -> Void)? //일단 안씀. 안되서, 위의 dismiss를 사용
+    let onComplete: () -> Void
     
     
     
@@ -31,7 +32,7 @@ struct PhotoSaveView: View {
     var body: some View {
         ScrollView {
             VStack (alignment: .leading, spacing: 0){
-
+              
                 // 이미지뷰
                 Image(uiImage: capturedImage)
                     .resizable()
@@ -62,25 +63,28 @@ struct PhotoSaveView: View {
                     .font(.Body2)
                     .foregroundStyle(Color.gray500)
                     .padding(.horizontal, 20)
-            }
+            } // ~VStack
         } // ~ ScrollView
-        .mainBackgourndColor()
-        .navigationBarTitleDisplayMode(.inline)
-        .navigationBarBackButtonHidden(true)
-        .toolbar {
-            ToolbarItem(placement: .navigationBarLeading) {
-                BackButton {
-                    onGoBack?()
-                }
-            }
-
-            ToolbarItem(placement: .navigationBarTrailing) {
-                MainButton(title: "완료", size: .small) {
-                    savePhoto()
-                }
-                .disabled(viewModel.isLoading)
-            }
+        .safeAreaInset(edge: .top) {
+            // 헤더
+            HeaderView(
+                leadingView: {
+                    BackButton {
+                        goBack()
+                    }
+                    
+                }, trailingView: {
+                    MainButton(title: "완료", size: .small) {
+                        savePhoto()
+                    }
+                    .disabled(viewModel.isLoading)
+                    .padding(.trailing, 20)
+                })
+            .background(Color.gray900)
         }
+        .mainBackgourndColor()
+        .navigationBarHidden(true)
+        .toolbar(.hidden, for: .navigationBar)
         .loading(viewModel.isLoading)
         // 로그인 팝업 띄우기
         .popup(isPresented: $showLoginPopup, content: {
@@ -106,7 +110,7 @@ struct PhotoSaveView: View {
         // 저장 성공 시 CameraView까지 닫기 (MainTabView로 돌아가기)
         .onChange(of: viewModel.isSaved) { isSaved in
             if isSaved {
-                onDismiss()
+                onComplete()
             }
         }
         .toast(message: $viewModel.toastMessage)
@@ -228,5 +232,5 @@ struct PhotoSaveView: View {
 #Preview {
     MockCameraDIContainer().makePhotoSaveView(
         capturedImage: UIImage(named: "sampleImage")!
-        , onGoBack: {}, onDismiss: {})
+        , onGoBack: {}, onComplete: {})
 }

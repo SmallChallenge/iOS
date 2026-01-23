@@ -87,7 +87,7 @@ struct CameraView: View {
                         capturedImage: image,
                         capturedDate: nil,
                         onGoBack: { navigateToEditor = false },
-                        onDismiss: onDismiss
+                        onComplete: onDismiss
                     )
                 }
             }

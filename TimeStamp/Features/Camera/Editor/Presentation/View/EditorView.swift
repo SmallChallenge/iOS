@@ -14,20 +14,20 @@ struct EditorView: View {
     let capturedDate: Date? // 갤러리에서 가져온 경우 PHAsset의 날짜, nil이면 Date()생성
     let diContainer: CameraDIContainerProtocol
     let onGoBack: (() -> Void)?
-    let onDismiss: () -> Void
+    let onComplete: () -> Void
     
     init(viewModel: EditorViewModel,
          capturedImage: UIImage,
          capturedDate: Date?,
          diContainer: CameraDIContainerProtocol,
          onGoBack: (() -> Void)?,
-         onDismiss: @escaping () -> Void) {
+         onComplete: @escaping () -> Void) {
         self._viewModel = StateObject(wrappedValue: viewModel)
         self.capturedImage = capturedImage
         self.capturedDate = capturedDate
         self.diContainer = diContainer
         self.onGoBack = onGoBack
-        self.onDismiss = onDismiss
+        self.onComplete = onComplete
     }
     
     // MARK: prevate property
@@ -140,10 +140,8 @@ struct EditorView: View {
             if let editedImage = editedImage {
                 diContainer.makePhotoSaveView(
                     capturedImage: editedImage,
-                    onGoBack: {
-                        navigateToPhotoSave = false
-                    },
-                    onDismiss: onDismiss
+                    onGoBack: nil,
+                    onComplete: onComplete
                 )
             }
         }
@@ -265,5 +263,5 @@ struct EditorView: View {
 }
 
 #Preview {
-    MockCameraDIContainer().makeEditorView(capturedImage: UIImage(named: "sampleImage")!, capturedDate: Date(), onGoBack: {}, onDismiss: {})
+    MockCameraDIContainer().makeEditorView(capturedImage: UIImage(named: "sampleImage")!, capturedDate: Date(), onGoBack: {}, onComplete: {})
 }

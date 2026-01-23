@@ -42,7 +42,7 @@ struct GalleryView: View {
                     capturedImage: image,
                     capturedDate: viewModel.selectedImageDate,
                     onGoBack: { navigateToPhotoSave = false },
-                    onDismiss: onDismiss
+                    onComplete: onDismiss
                 )
             }
         }
