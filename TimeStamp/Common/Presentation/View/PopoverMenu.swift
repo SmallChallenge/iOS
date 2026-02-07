@@ -34,13 +34,13 @@ struct PopoverMenu: View {
                     isPresented = false
                 } label: {
                     HStack(spacing: 12) {
-                       
+
                         Text(item.title)
                             .font(.Btn1_b)
                             .foregroundStyle(item.isDestructive ? Color.red : Color.gray300)
-                        
+
                         Spacer()
-                        
+
                         Image(item.icon)
                             .renderingMode(.template)
                             .foregroundStyle(item.isDestructive ? Color.red : Color.gray300)
@@ -48,7 +48,9 @@ struct PopoverMenu: View {
                     }
                     .padding(.horizontal, 24)
                     .padding(.vertical, 18)
+                    .contentShape(Rectangle())
                 }
+                .buttonStyle(.plain)
 
                 if index < items.count - 1 {
                     Divider()

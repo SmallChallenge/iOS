@@ -89,29 +89,26 @@ struct CommunityCard: View {
         } // ~VStack
         .overlay {
             if isMenuOpen {
-                ZStack(alignment: .topTrailing) {
-                    // 배경 (카드 영역 탭하면 닫기)
-                    Color.clear
-                        .contentShape(Rectangle())
-                        .onTapGesture {
-                            isMenuOpen = false
-                        }
-
-                    // 팝오버 메뉴
-                    VStack {
-                        PopoverMenu(items: [
-                            .init(title: "게시물 신고", icon: "IconReport", action: {
-                                onReport()
-                            }),
-                            .init(title: "게시자 차단", icon: "IconBlock", action: {
-                                onBlock()
-                            })
-                        ], isPresented: $isMenuOpen)
-                        .padding(.top, 50)
-                        .padding(.trailing, 10)
-                        Spacer()
+                // 배경 (카드 영역 탭하면 닫기)
+                Color.black.opacity(0.001)
+                    .onTapGesture {
+                        isMenuOpen = false
                     }
-                }
+            }
+        }
+        .overlay(alignment: .topTrailing) {
+            if isMenuOpen {
+                // 팝오버 메뉴
+                PopoverMenu(items: [
+                    .init(title: "게시물 신고", icon: "IconReport", action: {
+                        onReport()
+                    }),
+                    .init(title: "게시자 차단", icon: "IconBlock", action: {
+                        onBlock()
+                    })
+                ], isPresented: $isMenuOpen)
+                .padding(.top, 50)
+                .padding(.trailing, 10)
             }
         }
     }
