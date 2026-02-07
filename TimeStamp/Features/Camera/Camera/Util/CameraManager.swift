@@ -8,6 +8,7 @@
 import AVFoundation
 import UIKit
 import Combine
+import AVFAudio
 
 /// 플래시 모드 3단계
 enum FlashMode: CaseIterable {
@@ -49,8 +50,11 @@ final class CameraManager: NSObject, ObservableObject {
     /// 카메라 입력/출력을 관리하는 세션
     let session = AVCaptureSession()
 
-    /// 촬영된 사진을 출력하는 객체
-    private let output = AVCapturePhotoOutput()
+    /// 비디오 데이터 출력 (무음 촬영용)
+    private let videoOutput = AVCaptureVideoDataOutput()
+
+    /// 사진 출력용 큐
+    private let videoQueue = DispatchQueue(label: "com.timestamp.videoQueue")
 
     /// 현재 사용 중인 카메라 디바이스 (전면/후면)
     private var currentDevice: AVCaptureDevice?
@@ -107,9 +111,14 @@ final class CameraManager: NSObject, ObservableObject {
         // 후면 카메라로 시작
         setupCameraInput(isFront: false)
 
-        // 사진 출력 설정
-        if session.canAddOutput(output) {
-            session.addOutput(output)
+        // 비디오 데이터 출력 설정 (무음 촬영용)
+        if session.canAddOutput(videoOutput) {
+            session.addOutput(videoOutput)
+            videoOutput.setSampleBufferDelegate(self, queue: videoQueue)
+            // 비디오 방향 설정
+            if let connection = videoOutput.connection(with: .video) {
+                connection.videoOrientation = .portrait
+            }
         }
 
         session.commitConfiguration()
@@ -188,43 +197,96 @@ final class CameraManager: NSObject, ObservableObject {
         flashMode.next()
     }
 
-    /// 사진 촬영
+    /// 사진 촬영 (무음)
     /// - Parameter completion: 촬영 완료 시 UIImage를 반환하는 클로저
     func capturePhoto(completion: @escaping (UIImage?) -> Void) {
         photoCaptureCompletion = completion
 
-        let settings = AVCapturePhotoSettings()
-
         // 플래시 설정
-        // 디바이스에 플래시가 있고 후면 카메라일 때만 플래시 모드 적용
         if let device = currentDevice,
            device.hasFlash,
-           device.position == .back {
-            // 플래시(flashMode)로 촬영
-            settings.flashMode = flashMode.avFlashMode
-        } else {
-            //플래시 OFF로 촬영 (전면 카메라 또는 플래시 없음)
-            settings.flashMode = .off
-        }
+           device.position == .back,
+           flashMode != .off {
+            do {
+                try device.lockForConfiguration()
 
-        output.capturePhoto(with: settings, delegate: self)
+                // 플래시 켜기
+                if device.hasTorch {
+                    switch flashMode {
+                    case .on:
+                        try device.setTorchModeOn(level: 1.0)
+                    case .auto:
+                        // auto는 현재 밝기를 체크하기 어려우므로 off로 처리
+                        device.torchMode = .off
+                    case .off:
+                        device.torchMode = .off
+                    }
+                }
+
+                device.unlockForConfiguration()
+            } catch {
+                Logger.error("플래시 설정 실패: \(error)")
+            }
+        }
     }
 }
 
-// MARK: - AVCapturePhotoCaptureDelegate
+// MARK: - AVCaptureVideoDataOutputSampleBufferDelegate
 
-extension CameraManager: AVCapturePhotoCaptureDelegate {
+extension CameraManager: AVCaptureVideoDataOutputSampleBufferDelegate {
 
-    /// 사진 촬영 완료 시 호출
-    func photoOutput(_ output: AVCapturePhotoOutput, didFinishProcessingPhoto photo: AVCapturePhoto, error: Error?) {
-        guard error == nil,
-              let imageData = photo.fileDataRepresentation(),
-              let image = UIImage(data: imageData) else {
-            photoCaptureCompletion?(nil)
+    /// 비디오 프레임 수신 시 호출 (무음 촬영)
+    func captureOutput(_ output: AVCaptureOutput, didOutput sampleBuffer: CMSampleBuffer, from connection: AVCaptureConnection) {
+        // 촬영 요청이 있을 때만 프레임 캡처
+        guard let completion = photoCaptureCompletion else { return }
+
+        // CMSampleBuffer를 UIImage로 변환
+        guard let imageBuffer = CMSampleBufferGetImageBuffer(sampleBuffer) else {
+            DispatchQueue.main.async {
+                completion(nil)
+            }
+            photoCaptureCompletion = nil
             return
         }
 
-        photoCaptureCompletion?(image)
+        let ciImage = CIImage(cvPixelBuffer: imageBuffer)
+        let context = CIContext()
+
+        guard let cgImage = context.createCGImage(ciImage, from: ciImage.extent) else {
+            DispatchQueue.main.async {
+                completion(nil)
+            }
+            photoCaptureCompletion = nil
+            return
+        }
+
+        // 이미지 방향 조정
+        let image = UIImage(cgImage: cgImage, scale: 1.0, orientation: getImageOrientation())
+
+        // 플래시 끄기
+        if let device = currentDevice, device.hasTorch {
+            do {
+                try device.lockForConfiguration()
+                device.torchMode = .off
+                device.unlockForConfiguration()
+            } catch {
+                Logger.error("플래시 끄기 실패: \(error)")
+            }
+        }
+
+        DispatchQueue.main.async {
+            completion(image)
+        }
+
         photoCaptureCompletion = nil
+    }
+
+    /// 현재 카메라 위치에 따른 이미지 방향 반환
+    private func getImageOrientation() -> UIImage.Orientation {
+        if isFrontCamera {
+            return .upMirrored
+        } else {
+            return .up
+        }
     }
 }
