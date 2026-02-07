@@ -54,25 +54,28 @@ struct LogEditorView: View {
                 
             }// ~Vstack
             .padding(.horizontal, 20)
-        }
+        }// ~Scrollview
+        .safeAreaInset(edge: .top, content: {
+            // 헤더
+            HeaderView(
+                leadingView: {
+                    BackButton {
+                        onDismiss(viewModel.hasEdited)
+                    }
+                    
+                }, trailingView: {
+                    MainButton(title: "완료", size: .small) {
+                        viewModel.editLog()
+                    }
+                    .disabled(viewModel.isLoading)
+                    .padding(.trailing, 20)
+                })
+            .background(Color.gray900)
+        })
+        .navigationBarHidden(true)
+        .toolbar(.hidden, for: .navigationBar)
         .mainBackgourndColor()
         .toast(message: $viewModel.toastMessage)
-        .navigationBarTitleDisplayMode(.inline)
-        .navigationBarBackButtonHidden(true)
-        .toolbar {
-            // 뒤로가기 버튼
-            ToolbarItem(placement: .navigationBarLeading) {
-                BackButton {
-                    onDismiss(viewModel.hasEdited)
-                }
-            }
-            ToolbarItem(placement: .navigationBarTrailing) {
-                MainButton(title: "완료", size: .small) {
-                    viewModel.editLog()
-                }
-                .disabled(viewModel.isLoading)
-            }
-        }
         .onChange(of: viewModel.hasEdited) { hasEdited in
             if hasEdited{ // 수정완료
                 ToastManager.shared.show(AppMessage.editSuccess.text)

@@ -31,7 +31,6 @@ struct UserInfoPageView: View {
         ScrollView {
             // Body
             VStack (spacing: .zero){
-                thinLine
                 
                 profile
                 
@@ -51,24 +50,18 @@ struct UserInfoPageView: View {
                 }
             }
 
-        }// ~ZStack
-        .mainBackgourndColor()
-        .navigationBarTitleDisplayMode(.inline)
-        .navigationBarBackButtonHidden(true)
-        .toolbar {
-            ToolbarItem(placement: .navigationBarLeading) {
-                // 뒤로가기 버튼
+        }// ~ScrollView
+        .safeAreaInset(edge: .top) {
+            HeaderView(leadingView: {
                 BackButton {
                     onGoBack()
                 }
-            }
-            
-            ToolbarItem(placement: .title) {
-                Text("내 정보")
-                    .font(.SubTitle1)
-                    .foregroundStyle(Color.gray50)
-            }
+            }, title: "내 정보")
+            .background(Color.gray900)
         }
+        .navigationBarHidden(true)
+        .toolbar(.hidden, for: .navigationBar)
+        .mainBackgourndColor()
         // 토스트 메시지
         .toast(message: $viewModel.toastMessage)
         .popup(message: $viewModel.alertMessage)

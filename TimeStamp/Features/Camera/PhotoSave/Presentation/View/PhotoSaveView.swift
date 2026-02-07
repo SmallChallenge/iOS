@@ -82,9 +82,9 @@ struct PhotoSaveView: View {
                 })
             .background(Color.gray900)
         }
-        .mainBackgourndColor()
         .navigationBarHidden(true)
         .toolbar(.hidden, for: .navigationBar)
+        .mainBackgourndColor()
         .loading(viewModel.isLoading)
         // 로그인 팝업 띄우기
         .popup(isPresented: $showLoginPopup, content: {

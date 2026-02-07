@@ -32,6 +32,14 @@ struct LoginView: View {
     var body: some View {
         NavigationStack {
             VStack {
+                
+//                HeaderView(trailingView: {
+//                    CloseButton {
+//                        onDismiss()
+//                    }
+////                    .padding(.trailing, -12)
+//                })
+                
                 Spacer()
                     .frame(maxHeight: 115)
                 
@@ -92,20 +100,11 @@ struct LoginView: View {
                 Spacer()
             }// ~Vstack
             .mainBackgourndColor()
+            .navigationBarHidden(true)
+            .toolbar(.hidden, for: .navigationBar)
             .loading(viewModel.isLoading)
             .toast(message: $viewModel.toastMessage)
             .popup(message: $viewModel.alertMessage)
-            .navigationBarTitleDisplayMode(.inline)
-            .navigationBarBackButtonHidden(true)
-            .toolbar {
-                ToolbarItem(placement: .navigationBarTrailing) {
-                    // 닫기 버튼
-                    CloseButton {
-                        onDismiss()
-                    }
-                    .padding(.trailing, -12)
-                }
-            }
             .onChange(of: viewModel.isLoggedIn) { isLoggedIn in
                 if isLoggedIn {
                     // 로그인 성공 시, 로그인 화면 닫기

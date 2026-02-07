@@ -74,24 +74,27 @@ struct LogDetailView: View {
             } //~VStack
             
         } //~ScrollView
+        .safeAreaInset(edge: .top, content: {
+            HeaderView(
+                leadingView: {
+                    BackButton {
+                        onGoBack()
+                    }
+                    
+                })
+            .background(Color.gray900)
+        })
+        .navigationBarHidden(true)
+        .toolbar(.hidden, for: .navigationBar)
         .scrollDismissesKeyboard(.interactively)
         .mainBackgourndColor()
+        
         .loading(viewModel.isLoading)
         .toast(message: $viewModel.toastMessage)
-        .navigationBarTitleDisplayMode(.inline)
-        .navigationBarBackButtonHidden(true)
         .task {
             if !hasAppeared {
                 hasAppeared = true
                 viewModel.fetchDetail()
-            }
-        }
-        .toolbar {
-            // 뒤로가기 버튼
-            ToolbarItem(placement: .navigationBarLeading) {
-                BackButton {
-                    onGoBack()
-                }
             }
         }
         .popup(isPresented: $showDeletePopup) {

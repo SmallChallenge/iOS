@@ -58,7 +58,7 @@ struct MyPageView: View {
             ScrollView {
                 VStack(spacing: .zero) {
                     
-                    thinLine
+                    //thinLine
                     Spacer()
                         .frame(height: 24)
                     
@@ -128,6 +128,15 @@ struct MyPageView: View {
                    
                 }
             } // ~ScrollView
+            .safeAreaInset(edge: .top) {
+                HeaderView(leadingView: {
+                    BackButton {
+                        onGoBack()
+                    }
+                }, title: "마이페이지", hasUnderLine: true)
+                
+                .background(Color.gray900)
+            }
             
             #if DEBUG
             // 하단 배너 광고
@@ -143,22 +152,8 @@ struct MyPageView: View {
             
         } //~ ZStack
         .mainBackgourndColor()
-        .navigationBarTitleDisplayMode(.inline)
-        .navigationBarBackButtonHidden(true)
-        .toolbar {
-            ToolbarItem(placement: .navigationBarLeading) {
-                // 뒤로가기 버튼
-                BackButton {
-                    onGoBack()
-                }
-            }
-            
-            ToolbarItem(placement: .title) {
-                Text("마이페이지")
-                    .font(.SubTitle1)
-                    .foregroundStyle(Color.gray50)
-            }
-        }
+        .navigationBarHidden(true)
+        .toolbar(.hidden, for: .navigationBar)
         .onChange(of: viewModel.didLogout) { didLogout in
             if didLogout {
                 onGoBack()

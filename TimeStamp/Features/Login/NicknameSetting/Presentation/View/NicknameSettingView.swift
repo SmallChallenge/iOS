@@ -32,6 +32,21 @@ struct NicknameSettingView: View {
     var body: some View {
         GeometryReader { geometry in
             VStack(spacing: .zero) {
+                HeaderView(leadingView: {
+                    // 뒤로가기 버튼
+                    BackButton {
+                        onGoBack()
+                    }
+                }, trailingView: {
+                    if onDismiss != nil {
+                        CloseButton {
+                            onDismiss?()
+                        }
+                    } else {
+                        EmptyView()
+                    }
+                })
+                
                 ScrollView {
                     VStack(spacing: .zero) {
                         
@@ -76,7 +91,7 @@ struct NicknameSettingView: View {
                         
                     }
                     .frame(minHeight: geometry.size.height - 80)
-                }
+                }// ~ScrollView
                 .scrollDismissesKeyboard(.interactively)
 
                 MainButton(title: "확인", isDisabled: text.isEmpty || viewModel.validateMessage != nil) {
@@ -100,26 +115,8 @@ struct NicknameSettingView: View {
                 }
             }
             .mainBackgourndColor()
-            .navigationBarTitleDisplayMode(.inline)
-            .navigationBarBackButtonHidden(true)
-            .toolbar {
-                // 뒤로가기 버튼
-                ToolbarItem(placement: .navigationBarLeading) {
-                    BackButton {
-                        onGoBack()
-                    }
-                }
-                
-                // 닫기 버튼
-                if onDismiss != nil {
-                    ToolbarItem(placement: .navigationBarTrailing) {
-                        CloseButton {
-                            onDismiss?()
-                        }
-                        .padding(.trailing, -12)
-                    }
-                }
-            }
+            .navigationBarHidden(true)
+            .toolbar(.hidden, for: .navigationBar)
         }
     }
 }
