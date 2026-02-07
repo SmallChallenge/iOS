@@ -119,7 +119,13 @@ final class PhotoSaveViewModel: ObservableObject, MessageDisplayable {
         } catch {
             // 저장 실패
             isLoading = false
-            show(.saveFailed)
+            
+            if let networkError = error as? NetworkError,
+               networkError == .noInternet {
+                show(.noInternet)
+            } else {
+                show(.saveFailed)
+            }
             Logger.error("서버에 사진 저장 실패: \(error)")
         }
     }

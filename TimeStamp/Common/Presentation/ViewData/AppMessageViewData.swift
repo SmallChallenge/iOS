@@ -63,6 +63,9 @@ enum AppMessage {
     /// 필수값 입력 필요
     case requiredSelection
     
+    /// 네트워크 연결 확인
+    case noInternet
+    
     
 
     // MARK: 성공 메시지
@@ -111,6 +114,10 @@ enum AppMessage {
             return "본인 게시물은 신고할 수 없어요."
         case .blockToMineFailed:
             return "본인 게시물은 차단할 수 없어요."
+            
+        case .noInternet:
+            return "네트워크 연결을 확인해주세요."
+            
 
             // MARK: 성공
         case .saveSuccess:

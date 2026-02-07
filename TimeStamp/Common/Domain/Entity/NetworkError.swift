@@ -8,7 +8,7 @@
 
 import Foundation
 
-public enum NetworkError: Error {
+public enum NetworkError: Error, Equatable {
     case urlError
     case invalidResponse
     case failToDecode(String)
@@ -63,5 +63,25 @@ public enum NetworkError: Error {
         default:
             return false
         }
+    }
+    
+    public static func == (lhs: NetworkError, rhs: NetworkError) -> Bool {
+        switch (lhs, rhs) {
+        case (.urlError, .urlError): return true
+        case (.invalidResponse, .invalidResponse): return true
+        case (.failToDecode, .failToDecode): return true
+        case (.dataNil, .dataNil): return true
+        case (.serverError, .serverError): return true
+        case (.serverFailed, .serverFailed): return true
+        case (.requestFailed, .requestFailed): return true
+        case (.noInternet, .noInternet): return true
+        case (.cancelled, .cancelled): return true
+        case (.unauthorized, .unauthorized): return true
+        case (.forbidden, .forbidden): return true
+        case (.notFound, .notFound): return true
+        case (.timeout, .timeout): return true
+        default: return false
+        }
+        
     }
 }
