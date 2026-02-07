@@ -27,6 +27,9 @@ final class CameraViewModel: ObservableObject {
     /// 플래시 모드 (View에서 접근용)
     @Published var flashMode: FlashMode = .off
 
+    /// 촬영 중인지 여부 (중복 촬영 방지)
+    @Published var isCapturing: Bool = false
+
     // Combine 구독
     private var cancellables = Set<AnyCancellable>()
 
@@ -91,16 +94,22 @@ final class CameraViewModel: ObservableObject {
 
     /// 사진 촬영
     func capturePhoto() {
+        // 이미 촬영 중이면 무시
+        guard !isCapturing else { return }
+
         guard cameraManager.isAuthorized else {
             showPermissionAlert = true
             return
         }
+
+        isCapturing = true
 
         #if targetEnvironment(simulator)
         // 시뮬레이터: Color.gray를 UIImage로 변환
         let dummyImage = createDummyImage()
         Task { @MainActor in
             self.capturedImage = dummyImage
+            self.isCapturing = false
         }
         #else
         // 실제 기기: 카메라로 촬영
@@ -108,6 +117,7 @@ final class CameraViewModel: ObservableObject {
             guard let self = self else { return }
             Task { @MainActor in
                 self.capturedImage = image
+                self.isCapturing = false
             }
         }
         #endif

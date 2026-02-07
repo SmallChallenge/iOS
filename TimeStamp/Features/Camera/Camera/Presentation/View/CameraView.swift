@@ -110,6 +110,7 @@ struct CameraView: View {
                     .foregroundStyle(.gray50)
                     .frame(width: 80, height: 80)
             }
+            .disabled(viewModel.isCapturing)
 
 
             // 플래시 버튼 (off -> auto -> on)

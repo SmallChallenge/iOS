@@ -90,6 +90,7 @@ final class PhotoSaveViewModel: ObservableObject, MessageDisplayable {
         }
     }
     
+    // 서버에 사진 저장하기
     private func savePhotoToServer(image: UIImage, category: CategoryViewData, visibility: VisibilityViewData) async {
         do {
             let categoryEntity = CategoryMapper().toEntity(from: category)

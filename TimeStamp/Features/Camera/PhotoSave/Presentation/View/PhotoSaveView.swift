@@ -20,7 +20,6 @@ struct PhotoSaveView: View {
     let onComplete: () -> Void
     
     
-    
     @State private var selectedCategory: CategoryViewData? = nil
     @State private var selectedVisibility: VisibilityViewData? = nil
     @State private var didAttemptConfirm: Bool = false
