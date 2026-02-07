@@ -35,6 +35,7 @@ struct EditorView: View {
     @State private var selectedTemplateStyle: TemplateStyleViewData = .basic
     @State private var selectedTemplate: Template = Template.all[0]
     
+    @State private var showLoginView: Bool = false
     @State private var navigateToPhotoSave = false
     @State private var editedImage: UIImage?
 
@@ -114,38 +115,44 @@ struct EditorView: View {
             } // ~VStack
 
             // 광고 로딩 중 오버레이
-            if viewModel.isLoadingAd {
-                Color.black.opacity(0.4)
-                    .ignoresSafeArea()
-
-                VStack(spacing: 16) {
-                    ProgressView()
-                        .scaleEffect(1.5)
-                        .tint(.white)
-
-                    Text("광고를 불러오는 중...")
-                        .font(.Body1)
-                        .foregroundColor(.white)
-                }
-            }
+//            if viewModel.isLoadingAd {
+//                Color.black.opacity(0.4)
+//                    .ignoresSafeArea()
+//
+//                VStack(spacing: 16) {
+//                    ProgressView()
+//                        .scaleEffect(1.5)
+//                        .tint(.white)
+//
+//                    Text("광고를 불러오는 중...")
+//                        .font(.Body1)
+//                        .foregroundColor(.white)
+//                }
+//            }
         } // ~ZStack
         .mainBackgourndColor()
         .navigationBarHidden(true)
         .toolbar(.hidden, for: .navigationBar)
-        .task {
-            await viewModel.loadAd()
-        }
+//        .task {
+//            await viewModel.loadAd()
+//        }
         .toast(message: $viewModel.toastMessage)
-        .navigationDestination(isPresented: $navigateToPhotoSave) {
-            if let editedImage = editedImage {
-                diContainer.makePhotoSaveView(
-                    capturedImage: editedImage,
-                    onGoBack: nil,
-                    onComplete: onComplete
-                )
-            }
-        }
+        // 로그인 팝업 띄우기
+        .popup(isPresented: $viewModel.showLoginPopup, content: {
+            Modal(title: AppMessage.loginRequired.text)
+                .buttons {
+                    MainButton(title: "취소", colorType: .secondary) {
+                        viewModel.showLoginPopup = false
+                    }
+                    MainButton(title: "로그인", colorType: .primary) {
+                        // 로그인 화면 띄우기
+                        viewModel.showLoginPopup = false
+                        showLoginView = true
+                    }
+                }
+        })
        
+        /*
         // 광고 시청 팝업 띄우기
         .popup(isPresented: $viewModel.showAdPopup, content: {
             Modal(title: "광고 시청 후\n워터마크를 제거하세요.")
@@ -163,7 +170,23 @@ struct EditorView: View {
                         }
                     }
                 }
+        })*/
+        .navigationDestination(isPresented: $navigateToPhotoSave) {
+            if let editedImage = editedImage {
+                diContainer.makePhotoSaveView(
+                    capturedImage: editedImage,
+                    onGoBack: nil,
+                    onComplete: onComplete
+                )
+            }
+        }
+        // 로그인 화면 띄우기
+        .fullScreenCover(isPresented: $showLoginView, content: {
+            AppDIContainer.shared.makeLoginView {
+                showLoginView = false
+            }
         })
+        
     }
     
     // MARK: - Subviews
