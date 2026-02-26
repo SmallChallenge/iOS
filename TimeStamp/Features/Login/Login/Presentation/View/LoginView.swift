@@ -61,8 +61,7 @@ struct LoginView: View {
                 VStack(spacing: 16) {
                     // 카카오 로그인
                     SocialLoginButton(type: .kakao) {
-                        //viewModel.clickKakaoLoginButton()
-                        showTermsSheet = true
+                        viewModel.clickKakaoLoginButton()
                     }
                     
                     // 구글 로그인
