@@ -61,7 +61,8 @@ struct LoginView: View {
                 VStack(spacing: 16) {
                     // 카카오 로그인
                     SocialLoginButton(type: .kakao) {
-                        viewModel.clickKakaoLoginButton()
+                        //viewModel.clickKakaoLoginButton()
+                        showTermsSheet = true
                     }
                     
                     // 구글 로그인
@@ -129,7 +130,7 @@ struct LoginView: View {
             }
             // 약관동의 띄우기
             .sheet(isPresented: $showTermsSheet, onDismiss: {
-                // 약관 배경눌러서 닫음
+                // 약관 배경눌러서 닫음 -> 탈퇴
                 viewModel.signOut()
             }) {
                 diContainer.makeTermsView(

@@ -117,6 +117,7 @@ struct TermsView: View {
 
             Spacer()
         }
+        .mainBackgourndColor(.gray50)
         .loading(viewModel.isLoading)
         .sheet(isPresented: $showTermsOfService) {
             diContainer.makeWebView(url: AppConstants.URLs.termsOfService) {
