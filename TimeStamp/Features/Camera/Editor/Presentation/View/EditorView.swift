@@ -11,14 +11,14 @@ import Combine
 struct EditorView: View {
     @StateObject private var viewModel: EditorViewModel
     let capturedImage: UIImage
-    let capturedDate: Date? // 갤러리에서 가져온 경우 PHAsset의 날짜, nil이면 Date()생성
+    let capturedDate: Date // 갤러리에서 가져온 경우 PHAsset의 날짜, nil이면 Date()생성
     let diContainer: CameraDIContainerProtocol
     let onGoBack: (() -> Void)?
     let onComplete: () -> Void
     
     init(viewModel: EditorViewModel,
          capturedImage: UIImage,
-         capturedDate: Date?,
+         capturedDate: Date,
          diContainer: CameraDIContainerProtocol,
          onGoBack: (() -> Void)?,
          onComplete: @escaping () -> Void) {
@@ -40,13 +40,6 @@ struct EditorView: View {
     @State private var editedImage: UIImage?
 
     private let imageCompositor = ImageCompositor()
-
-    /// 실제 촬영/생성 날짜
-    private var photoDate: Date {
-        // from 갤러리: PHAsset.creationDate
-        // from 카메라: 현재 시간
-        capturedDate ?? Date()
-    }
 
     /// 선택된 스타일에 맞는 템플릿 필터링
     private var filteredTemplates: [Template] {
@@ -273,7 +266,7 @@ struct EditorView: View {
 
         guard let composedImage = imageCompositor.composeImage(
             background: capturedImage,
-            template: selectedTemplate.makeView(displayDate: photoDate, hasLogo: viewModel.isOnLogo),
+            template: selectedTemplate.makeView(displayDate: capturedDate, hasLogo: viewModel.isOnLogo),
             templateSize: targetSize
         ) else {
             return

@@ -25,7 +25,7 @@ protocol CameraDIContainerProtocol {
     // 사진 수정
     func makeEditorView(
         capturedImage: UIImage,
-        capturedDate: Date?,
+        capturedDate: Date,
         onGoBack: (() -> Void)?,
         onComplete: @escaping () -> Void
     ) -> EditorView
@@ -122,7 +122,7 @@ final class CameraDIContainer: CameraDIContainerProtocol {
     
     func makeEditorView(
         capturedImage: UIImage,
-        capturedDate: Date?,
+        capturedDate: Date,
         onGoBack: (() -> Void)?,
         onComplete: @escaping () -> Void
     ) -> EditorView {
@@ -219,7 +219,7 @@ struct MockCameraDIContainer: CameraDIContainerProtocol {
 
     func makeEditorView(
         capturedImage: UIImage,
-        capturedDate: Date?,
+        capturedDate: Date,
         onGoBack: (() -> Void)?,
         onComplete: @escaping () -> Void
     ) -> EditorView {

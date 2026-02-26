@@ -41,7 +41,7 @@ struct CameraTabView: View {
                     diContainer.makeCameraView(
                         onCaptured: { image in
                             selectedImage = image
-                            capturedDate = nil
+                            capturedDate = Date() // 촬영시간(지금)
                             navigateToEditor = true
                         }
                     )
@@ -75,7 +75,7 @@ struct CameraTabView: View {
                 if let image = selectedImage {
                     diContainer.makeEditorView(
                         capturedImage: image,
-                        capturedDate: capturedDate,
+                        capturedDate: capturedDate ?? Date(), // 촬영시간 못가져왔으면, 지금.
                         onGoBack: { navigateToEditor = false },
                         onComplete: onDismiss
                     )
