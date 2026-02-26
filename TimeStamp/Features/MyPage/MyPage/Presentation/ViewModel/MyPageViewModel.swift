@@ -46,23 +46,24 @@ final class MyPageViewModel: ObservableObject, MessageDisplayable {
     @MainActor
     private func performLogout() async {
         isLoading = true
-
+        
         do {
             try await logoutUseCase.logout()
             Logger.success("로그아웃 성공")
-            ToastManager.shared.show(AppMessage.logoutSuccess.text)
-
-            // AuthManager에서 로컬 토큰 삭제
-            AuthManager.shared.logout()
-            AmplitudeManager.shared.logout()
-            
-            didLogout = true
-
-            isLoading = false
         } catch {
             isLoading = false
             show(.logoutFailed)
             Logger.error("로그아웃 실패: \(error)")
         }
+        
+        // 로그아웃(api) 성공여부와 상관없이, 로그아웃시키기
+        ToastManager.shared.show(AppMessage.logoutSuccess.text)
+
+        // AuthManager에서 로컬 토큰 삭제
+        AuthManager.shared.logout()
+        AmplitudeManager.shared.logout()
+        
+        didLogout = true
+        isLoading = false
     }
 }
