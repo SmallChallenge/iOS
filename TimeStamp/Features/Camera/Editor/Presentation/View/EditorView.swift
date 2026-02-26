@@ -65,7 +65,7 @@ struct EditorView: View {
                 })
                 
                 
-                // 사진 화면
+                // 사진 화면 (사진+템플릿)
                 VStack (alignment: .center, spacing: .zero){
                     
                     Spacer()
@@ -222,6 +222,7 @@ struct EditorView: View {
     @ViewBuilder
     private func editedImageView() -> some View {
         ZStack {
+            // 원본사진
             Color.gray500
                 .overlay {
                     Image(uiImage: capturedImage)
@@ -230,9 +231,10 @@ struct EditorView: View {
                         .clipped()
                 }
                 .clipShape(Rectangle())
+                .contentShape(Rectangle())
 
             // 템플릿 (타임스탬프, 로고)
-            selectedTemplate.makeView(displayDate: photoDate, hasLogo: viewModel.isOnLogo)
+            selectedTemplate.makeView(displayDate: capturedDate, hasLogo: viewModel.isOnLogo)
         }
         .aspectRatio(1, contentMode: .fit)
     }
