@@ -7,6 +7,7 @@
 
 import SwiftUI
 import UIKit
+import MessageUI
 
 /// 마이페이지 화면
 struct MyPageView: View {
@@ -29,6 +30,9 @@ struct MyPageView: View {
     
     /// 오픈소스라이선스(웹뷰)띄우기
     @State private var showOpenSourceLicense: Bool = false
+    
+    /// 문의 메일 보내기 띄우기
+    @State private var isShowingMailView = false
 
 
     private let appVersion: String
@@ -103,7 +107,9 @@ struct MyPageView: View {
                             showOpenSourceLicense = true
                         }
                         MyPageMenu("앱 버전", type: .text(text: appVersion)){}
-                        MyPageMenu("문의방법", type: .text(text: AppConstants.URLs.supportEmail)){}
+                        MyPageMenu("문의방법", type: .text(text: AppConstants.URLs.supportEmail)){
+                           sendEmail()
+                        }
                         
                         if authManager.isLoggedIn {
                             MyPageMenu("로그아웃", type: .none){
@@ -209,6 +215,11 @@ struct MyPageView: View {
             .presentationDetents([.medium, .large])
             .presentationDragIndicator(.visible)
         }
+        // 문의 메일 보내기
+        .sheet(isPresented: $isShowingMailView) {
+            MailView(userId: "\(authManager.currentUser?.userId ?? -1)")
+        }
+        .toast(message: $viewModel.toastMessage)
     }
     private var userProfile: some View {
         HStack(alignment: .center,spacing: 16) {
@@ -321,6 +332,53 @@ struct MyPageView: View {
     }
     
     // MARK: -
+    
+    private func sendEmail() {
+        let recipient = AppConstants.URLs.supportEmail
+        let userId = "\(authManager.currentUser?.userId ?? -1)"
+        let emailBody = EmailHelper.getSupportEmailBody(userId: userId)
+        let subject = "[Stampic] 서비스문의"
+        
+        // 1단계: 아이폰 기본 Mail 앱 + 계정 설정이 되어 있는 경우
+        if MFMailComposeViewController.canSendMail() {
+            self.isShowingMailView = true
+            Logger.success("이메일 전송1")
+            return // 실행 후 종료
+        }
+        
+        // 2단계: (기본 앱은 없지만) 다른 메일 앱(Gmail, Outlook 등)이라도 있는 경우
+        let encodedSubject = subject.addingPercentEncoding(withAllowedCharacters: .urlQueryAllowed) ?? ""
+        let encodedBody = emailBody.addingPercentEncoding(withAllowedCharacters: .urlQueryAllowed) ?? ""
+        let mailtoUrlString = "mailto:\(recipient)?subject=\(encodedSubject)&body=\(encodedBody)"
+
+        if let url = URL(string: mailtoUrlString) {
+            // 1. 일단 열 수 있는지 확인
+            if UIApplication.shared.canOpenURL(url) {
+                UIApplication.shared.open(url, options: [:]) { success in
+                    if success {
+                        Logger.success("이메일 전송2 성공")
+                    } else {
+                        // [핵심] 열 수 있다고 했는데 실제 실행에 실패한 경우 (에러 115 방어)
+                        Logger.error("이메일 앱 실행 실패 - 복사 로직으로 이동")
+                        self.copyToClipboard(recipient: recipient)
+                    }
+                }
+                return
+            }
+            // 2. 아예 열 수 있는 앱이 없는 경우
+            else {
+                self.copyToClipboard(recipient: recipient)
+                return
+            }
+        }
+    }
+    
+    // 메일 클립보드 복사
+    func copyToClipboard(recipient: String) {
+        UIPasteboard.general.string = recipient
+        viewModel.toastMessage = "클립보드에 복사되었습니다."
+        Logger.success("이메일 주소 클립보드 복사 완료")
+    }
     
     private func copyTokenForTest(){
         guard let token = authManager.getAccessToken() else {

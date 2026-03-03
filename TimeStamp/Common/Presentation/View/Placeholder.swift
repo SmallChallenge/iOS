@@ -7,6 +7,7 @@
 
 import SwiftUI
 
+// 기본이미지
 struct Placeholder: View {
     let width: CGFloat
     let height: CGFloat
