@@ -75,8 +75,13 @@ struct NicknameSettingView: View {
                             TextField(authManager.currentUser?.nickname ?? "닉네임", text: $newNickname)
                                 .font(.H2)
                                 .multilineTextAlignment(.center)
-                                .focused($isTextFieldFocused)
                                 .foregroundStyle(Color.gray50)
+                                .focused($isTextFieldFocused)
+                                .onSubmit {
+                                    if (newNickname.isNotEmpty && viewModel.validateMessage == nil && oldNickname != newNickname){
+                                        viewModel.saveNickname(newNickname)
+                                    }
+                                }
                             
                             // 밑줄
                             ((newNickname.isEmpty || viewModel.validateMessage.isEmptyOrNil) ? Color.neon300 : Color.error)
