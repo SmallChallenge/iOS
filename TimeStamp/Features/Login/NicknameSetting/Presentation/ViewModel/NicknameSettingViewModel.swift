@@ -24,6 +24,10 @@ class NicknameSettingViewModel: ObservableObject {
     /// 저장 성공 여부
     @Published var isSaved = false
     
+    func resetValidateMessage(){
+        validateMessage = nil
+    }
+    
     // Input Method
     func checkValidateNickname(_ nickname: String) -> Bool {
 

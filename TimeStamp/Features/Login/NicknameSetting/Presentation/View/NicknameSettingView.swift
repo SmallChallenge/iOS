@@ -8,30 +8,36 @@
 import SwiftUI
 
 struct NicknameSettingView: View {
-
+    
     init(
         viewModel: NicknameSettingViewModel,
         onGoBack: @escaping () -> Void,
         onDismiss: (() -> Void)?,
         onSuccess: (() -> Void)? = nil
     ) {
+        print(">>>>> init NicknameSettingView")
         self.onGoBack = onGoBack
         self.onDismiss = onDismiss
         self.onSuccess = onSuccess
         self._viewModel = StateObject(wrappedValue: viewModel)
+        self.oldNickname = AuthManager.shared.currentUser?.nickname ?? ""
     }
+    
 
     let onGoBack: () -> Void
     let onDismiss: (() -> Void)?
     let onSuccess: (() -> Void)?
 
+    @ObservedObject private var authManager = AuthManager.shared
     @StateObject private var viewModel: NicknameSettingViewModel
-    @State private var text: String = ""
     @FocusState private var isTextFieldFocused: Bool
+    @State private var isReadyKeyboard = false
+    @State private var newNickname: String = ""
+    private let oldNickname: String
     
     var body: some View {
-        GeometryReader { geometry in
             VStack(spacing: .zero) {
+                // 헤더
                 HeaderView(leadingView: {
                     // 뒤로가기 버튼
                     BackButton {
@@ -47,11 +53,9 @@ struct NicknameSettingView: View {
                     }
                 })
                 
-                ScrollView {
                     VStack(spacing: .zero) {
                         
                         Spacer()
-                            .frame(height: isTextFieldFocused ? 80 : geometry.size.height * 0.2)
                         
                         VStack (spacing: 4) {
                             Text("닉네임 입력")
@@ -68,40 +72,41 @@ struct NicknameSettingView: View {
                         
                         VStack(spacing: 12) {
                             // 입력필드
-                            TextField("닉네임", text: $text)
+                            TextField(authManager.currentUser?.nickname ?? "닉네임", text: $newNickname)
                                 .font(.H2)
                                 .multilineTextAlignment(.center)
                                 .focused($isTextFieldFocused)
                                 .foregroundStyle(Color.gray50)
                             
                             // 밑줄
-                            ((text.isEmpty || viewModel.validateMessage.isEmptyOrNil) ? Color.neon300 : Color.error)
+                            ((newNickname.isEmpty || viewModel.validateMessage.isEmptyOrNil) ? Color.neon300 : Color.error)
                                 .frame(height:1)
                             
                             Text(viewModel.validateMessage ?? "")
                                 .font(.caption)
-                                .foregroundStyle(text.isEmpty ? Color.clear : Color.error)
+                                .foregroundStyle(newNickname.isEmpty ? Color.clear : Color.error)
                         }
                         .padding(.horizontal, 48)
                         
-                        if !isTextFieldFocused {
                             Spacer()
-                                .frame(height: geometry.size.height * 0.3)
-                        }
-                        
                     }
-                    .frame(minHeight: geometry.size.height - 80)
-                }// ~ScrollView
-                .scrollDismissesKeyboard(.interactively)
 
-                MainButton(title: "확인", isDisabled: text.isEmpty || viewModel.validateMessage != nil) {
-                    viewModel.saveNickname(text)
+                MainButton(title: "확인", isDisabled: (newNickname.isEmpty || viewModel.validateMessage != nil || oldNickname == newNickname)) {
+                    viewModel.saveNickname(newNickname)
                 }
                 .padding(.horizontal, 20)
                 .padding(.bottom, 20)
             } // ~VStack
             .loading(viewModel.isLoading)
-            .onChange(of: text){ newValue in
+            .onAppear(perform: {
+                self.newNickname = authManager.currentUser?.nickname ?? ""
+            })
+            .task {
+                try? await Task.sleep(nanoseconds: 100_000_000)
+                isTextFieldFocused = true
+            }
+            .onChange(of: newNickname){ newValue in
+                viewModel.resetValidateMessage()
                 let _ = viewModel.checkValidateNickname(newValue)
             }
             // 저장 성공 시 로그인뷰 닫기 및 성공 핸들러 호출
@@ -117,7 +122,6 @@ struct NicknameSettingView: View {
             .mainBackgourndColor()
             .navigationBarHidden(true)
             .toolbar(.hidden, for: .navigationBar)
-        }
     }
 }
 
