@@ -75,16 +75,23 @@ class NicknameSettingViewModel: ObservableObject {
                 await MainActor.run {
                     isLoading = false
                     isSaved = true
-                    ToastManager.shared.show(AppMessage.welcomeMessage(nickname: nickname).text)
-                    Logger.success("닉네임 설정 완료: \(result.nickname)")
+                    
+                    // 성공메세지 분기
+                    if AuthManager.shared.currentUser?.nickname == nil {
+                        ToastManager.shared.show(AppMessage.welcomeMessage(nickname: nickname).text)
+                    } else {
+                        ToastManager.shared.show(AppMessage.saveSuccess.text)
+                    }
 
                     //  로그인화면에서 넘어온 경우, 로그인 시키기
                     if let loginEntity {
                         useCase.login(entity: loginEntity)
                     }
+                    
                     // 유저정보 업데이트
                     useCase.updateUserInfo(nickname: nickname)
-
+                    
+                    Logger.success("닉네임 설정 완료: \(result.nickname)")
                 }
             } catch let error as NetworkError {
                 await MainActor.run {

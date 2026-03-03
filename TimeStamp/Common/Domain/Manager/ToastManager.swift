@@ -8,6 +8,7 @@
 import SwiftUI
 import Combine
 
+// 전역 토스트를위한 매니저
 final class ToastManager: ObservableObject {
     static let shared = ToastManager()
 
