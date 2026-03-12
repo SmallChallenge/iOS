@@ -13,14 +13,15 @@ enum AppConstants {
 
     enum URLs {
         /// 이용약관
-        static let termsOfService = "https://sage-hare-ff7.notion.site/2d5f2907580d80df9a21f95acd343d3f?source=copy_link"
+        static let termsOfService = "https://dear-building-cd1.notion.site/3100e394538c806f8d7fc9355045bd7f?source=copy_link"
         /// 개인정보 처리방침
-        static let privacyPolicy = "https://sage-hare-ff7.notion.site/2d5f2907580d80eda745ccfbda543bc5?source=copy_link"
-        
-        static let supportEmail = "stampy7373@gmail.com"
+        static let privacyPolicy = "https://dear-building-cd1.notion.site/3100e394538c803d93c6de93f47c45ce?source=copy_link"
         
         /// 오픈소스라이선스
-        static let openSourceLicense = "https://sage-hare-ff7.notion.site/2d8f2907580d80e4accee06ce4da69cd?source=copy_link"
+        static let openSourceLicense = "https://dear-building-cd1.notion.site/3100e394538c8014a97affaade263397?source=copy_link"
+        
+        // 지원 메일
+        static let supportEmail = "stampy7373@gmail.com"
     }
 
     // MARK: - App Info
