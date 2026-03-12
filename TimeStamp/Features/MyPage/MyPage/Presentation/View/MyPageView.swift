@@ -107,7 +107,7 @@ struct MyPageView: View {
                             showOpenSourceLicense = true
                         }
                         MyPageMenu("앱 버전", type: .text(text: appVersion)){}
-                        MyPageMenu("문의방법", type: .text(text: AppConstants.URLs.supportEmail)){
+                        MyPageMenu("문의하기", type: .none){
                            sendEmail()
                         }
                         
@@ -337,7 +337,7 @@ struct MyPageView: View {
         let recipient = AppConstants.URLs.supportEmail
         let userId = "\(authManager.currentUser?.userId ?? -1)"
         let emailBody = EmailHelper.getSupportEmailBody(userId: userId)
-        let subject = "[Stampic] 서비스문의"
+        let subject = "[스탬픽] 서비스 문의"
         
         // 1단계: 아이폰 기본 Mail 앱 + 계정 설정이 되어 있는 경우
         if MFMailComposeViewController.canSendMail() {

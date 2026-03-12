@@ -25,7 +25,7 @@ struct MailView: UIViewControllerRepresentable {
         
         // 1. 받는 사람 & 제목 설정
         vc.setToRecipients([AppConstants.URLs.supportEmail])
-        vc.setSubject("[Stampic] 서비스문의")
+        vc.setSubject("[스탬픽] 서비스 문의")
         
         // 3. 본문 구성 (HTML이 아닌 일반 텍스트 모드)
         let body = EmailHelper.getSupportEmailBody(userId: userId)
