@@ -40,10 +40,10 @@ public struct NetworkConfig {
         switch environment {
         case .dev:
             // TODO: Replace with your actual dev server URL
-            return URL(string: "https://dev.example.com")!
+            return URL(string: "https://dev-api.stampy.kr")!
         case .prod:
             // TODO: Replace with your actual prod server URL
-            return URL(string: "https://api.example.com")!
+            return URL(string: "https://api.stampy.kr")!
         }
     }
 }
