@@ -2,8 +2,8 @@
 <!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
 <plist version="1.0">
 <dict>
-	<key>CFBundleName</key>
-	<string>스탬픽</string>
+	<key>AMPLITUDE_API_KEY</key>
+	<string>$(AMPLITUDE_API_KEY)</string>
 	<key>CFBundleURLTypes</key>
 	<array>
 		<dict>
@@ -13,11 +13,13 @@
 			<string>스탬픽</string>
 			<key>CFBundleURLSchemes</key>
 			<array>
-				<string>kakao$(KAKAO_APP_KEY)</string>
+				<string>kakao$(KAKAO_APP_KEY)://oauth</string>
 				<string>$(GOOGLE_REVERSED_CLIENT_ID)</string>
 			</array>
 		</dict>
 	</array>
+	<key>GADApplicationIdentifier</key>
+	<string>$(GAD_APP_ID)</string>
 	<key>GIDClientID</key>
 	<string>$(GOOGLE_CLIENT_ID)</string>
 	<key>GOOGLE_CLIENT_ID</key>
@@ -28,81 +30,6 @@
 	<array>
 		<string>kakaokompassauth</string>
 	</array>
-	<key>UIAppFonts</key>
-	<array>
-		<string>Pretendard-Black.otf</string>
-		<string>Pretendard-Bold.otf</string>
-		<string>Pretendard-ExtraBold.otf</string>
-		<string>Pretendard-ExtraLight.otf</string>
-		<string>Pretendard-Light.otf</string>
-		<string>Pretendard-Medium.otf</string>
-		<string>Pretendard-Regular.otf</string>
-		<string>Pretendard-SemiBold.otf</string>
-		<string>Pretendard-Thin.otf</string>
-		<string>MoveSans-Bold.otf</string>
-		<string>MoveSans-Light.otf</string>
-		<string>MoveSans-Medium.otf</string>
-		<string>ClimateCrisisKR-1990.otf</string>
-        <string>DungGeunMo.otf</string>
-		<string>BoldDunggeunmo.ttf</string>
-		<string>EricaOne-Regular.ttf</string>
-		<string>PartialSansKR-Regular.otf</string>
-		<string>SUIT-Bold.otf</string>
-		<string>SUIT-ExtraBold.otf</string>
-		<string>SUIT-ExtraLight.otf</string>
-		<string>SUIT-Heavy.otf</string>
-		<string>SUIT-Light.otf</string>
-		<string>SUIT-Medium.otf</string>
-		<string>SUIT-Regular.otf</string>
-		<string>SUIT-SemiBold.otf</string>
-		<string>SUIT-Thin.otf</string>
-        <string>ShipporiMincho-Bold.ttf</string>
-        <string>ShipporiMincho-ExtraBold.ttf</string>
-        <string>ShipporiMincho-Medium.ttf</string>
-        <string>ShipporiMincho-Regular.ttf</string>
-        <string>ShipporiMincho-SemiBold.ttf</string>
-        <string>BMKkubulim.otf</string>
-        <string>Ownglyph.ttf</string>
-        <string>Cafe24PROUP.otf</string>
-        <string>LINESeedKR-Bd.otf</string>
-        <string>LINESeedKR-Rg.otf</string>
-        <string>LINESeedKR-Th.otf</string>
-        <string>Monofett-Regular.ttf</string>
-        <string>KERISKEDU_B.otf</string>
-        <string>KERISKEDU_Line.otf</string>
-        <string>KERISKEDU_R.otf</string>
-        <string>SpaceMono-Bold.ttf</string>
-        <string>SpaceMono-BoldItalic.ttf</string>
-        <string>SpaceMono-Italic.ttf</string>
-        <string>SpaceMono-Regular.ttf</string>
-        <string>Notable-Regular.ttf</string>
-        <string>Montserrat-Black.ttf</string>
-        <string>Montserrat-Bold.ttf</string>
-        <string>Montserrat-ExtraBold.ttf</string>
-        <string>Montserrat-ExtraLight.ttf</string>
-        <string>Montserrat-Light.ttf</string>
-        <string>Montserrat-Medium.ttf</string>
-        <string>Montserrat-Regular.ttf</string>
-        <string>Montserrat-SemiBold.ttf</string>
-        <string>Montserrat-Thin.ttf</string>
-        <string>RixInooAriDuri_Pro Regular.otf</string>
-        <string>GalmuriMono11.ttf</string>
-	</array>
-	<key>UIDesignRequiresCompatibility</key>
-	<true/>
-	<key>UILaunchScreen</key>
-	<dict>
-		<key>UIImageName</key>
-		<string>LaunchImage</string>
-		<key>UIColorName</key>
-		<string>LaunchColor</string>
-	</dict>
-	<key>GADApplicationIdentifier</key>
-	<string>$(GAD_APP_ID)</string>
-	<key>AMPLITUDE_API_KEY</key>
-	<string>$(AMPLITUDE_API_KEY)</string>
-	<key>NSUserTrackingUsageDescription</key>
-	<string>앱 사용 패턴을 분석하여 오류를 개선하고 앱 내 광고를 제공함으로써 더 나은 타임스탬프 기능을 제공하기 위해 추적 권한이 필요합니다.</string>
 	<key>SKAdNetworkItems</key>
 	<array>
 		<dict>
@@ -302,5 +229,74 @@
 			<string>3qcr597p9d.skadnetwork</string>
 		</dict>
 	</array>
+	<key>UIAppFonts</key>
+	<array>
+		<string>Pretendard-Black.otf</string>
+		<string>Pretendard-Bold.otf</string>
+		<string>Pretendard-ExtraBold.otf</string>
+		<string>Pretendard-ExtraLight.otf</string>
+		<string>Pretendard-Light.otf</string>
+		<string>Pretendard-Medium.otf</string>
+		<string>Pretendard-Regular.otf</string>
+		<string>Pretendard-SemiBold.otf</string>
+		<string>Pretendard-Thin.otf</string>
+		<string>MoveSans-Bold.otf</string>
+		<string>MoveSans-Light.otf</string>
+		<string>MoveSans-Medium.otf</string>
+		<string>ClimateCrisisKR-1990.otf</string>
+		<string>DungGeunMo.otf</string>
+		<string>BoldDunggeunmo.ttf</string>
+		<string>EricaOne-Regular.ttf</string>
+		<string>PartialSansKR-Regular.otf</string>
+		<string>SUIT-Bold.otf</string>
+		<string>SUIT-ExtraBold.otf</string>
+		<string>SUIT-ExtraLight.otf</string>
+		<string>SUIT-Heavy.otf</string>
+		<string>SUIT-Light.otf</string>
+		<string>SUIT-Medium.otf</string>
+		<string>SUIT-Regular.otf</string>
+		<string>SUIT-SemiBold.otf</string>
+		<string>SUIT-Thin.otf</string>
+		<string>ShipporiMincho-Bold.ttf</string>
+		<string>ShipporiMincho-ExtraBold.ttf</string>
+		<string>ShipporiMincho-Medium.ttf</string>
+		<string>ShipporiMincho-Regular.ttf</string>
+		<string>ShipporiMincho-SemiBold.ttf</string>
+		<string>BMKkubulim.otf</string>
+		<string>Ownglyph.ttf</string>
+		<string>Cafe24PROUP.otf</string>
+		<string>LINESeedKR-Bd.otf</string>
+		<string>LINESeedKR-Rg.otf</string>
+		<string>LINESeedKR-Th.otf</string>
+		<string>Monofett-Regular.ttf</string>
+		<string>KERISKEDU_B.otf</string>
+		<string>KERISKEDU_Line.otf</string>
+		<string>KERISKEDU_R.otf</string>
+		<string>SpaceMono-Bold.ttf</string>
+		<string>SpaceMono-BoldItalic.ttf</string>
+		<string>SpaceMono-Italic.ttf</string>
+		<string>SpaceMono-Regular.ttf</string>
+		<string>Notable-Regular.ttf</string>
+		<string>Montserrat-Black.ttf</string>
+		<string>Montserrat-Bold.ttf</string>
+		<string>Montserrat-ExtraBold.ttf</string>
+		<string>Montserrat-ExtraLight.ttf</string>
+		<string>Montserrat-Light.ttf</string>
+		<string>Montserrat-Medium.ttf</string>
+		<string>Montserrat-Regular.ttf</string>
+		<string>Montserrat-SemiBold.ttf</string>
+		<string>Montserrat-Thin.ttf</string>
+		<string>RixInooAriDuri_Pro Regular.otf</string>
+		<string>GalmuriMono11.ttf</string>
+	</array>
+	<key>UIDesignRequiresCompatibility</key>
+	<true/>
+	<key>UILaunchScreen</key>
+	<dict>
+		<key>UIColorName</key>
+		<string>LaunchColor</string>
+		<key>UIImageName</key>
+		<string>LaunchImage</string>
+	</dict>
 </dict>
 </plist>
