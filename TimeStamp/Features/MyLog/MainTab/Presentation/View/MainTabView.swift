@@ -47,8 +47,13 @@ struct MainTabView: View {
                         .tag(1)
                     
                     // 커뮤니티 화면
-                    container.makeCommunityView(triggerRefresh: $triggerCommunityRefresh)
-                        .tag(2)
+                    container.makeCommunityView(
+                        triggerRefresh: $triggerCommunityRefresh,
+                        onOpenCamera: {
+                            showCamera = true
+                        }
+                    )
+                    .tag(2)
                     
                 } //~TabView
                 .hideTabBar()

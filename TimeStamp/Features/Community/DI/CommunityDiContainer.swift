@@ -9,7 +9,7 @@ import Foundation
 import SwiftUI
 
 protocol CommunityDiContainerProtocol {
-    func makeCommunityView(triggerRefresh: Binding<Bool>) -> CommunityView
+    func makeCommunityView(triggerRefresh: Binding<Bool>, onOpenCamera: (() -> Void)?) -> CommunityView
 }
 
 final class CommunityDiContainer: CommunityDiContainerProtocol {
@@ -44,18 +44,18 @@ final class CommunityDiContainer: CommunityDiContainerProtocol {
 
     // MARK: - View
 
-    func makeCommunityView(triggerRefresh: Binding<Bool> = .constant(false)) -> CommunityView {
+    func makeCommunityView(triggerRefresh: Binding<Bool> = .constant(false), onOpenCamera: (() -> Void)? = nil) -> CommunityView {
         let viewModel = makeCommunityViewModel()
-        return CommunityView(viewModel: viewModel, triggerRefresh: triggerRefresh)
+        return CommunityView(viewModel: viewModel, triggerRefresh: triggerRefresh, onOpenCamera: onOpenCamera)
     }
 }
 
 //MARK: - MOCK
 struct MockCommunityDiContainer: CommunityDiContainerProtocol {
-    func makeCommunityView(triggerRefresh: Binding<Bool> = .constant(false)) -> CommunityView {
+    func makeCommunityView(triggerRefresh: Binding<Bool> = .constant(false), onOpenCamera: (() -> Void)? = nil) -> CommunityView {
         let usecase = MockCommunityUseCase()
         let vm = CommunityViewModel(useCase: usecase)
-        return CommunityView(viewModel: vm, triggerRefresh: triggerRefresh)
+        return CommunityView(viewModel: vm, triggerRefresh: triggerRefresh, onOpenCamera: onOpenCamera)
     }
 }
 

@@ -21,9 +21,12 @@ struct CommunityView: View {
     @State private var showLoginView: Bool = false
     @Binding var triggerRefresh: Bool
 
-    init(viewModel: CommunityViewModel, triggerRefresh: Binding<Bool> = .constant(false)) {
+    private let onOpenCamera: (() -> Void)?
+
+    init(viewModel: CommunityViewModel, triggerRefresh: Binding<Bool> = .constant(false), onOpenCamera: (() -> Void)? = nil) {
         _viewModel = StateObject(wrappedValue: viewModel)
         _triggerRefresh = triggerRefresh
+        self.onOpenCamera = onOpenCamera
     }
 
     var body: some View {
@@ -121,9 +124,14 @@ struct CommunityView: View {
 
                 case .banner(let bannerData):
                     CommunityBannerView(viewData: bannerData,
-                                        loginAction: {
-                        // 바로 로그인 화면 띄우기
-                        showLoginView = true
+                                        action: {
+                        if bannerData.type == .guest {
+                            // 바로 로그인 화면 띄우기
+                            showLoginView = true
+                        } else {
+                            // 카메라 촬영 화면 열기
+                            onOpenCamera?()
+                        }
                     })
                         .listRowSeparator(.hidden)
                         .listRowBackground(Color.clear)

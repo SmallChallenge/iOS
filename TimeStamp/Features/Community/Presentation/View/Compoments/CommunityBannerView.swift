@@ -9,46 +9,53 @@ import SwiftUI
 
 struct CommunityBannerView: View {
     let viewData: BannerViewData
-    let loginAction: ()->Void
+    let action: ()->Void
 
     var body: some View {
-        VStack(spacing: 12) {
-            HStack(spacing: 12) {
-                // 아이콘
-                Image("logo_character")
-                    .resizable()
-                    .frame(width: 28, height: 35)
-                    .padding(.top, 3)
-                    .padding(.bottom, 2)
-                    .padding(.horizontal, 6)
+        Button {
+            action()
+        } label: {
+            VStack(spacing: 12) {
+                HStack(spacing: 12) {
+                    // 아이콘
+                    Image("logo_character")
+                        .resizable()
+                        .frame(width: 28, height: 35)
+                        .padding(.top, 3)
+                        .padding(.bottom, 2)
+                        .padding(.horizontal, 6)
+                    
+                    // 메시지
+                    Text(viewData.message)
+                        .font(.SubTitle2)
+                        .foregroundStyle(Color.gray900)
+                        .multilineTextAlignment(.leading)
+                    
+                    Spacer()
+                    
+                    if viewData.type == .user {
+                        Image(systemName: "chevron.right")
+                            .foregroundStyle(Color.gray900)
+                    }
+                }
                 
-                // 메시지
-                Text(viewData.message)
-                    .font(.SubTitle2)
-                    .foregroundStyle(Color.gray900)
-                    .multilineTextAlignment(.leading)
-                
-                Spacer()
-            }
-            
-            if viewData.type == .guest {
-                Button(action: {
-                    loginAction()
-                }) {
+                // 비로그인 상태면, 로그인유도 버튼 (가짜버튼)
+                if viewData.type == .guest {
                     Text("3초 만에 로그인하기")
                         .font(.SubTitle2)
                         .foregroundColor(.gray50)
                         .frame(maxWidth: .infinity)
                         .padding(.vertical, 12)
+                    .background(Color.gray900)
+                    .cornerRadius(8)
                 }
-                .background(Color.gray900)
-                .cornerRadius(8)
             }
+            .padding(.top, viewData.type == .guest ? 16 : 12)
+            .padding(.horizontal, 20)
+            .padding(.bottom, 12)
+            .background(viewData.color)
+
         }
-        .padding(.top, viewData.type == .guest ? 16 : 12)
-        .padding(.horizontal, 20)
-        .padding(.bottom, 12)
-        .background(viewData.color)
         .cornerRadius(12)
         
     }
@@ -57,11 +64,11 @@ struct CommunityBannerView: View {
     VStack {
 //        CommunityBannerView(viewData: BannerViewData.create(sequence: 0, isLoggedIn: true))
 //        CommunityBannerView(viewData: BannerViewData.create(sequence: 1, isLoggedIn: true))
-        CommunityBannerView(viewData: BannerViewData.create(sequence: 2, isLoggedIn: true), loginAction: {})
-        CommunityBannerView(viewData: BannerViewData.create(sequence: 3, isLoggedIn: true), loginAction: {})
+        CommunityBannerView(viewData: BannerViewData.create(sequence: 2, isLoggedIn: true), action: {})
+        CommunityBannerView(viewData: BannerViewData.create(sequence: 3, isLoggedIn: true), action: {})
         
-        CommunityBannerView(viewData: BannerViewData.create(sequence: 0, isLoggedIn: false), loginAction: {})
-        CommunityBannerView(viewData: BannerViewData.create(sequence: 1, isLoggedIn: false), loginAction: {})
+        CommunityBannerView(viewData: BannerViewData.create(sequence: 0, isLoggedIn: false), action: {})
+        CommunityBannerView(viewData: BannerViewData.create(sequence: 1, isLoggedIn: false), action: {})
 //        CommunityBannerView(viewData: BannerViewData.create(sequence: 2, isLoggedIn: false))
 //        CommunityBannerView(viewData: BannerViewData.create(sequence: 3, isLoggedIn: false))
         
