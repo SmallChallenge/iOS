@@ -9,7 +9,6 @@ import Foundation
 import UIKit
 import SwiftUI
 
-
 public enum FontStyle {
     case H1
     case H2

@@ -366,7 +366,7 @@ struct CustomFontModifier: ViewModifier {
         self.trackingPercent = trackingPercent
     }
 
-//    /55pt 텍스트: .tracking(-1.1) (55 × -2% = -1.1)/
+//  55pt 텍스트: .tracking(-1.1) (55 × -2% = -1.1)
     func body(content: Content) -> some View {
         let baseContent = content.font(.custom(fontName, size: fontSize))
 

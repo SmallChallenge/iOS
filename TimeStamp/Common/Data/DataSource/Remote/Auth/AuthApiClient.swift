@@ -198,6 +198,7 @@ public protocol AuthApiClientProtocol {
         agreedToTermsOfService: Bool,
         agreedToMarketing: Bool
     ) async -> Result<ActiveAccountDto, NetworkError>
+    
     /// 토큰 재발급
     func refreshToken(refreshToken token: String) async -> Result<RefreshDto, NetworkError>
     
