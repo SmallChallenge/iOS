@@ -122,7 +122,8 @@ struct CommunityView: View {
                 case .banner(let bannerData):
                     CommunityBannerView(viewData: bannerData,
                                         loginAction: {
-                        activePopup = .login
+                        // 바로 로그인 화면 띄우기
+                        showLoginView = true
                     })
                         .listRowSeparator(.hidden)
                         .listRowBackground(Color.clear)
