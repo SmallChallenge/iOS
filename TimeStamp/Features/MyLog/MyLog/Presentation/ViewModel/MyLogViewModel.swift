@@ -40,21 +40,6 @@ final class MyLogViewModel: ObservableObject, MessageDisplayable {
     private var currentPage = 0
     private var hasMorePages = false
 
-    /// 사진이 있는 카테고리만 필터링    
-    var availableCategories: [CategoryFilterViewData] {
-        let categorySet = Set(myLogs.map { $0.category })
-
-        return [.all] + CategoryFilterViewData.allCases.filter { category in
-            switch category {
-            case .all: return false // 이미 추가됨
-            case .study: return categorySet.contains(.study)
-            case .health: return categorySet.contains(.health)
-            case .food: return categorySet.contains(.food)
-            case .etc: return categorySet.contains(.etc)
-            }
-        }
-    }
-
     // MARK: - Init
 
     init(useCase: MyLogUseCaseProtocol, settingsRepository: SettingsDataSourceProtocol) {

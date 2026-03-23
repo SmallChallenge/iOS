@@ -47,18 +47,20 @@ struct MyLogView: View {
     }
 
     var body: some View {
-        VStack {
+        VStack(spacing: .zero) {
+            
+            // 카테고리
+            CategoryView(
+                selectedCategory: $selectedCategory,
+                availableCategories: CategoryFilterViewData.allCases
+            )
+            
             if viewModel.myLogs.isEmpty { // 내기록 없음
                 MyLogEmptyView()
 
             } else { // 내 기록 있음.
                 ScrollView {
                     VStack (spacing: .zero){
-                        // 카테고리
-                        CategoryView(
-                            selectedCategory: $selectedCategory,
-                            availableCategories: viewModel.availableCategories
-                        )
                         
                         // 로컬 20개 제한 안내 팝업
                         if viewModel.localLogsCount >= AppConstants.Limits.warningLogCount // 18개 이상이면 뜬다
