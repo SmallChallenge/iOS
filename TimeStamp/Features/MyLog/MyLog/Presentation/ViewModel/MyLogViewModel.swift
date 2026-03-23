@@ -7,6 +7,7 @@
 
 import Foundation
 import Combine
+import UIKit
 
 @MainActor
 final class MyLogViewModel: ObservableObject, MessageDisplayable {
@@ -39,6 +40,25 @@ final class MyLogViewModel: ObservableObject, MessageDisplayable {
     /// 페이지네이션 상태
     private var currentPage = 0
     private var hasMorePages = false
+    
+    
+    private let screenHeight = UIScreen.main.bounds.height
+    
+    var emptyViewHeight: CGFloat {
+        // 헤더: 60
+        // 카테고리 113
+        // 하단 탭바 대충 100
+        let logLimitBannerHeight: CGFloat = (shouldShowLogLimitBanner ? 76.0 : 0.0)
+        let otherHeight = 60.0 + 113.0 + logLimitBannerHeight + 150
+        return screenHeight - otherHeight
+    }
+
+    /// 로그 제한 배너 표시 여부
+    var shouldShowLogLimitBanner: Bool {
+        localLogsCount >= AppConstants.Limits.warningLogCount // 18개 이상이면 뜬다
+            && !isLogLimitBannerDismissed // 한번 닫으면 안뜬다.
+            && !AuthManager.shared.isLoggedIn // 로그아웃 상태일때만
+    }
 
     // MARK: - Init
 

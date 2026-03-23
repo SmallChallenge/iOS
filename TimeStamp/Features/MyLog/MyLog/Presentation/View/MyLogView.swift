@@ -48,44 +48,47 @@ struct MyLogView: View {
 
     var body: some View {
         VStack(spacing: .zero) {
-            
-            // 카테고리
-            CategoryView(
-                selectedCategory: $selectedCategory,
-                availableCategories: CategoryFilterViewData.allCases
-            )
-            
-            if viewModel.myLogs.isEmpty { // 내기록 없음
-                MyLogEmptyView()
-
-            } else { // 내 기록 있음.
                 ScrollView {
                     VStack (spacing: .zero){
                         
+                        // 카테고리
+                        CategoryView(
+                            selectedCategory: $selectedCategory,
+                            availableCategories: CategoryFilterViewData.allCases
+                        )
+                        
                         // 로컬 20개 제한 안내 팝업
-                        if viewModel.localLogsCount >= AppConstants.Limits.warningLogCount // 18개 이상이면 뜬다
-                            && !viewModel.isLogLimitBannerDismissed // 한번 닫으면 안뜬다.
-                            && !authManager.isLoggedIn { // 로그아웃 상태일때만
+                        if viewModel.shouldShowLogLimitBanner {
                             LogLimitBannerView
                         }
 
                         // 사진 목록
-                        LazyVGrid(columns: columns, spacing: 1) {
-                            ForEach(Array(filteredLogs.enumerated()), id: \.element.id) { index, log in
-                                Button(action: {
-                                    selectedLog = log
-                                }, label: {
-                                    PhotoCell(log: log)
-                                        .aspectRatio(1, contentMode: .fill)
-                                })
-                                .id(log.id)
-                                .onAppear {
-                                    if index == filteredLogs.count - 1 {
-                                        viewModel.loadMore()
+                        if filteredLogs.isEmpty {
+                            // 해당 카테고리 해당되는 사진 없음
+                            MyLogEmptyView()
+                                .frame(minHeight: viewModel.emptyViewHeight)
+                            
+                            
+                        } else {
+                            // 해당 카테고리 해당되는 사진 있음
+                            LazyVGrid(columns: columns, spacing: 1) {
+                                ForEach(Array(filteredLogs.enumerated()), id: \.element.id) { index, log in
+                                    Button(action: {
+                                        selectedLog = log
+                                    }, label: {
+                                        PhotoCell(log: log)
+                                            .aspectRatio(1, contentMode: .fill)
+                                    })
+                                    .id(log.id)
+                                    .onAppear {
+                                        if index == filteredLogs.count - 1 {
+                                            viewModel.loadMore()
+                                        }
                                     }
                                 }
                             }
                         }
+                        
                        
                         // 추가 로딩 인디케이터
                         if viewModel.isLoadingMore {
@@ -99,7 +102,6 @@ struct MyLogView: View {
                     }
                 }
                 .scrollDismissesKeyboard(.interactively)
-            }
         }
         .mainBackgourndColor()
         .loading(viewModel.isLoading)
