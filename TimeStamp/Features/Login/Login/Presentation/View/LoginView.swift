@@ -33,12 +33,12 @@ struct LoginView: View {
         NavigationStack {
             VStack {
                 
-//                HeaderView(trailingView: {
-//                    CloseButton {
-//                        onDismiss()
-//                    }
-////                    .padding(.trailing, -12)
-//                })
+                HeaderView(trailingView: {
+                    CloseButton {
+                        onDismiss()
+                    }
+                    .padding(.trailing, -12)
+                })
                 
                 Spacer()
                     .frame(maxHeight: 115)
