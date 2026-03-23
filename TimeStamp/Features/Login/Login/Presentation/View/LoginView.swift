@@ -37,7 +37,6 @@ struct LoginView: View {
                     CloseButton {
                         onDismiss()
                     }
-                    .padding(.trailing, -12)
                 })
                 
                 Spacer()

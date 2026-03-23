@@ -30,7 +30,7 @@ struct MyPageMenu: View {
         Button {
             action()
         } label: {
-            HStack{
+            HStack {
                 Text(title)
                     .font(.Btn2_b)
                     .foregroundStyle(Color.gray300)

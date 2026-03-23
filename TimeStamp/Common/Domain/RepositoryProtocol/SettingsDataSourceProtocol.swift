@@ -16,4 +16,12 @@ protocol SettingsDataSourceProtocol {
     /// 로그 제한 배너를 닫았는지 여부를 저장
     /// - Parameter isDismissed: 닫았으면 true, 아니면 false
     func setIsLogLimitBannerDismissed(_ isDismissed: Bool)
+
+    /// 자동저장 여부 조회 (기본값: true)
+    /// - Returns: 자동저장이 활성화되어 있으면 true
+    func getIsAutoSave() -> Bool
+
+    /// 자동저장 여부 설정
+    /// - Parameter isAutoSave: 자동저장 활성화 여부
+    func setIsAutoSave(_ isAutoSave: Bool)
 }

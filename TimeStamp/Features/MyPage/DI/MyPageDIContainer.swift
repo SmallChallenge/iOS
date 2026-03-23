@@ -12,29 +12,31 @@ protocol MyPageDIContainerProtocol {
     
 }
 final class MyPageDIContainer: MyPageDIContainerProtocol {
-    
+
     // MARK: - Dependencies
     private let authApiClient: AuthApiClientProtocol
-    
+    private let settingsDataSource: SettingsDataSourceProtocol
+
     // MARK: - Initializer
 
-    init(authApiClient: AuthApiClientProtocol) {
+    init(authApiClient: AuthApiClientProtocol, settingsDataSource: SettingsDataSourceProtocol) {
         self.authApiClient = authApiClient
+        self.settingsDataSource = settingsDataSource
     }
-    
+
     // MARK: - MyPageView
     private func makeLogoutRepository() -> LogoutRepositoryProtocol {
         LogoutRepository(authApiClient: authApiClient)
     }
 
-    private func makeLogoutUseCase() -> LogoutUseCaseProtocol {
-        let repository = makeLogoutRepository()
-        return LogoutUseCase(repository: repository)
+    private func makeMyPageUseCase() -> MyPageUseCaseProtocol {
+        let logoutRepository = makeLogoutRepository()
+        return MyPageUseCase(logoutRepository: logoutRepository, settingsRepository: settingsDataSource)
     }
 
     private func makeMyPageViewModel() -> MyPageViewModel {
-        let useCase = makeLogoutUseCase()
-        return MyPageViewModel(logoutUseCase: useCase)
+        let useCase = makeMyPageUseCase()
+        return MyPageViewModel(useCase: useCase)
     }
 
     func makeMyPageView(onGoBack: @escaping () -> Void) -> MyPageView {
@@ -63,8 +65,8 @@ final class MyPageDIContainer: MyPageDIContainerProtocol {
 }
 struct MockMyPageDIContainer: MyPageDIContainerProtocol{
     func makeMyPageView(onGoBack: @escaping () -> Void) -> MyPageView {
-        let logoutUseCase = MockLogoutUseCase()
-        let vm = MyPageViewModel(logoutUseCase: logoutUseCase)
+        let useCase = MockMyPageUseCase()
+        let vm = MyPageViewModel(useCase: useCase)
         return MyPageView(viewModel: vm, diContainer: self, onGoBack: onGoBack)
     }
 
@@ -74,8 +76,12 @@ struct MockMyPageDIContainer: MyPageDIContainerProtocol{
         return UserInfoPageView(viewModel: viewModel, onGoBack: onGoBack, onSignOutCompleted: onSignOutCompleted)
     }
 
-    struct MockLogoutUseCase: LogoutUseCaseProtocol {
+    struct MockMyPageUseCase: MyPageUseCaseProtocol {
         func logout() async throws {}
+        func getIsLogLimitBannerDismissed() -> Bool { false }
+        func setIsLogLimitBannerDismissed(_ isDismissed: Bool) {}
+        func isAutoSaveEnabled() -> Bool { true }
+        func setAutoSaveEnabled(_ isEnabled: Bool) {}
     }
 
     struct MockWithdrawalUseCase: WithdrawalUseCaseProtocol {

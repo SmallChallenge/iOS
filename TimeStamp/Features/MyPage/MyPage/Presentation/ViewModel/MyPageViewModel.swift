@@ -12,10 +12,12 @@ final class MyPageViewModel: ObservableObject, MessageDisplayable {
 
     // MARK: - Dependencies
 
-    private let logoutUseCase: LogoutUseCaseProtocol
+    private let useCase: MyPageUseCaseProtocol
 
     // MARK: - Output Properties
-    
+
+    @Published var isAutoSave: Bool = true
+
     /// 로그아웃 성공 여부
     @Published var didLogout: Bool = false
 
@@ -28,8 +30,10 @@ final class MyPageViewModel: ObservableObject, MessageDisplayable {
 
     // MARK: - Init
 
-    init(logoutUseCase: LogoutUseCaseProtocol) {
-        self.logoutUseCase = logoutUseCase
+    init(useCase: MyPageUseCaseProtocol) {
+        self.useCase = useCase
+        // 초기값 로드
+        self.isAutoSave = useCase.isAutoSaveEnabled()
     }
 
     // MARK: - Input Methods
@@ -43,12 +47,18 @@ final class MyPageViewModel: ObservableObject, MessageDisplayable {
         }
     }
 
+    func updateAutoSave(_ isEnabled: Bool) {
+        useCase.setAutoSaveEnabled(isEnabled)
+    }
+
+    // MARK: - private Methods..
+    
     @MainActor
     private func performLogout() async {
         isLoading = true
-        
+
         do {
-            try await logoutUseCase.logout()
+            try await useCase.logout()
             Logger.success("로그아웃 성공")
         } catch {
             isLoading = false

@@ -55,12 +55,12 @@ struct MyLogDIContainer: MyLogDIContainerProtocol {
         return MyLogRepository(localDataSource: localDataSource, apiClient: apiClient)
     }
 
-    private func makeMyLogUseCase() -> MyLogUseCaseProtocol {
-        return MyLogUseCase(repository: makeMyLogRepository())
-    }
-
     private func makeMyLogViewModel() -> MyLogViewModel {
-        return MyLogViewModel(useCase: makeMyLogUseCase(), settingsRepository: settingsRepository)
+        return MyLogViewModel(useCase: makeMyLogUseCase())
+    }
+    
+    private func makeMyLogUseCase() -> MyLogUseCaseProtocol {
+        return MyLogUseCase(repository: makeMyLogRepository(), settingsRepository: settingsRepository)
     }
 
     func makeMyLogView(selectedLog: Binding<TimeStampLogViewData?>) -> MyLogView {
@@ -133,11 +133,17 @@ struct MockMyLogDIContainer: MyLogDIContainerProtocol {
     func makeMyLogView(selectedLog: Binding<TimeStampLogViewData?>) -> MyLogView {
         let usecase = MockMyLogUseCase()
         let settingsRepository = MockSettingsRepository()
-        let viewModel = MyLogViewModel(useCase: usecase, settingsRepository: settingsRepository)
+        let viewModel = MyLogViewModel(useCase: usecase)
         return MyLogView(viewModel: viewModel, diContainer: self, selectedLog: selectedLog)
     }
 
     struct MockMyLogUseCase: MyLogUseCaseProtocol {
+        func getIsLogLimitBannerDismissed() -> Bool {
+            false
+        }
+        
+        func dismissLogLimitBanner() {}
+        
         func getLocalLogsCount() -> Int {
             return 0
         }
@@ -155,6 +161,10 @@ struct MockMyLogDIContainer: MyLogDIContainerProtocol {
             return false
         }
         func setIsLogLimitBannerDismissed(_ isDismissed: Bool) {}
+        func getIsAutoSave() -> Bool {
+            return true
+        }
+        func setIsAutoSave(_ isAutoSave: Bool) {}
     }
 
    

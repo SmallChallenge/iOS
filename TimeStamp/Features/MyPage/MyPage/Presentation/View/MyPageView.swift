@@ -33,8 +33,7 @@ struct MyPageView: View {
     
     /// 문의 메일 보내기 띄우기
     @State private var isShowingMailView = false
-
-
+    
     private let appVersion: String
     
     init(viewModel: MyPageViewModel,
@@ -97,6 +96,12 @@ struct MyPageView: View {
                     
                     // 메뉴버튼
                     VStack(spacing: .zero) {
+                        
+                        // 갤러리에 자동 저장
+                        authSaveMenu
+                        
+                        thickLine
+                        
                         MyPageMenu("이용약관", type: .chevron){
                             showTermsOfService = true
                         }
@@ -162,6 +167,9 @@ struct MyPageView: View {
                 onGoBack()
             }
         }
+        .onChange(of: viewModel.isAutoSave) { isAutoSave in
+            viewModel.updateAutoSave(isAutoSave)
+        }
         // 유저정보화면 띄우기
         .navigationDestination(isPresented: $presentUserInfo) {
             diContainer.makeUserInfoPageView(onGoBack: {
@@ -221,6 +229,9 @@ struct MyPageView: View {
         }
         .toast(message: $viewModel.toastMessage)
     }
+    
+    // MARK: -
+    
     private var userProfile: some View {
         HStack(alignment: .center,spacing: 16) {
             Image("profile")
@@ -320,6 +331,32 @@ struct MyPageView: View {
         .padding(.horizontal, 24)
         .background(Color.gray800)
         .rounded(radius: 16)
+    }
+    
+    // 자동저장 메뉴
+    private var authSaveMenu: some View {
+        VStack(alignment: .leading, spacing: .zero) {
+            Text("카메라 설정")
+                .font(.Label)
+                .foregroundStyle(Color.gray500)
+                .padding([.top, .leading], 20)
+            
+            HStack {
+                Text("갤러리에 자동 저장")
+                    .font(.Btn2_b)
+                    .foregroundStyle(Color.gray300)
+                
+                Spacer()
+                
+                Toggle(isOn: $viewModel.isAutoSave) {}
+                .padding(.trailing, 20)
+                
+            }
+            .padding(.leading, 20)
+            .padding(.vertical, 19.5)
+
+        }
+        
     }
     
     private var thinLine: some View {

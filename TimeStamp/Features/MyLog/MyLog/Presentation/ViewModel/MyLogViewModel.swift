@@ -17,9 +17,6 @@ final class MyLogViewModel: ObservableObject, MessageDisplayable {
     /// MyLog UseCase
     private let useCase: MyLogUseCaseProtocol
 
-    /// Settings Repository
-    private let settingsRepository: SettingsDataSourceProtocol
-
     // MARK: - Output Properties
 
     @Published var isLoading = false
@@ -62,12 +59,11 @@ final class MyLogViewModel: ObservableObject, MessageDisplayable {
 
     // MARK: - Init
 
-    init(useCase: MyLogUseCaseProtocol, settingsRepository: SettingsDataSourceProtocol) {
+    init(useCase: MyLogUseCaseProtocol) {
         self.useCase = useCase
-        self.settingsRepository = settingsRepository
 
         // 배너 닫힘 상태 불러오기
-        self.isLogLimitBannerDismissed = settingsRepository.getIsLogLimitBannerDismissed()
+        self.isLogLimitBannerDismissed = useCase.getIsLogLimitBannerDismissed()
 
         loadLogs()
     }
@@ -145,6 +141,6 @@ final class MyLogViewModel: ObservableObject, MessageDisplayable {
     /// 로그 제한 배너 닫기
     func dismissLogLimitBanner() {
         isLogLimitBannerDismissed = true
-        settingsRepository.setIsLogLimitBannerDismissed(true)
+        useCase.dismissLogLimitBanner()
     }
 }

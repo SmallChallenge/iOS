@@ -104,7 +104,7 @@ final class AppDIContainer {
     // MARK: - MyPage Feature
     
     private lazy var myPageDIContainer: MyPageDIContainer = {
-        return MyPageDIContainer(authApiClient: authApiClient)
+        return MyPageDIContainer(authApiClient: authApiClient, settingsDataSource: settingsDataSource)
     }()
     
     func makeMyPageView(onGoBack: @escaping () -> Void) -> MyPageView {

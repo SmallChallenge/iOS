@@ -133,10 +133,5 @@ struct MainTabView: View {
 }
 
 #Preview {
-    let container = AppDIContainer.shared
-    let localDataSource = LocalTimeStampLogDataSource()
-    let repository = MyLogRepository(localDataSource: localDataSource, apiClient: MyLogApiClient(session: SessionFactory().makeSession(for: .dev)))
-    let useCase = MyLogUseCase(repository: repository)
-    let viewModel = MainTabViewModel(myLogUseCase: useCase)
-    return MainTabView(container: container, viewModel: viewModel)
+    AppDIContainer.shared.makeMainTabView()
 }

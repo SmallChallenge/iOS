@@ -12,11 +12,15 @@ struct MyLogUseCase: MyLogUseCaseProtocol {
     // MARK: - Properties
 
     private let repository: MyLogRepositoryProtocol
+    
+    /// Settings Repository
+    private let settingsRepository: SettingsDataSourceProtocol
 
     // MARK: - Init
 
-    init(repository: MyLogRepositoryProtocol) {
+    init(repository: MyLogRepositoryProtocol, settingsRepository: SettingsDataSourceProtocol) {
         self.repository = repository
+        self.settingsRepository = settingsRepository
     }
 
     // MARK: - Methods
@@ -69,5 +73,13 @@ struct MyLogUseCase: MyLogUseCaseProtocol {
             Logger.error("로컬 로그 개수 조회 실패: \(error)")
             return 0
         }
+    }
+    
+    func getIsLogLimitBannerDismissed() -> Bool {
+        settingsRepository.getIsLogLimitBannerDismissed()
+    }
+    
+    func dismissLogLimitBanner() {
+        settingsRepository.setIsLogLimitBannerDismissed(true)
     }
 }
