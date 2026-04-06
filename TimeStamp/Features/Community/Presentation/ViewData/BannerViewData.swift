@@ -32,11 +32,11 @@ struct BannerViewData {
             color: Color(hex: "FFC5A4")
         ),
         BannerContent(
-            message: "로그인하고 마음에 드는 게시물에 좋아요를 눌러 응원해 보세요!",
+            message: "로그인하고 마음에 드는 게시물에\n좋아요를 눌러 응원해 보세요!",
             color: Color(hex: "F6DFFF")
         ),
         BannerContent(
-            message: "함께 기록하면 더 즐거워요.\n좋아요를 눌러 응원해 보세요!",
+            message: "함께 기록하면 더 즐거워요.\n지금 로그인하고 커뮤니티를 즐겨보세요",
             color: Color(hex: "CFEFFF")
         ),
         BannerContent(
@@ -47,19 +47,19 @@ struct BannerViewData {
 
     static let userBanners: [BannerContent] = [
         BannerContent(
-            message: "이미 많은 분들이 갓생을 기록 중이에요.\n여러분의 오늘 하루는 어땠나요?",
+            message: "혼자만 알기 아까운 오늘의 갓생 모먼트.\n지금 바로 커뮤니티에 자랑해볼까요?",
             color: Color(hex: "FFC5A4")
         ),
         BannerContent(
-            message: "나만 보긴 아까운 갓생 기록들,\n로그인하고 친구들과 공유해 볼까요?",
+            message: "평범한 일상도 스탬픽 특별하게!\n오늘의 한 컷, 친구들과 나눠보세요",
             color: Color(hex: "E6FF8A")
         ),
         BannerContent(
-            message: "투박한 일상 사진도 스탬픽으로 예쁘게!\n지금 촬영 버튼을 눌러보세요.",
+            message: "투박한 일상 사진도 스탬픽으로 예쁘게!\n지금 촬영하고 첫 게시물을 남겨봐요",
             color: Color(hex: "CFEFFF")
         ),
         BannerContent(
-            message: "오늘의 미션: 갓생 사진 1장 올리기!\n아직 늦지 않았어요, 지금 기록해 보세요.",
+            message: "오늘의 갓생 기록, 아직 늦지 않았어요!\n딱 10초만 투자해서 오늘의 흔적 남기기",
             color: Color(hex: "F6DFFF")
         )
     ]
