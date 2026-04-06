@@ -30,4 +30,13 @@ enum CategoryViewData: String, CaseIterable {
         case .etc: return "category_etc"
         }
     }
+    
+    var iconImage: String {
+        switch self {
+        case .study: return "icon_category_study"
+        case .health: return "icon_category_health"
+        case .food: return "icon_category_food"
+        case .etc: return "icon_category_etc"
+        }
+    }
 }

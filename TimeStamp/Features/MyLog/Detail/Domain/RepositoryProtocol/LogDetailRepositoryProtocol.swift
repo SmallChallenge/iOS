@@ -22,4 +22,11 @@ protocol LogDetailRepositoryProtocol {
     // 이미지 준비
     func downloadRemoteImage(url: String) async throws -> UIImage
     func loadLocalImage(fileName: String) throws -> UIImage
+    
+    
+    /// 서버 로그 수정
+    func editForServer(logId id: Int, newCategory category: String, newVisibility visibility: String) async throws -> EditLog
+
+    /// 로컬 로그 수정
+    func editForLocal(logId id: UUID, newCategory category: String, newVisibility visibility: String) throws
 }

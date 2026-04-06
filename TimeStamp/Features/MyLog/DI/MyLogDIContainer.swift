@@ -180,6 +180,14 @@ struct MockMyLogDIContainer: MyLogDIContainerProtocol {
     }
     
     struct MockLogDetailUseCase: LogDetailUseCaseProtocol {
+        func editLogForServer(logId: Int, category: Category, visibility: VisibilityType) async throws -> EditLog {
+            EditLog(imageId: 0, category: .etc, visibility: .privateVisible, visibilityChanged: true, updatedAt: Date(), publishedAt: Date())
+        }
+        
+        func editLogForLocal(logId: UUID, category: Category, visibility: VisibilityType) throws {
+            return 
+        }
+        
         func fetchLogDetailFromServer(logId: Int) async throws -> TimeStampLog {
             return TimeStampLog(id: UUID(), category: .etc, timeStamp: Date(), imageSource: .local(TimeStampLog.LocalTimeStampImage.init(imageFileName: "")), visibility: .privateVisible)
         }

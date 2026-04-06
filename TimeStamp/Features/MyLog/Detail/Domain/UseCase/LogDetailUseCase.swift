@@ -46,4 +46,20 @@ final class LogDetailUseCase: LogDetailUseCaseProtocol {
             return try repository.loadLocalImage(fileName: localImage.imageFileName)
         }
     }
+    
+    func editLogForServer(logId: Int, category: Category, visibility: VisibilityType) async throws -> EditLog {
+        return try await repository.editForServer(
+            logId: logId,
+            newCategory: category.rawValue,
+            newVisibility: visibility.rawValue
+        )
+    }
+
+    func editLogForLocal(logId: UUID, category: Category, visibility: VisibilityType) throws {
+        try repository.editForLocal(
+            logId: logId,
+            newCategory: category.rawValue,
+            newVisibility: visibility.rawValue
+        )
+    }
 }

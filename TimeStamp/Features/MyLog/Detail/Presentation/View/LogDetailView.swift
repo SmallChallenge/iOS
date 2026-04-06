@@ -26,46 +26,56 @@ struct LogDetailView: View {
     
     @State private var showDeletePopup: Bool = false
     @State private var showShareSheet: Bool = false
-    @State private var showPopoverMenu: Bool = false
+    
     @State private var navigateToEditor: Bool = false
     @State private var hasAppeared: Bool = false
     
     var body: some View {
         ScrollView {
-            VStack(spacing: 20) {
-                Group {
-                    
-                    // 메뉴버튼 + 이미지뷰
-                    VStack(spacing: 16) {
-                        HStack {
-                            Spacer()
-                            Button {
-                                showPopoverMenu = true
-                            } label: {
-                                ellipsisImage
-                            }
-                        }
-                        
-                        // 이미지 뷰
-                        logImage
-                    }
+            VStack(spacing: 24) {
+                
+                // 이미지 뷰
+                logImage
+                    .padding(.bottom, 7 )
+                
+                VStack(alignment: .leading, spacing: 17) {
                     
                     // 카테고리 + 공개여부
-                    HStack(alignment: .top, spacing: 20) {
-                        // 카테고리
-                        category
+                    HStack(alignment: .top, spacing: 12) {
+                        
+                        Spacer()
+                            .frame(width: 110)
                         
                         // 공개 여부
-                        visibility
+                        if viewModel.isPublicVisibility() {
+                            // 스위치...
+                            SegmentedToggleView(selectedTab: $viewModel.visibility)
+                                .frame(width: 140, height: 40)
+                                .onChange(of: viewModel.visibility) { visibility in
+                                    viewModel.updateLog()
+                                }
+                            
+                        } else {
+                            privateTag
+                        }
+                        
                         Spacer()
                     }
-                    .padding(.bottom, 20)
                     
-                    
-                } // ~Group
-            .padding(.horizontal, 20)
+                    if !viewModel.isPublicVisibility() {
+                        NoticeBanner("게스트 게시물은 공개 범위를 수정할 수 없어요.")
+                    }
+                }
+                .overlay(alignment: .topLeading) {
+                    CategoryDropDownView(selectedCategory: $viewModel.category)
+                        .onChange(of: viewModel.category) { category in
+                            viewModel.updateLog()
+                        }
+                }
+                
             } //~VStack
-            
+            .padding(.horizontal, 20)
+            .padding(.top, 26)
         } //~ScrollView
         .safeAreaInset(edge: .top, content: {
             HeaderView(
@@ -74,7 +84,7 @@ struct LogDetailView: View {
                         onGoBack()
                     }
                 },trailingView: {
-                    HStack (spacing: 4){
+                    HStack (alignment: .center, spacing: 4){
                         Button {
                             viewModel.downloadImage()
                         } label: {
@@ -97,7 +107,7 @@ struct LogDetailView: View {
                         }
                         
                         Button {
-                            print(">>>>> 쓰레기")
+                            showDeletePopup = true
                         } label: {
                             Image("IconDelete")
                                 .renderingMode(.template)
@@ -114,7 +124,6 @@ struct LogDetailView: View {
         .toolbar(.hidden, for: .navigationBar)
         .scrollDismissesKeyboard(.interactively)
         .mainBackgourndColor()
-        
         .loading(viewModel.isLoading)
         .toast(message: $viewModel.toastMessage)
         .task {
@@ -155,39 +164,18 @@ struct LogDetailView: View {
                 showShareSheet = true
             }
         }
-        .overlay(alignment: .topTrailing) {
-            if showPopoverMenu {
-                ZStack(alignment: .topTrailing) {
-                    
-                    Color.clear
-                        .ignoresSafeArea()
-                        .contentShape(Rectangle())
-                        .onTapGesture {
-                            showPopoverMenu = false
-                        }
-                    
-                    PopoverMenu(
-                        items: [
-                            .init(title: "기록 수정", icon: "square.and.pencil") {
-                                showPopoverMenu = false
-                                navigateToEditor = true
-                            },
-                            .init(title: "기록 삭제", icon: "trash") {
-                                showPopoverMenu = false
-                                showDeletePopup = true
-                            }
-                        ],
-                        isPresented: $showPopoverMenu
-                    )
-                    .padding(.top, 30)
-                    .padding(.trailing, 20)
-                    .rounded(radius: 12)
-                }
-                
-                .transition(.opacity)
-                .animation(.easeInOut(duration: 0.2), value: showPopoverMenu)
-            }
+    }
+    
+    private var privateTag: some View {
+        HStack(spacing: 4){
+            Image("lock_line")
+                .resizable()
+                .frame(width: 16, height: 16)
+            Text("비공개")
+                .font(.Btn2)
+                .foregroundStyle(Color.gray300)
         }
+        .padding(.vertical, 10)
     }
     
     private var ellipsisImage: some View {
@@ -244,35 +232,6 @@ struct LogDetailView: View {
         .foregroundStyle(Color.gray500)
         .background(Color.gray800)
         .rounded(radius: 8)
-    }
-    
-    private var category: some View {
-        VStack(alignment: .leading, spacing: 12) {
-            
-            Text("카테고리")
-                .font(.SubTitle2)
-                .foregroundStyle(Color.gray400)
-            
-            HStack(alignment: .center, spacing: 9) {
-                Image(viewModel.detail.category.image)
-                Text(viewModel.detail.category.title)
-                    .font(.Btn2_b)
-                    .foregroundStyle(Color.gray50)
-            }
-            
-        }
-        .frame(width: 120, alignment: .leading)
-    }
-    
-    private var visibility: some View {
-        VStack(alignment: .leading, spacing: 10) {
-            Text("공개 여부")
-                .font(.SubTitle2)
-                .foregroundStyle(Color.gray400)
-            
-            TagView(title: viewModel.detail.visibility.title, state: .active)
-            
-        }
     }
 }
 

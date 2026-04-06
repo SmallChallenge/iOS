@@ -19,4 +19,12 @@ protocol LogDetailUseCaseProtocol {
 
     // 이미지 준비
     func prepareImageForSharing(imageSource: TimeStampLog.ImageSource) async throws -> UIImage
+    
+    
+    
+    /// 서버 로그 수정
+    func editLogForServer(logId: Int, category: Category, visibility: VisibilityType) async throws -> EditLog
+
+    /// 로컬 로그 수정
+    func editLogForLocal(logId: UUID, category: Category, visibility: VisibilityType) throws
 }

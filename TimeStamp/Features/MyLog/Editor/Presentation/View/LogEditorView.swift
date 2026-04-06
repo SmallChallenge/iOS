@@ -51,7 +51,6 @@ struct LogEditorView: View {
                 }
                 
                 
-                
             }// ~Vstack
             .padding(.horizontal, 20)
         }// ~Scrollview
