@@ -244,6 +244,10 @@ struct MockCameraDIContainer: CameraDIContainerProtocol {
     // MARK: - PhotoSave
 
     struct MockPhotoSaveUseCase: PhotoSaveUseCaseProtocol {
+        func getIsAutoSave() -> Bool {
+            true
+        }
+        
         func savePhotoToGallery(image: UIImage) {}
         func savePhotoToLacal(image: UIImage, category: Category, visibility: VisibilityType) throws {}
         func savePhotoToServer(image: UIImage, category: Category, visibility: VisibilityType) async throws {}

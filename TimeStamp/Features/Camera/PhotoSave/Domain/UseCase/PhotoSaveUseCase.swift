@@ -88,4 +88,8 @@ struct PhotoSaveUseCase: PhotoSaveUseCaseProtocol {
     func savePhotoToGallery(image: UIImage) {
         repository.savePhotoToGallery(image: image)
     }
+    
+    func getIsAutoSave() -> Bool {
+        repository.getIsAutoSave()
+    }
 }

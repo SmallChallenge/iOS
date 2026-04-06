@@ -49,7 +49,10 @@ final class PhotoSaveViewModel: ObservableObject, MessageDisplayable {
         guard isLoading == false else { return }
 
         // 갤러리에 사진 저장
-        useCase.savePhotoToGallery(image: image)
+        let isGalleySave = useCase.getIsAutoSave()
+        if isGalleySave {
+            useCase.savePhotoToGallery(image: image)
+        }
 
         // 로그인 여부 확인
         if AuthManager.shared.isLoggedIn {

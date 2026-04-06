@@ -32,8 +32,6 @@ final class MyPageViewModel: ObservableObject, MessageDisplayable {
 
     init(useCase: MyPageUseCaseProtocol) {
         self.useCase = useCase
-        // 초기값 로드
-        self.isAutoSave = useCase.isAutoSaveEnabled()
     }
 
     // MARK: - Input Methods
@@ -48,7 +46,15 @@ final class MyPageViewModel: ObservableObject, MessageDisplayable {
     }
 
     func updateAutoSave(_ isEnabled: Bool) {
-        useCase.setAutoSaveEnabled(isEnabled)
+        Task {
+            useCase.setAutoSaveEnabled(isEnabled)
+        }
+    }
+    
+    func getAutoSave(){
+        Task {
+            isAutoSave = useCase.isAutoSaveEnabled()
+        }
     }
 
     // MARK: - private Methods..

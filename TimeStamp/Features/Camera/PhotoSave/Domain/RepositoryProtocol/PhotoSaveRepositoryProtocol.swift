@@ -32,4 +32,6 @@ protocol PhotoSaveRepositoryProtocol {
     /// 갤러리에 사진 저장
     /// - Parameter image: 저장할 이미지
     func savePhotoToGallery(image: UIImage)
+    
+    func getIsAutoSave() -> Bool
 }

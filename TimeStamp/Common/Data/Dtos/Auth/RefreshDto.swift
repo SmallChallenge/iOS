@@ -8,6 +8,7 @@
 import Foundation
 
 public struct RefreshDto: Codable {
+    let userId: Int
     let accessToken: String
     let refreshToken: String
 }

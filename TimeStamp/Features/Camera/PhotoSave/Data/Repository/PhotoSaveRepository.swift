@@ -182,4 +182,9 @@ final class PhotoSaveRepository: PhotoSaveRepositoryProtocol {
             }
         }
     }
+    
+    /// 자동저장 여부 조회 (기본값: true)
+    func getIsAutoSave() -> Bool {
+        return AppConfig.shared.isAutoSave
+    }
 }

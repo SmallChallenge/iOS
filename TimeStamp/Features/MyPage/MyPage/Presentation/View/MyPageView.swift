@@ -145,7 +145,6 @@ struct MyPageView: View {
                         onGoBack()
                     }
                 }, title: "마이페이지", hasUnderLine: true)
-                
                 .background(Color.gray900)
             }
             
@@ -160,6 +159,9 @@ struct MyPageView: View {
             
         } //~ ZStack
         .mainBackgourndColor()
+        .task {
+            viewModel.getAutoSave()
+        }
         .navigationBarHidden(true)
         .toolbar(.hidden, for: .navigationBar)
         .onChange(of: viewModel.didLogout) { didLogout in

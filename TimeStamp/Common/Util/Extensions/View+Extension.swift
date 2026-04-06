@@ -35,10 +35,7 @@ extension View {
             self
         }
     }
-
 }
-
-
 
 // MARK: - 화면 배경 검게하는거
 
