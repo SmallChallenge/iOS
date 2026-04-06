@@ -61,13 +61,6 @@ struct LogDetailView: View {
                     }
                     .padding(.bottom, 20)
                     
-                    // 공유하기 버튼
-                    MainButton(title: viewModel.isPreparingShare ? "준비중..." : "공유하기", colorType: .secondary) {
-                        viewModel.prepareImageForSharing()
-                        if viewModel.shareImage != nil {
-                            showShareSheet = true
-                        }
-                    }
                     
                 } // ~Group
             .padding(.horizontal, 20)
@@ -80,8 +73,41 @@ struct LogDetailView: View {
                     BackButton {
                         onGoBack()
                     }
-                    
-                })
+                },trailingView: {
+                    HStack (spacing: 4){
+                        Button {
+                            viewModel.downloadImage()
+                        } label: {
+                            Image("iconDownload")
+                                .renderingMode(.template)
+                                .foregroundStyle(Color.gray50)
+                                .padding(10)
+                        }
+                        
+                        Button {
+                            viewModel.prepareImageForSharing()
+                            if viewModel.shareImage != nil {
+                                showShareSheet = true
+                            }
+                        } label: {
+                            Image("iconShare")
+                                .renderingMode(.template)
+                                .foregroundStyle(Color.gray50)
+                                .padding(10)
+                        }
+                        
+                        Button {
+                            print(">>>>> 쓰레기")
+                        } label: {
+                            Image("IconDelete")
+                                .renderingMode(.template)
+                                .foregroundStyle(Color.gray50)
+                                .padding(10)
+                        }
+                    }
+                }
+                
+            )
             .background(Color.gray900)
         })
         .navigationBarHidden(true)

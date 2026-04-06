@@ -90,6 +90,15 @@ final class AppDIContainer {
     func makeCameraTapView(onDismiss: @escaping () -> Void) -> CameraTabView {
         return cameraTabDIContainer.makeCameraTabView(onDismiss: onDismiss)
     }
+
+    // PhotoSave Repository (다른 곳에서도 사용 가능하도록 공개)
+    func makePhotoSaveRepository() -> PhotoSaveRepositoryProtocol {
+        let photoSaveApiClient = PhotoSaveApiClient(session: session)
+        return PhotoSaveRepository(
+            localDataSource: localTimeStampLogDataSource,
+            apiClient: photoSaveApiClient
+        )
+    }
    
     // MARK: - Community Feature
 

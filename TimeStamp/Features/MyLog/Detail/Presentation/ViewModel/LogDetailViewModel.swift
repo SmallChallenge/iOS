@@ -168,4 +168,26 @@ final class LogDetailViewModel: ObservableObject, MessageDisplayable {
             isLoading = false
         }
     }
+
+    // MARK: - 다운로드
+
+    /// 사진을 갤러리에 저장
+    func downloadImage() {
+        guard !isLoading else { return }
+
+        isLoading = true
+
+        Task { @MainActor in
+            do {
+                let image = try await useCase.prepareImageForSharing(imageSource: detail.imageSource)
+                let photoSaveRepository = AppDIContainer.shared.makePhotoSaveRepository()
+                photoSaveRepository.savePhotoToGallery(image: image)
+                toastMessage = "사진이 저장되었어요."
+            } catch {
+                Logger.error("사진 저장 실패: \(error)")
+                toastMessage = "사진 저장에 실패했어요."
+            }
+            isLoading = false
+        }
+    }
 }

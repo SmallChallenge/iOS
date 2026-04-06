@@ -15,7 +15,6 @@ struct NicknameSettingView: View {
         onDismiss: (() -> Void)?,
         onSuccess: (() -> Void)? = nil
     ) {
-        print(">>>>> init NicknameSettingView")
         self.onGoBack = onGoBack
         self.onDismiss = onDismiss
         self.onSuccess = onSuccess
