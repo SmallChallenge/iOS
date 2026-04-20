@@ -48,7 +48,7 @@ enum AppConstants {
         static let maxImageSize = 10 * 1024 * 1024 // 10MB
         
         static let maxLogCount: Int = 20
-        static let warningLogCount: Int = 18
+        static let warningLogCount: Int = (maxLogCount - 2)
     }
     
     // MARK: SDK key

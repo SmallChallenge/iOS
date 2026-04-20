@@ -24,7 +24,7 @@ struct Template: Identifiable, Equatable {
     let name: String // asset이름 가져올 때 씀.
     private let viewBuilder: (Date, Bool) -> AnyView
 
-    var id: String { name }
+    var id: String { templateId }
 
     init(style: TemplateStyle, templateId: String,  name: String, viewBuilder: @escaping (Date, Bool) -> AnyView) {
         self.name = name
@@ -325,9 +325,3 @@ extension Template {
             }),
     ]
 }
-
-
-
-
-
-

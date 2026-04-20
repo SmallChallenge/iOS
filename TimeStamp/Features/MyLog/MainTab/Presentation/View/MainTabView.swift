@@ -66,7 +66,9 @@ struct MainTabView: View {
                         if viewModel.canTakePhoto() {
                             showCamera = true
                         } else {
+                            // 한계도달 팝업 띄우기
                             showLimitReachedPopup = true
+                            AmplitudeManager.shared.trackPhotoLimitReached()
                         }
                     },
                     onCommunityReselected: {
@@ -84,7 +86,7 @@ struct MainTabView: View {
                 await viewModel.requestAuthorization()
             }
             .popup(isPresented: $showLimitReachedPopup, content: {
-                Modal(title: "기록 한계에 도달했어요.\n로그인하면 계속 기록할 수 있어요.")
+                Modal(title: AppMessage.maxPhotoLimitReached.text)
                     .buttons {
                         MainButton(title: "취소", colorType: .secondary) {
                             showLimitReachedPopup = false

@@ -146,7 +146,7 @@ struct MyLogView: View {
                     .tint(Color.neon300)
 
                 // 로컬 기록 개수
-                Text("\(viewModel.localLogsCount)/20")
+                Text("\(viewModel.localLogsCount)/\(AppConstants.Limits.maxLogCount)")
                     .font(.Caption)
                     .foregroundStyle(Color.gray500)
             }

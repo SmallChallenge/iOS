@@ -46,6 +46,8 @@ struct EditorView: View {
         Template.all.filter { $0.style == selectedTemplateStyle }
     }
     
+    @State private var didLog = false
+    
     var body: some View {
         ZStack {
             VStack (alignment: .center, spacing: .zero){
@@ -126,6 +128,11 @@ struct EditorView: View {
         .mainBackgourndColor()
         .navigationBarHidden(true)
         .toolbar(.hidden, for: .navigationBar)
+        .onAppear(perform: {
+            guard !didLog else { return }
+            didLog = true
+            AmplitudeManager.shared.trackEditorViewEnter()
+        })
 //        .task {
 //            await viewModel.loadAd()
 //        }
@@ -252,7 +259,12 @@ struct EditorView: View {
                         template: template,
                         isSelected: selectedTemplate == template
                     ) {
+                        // 템플릿 선택
                         selectedTemplate = template
+                        AmplitudeManager.shared.trackTemplateSelection(
+                            templateId: template.templateId,
+                            templateCategory: selectedTemplateStyle.enName
+                        )
                     }
                 }
             }
