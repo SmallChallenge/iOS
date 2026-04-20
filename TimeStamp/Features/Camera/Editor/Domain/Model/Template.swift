@@ -14,10 +14,6 @@ enum TemplateStyle: CaseIterable {
     case accent
     case fun
     case fixel
-    
-    
-    
-    case digital
 }
 
 
@@ -247,14 +243,12 @@ extension Template {
                 AnyView(Fun009Template(displayDate: date, hasLogo: hasLogo))
             }),
 
-        
-    
        
-        // MARK: - Digital
+        // MARK: - Fixel
      
         
         Template(
-            style: .digital,
+            style: .fixel,
             name: "Digital2Template",
             viewBuilder: { date, hasLogo in
                 AnyView(Digital2Template(displayDate: date, hasLogo: hasLogo))
@@ -262,37 +256,35 @@ extension Template {
 
         
         Template(
-            style: .digital,
+            style: .fixel,
             name: "Digital3Template",
             viewBuilder: { date, hasLogo in
                 AnyView(Digital3Template(displayDate: date, hasLogo: hasLogo))
             }),
-        
-        
       
         Template(
-            style: .digital,
+            style: .fixel,
             name: "Digital5Template",
             viewBuilder: { date, hasLogo in
                 AnyView(Digital5Template(displayDate: date, hasLogo: hasLogo))
             }),
         
         Template(
-            style: .digital,
+            style: .fixel,
             name: "Digital6Template",
             viewBuilder: { date, hasLogo in
                 AnyView(Digital6Template(displayDate: date, hasLogo: hasLogo))
             }),
         
         Template(
-            style: .digital,
+            style: .fixel,
             name: "Digital7Template",
             viewBuilder: { date, hasLogo in
                 AnyView(Digital7Template(displayDate: date, hasLogo: hasLogo))
             }),
         
         Template(
-            style: .digital,
+            style: .fixel,
             name: "Digital8Template",
             viewBuilder: { date, hasLogo in
                 AnyView(Digital8Template(displayDate: date, hasLogo: hasLogo))
