@@ -1,5 +1,5 @@
 //
-//  Basic3Template.swift
+//  Minimal002Template.swift
 //  Stampic
 //
 //  Created by 임주희 on 1/4/26.
@@ -7,37 +7,37 @@
 
 import SwiftUI
 
-struct Basic3Template: View, TemplateViewProtocol {
+struct Minimal002Template: View, TemplateViewProtocol {
     let displayDate: Date
     let hasLogo: Bool
+    
     var body: some View {
+    
         VStack {
             Spacer()
-            VStack(spacing: .zero){
+            HStack {
+                Text(displayDate.toString(
+                    format: "\(Date.DateFormat.koreanDate_yyyyM월d일E.rawValue)\n\(Date.DateFormat.time_a_h_mm.rawValue)",
+                    locale: .kr))
+                .font(.suit(.heavy), size: 24, trackingPercent: -0.02)
+                .multilineTextAlignment(.leading)
+                .foregroundStyle(Color.gray50)
+                .padding(24)
                 
-                Text(displayDate.toString(.time_a_hh_mm, locale: .kr))
-                
-                    .font(.suit(.heavy), size: 40, trackingPercent: -0.02)
-                
-                
-                Text(displayDate.toString(.koreanDate_yyyyM월d일E
-                                          , locale: .kr))
-                .font(.suit(.heavy), size: 20, trackingPercent: -0.02)
-                
+                Spacer()
+            } 
+        }
+        .overlay(alignment: .topTrailing) {
+            if hasLogo {
+                TimeStampWhiteLogo()
+                    .padding(16)
             }
-            .foregroundStyle(Color.gray50)
-            Spacer()
         }
         .shadow(
             color: Color.black.opacity(0.45),
             radius: 5/2, x: 0, y: 0
         )
-        .overlay(alignment: .bottom) {
-            if hasLogo {
-                LogotypeImage()
-                    .padding(16)
-            }
-        }
+        
     }
 }
 
@@ -49,7 +49,7 @@ struct Basic3Template: View, TemplateViewProtocol {
                 .frame(width: 300, height: 300)
                 .aspectRatio(1, contentMode: .fit)
             
-            Basic3Template(displayDate: Date(), hasLogo: true)
+            Minimal002Template(displayDate: Date(), hasLogo: true)
         }
         .frame(width: 300, height: 300)
         .aspectRatio(1, contentMode: .fit)
@@ -60,11 +60,9 @@ struct Basic3Template: View, TemplateViewProtocol {
                 .frame(width: 300, height: 300)
                 .aspectRatio(1, contentMode: .fit)
             
-            Basic3Template(displayDate: Date(), hasLogo: false)
+            Minimal002Template(displayDate: Date(), hasLogo: false)
         }
         .frame(width: 300, height: 300)
         .aspectRatio(1, contentMode: .fit)
     }
 }
-
-

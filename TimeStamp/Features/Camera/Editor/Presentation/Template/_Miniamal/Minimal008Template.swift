@@ -1,5 +1,5 @@
 //
-//  Basic8Template.swift
+//  Minimal008Template.swift
 //  Stampic
 //
 //  Created by 임주희 on 1/20/26.
@@ -7,7 +7,7 @@
 
 import SwiftUI
 
-struct Basic8Template: View, TemplateViewProtocol {
+struct Minimal008Template: View, TemplateViewProtocol {
     let displayDate: Date
     let hasLogo: Bool
     
@@ -46,14 +46,14 @@ struct Basic8Template: View, TemplateViewProtocol {
             Image("sampleImage")
                 .resizable()
             
-            Basic8Template(displayDate: Date(), hasLogo: true)
+            Minimal008Template(displayDate: Date(), hasLogo: true)
         }
         .aspectRatio(1, contentMode: .fit)
         
         ZStack {
             Image("sampleImage")
                 .resizable()
-            Basic8Template(displayDate: Date(), hasLogo: false)
+            Minimal008Template(displayDate: Date(), hasLogo: false)
         }
         .aspectRatio(1, contentMode: .fit)
     }

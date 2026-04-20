@@ -1,5 +1,5 @@
 //
-//  Basic7Template.swift
+//  Minimal007Template.swift
 //  Stampic
 //
 //  Created by 임주희 on 1/20/26.
@@ -7,7 +7,7 @@
 
 import SwiftUI
 
-struct Basic7Template: View, TemplateViewProtocol {
+struct Minimal007Template: View, TemplateViewProtocol {
     let displayDate: Date
     let hasLogo: Bool
     
@@ -37,14 +37,14 @@ struct Basic7Template: View, TemplateViewProtocol {
             Image("sampleImage")
                 .resizable()
             
-            Basic7Template(displayDate: Date(), hasLogo: true)
+            Minimal007Template(displayDate: Date(), hasLogo: true)
         }
         .aspectRatio(1, contentMode: .fit)
         
         ZStack {
             Image("sampleImage")
                 .resizable()
-            Basic7Template(displayDate: Date(), hasLogo: false)
+            Minimal007Template(displayDate: Date(), hasLogo: false)
         }
         .aspectRatio(1, contentMode: .fit)
     }

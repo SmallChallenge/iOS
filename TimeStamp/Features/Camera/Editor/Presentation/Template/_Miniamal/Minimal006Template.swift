@@ -1,5 +1,5 @@
 //
-//  Basic6Template.swift
+//  Minimal006Template.swift
 //  Stampic
 //
 //  Created by 임주희 on 1/19/26.
@@ -7,7 +7,7 @@
 
 import SwiftUI
 
-struct Basic6Template: View, TemplateViewProtocol {
+struct Minimal006Template: View, TemplateViewProtocol {
     let displayDate: Date
     let hasLogo: Bool
     
@@ -44,14 +44,14 @@ struct Basic6Template: View, TemplateViewProtocol {
             Image("sampleImage")
                 .resizable()
             
-            Basic6Template(displayDate: Date(), hasLogo: true)
+            Minimal006Template(displayDate: Date(), hasLogo: true)
         }
         .aspectRatio(1, contentMode: .fit)
         
         ZStack {
             Image("sampleImage")
                 .resizable()
-            Basic6Template(displayDate: Date(), hasLogo: false)
+            Minimal006Template(displayDate: Date(), hasLogo: false)
         }
         .aspectRatio(1, contentMode: .fit)
     }

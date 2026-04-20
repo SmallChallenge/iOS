@@ -35,10 +35,10 @@ struct TemplateButton: View {
 #Preview {
     HStack(spacing: 8) {
         TemplateButton(
-            capturedImage: UIImage(named: "Basic3Template"),
+            capturedImage: UIImage(named: "Minimal003Template"),
             template: Template(
-                style: .basic,
-                name: "Basic3Template",
+                style: .minimal,
+                name: "Minimal003Template",
                 viewBuilder: { _,_ in AnyView(EmptyView())}
             ),
             isSelected: true

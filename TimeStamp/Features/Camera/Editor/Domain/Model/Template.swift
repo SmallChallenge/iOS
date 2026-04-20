@@ -10,10 +10,11 @@ import SwiftUI
 
 /// 템플릿 스타일 (Domain Layer)
 enum TemplateStyle: CaseIterable {
-    case basic
     case moody
     case active
     case digital
+    
+    case minimal
 }
 
 
@@ -49,60 +50,67 @@ extension Template {
     static let all: [Template] = [
         // MARK: - Basic
         Template(
-            style: .basic,
-            name: "Basic1Template",
+            style: .minimal,
+            name: "Minimal001Template",
             viewBuilder: { date, hasLogo in
-                AnyView(Basic1Template(displayDate: date, hasLogo: hasLogo))
+                AnyView(Minimal001Template(displayDate: date, hasLogo: hasLogo))
             }
         ),
         
         Template(
-            style: .basic,
-            name: "Basic2Template",
+            style: .minimal,
+            name: "Minimal002Template",
             viewBuilder: { date, hasLogo in
-                AnyView(Basic2Template(displayDate: date, hasLogo: hasLogo))
+                AnyView(Minimal002Template(displayDate: date, hasLogo: hasLogo))
             }),
         
         Template(
-            style: .basic,
-            name: "Basic3Template",
+            style: .minimal,
+            name: "Minimal003Template",
             viewBuilder: { date, hasLogo in
-                AnyView(Basic3Template(displayDate: date, hasLogo: hasLogo))
+                AnyView(Minimal003Template(displayDate: date, hasLogo: hasLogo))
             }),
         
         Template(
-            style: .basic,
-            name: "Basic4Template",
+            style: .minimal,
+            name: "Minimal004Template",
             viewBuilder: { date, hasLogo in
-                AnyView(Basic4Template(displayDate: date, hasLogo: hasLogo))
+                AnyView(Minimal004Template(displayDate: date, hasLogo: hasLogo))
             }),
 
         Template(
-            style: .basic,
-            name: "Basic5Template",
+            style: .minimal,
+            name: "Minimal005Template",
             viewBuilder: { date, hasLogo in
-                AnyView(Basic5Template(displayDate: date, hasLogo: hasLogo))
+                AnyView(Minimal005Template(displayDate: date, hasLogo: hasLogo))
             }),
         
         Template(
-            style: .basic,
-            name: "Basic6Template",
+            style: .minimal,
+            name: "Minimal006Template",
             viewBuilder: { date, hasLogo in
-                AnyView(Basic6Template(displayDate: date, hasLogo: hasLogo))
+                AnyView(Minimal006Template(displayDate: date, hasLogo: hasLogo))
             }),
         
         Template(
-            style: .basic,
-            name: "Basic7Template",
+            style: .minimal,
+            name: "Minimal007Template",
             viewBuilder: { date, hasLogo in
-                AnyView(Basic7Template(displayDate: date, hasLogo: hasLogo))
+                AnyView(Minimal007Template(displayDate: date, hasLogo: hasLogo))
             }),
         
         Template(
-            style: .basic,
-            name: "Basic8Template",
+            style: .minimal,
+            name: "Minimal008Template",
             viewBuilder: { date, hasLogo in
-                AnyView(Basic8Template(displayDate: date, hasLogo: hasLogo))
+                AnyView(Minimal008Template(displayDate: date, hasLogo: hasLogo))
+            }),
+        
+        Template(
+            style: .minimal,
+            name: "Minimal009Template",
+            viewBuilder: { date, hasLogo in
+                AnyView(Minimal009Template(displayDate: date, hasLogo: hasLogo))
             }),
         
 
@@ -152,12 +160,7 @@ extension Template {
                 AnyView(Moody6Template(displayDate: date, hasLogo: hasLogo))
             }),
         
-        Template(
-            style: .moody,
-            name: "Moody7Template",
-            viewBuilder: { date, hasLogo in
-                AnyView(Moody7Template(displayDate: date, hasLogo: hasLogo))
-            }),
+       
         
         Template(
             style: .moody,

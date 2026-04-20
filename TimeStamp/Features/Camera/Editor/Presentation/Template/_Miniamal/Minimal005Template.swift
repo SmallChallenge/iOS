@@ -1,5 +1,5 @@
 //
-//  Basic5Template.swift
+//  Minimal005Template.swift
 //  Stampic
 //
 //  Created by 임주희 on 1/17/26.
@@ -7,7 +7,7 @@
 
 import SwiftUI
 
-struct Basic5Template: View,  TemplateViewProtocol {
+struct Minimal005Template: View,  TemplateViewProtocol {
     
     let displayDate: Date
     let hasLogo: Bool
@@ -53,7 +53,7 @@ struct Basic5Template: View,  TemplateViewProtocol {
                 .frame(width: 300, height: 300)
                 .aspectRatio(1, contentMode: .fit)
             
-            Basic5Template(displayDate: Date(), hasLogo: true)
+            Minimal005Template(displayDate: Date(), hasLogo: true)
         }
         .frame(width: 300, height: 300)
         .aspectRatio(1, contentMode: .fit)
@@ -64,7 +64,7 @@ struct Basic5Template: View,  TemplateViewProtocol {
                 .frame(width: 300, height: 300)
                 .aspectRatio(1, contentMode: .fit)
             
-            Basic5Template(displayDate: Date(), hasLogo: false)
+            Minimal005Template(displayDate: Date(), hasLogo: false)
         }
         .frame(width: 300, height: 300)
         .aspectRatio(1, contentMode: .fit)

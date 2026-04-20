@@ -9,14 +9,14 @@ import Foundation
 
 /// 템플릿 스타일 ViewData (Presentation Layer)
 enum TemplateStyleViewData: CaseIterable {
-    case basic
+    case minimal
     case moody
     case active
     case digital
 
     var name: String {
         switch self {
-        case .basic: return "Basic"
+        case .minimal: return "깔끔"
         case .moody: return "Moody"
         case .active: return "Active"
         case .digital: return "Digital"
@@ -27,7 +27,7 @@ enum TemplateStyleViewData: CaseIterable {
     /// ViewData와 Domain 직접 비교
     static func == (lhs: TemplateStyleViewData, rhs: TemplateStyle) -> Bool {
         switch (lhs, rhs) {
-        case (.basic, .basic): return true
+        case (.minimal, .minimal): return true
         case (.moody, .moody): return true
         case (.active, .active): return true
         case (.digital, .digital): return true

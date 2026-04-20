@@ -1,5 +1,5 @@
 //
-//  Moody7Template.swift
+//  Minimal009Template.swift
 //  Stampic
 //
 //  Created by 임주희 on 1/20/26.
@@ -7,7 +7,7 @@
 
 import SwiftUI
 
-struct Moody7Template: View, TemplateViewProtocol {
+struct Minimal009Template: View, TemplateViewProtocol {
     let displayDate: Date
     let hasLogo: Bool
     
@@ -44,14 +44,14 @@ struct Moody7Template: View, TemplateViewProtocol {
             Image("sampleImage")
                 .resizable()
             
-            Moody7Template(displayDate: Date(), hasLogo: true)
+            Minimal009Template(displayDate: Date(), hasLogo: true)
         }
         .aspectRatio(1, contentMode: .fit)
         
         ZStack {
             Image("sampleImage")
                 .resizable()
-            Moody7Template(displayDate: Date(), hasLogo: false)
+            Minimal009Template(displayDate: Date(), hasLogo: false)
         }
         .aspectRatio(1, contentMode: .fit)
     }

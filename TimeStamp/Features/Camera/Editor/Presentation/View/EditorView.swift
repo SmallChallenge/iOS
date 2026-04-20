@@ -32,7 +32,7 @@ struct EditorView: View {
     
     // MARK: prevate property
 
-    @State private var selectedTemplateStyle: TemplateStyleViewData = .basic
+    @State private var selectedTemplateStyle: TemplateStyleViewData = .minimal
     @State private var selectedTemplate: Template = Template.all[0]
     
     @State private var showLoginView: Bool = false
