@@ -1,5 +1,5 @@
 //
-//  Active5Template.swift
+//  Accent007Template.swift
 //  Stampic
 //
 //  Created by 임주희 on 1/17/26.
@@ -7,7 +7,7 @@
 
 import SwiftUI
 
-struct Active5Template: View, TemplateViewProtocol {
+struct Accent007Template: View, TemplateViewProtocol {
     let displayDate: Date
     let hasLogo: Bool
     
@@ -17,10 +17,10 @@ struct Active5Template: View, TemplateViewProtocol {
                 .font(.partialSans, size: 14, trackingPercent: 0.1)
             Spacer()
             
-            Text(displayDate.toString(.yyyyMMdd_E))
+            Text(displayDate.toString(.yyyyMMdd_E, locale: .kr))
                 .font(.partialSans, size: 14)
             
-            Text(displayDate.toString(.time_a_h_mm))
+            Text(displayDate.toString(.time_a_h_mm, locale: .kr))
                 .font(.partialSans, size: 24)
         }
         .padding(.top, 14)
@@ -46,14 +46,14 @@ struct Active5Template: View, TemplateViewProtocol {
         ZStack {
             Image("sampleImage")
                 .resizable()
-            Active5Template(displayDate: Date(), hasLogo: true)
+            Accent007Template(displayDate: Date(), hasLogo: true)
         }
         .aspectRatio(1, contentMode: .fit)
         
         ZStack {
             Image("sampleImage")
                 .resizable()
-            Active5Template(displayDate: Date(), hasLogo: false)
+            Accent007Template(displayDate: Date(), hasLogo: false)
         }
         .aspectRatio(1, contentMode: .fit)
     }

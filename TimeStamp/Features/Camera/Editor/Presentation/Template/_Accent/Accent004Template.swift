@@ -1,5 +1,5 @@
 //
-//  Active3Template.swift
+//  Accent004Template.swift
 //  Stampic
 //
 //  Created by 임주희 on 1/4/26.
@@ -7,7 +7,7 @@
 
 import SwiftUI
 
-struct Active3Template: View ,TemplateViewProtocol {
+struct Accent004Template: View ,TemplateViewProtocol {
     let displayDate: Date
     let hasLogo: Bool
     
@@ -61,7 +61,7 @@ struct Active3Template: View ,TemplateViewProtocol {
                 .frame(width: 300, height: 300)
                 .aspectRatio(1, contentMode: .fit)
             
-            Active3Template(displayDate: Date(), hasLogo: true)
+            Accent004Template(displayDate: Date(), hasLogo: true)
         }
         .frame(width: 300, height: 300)
         .aspectRatio(1, contentMode: .fit)
@@ -72,7 +72,7 @@ struct Active3Template: View ,TemplateViewProtocol {
                 .frame(width: 300, height: 300)
                 .aspectRatio(1, contentMode: .fit)
             
-            Active3Template(displayDate: Date(), hasLogo: false)
+            Accent004Template(displayDate: Date(), hasLogo: false)
         }
         .frame(width: 300, height: 300)
         .aspectRatio(1, contentMode: .fit)

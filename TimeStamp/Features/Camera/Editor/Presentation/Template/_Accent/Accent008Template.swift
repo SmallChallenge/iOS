@@ -1,5 +1,5 @@
 //
-//  Active8Template.swift
+//  Accent008Template.swift
 //  Stampic
 //
 //  Created by 임주희 on 1/20/26.
@@ -7,7 +7,7 @@
 
 import SwiftUI
 
-struct Active8Template: View, TemplateViewProtocol {
+struct Accent008Template: View, TemplateViewProtocol {
     let displayDate: Date
     let hasLogo: Bool
     
@@ -40,14 +40,14 @@ struct Active8Template: View, TemplateViewProtocol {
         ZStack {
             Image("sampleImage")
                 .resizable()
-            Active8Template(displayDate: Date(), hasLogo: true)
+            Accent008Template(displayDate: Date(), hasLogo: true)
         }
         .aspectRatio(1, contentMode: .fit)
         
         ZStack {
             Image("sampleImage")
                 .resizable()
-            Active8Template(displayDate: Date(), hasLogo: false)
+            Accent008Template(displayDate: Date(), hasLogo: false)
         }
         .aspectRatio(1, contentMode: .fit)
     }

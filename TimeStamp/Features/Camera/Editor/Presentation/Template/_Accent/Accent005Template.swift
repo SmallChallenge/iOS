@@ -1,5 +1,5 @@
 //
-//  Moody6Template.swift
+//  Accent005Template.swift
 //  Stampic
 //
 //  Created by 임주희 on 1/19/26.
@@ -7,7 +7,7 @@
 
 import SwiftUI
 
-struct Moody6Template: View, TemplateViewProtocol {
+struct Accent005Template: View, TemplateViewProtocol {
     let displayDate: Date
     let hasLogo: Bool
     
@@ -45,14 +45,14 @@ struct Moody6Template: View, TemplateViewProtocol {
             Image("sampleImage")
                 .resizable()
             
-            Moody6Template(displayDate: Date(), hasLogo: true)
+            Accent005Template(displayDate: Date(), hasLogo: true)
         }
         .aspectRatio(1, contentMode: .fit)
         
         ZStack {
             Image("sampleImage")
                 .resizable()
-            Moody6Template(displayDate: Date(), hasLogo: false)
+            Accent005Template(displayDate: Date(), hasLogo: false)
         }
         .aspectRatio(1, contentMode: .fit)
     }

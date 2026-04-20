@@ -15,6 +15,7 @@ enum TemplateStyle: CaseIterable {
     case digital
     
     case minimal
+    case accent
 }
 
 
@@ -115,14 +116,70 @@ extension Template {
         
 
 
-        // MARK:  - Moody
+        // MARK:  - Accent
         Template(
-            style: .moody,
-            name: "Moody1Template",
+            style: .accent,
+            name: "Accent001Template",
             viewBuilder: { date, hasLog in
-                AnyView(Moody1Template(displayDate: date, hasLogo: hasLog))
+                AnyView(Accent001Template(displayDate: date, hasLogo: hasLog))
             }
         ),
+        
+        Template(
+            style: .accent,
+            name: "Accent002Template",
+            viewBuilder: { date, hasLogo in
+                AnyView(Accent002Template(displayDate: date, hasLogo: hasLogo))
+            }),
+        
+        Template(
+            style: .accent,
+            name: "Accent003Template",
+            viewBuilder: { date, hasLog in
+                AnyView(Accent003Template(displayDate: date, hasLogo: hasLog))
+            }
+        ),
+        
+        Template(
+            style: .accent,
+            name: "Accent004Template",
+            viewBuilder: { date, hasLogo in
+                AnyView(Accent004Template(displayDate: date, hasLogo: hasLogo))
+            }),
+        
+        Template(
+            style: .accent,
+            name: "Moody6Template",
+            viewBuilder: { date, hasLogo in
+                AnyView(Accent005Template(displayDate: date, hasLogo: hasLogo))
+            }),
+        
+        Template(
+            style: .accent,
+            name: "Active2Template",
+            viewBuilder: { date, hasLogo in
+                AnyView(Accent006Template(displayDate: date, hasLogo: hasLogo))
+            }),
+
+        Template(
+            style: .accent,
+            name: "Active5Template",
+            viewBuilder: { date, hasLogo in
+                AnyView(Accent007Template(displayDate: date, hasLogo: hasLogo))
+            }),
+        
+        Template(
+            style: .accent,
+            name: "Active8Template",
+            viewBuilder: { date, hasLogo in
+                AnyView(Accent008Template(displayDate: date, hasLogo: hasLogo))
+            }),
+
+        
+        
+
+        
+        // MARK:  - Moody
         
         Template(
             style: .moody,
@@ -152,14 +209,7 @@ extension Template {
             viewBuilder: { date, hasLogo in
                 AnyView(Moody5Template(displayDate: date, hasLogo: hasLogo))
             }),
-        
-        Template(
-            style: .moody,
-            name: "Moody6Template",
-            viewBuilder: { date, hasLogo in
-                AnyView(Moody6Template(displayDate: date, hasLogo: hasLogo))
-            }),
-        
+    
        
         
         Template(
@@ -171,44 +221,14 @@ extension Template {
 
         
         // MARK: - Active
-        Template(
-            style: .active,
-            name: "Active1Template",
-            viewBuilder: { date, hasLog in
-                AnyView(Active1Template(displayDate: date, hasLogo: hasLog))
-            }
-        ),
+       
+     
         
-        Template(
-            style: .active,
-            name: "Active2Template",
-            viewBuilder: { date, hasLogo in
-                AnyView(Active2Template(displayDate: date, hasLogo: hasLogo))
-            }),
-
+       
         
-        Template(
-            style: .active,
-            name: "Active3Template",
-            viewBuilder: { date, hasLogo in
-                AnyView(Active3Template(displayDate: date, hasLogo: hasLogo))
-            }),
+      
         
-        
-        Template(
-            style: .active,
-            name: "Active4Template",
-            viewBuilder: { date, hasLogo in
-                AnyView(Active4Template(displayDate: date, hasLogo: hasLogo))
-            }),
-
-        
-        Template(
-            style: .active,
-            name: "Active5Template",
-            viewBuilder: { date, hasLogo in
-                AnyView(Active5Template(displayDate: date, hasLogo: hasLogo))
-            }),
+      
         
         Template(
             style: .active,
@@ -224,13 +244,7 @@ extension Template {
                 AnyView(Active7Template(displayDate: date, hasLogo: hasLogo))
             }),
         
-        Template(
-            style: .active,
-            name: "Active8Template",
-            viewBuilder: { date, hasLogo in
-                AnyView(Active8Template(displayDate: date, hasLogo: hasLogo))
-            }),
-
+       
         // MARK: - Digital
         Template(
             style: .digital,

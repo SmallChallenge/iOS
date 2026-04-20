@@ -1,5 +1,5 @@
 //
-//  Moody1Template.swift
+//  Accent001Template.swift
 //  Stampic
 //
 //  Created by 임주희 on 1/3/26.
@@ -7,7 +7,7 @@
 
 import SwiftUI
 
-struct Moody1Template: View, TemplateViewProtocol {
+struct Accent001Template: View, TemplateViewProtocol {
     
     let displayDate: Date
     let hasLogo: Bool
@@ -50,7 +50,7 @@ struct Moody1Template: View, TemplateViewProtocol {
                 .frame(width: 300, height: 300)
                 .aspectRatio(1, contentMode: .fit)
             
-            Moody1Template(displayDate: Date(), hasLogo: true)
+            Accent001Template(displayDate: Date(), hasLogo: true)
         }
         .frame(width: 300, height: 300)
         .aspectRatio(1, contentMode: .fit)
@@ -62,7 +62,7 @@ struct Moody1Template: View, TemplateViewProtocol {
                 .frame(width: 300, height: 300)
                 .aspectRatio(1, contentMode: .fit)
             
-            Moody1Template(displayDate: Date(), hasLogo: false)
+            Accent001Template(displayDate: Date(), hasLogo: false)
         }
         .frame(width: 300, height: 300)
         .aspectRatio(1, contentMode: .fit)
