@@ -11,18 +11,19 @@ import Foundation
 enum TemplateStyleViewData: CaseIterable {
     case minimal
     case accent
+    case fun
+    case fixel
     
-    case moody
-    case active
+ 
     case digital
 
     var name: String {
         switch self {
         case .minimal: return "깔끔"
         case .accent:  return "강조"
-            
-        case .moody: return "Moody"
-        case .active: return "Active"
+        case .fun: return "재미"
+        case .fixel: return "픽셀"
+    
         case .digital: return "Digital"
         }
     }
@@ -33,10 +34,9 @@ enum TemplateStyleViewData: CaseIterable {
         switch (lhs, rhs) {
         case (.minimal, .minimal): return true
         case (.accent, .accent): return true
+        case (.fun, .fun): return true
             
             
-        case (.moody, .moody): return true
-        case (.active, .active): return true
         case (.digital, .digital): return true
         default: return false
         }

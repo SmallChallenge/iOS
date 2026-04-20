@@ -1,5 +1,5 @@
 //
-//  Moody5Template.swift
+//  Fun008Template.swift
 //  Stampic
 //
 //  Created by 임주희 on 1/17/26.
@@ -7,7 +7,7 @@
 
 import SwiftUI
 
-struct Moody5Template: View, TemplateViewProtocol {
+struct Fun008Template: View, TemplateViewProtocol {
     let displayDate: Date
     let hasLogo: Bool
     
@@ -53,14 +53,14 @@ struct Moody5Template: View, TemplateViewProtocol {
             Image("sampleImage")
                 .resizable()
             
-            Moody5Template(displayDate: Date(), hasLogo: true)
+            Fun008Template(displayDate: Date(), hasLogo: true)
         }
         .aspectRatio(1, contentMode: .fit)
         
         ZStack {
             Image("sampleImage")
                 .resizable()
-            Moody5Template(displayDate: Date(), hasLogo: false)
+            Fun008Template(displayDate: Date(), hasLogo: false)
         }
         .aspectRatio(1, contentMode: .fit)
     }

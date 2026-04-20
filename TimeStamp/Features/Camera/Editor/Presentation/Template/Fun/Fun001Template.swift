@@ -1,5 +1,5 @@
 //
-//  Digital4Template.swift
+//  Fun001Template.swift
 //  Stampic
 //
 //  Created by 임주희 on 1/16/26.
@@ -7,7 +7,7 @@
 
 import SwiftUI
 
-struct Digital4Template: View ,TemplateViewProtocol {
+struct Fun001Template: View ,TemplateViewProtocol {
     
     let displayDate: Date
     let hasLogo: Bool
@@ -122,7 +122,7 @@ struct Digital4Template: View ,TemplateViewProtocol {
                 .frame(width: 300, height: 300)
                 .aspectRatio(1, contentMode: .fit)
             
-            Digital4Template(displayDate: Date(), hasLogo: true)
+            Fun001Template(displayDate: Date(), hasLogo: true)
         }
         
         .frame(width: 300, height: 300)
@@ -134,7 +134,7 @@ struct Digital4Template: View ,TemplateViewProtocol {
                 .frame(width: 300, height: 300)
                 .aspectRatio(1, contentMode: .fit)
             
-            Digital4Template(displayDate: Date(), hasLogo: false)
+            Fun001Template(displayDate: Date(), hasLogo: false)
         }
         .frame(width: 300, height: 300)
         .aspectRatio(1, contentMode: .fit)

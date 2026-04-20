@@ -1,5 +1,5 @@
 //
-//  Moody3Template.swift
+//  Fun006Template.swift
 //  Stampic
 //
 //  Created by 임주희 on 1/4/26.
@@ -7,7 +7,7 @@
 
 import SwiftUI
 
-struct Moody3Template: View , TemplateViewProtocol {
+struct Fun006Template: View , TemplateViewProtocol {
     let displayDate: Date
     let hasLogo: Bool
     
@@ -54,7 +54,7 @@ struct Moody3Template: View , TemplateViewProtocol {
                 .frame(width: 300, height: 300)
                 .aspectRatio(1, contentMode: .fit)
             
-            Moody3Template(displayDate: Date(), hasLogo: true)
+            Fun006Template(displayDate: Date(), hasLogo: true)
         }
         .aspectRatio(1, contentMode: .fit)
         .border(.red)
@@ -65,7 +65,7 @@ struct Moody3Template: View , TemplateViewProtocol {
                 .frame(width: 300, height: 300)
                 .aspectRatio(1, contentMode: .fit)
             
-            Moody3Template(displayDate: Date(), hasLogo: false)
+            Fun006Template(displayDate: Date(), hasLogo: false)
         }
         .aspectRatio(1, contentMode: .fit)
         .border(.red)
