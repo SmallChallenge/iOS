@@ -85,7 +85,7 @@ struct PhotoSaveView: View {
         .loading(viewModel.isLoading)
         // 로그인 팝업 띄우기
         .popup(isPresented: $showLoginPopup, content: {
-            Modal(title: AppMessage.loginRequired.text)
+            Modal(title: "로그인하면 내 기록을\n커뮤니티에 공유할 수 있어요.")
                 .buttons {
                     MainButton(title: "취소", colorType: .secondary) {
                         showLoginPopup = false
