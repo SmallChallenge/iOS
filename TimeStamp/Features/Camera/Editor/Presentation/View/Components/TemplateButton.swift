@@ -38,6 +38,7 @@ struct TemplateButton: View {
             capturedImage: UIImage(named: "Minimal003Template"),
             template: Template(
                 style: .minimal,
+                templateId: "minimal_003",
                 name: "Minimal003Template",
                 viewBuilder: { _,_ in AnyView(EmptyView())}
             ),

@@ -26,8 +26,6 @@ struct PhotoSaveView: View {
     @State private var showLoginPopup: Bool = false
     @State private var showLoginView: Bool = false
     
-    
-
     var body: some View {
         ScrollView {
             VStack (alignment: .leading, spacing: 0){
@@ -230,6 +228,8 @@ struct PhotoSaveView: View {
 
 #Preview {
     MockCameraDIContainer().makePhotoSaveView(
-        capturedImage: UIImage(named: "sampleImage")!
+        capturedImage: UIImage(named: "sampleImage")!,
+        selectedCategoryType: "",
+        selectedTamplateId: ""
         , onGoBack: {}, onComplete: {})
 }

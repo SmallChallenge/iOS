@@ -165,9 +165,12 @@ struct EditorView: View {
                 }
         })*/
         .navigationDestination(isPresented: $navigateToPhotoSave) {
+            // 수정 화면으로 넘기기
             if let editedImage = editedImage {
                 diContainer.makePhotoSaveView(
                     capturedImage: editedImage,
+                    selectedCategoryType: selectedTemplateStyle.enName,
+                    selectedTamplateId: selectedTemplate.templateId,
                     onGoBack: nil,
                     onComplete: onComplete
                 )

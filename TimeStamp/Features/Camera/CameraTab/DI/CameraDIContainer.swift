@@ -33,9 +33,12 @@ protocol CameraDIContainerProtocol {
     // 사진 저장
     func makePhotoSaveView(
         capturedImage: UIImage,
+        selectedCategoryType: String,
+        selectedTamplateId: String,
         onGoBack: (() -> Void)?,
         onComplete: @escaping () -> Void
     ) -> PhotoSaveView
+    
 }
 
 final class CameraDIContainer: CameraDIContainerProtocol {
@@ -155,16 +158,21 @@ final class CameraDIContainer: CameraDIContainerProtocol {
         return PhotoSaveUseCase(repository: makePhotoSaveRepository())
     }
     
-    private func makePhotoSaveViewModel() -> PhotoSaveViewModel {
-        return PhotoSaveViewModel(useCase: makePhotoSaveUseCase())
+    private func makePhotoSaveViewModel(selectedCategoryType: String, selectedTamplateId: String) -> PhotoSaveViewModel {
+        return PhotoSaveViewModel(useCase: makePhotoSaveUseCase(),
+                                  selectedCategoryType: selectedCategoryType,
+                                  selectedTamplateId: selectedTamplateId
+        )
     }
     
     func makePhotoSaveView(
         capturedImage: UIImage,
+        selectedCategoryType: String,
+        selectedTamplateId: String,
         onGoBack: (() -> Void)? = nil,
         onComplete: @escaping () -> Void
     ) -> PhotoSaveView {
-        let viewModel = makePhotoSaveViewModel()
+        let viewModel = makePhotoSaveViewModel(selectedCategoryType: selectedCategoryType, selectedTamplateId: selectedTamplateId)
         return PhotoSaveView(
             viewModel: viewModel,
             capturedImage: capturedImage,
@@ -254,11 +262,17 @@ struct MockCameraDIContainer: CameraDIContainerProtocol {
     }
     
     private func makePhotoSaveViewModel() -> PhotoSaveViewModel {
-        return PhotoSaveViewModel(useCase: MockPhotoSaveUseCase())
+        return PhotoSaveViewModel(useCase: MockPhotoSaveUseCase(),
+                                  selectedCategoryType: "",
+                                  selectedTamplateId: ""
+        )
     }
+    
     func makePhotoSaveView(
         capturedImage: UIImage,
-        onGoBack: (() -> Void)?,
+        selectedCategoryType: String,
+        selectedTamplateId: String,
+        onGoBack: (() -> Void)? = nil,
         onComplete: @escaping () -> Void
     ) -> PhotoSaveView {
         let viewModel = makePhotoSaveViewModel()

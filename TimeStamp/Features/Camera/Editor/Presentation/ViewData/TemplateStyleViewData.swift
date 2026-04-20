@@ -20,6 +20,15 @@ enum TemplateStyleViewData: CaseIterable {
         case .accent:  return "강조"
         case .fun: return "재미"
         case .fixel: return "픽셀"
+        }
+    }
+    
+    var enName: String {
+        switch self {
+        case .minimal: return "minimal"
+        case .accent:  return "accent"
+        case .fun: return "fun"
+        case .fixel: return "fixel"
 
         }
     }

@@ -131,10 +131,26 @@ extension AmplitudeManager {
         let userIdString = userId.map { "user_\($0)" }
         instance?.setUserId(userId: userIdString)
     }
+    
+    
+    func indentify(socialType: LoginType){
+        let prooerties: [String : Any] = [
+            "is_logged_in" : AuthManager.shared.isLoggedIn,
+            "login_method": socialType.rawValue,
+            "photo_save_count" : 0
+        ]
+        instance?.identify(userProperties: prooerties)
+    }
 
     func login(userId: Int, socialType: LoginType){
         // userId 설정
         setUserId(userId)
+        
+        // identify 유저 프로퍼티 업데이트
+        instance?.identify(userProperties: [
+            "is_logged_in" : true,
+            "login_method": socialType.rawValue
+        ])
 
         // 로그인 이벤트 전송 (eventTrack 내부에서 초기화 확인)
         eventTrack(.login, eventProperties: [
@@ -144,6 +160,12 @@ extension AmplitudeManager {
 
     func logout(){
         eventTrack(.logout)
+        
+        // identify 유저 프로퍼티 업데이트
+        instance?.identify(userProperties: [
+            "is_logged_in" : false
+        ])
+        
         instance?.setUserId(userId: nil)
     }
     
@@ -153,10 +175,19 @@ extension AmplitudeManager {
     }
     
     /// 사진 저장 완료 (서버에만)
-    func trackCompletePhotoSave(category: Category, visibility: VisibilityType){
+    /// - Parameters:
+    ///   - category: study | exercise | food | etc
+    ///   - visibility:  private | public
+    ///   - templateId: minimal_001
+    ///   - templateCategory: minimal | accent | fun | pixel
+    func trackCompletePhotoSave(category: String, visibility: String, templateId: String, templateCategory: String){
         eventTrack(.photoSaveCompleted, eventProperties: [
-            "category" : category.rawValue.lowercased(),
-            "save_scope": visibility.rawValue.lowercased()
+            "category" : category,
+            "save_scope": visibility,
+            "template_id" : templateId,
+            "template_category": templateCategory,
+            "template_type" : "default",
+            "template_is_paid" : false
         ])
     }
 

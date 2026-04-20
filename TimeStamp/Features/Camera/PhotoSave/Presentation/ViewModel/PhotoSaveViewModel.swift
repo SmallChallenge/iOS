@@ -24,6 +24,8 @@ final class PhotoSaveViewModel: ObservableObject, MessageDisplayable {
 
     /// 사진 저장 UseCase
     private let useCase: PhotoSaveUseCaseProtocol
+    private let selectedCategoryType: String
+    private let selectedTamplateId: String
 
     /// 저장 성공 여부
     @Published var isSaved = false
@@ -37,8 +39,10 @@ final class PhotoSaveViewModel: ObservableObject, MessageDisplayable {
 
     // MARK: - Init
 
-    init(useCase: PhotoSaveUseCaseProtocol) {
+    init(useCase: PhotoSaveUseCaseProtocol, selectedCategoryType: String, selectedTamplateId: String) {
         self.useCase = useCase
+        self.selectedCategoryType = selectedCategoryType
+        self.selectedTamplateId = selectedTamplateId
     }
 
     // MARK: - Actions
@@ -59,10 +63,29 @@ final class PhotoSaveViewModel: ObservableObject, MessageDisplayable {
             // 로그인되어 있으면 서버에 저장
             Task {
                 await savePhotoToServer(image: image, category: category, visibility: visibility)
+                
+                /// 앰플리튜드
+                trackPhotoSave(category: category, visibility: visibility)
             }
         } else {
             // 로그아웃 상태면 로컬에 저장
             savePhotoToLocal(image: image, category: category, visibility: visibility)
+        }
+    }
+    
+    private func trackPhotoSave(category: CategoryViewData, visibility: VisibilityViewData) {
+        print(">>>>> trackPhotoSave")
+        let categoryEntity = CategoryMapper().toEntity(from: category)
+        let visibilityEntity = VisibilityTypeMapper().toEntity(from: visibility)
+        
+        AmplitudeManager.shared.trackCompletePhotoSave(
+            category: categoryEntity.rawValue.lowercased(),
+            visibility: visibilityEntity.rawValue.lowercased(),
+            templateId: selectedTamplateId,
+            templateCategory: selectedCategoryType
+        )
+        if visibility == .publicVisible {
+            AmplitudeManager.shared.trackPublicPhotoUpload(category: categoryEntity)
         }
     }
     
@@ -110,15 +133,6 @@ final class PhotoSaveViewModel: ObservableObject, MessageDisplayable {
 
             // MyLogView에 새로고침 알림
             NotificationCenter.default.post(name: .shouldRefreshMyLog, object: nil)
-            
-            /// 앰플리튜드
-            AmplitudeManager.shared.trackCompletePhotoSave(
-                category: categoryEntity,
-                visibility: visibilityEntity
-            )
-            if visibility == .publicVisible {
-                AmplitudeManager.shared.trackPublicPhotoUpload(category: categoryEntity)
-            }
 
         } catch {
             // 저장 실패
