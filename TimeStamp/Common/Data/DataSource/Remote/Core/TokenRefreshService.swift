@@ -32,12 +32,14 @@ final class TokenRefreshService {
     func refreshToken(completion: @escaping (Bool) -> Void) {
         // 이미 갱신 중이면 대기열에 추가
         if isRefreshing {
+            Logger.debug("이미 갱신 중이면 대기열에 추가")
             pendingCompletions.append(completion)
             return
         }
 
         // refreshToken 확인
         guard let refreshToken = AuthManager.shared.getRefreshToken() else {
+            Logger.error("refreshToken 가져오기 실패")
             completion(false)
             return
         }
@@ -64,6 +66,7 @@ final class TokenRefreshService {
 
             switch result {
             case .success(let dto):
+                Logger.success("토큰 갱신 성공")
                 // 성공 - 토큰 저장
                 AuthManager.shared.refreshToken(
                     accessToken: dto.accessToken,
@@ -92,7 +95,7 @@ final class TokenRefreshService {
                     )
                 } else {
                     // 최대 재시도 초과 - 로그아웃
-                    Logger.error("토큰 갱신 최종 실패 (\(maxRetries)회 재시도 후): \(error)")
+                    Logger.error("토큰 갱신 최종 실패, 로그아웃 처리 (\(maxRetries)회 재시도 후): \(error)")
                     AuthManager.shared.logout()
 
                     // 완료 처리
