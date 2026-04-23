@@ -12,18 +12,8 @@ import Alamofire
 
 public final class APIRequestInterceptor: RequestInterceptor {
 
-    
-    private let tokenRefreshService: TokenRefreshService
-
-    public init() {
-        
-        // 토큰 갱신 전용 서비스 (순환 의존성 방지를 위해 interceptor 없는 별도 session 사용)
-        let configuration = URLSessionConfiguration.af.default
-        configuration.timeoutIntervalForRequest = 20
-        let refreshSession = Session(configuration: configuration)
-        let authApiClient = AuthApiClient(session: refreshSession)
-        self.tokenRefreshService = TokenRefreshService(authApiClient: authApiClient)
-    }
+    // TokenRefreshService는 싱글톤 사용
+    public init() {}
 
     // Adapt request if needed (e.g., attach auth headers)
     public func adapt(_ urlRequest: URLRequest, for session: Session, completion: @escaping (Result<URLRequest, Error>) -> Void) {
@@ -50,7 +40,7 @@ public final class APIRequestInterceptor: RequestInterceptor {
 
         // 401,403 에러 시 토큰 갱신 후 재시도
         if [401, 403].contains(response.statusCode) {
-            tokenRefreshService.refreshToken { success in
+            TokenRefreshService.shared.refreshToken { success in
                 completion(success ? .retry : .doNotRetry)
             }
         } else if (500...599).contains(response.statusCode) {

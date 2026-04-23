@@ -64,9 +64,23 @@ struct RootViewWithGlobalToast<Content: View>: View {
 // MARK: - 화면 회전 제어를 위한 AppDelegate
 class AppDelegate: NSObject, UIApplicationDelegate {
     static var orientationLock = UIInterfaceOrientationMask.all
-    
+
     func application(_ application: UIApplication, supportedInterfaceOrientationsFor window: UIWindow?) -> UIInterfaceOrientationMask {
         return AppDelegate.orientationLock
+    }
+
+    // MARK: - 포그라운드 진입 시 토큰 갱신
+    func applicationDidBecomeActive(_ application: UIApplication) {
+        // 로그인 상태이면 토큰 갱신 시도
+        if AuthManager.shared.isLoggedIn {
+            TokenRefreshService.shared.refreshToken { success in
+                if success {
+                    Logger.info("포그라운드 진입 시 토큰 갱신 성공")
+                } else {
+                    Logger.info("포그라운드 진입 시 토큰 갱신 실패 (로그아웃 처리)")
+                }
+            }
+        }
     }
 }
 
