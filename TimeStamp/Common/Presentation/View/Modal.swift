@@ -7,37 +7,13 @@
 
 import SwiftUI
 
-struct Modal: View {
+struct Modal {
     let title: String
     let content: String?
 
     init(title: String, content: String? = nil) {
         self.title = title
         self.content = content
-    }
-
-    var body: some View {
-        VStack(alignment: .center, spacing: 24){
-
-            // 제목, 컨텐츠
-            VStack(alignment: .center, spacing: 8) {
-                Text(title)
-                    .font(.H3)
-                    .foregroundStyle(Color.gray50)
-
-                if let content {
-                    Text(content)
-                        .font(.Body2)
-                        .foregroundStyle(Color.gray300)
-                        .multilineTextAlignment(.center)
-                }
-            }
-        }
-        .padding(.top, 32)
-        .padding([.bottom, .horizontal], 20)
-        .frame(maxWidth: .infinity)
-        .background(Color.gray900)
-        .cornerRadius(16)
     }
 
     func buttons<Content: View>(@ViewBuilder _ content: () -> Content) -> some View {
@@ -75,7 +51,7 @@ private struct ModalWithButtons<Buttons: View>: View {
         .padding(.top, 32)
         .padding([.bottom, .horizontal], 20)
         .frame(maxWidth: .infinity)
-        .background(Color.gray900)
+        .background(Color.gray800)
         .cornerRadius(16)
     }
 }
