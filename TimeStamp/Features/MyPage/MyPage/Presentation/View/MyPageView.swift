@@ -413,9 +413,9 @@ struct MyPageView: View {
     }
     
     // 메일 클립보드 복사
-    func copyToClipboard(recipient: String) {
+    private func copyToClipboard(recipient: String) {
         UIPasteboard.general.string = recipient
-        viewModel.toastMessage = "클립보드에 복사되었습니다."
+        viewModel.toastMessage = "메일 주소가 복사되었습니다.\n문의 메일을 보내주세요."
         Logger.success("이메일 주소 클립보드 복사 완료")
     }
     

@@ -42,7 +42,7 @@ public class StoreRatingsManager {
     /// Dev 버전이면 무조건 5분뒤로 설정
     private func setDelayedForDev() {
         let today = Date()
-        if let target = Calendar.current.date(byAdding: .minute, value: 1, to: today) {
+        if let target = Calendar.current.date(byAdding: .minute, value: 5, to: today) {
             targetDate = target.toString(format: "yyyy-MM-dd HH:mm")
         }
     }
@@ -66,20 +66,30 @@ public class StoreRatingsManager {
     /// 저장된 날짜가 지났는지 안지났는지 확인 && logCount 개수가 3개 이상
     /// - Returns: 저장된 날짜가 없으면 true 반환, 저장된 날짜가 있으면 해당 날짜가 지난 경우에 true 지나지 않은 경우 false
     public func canOpen() -> Bool {
-        guard let target = targetDate.toDate(format: "yyyy-MM-dd HH:mm") else {
-            return true
-        }
+       
         let today = Date()
+        // 저장된 날짜가 없으면 true 반환,
+        // 저장된 날짜가 있으면 해당 날짜가 지난 경우에 true 지나지 않은 경우 false
+        let isAfterTargetDate = if let target = targetDate.toDate(format: "yyyy-MM-dd HH:mm"){
+            today > target
+        } else {
+            true
+        }
         
-        Logger.debug("(today > target) : \(today > target)")
+        
+        Logger.debug("isAfterTargetDate : \(isAfterTargetDate)")
         Logger.debug("logCount : \(logCount ?? "")")
+        print(">>>>> isAfterTargetDate : \(isAfterTargetDate)")
+        print(">>>>> logCount : \(logCount ?? "")")
+        
+        // 로그개수, 가져올 수 없으면 기본값 0
         let count = if let logCount {
             Int(logCount) ?? 0
         } else {
             0
         }
         
-        return (today > target) && (count >= 3)
+        return isAfterTargetDate && (count >= 3)
     }
 
     /// 앱스토어 리뷰 요청하기
@@ -95,6 +105,7 @@ public class StoreRatingsManager {
 
     /// 앱 평가 요청하기
     public func requestRatings() {
+        print(">>>>> requestRatings ")
         guard canOpen() else { return }
         if let windowScene = UIApplication.shared.connectedScenes.first as? UIWindowScene {
             SKStoreReviewController.requestReview(in: windowScene)

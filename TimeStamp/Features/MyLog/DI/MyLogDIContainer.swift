@@ -37,10 +37,16 @@ struct MyLogDIContainer: MyLogDIContainerProtocol {
     }
     
     
-    
     // MARK: - MainTab
+    private func makeMainTabUseCase() -> MainTabUseCaseProtocol {
+        let repo = MainTabRepository()
+        let myLogRepo = makeMyLogRepository()
+        return MainTabUseCase(repository: repo, myLogRepository: myLogRepo)
+    }
+    
     private func makeMainTabViewModel() -> MainTabViewModel {
-        return MainTabViewModel(myLogUseCase: makeMyLogUseCase())
+        let usecase = makeMainTabUseCase()
+        return MainTabViewModel(useCase: usecase)
     }
 
     func makeMainTabView() -> MainTabView {
@@ -123,16 +129,23 @@ struct MockMyLogDIContainer: MyLogDIContainerProtocol {
     
     // MARK: MainTab
     func makeMainTabView() -> MainTabView {
-        let useCase = MockMyLogUseCase()
-        let viewModel = MainTabViewModel(myLogUseCase: useCase)
+        let useCase = MockMainTabUseCase()
+        let viewModel = MainTabViewModel(useCase: useCase)
         return MainTabView(container: AppDIContainer.shared, viewModel: viewModel)
     }
+    struct MockMainTabUseCase: MainTabUseCaseProtocol {
+        func setReviewDelayed(days: Int) { }
+        
+        func getLocalLogsCount() -> Int { return 10}
+        
+        func checkShowReviewPopup() -> Bool { return true }
+        
+        
+    }
    
-    
     // MARK: MyLogView
     func makeMyLogView(selectedLog: Binding<TimeStampLogViewData?>) -> MyLogView {
         let usecase = MockMyLogUseCase()
-        let settingsRepository = MockSettingsRepository()
         let viewModel = MyLogViewModel(useCase: usecase)
         return MyLogView(viewModel: viewModel, diContainer: self, selectedLog: selectedLog)
     }

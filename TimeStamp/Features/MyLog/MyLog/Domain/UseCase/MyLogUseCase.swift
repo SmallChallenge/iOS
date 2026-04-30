@@ -82,4 +82,10 @@ struct MyLogUseCase: MyLogUseCaseProtocol {
     func dismissLogLimitBanner() {
         settingsRepository.setIsLogLimitBannerDismissed(true)
     }
+    
+    // MARK: - 리뷰 유도 팝업
+    
+    func checkShowReviewPopup(){
+        
+    }
 }
