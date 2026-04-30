@@ -22,7 +22,8 @@ struct PhotoSaveUseCase: PhotoSaveUseCaseProtocol {
 
     // MARK: - Methods
 
-    /// Core Data에 사진을 저장하고
+    
+    // 로컬에 저장하기 ( Core Data에 사진 저장 )
     func savePhotoToLacal(image: UIImage, category: Category, visibility: VisibilityType) throws {
         // 1. 타임스탬프 생성
         let dateString = Date().toString(.iso8601)
@@ -45,8 +46,12 @@ struct PhotoSaveUseCase: PhotoSaveUseCaseProtocol {
             fileName: fileName,
             dto: dto
         )
+        
+        // 사진 저장개수 +1 하기
+        repository.saveLogCount()
     }
     
+    // 서버에 저장하기
     func savePhotoToServer(image: UIImage, category: Category, visibility: VisibilityType) async throws {
         // 1. 타임스탬프 생성
         let dateString = Date().toString(format: "yyyy-MM-dd'T'HH:mm:ss")
@@ -83,12 +88,19 @@ struct PhotoSaveUseCase: PhotoSaveUseCaseProtocol {
             visibility: visibility.rawValue,
             timeStamp: dateString
         )
+        
+        // 사진 저장개수 +1 하기
+        repository.saveLogCount()
+        
     }
 
+    // 갤러리에 사진 저장하기
     func savePhotoToGallery(image: UIImage) {
         repository.savePhotoToGallery(image: image)
     }
     
+    
+    // 자동저장 여부 가져오기
     func getIsAutoSave() -> Bool {
         repository.getIsAutoSave()
     }

@@ -25,7 +25,7 @@ struct MyLogUseCase: MyLogUseCaseProtocol {
 
     // MARK: - Methods
 
-    /// 모든 타임스탬프 로그를 조회
+    /// 모든 타임스탬프 로그를 조회 (서버 + 로컬)
     func fetchAllLogs(isLoggedIn: Bool) async -> (logs: [TimeStampLog], pageInfo: PageInfo?) {
 
         // 로컬 로그 가져오기

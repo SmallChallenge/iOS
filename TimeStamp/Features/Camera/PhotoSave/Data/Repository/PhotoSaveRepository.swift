@@ -187,4 +187,9 @@ final class PhotoSaveRepository: PhotoSaveRepositoryProtocol {
     func getIsAutoSave() -> Bool {
         return AppConfig.shared.isAutoSave
     }
+    
+    /// 사진 저장개수  +1 하기
+    func saveLogCount(){
+        StoreRatingsManager().updateLogCount()
+    }
 }

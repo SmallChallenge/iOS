@@ -28,8 +28,6 @@ public struct Keychain {
             }
         }
     }
-    
-    
 }
 
 extension Keychain {

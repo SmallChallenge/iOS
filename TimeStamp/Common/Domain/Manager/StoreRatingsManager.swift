@@ -8,10 +8,20 @@
 import Foundation
 import StoreKit
 
+/*
+ 유저가 앱을 설치하고 최소 3회 이상 사진을 저장했을 때, 저장 직후 로직 작동
+ 이미 설치 후 3회 이상 사진을 촬영한 사람은 1회 저장 완료되면 로직 작동
+ 
+ */
+
 public class StoreRatingsManager {
     // Date값을 String으로 변환해서 저장하기 (포맷 "yyyy-MM-dd HH:mm")
     @UserDefaultsValue(key: "StoreRatingsDate", defaultValue: "")
     private var targetDate: String
+    
+    // 사진 저장회수를 String으로 변환해서 저장
+    @Keychain(key: "totalLogCount")
+    private var logCount: String?
 
     public init() {}
 
@@ -32,19 +42,44 @@ public class StoreRatingsManager {
     /// Dev 버전이면 무조건 5분뒤로 설정
     private func setDelayedForDev() {
         let today = Date()
-        if let target = Calendar.current.date(byAdding: .minute, value: 5, to: today) {
+        if let target = Calendar.current.date(byAdding: .minute, value: 1, to: today) {
             targetDate = target.toString(format: "yyyy-MM-dd HH:mm")
         }
     }
+    
+    
+    /// 사진 저장 개수 +1 하기
+    public func updateLogCount() {
+        var count = if let logCount {
+            Int(logCount) ?? 0
+        } else {
+            0
+        }
+        
+        count += 1
+        
+        logCount = "\(count)"
+        
+        Logger.debug("updated logCount : \(logCount ?? "")")
+    }
 
-    /// 저장된 날짜가 지났는지 안지났는지 확인
+    /// 저장된 날짜가 지났는지 안지났는지 확인 && logCount 개수가 3개 이상
     /// - Returns: 저장된 날짜가 없으면 true 반환, 저장된 날짜가 있으면 해당 날짜가 지난 경우에 true 지나지 않은 경우 false
     public func canOpen() -> Bool {
         guard let target = targetDate.toDate(format: "yyyy-MM-dd HH:mm") else {
             return true
         }
         let today = Date()
-        return today > target
+        
+        Logger.debug("(today > target) : \(today > target)")
+        Logger.debug("logCount : \(logCount ?? "")")
+        let count = if let logCount {
+            Int(logCount) ?? 0
+        } else {
+            0
+        }
+        
+        return (today > target) && (count >= 3)
     }
 
     /// 앱스토어 리뷰 요청하기

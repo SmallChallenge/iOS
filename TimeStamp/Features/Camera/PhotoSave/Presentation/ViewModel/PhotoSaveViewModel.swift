@@ -14,6 +14,9 @@ import Combine
 extension Notification.Name {
     static let shouldRefresh = Notification.Name("shouldRefres")
     static let shouldRefreshMyLog = Notification.Name("shouldRefreshMyLog")
+    
+    /// 방금 저장됨
+    static let didSaveLog = Notification.Name("savedLog")
 }
 
 /// 사진 저장 화면의 비즈니스 로직을 관리하는 ViewModel
@@ -74,7 +77,6 @@ final class PhotoSaveViewModel: ObservableObject, MessageDisplayable {
     }
     
     private func trackPhotoSave(category: CategoryViewData, visibility: VisibilityViewData) {
-        print(">>>>> trackPhotoSave")
         let categoryEntity = CategoryMapper().toEntity(from: category)
         let visibilityEntity = VisibilityTypeMapper().toEntity(from: visibility)
         
@@ -87,6 +89,11 @@ final class PhotoSaveViewModel: ObservableObject, MessageDisplayable {
         if visibility == .publicVisible {
             AmplitudeManager.shared.trackPublicPhotoUpload(category: categoryEntity)
         }
+    }
+    
+    // TODO: 사진 저장개수 카운트
+    private func saveCount(){
+        
     }
     
 
@@ -105,9 +112,14 @@ final class PhotoSaveViewModel: ObservableObject, MessageDisplayable {
             isSaved = true
             ToastManager.shared.show(AppMessage.saveSuccess.text)
             Logger.success("사진 저장 성공")
+            
+            // TODO: 사진 저장개수 카운트
 
             // MyLogView에 새로고침 알림
             NotificationCenter.default.post(name: .shouldRefreshMyLog, object: nil)
+            
+            // MainTabView에 저장됨을 알림.
+            NotificationCenter.default.post(name: .didSaveLog, object: nil)
 
         } catch {
             // 저장 실패
@@ -130,9 +142,14 @@ final class PhotoSaveViewModel: ObservableObject, MessageDisplayable {
             isLoading = false
             ToastManager.shared.show(AppMessage.saveSuccess.text)
             Logger.success("서버에 사진 저장 성공")
+            
+            // TODO: 사진 저장개수 카운트
 
             // MyLogView에 새로고침 알림
             NotificationCenter.default.post(name: .shouldRefreshMyLog, object: nil)
+            
+            // MainTabView에 저장됨을 알림.
+            NotificationCenter.default.post(name: .didSaveLog, object: nil)
 
         } catch {
             // 저장 실패

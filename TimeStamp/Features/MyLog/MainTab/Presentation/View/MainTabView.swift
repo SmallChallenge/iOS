@@ -97,10 +97,12 @@ struct MainTabView: View {
                         }
                     }
             })
-            .onReceive(NotificationCenter.default.publisher(for: .shouldRefreshMyLog)) { _ in
+            .onReceive(NotificationCenter.default.publisher(for: .didSaveLog), perform: { _ in
                 // 사진 저장 후 탭바 '내기록'으로 이동
                 selectedTab = 0
-            }
+                
+                // TODO: 저장 개수에 따라서 팝업 띄우기
+            })
             // 마이페이지 화면으로
             .navigationDestination(isPresented: $presentMypage) {
                 container.makeMyPageView(onGoBack: {
