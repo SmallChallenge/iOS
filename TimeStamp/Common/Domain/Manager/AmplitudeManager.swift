@@ -204,6 +204,13 @@ extension AmplitudeManager {
             "template_is_paid" : false
         ])
     }
+    
+    /// 사진 저장 완료 (로컬, 서버 구분 없이)
+    func trackComplatePhotoSaveCount(){
+        instance?.identify(userProperties: [
+            "photo_save_count" : 1
+        ])
+    }
 
     
     /// 편집화면에서 특정 템플릿 클릭 시
@@ -212,8 +219,8 @@ extension AmplitudeManager {
     ///   - templateCategory: minimal | accent | fun | pixel
     func trackTemplateSelection(templateId: String, templateCategory: String){
         eventTrack(.selectTemplate, eventProperties: [
-            "template_id" : "category",
-            "template_category" : "category",
+            "template_id" : "templateId",
+            "template_category" : "templateCategory",
             "template_type" : "default",
             "template_is_paid" : false,
         ])

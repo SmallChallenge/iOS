@@ -74,12 +74,15 @@ final class PhotoSaveViewModel: ObservableObject, MessageDisplayable {
             // 로그아웃 상태면 로컬에 저장
             savePhotoToLocal(image: image, category: category, visibility: visibility)
         }
+        // 앰플리튜드 - 사진 저장 완료 (로컬, 서버 구분 없이)
+        AmplitudeManager.shared.trackComplatePhotoSaveCount()
     }
     
     private func trackPhotoSave(category: CategoryViewData, visibility: VisibilityViewData) {
         let categoryEntity = CategoryMapper().toEntity(from: category)
         let visibilityEntity = VisibilityTypeMapper().toEntity(from: visibility)
         
+        // 사진 저장 완료 (서버에만)
         AmplitudeManager.shared.trackCompletePhotoSave(
             category: categoryEntity.rawValue.lowercased(),
             visibility: visibilityEntity.rawValue.lowercased(),
@@ -87,6 +90,7 @@ final class PhotoSaveViewModel: ObservableObject, MessageDisplayable {
             templateCategory: selectedCategoryType
         )
         if visibility == .publicVisible {
+            // 전체공개로 사진 업로드 or 전체공개로 사진을 수정한 경우
             AmplitudeManager.shared.trackPublicPhotoUpload(category: categoryEntity)
         }
     }
