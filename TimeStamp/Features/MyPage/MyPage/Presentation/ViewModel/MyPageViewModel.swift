@@ -16,7 +16,11 @@ final class MyPageViewModel: ObservableObject, MessageDisplayable {
 
     // MARK: - Output Properties
 
+    // 갤러리 자동저장
     @Published var isAutoSave: Bool = true
+    
+    // 앱 시작시 카메라 실행
+    @Published var shouldLaunchCameraOnStart: Bool = false
 
     /// 로그아웃 성공 여부
     @Published var didLogout: Bool = false

@@ -104,6 +104,7 @@ class NicknameSettingViewModel: ObservableObject {
                             validateMessage = "이미 누군가 사용하고 있어요."
                         }
                         Logger.error("닉네임 설정 실패 [\(code)]: \(message)")
+                        
                     default:
                         validateMessage = error.description
                         Logger.error("닉네임 설정 실패: \(error)")

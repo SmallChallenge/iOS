@@ -100,8 +100,22 @@ struct MyPageView: View {
                     // 메뉴버튼
                     VStack(spacing: .zero) {
                         
-                        // 갤러리에 자동 저장
-                        authSaveMenu
+                        // 카메라 설정 ( 자동저장, 촬영바로가기)
+                        VStack(alignment: .leading, spacing: .zero) {
+                            MyPageMenuHeader(title: "카메라 설정")
+                            
+                            // 갤러리 자동저장
+                            MyPageToggleMenu(
+                                title: "갤러리에 자동 저장",
+                                toggleValue: $viewModel.isAutoSave
+                            )
+                            
+                            // 앱 시작 시 카메라 실행
+                            MyPageToggleMenu(
+                                title: "앱 시작 시, 카메라 실행",
+                                toggleValue: $viewModel.shouldLaunchCameraOnStart
+                            )
+                        }
                         
                         thickLine
                         MyPageMenu("공지사항", type: .chevron){
@@ -344,32 +358,6 @@ struct MyPageView: View {
         .padding(.horizontal, 24)
         .background(Color.gray800)
         .rounded(radius: 16)
-    }
-    
-    // 자동저장 메뉴
-    private var authSaveMenu: some View {
-        VStack(alignment: .leading, spacing: .zero) {
-            Text("카메라 설정")
-                .font(.Label)
-                .foregroundStyle(Color.gray500)
-                .padding([.top, .leading], 20)
-            
-            HStack {
-                Text("갤러리에 자동 저장")
-                    .font(.Btn2_b)
-                    .foregroundStyle(Color.gray300)
-                
-                Spacer()
-                
-                Toggle(isOn: $viewModel.isAutoSave) {}
-                .padding(.trailing, 20)
-                
-            }
-            .padding(.leading, 20)
-            .padding(.vertical, 19.5)
-
-        }
-        
     }
     
     private var thinLine: some View {
