@@ -143,7 +143,6 @@ extension AmplitudeManager {
         guard isProduction else {
             return
         }
-        
         let userIdString = userId.map { "user_\($0)" }
         instance?.setUserId(userId: userIdString)
     }
@@ -219,8 +218,8 @@ extension AmplitudeManager {
     ///   - templateCategory: minimal | accent | fun | pixel
     func trackTemplateSelection(templateId: String, templateCategory: String){
         eventTrack(.selectTemplate, eventProperties: [
-            "template_id" : "templateId",
-            "template_category" : "templateCategory",
+            "template_id" : templateId,
+            "template_category" : templateCategory,
             "template_type" : "default",
             "template_is_paid" : false,
         ])
