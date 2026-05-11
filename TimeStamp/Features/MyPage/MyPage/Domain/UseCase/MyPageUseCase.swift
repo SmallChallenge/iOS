@@ -43,4 +43,12 @@ final class MyPageUseCase: MyPageUseCaseProtocol {
     func setAutoSaveEnabled(_ isEnabled: Bool) {
         settingsRepository.setIsAutoSave(isEnabled)
     }
+    
+    func getLaunchCameraOnStart() -> Bool{
+        return settingsRepository.getLaunchCameraOnStart()
+    }
+    
+    func updateLaunchCameraOnStart(_ shouldLaunchCameraOnStart: Bool){
+        settingsRepository.updateLaunchCameraOnStart(shouldLaunchCameraOnStart)
+    }
 }

@@ -112,7 +112,7 @@ struct MyPageView: View {
                             
                             // 앱 시작 시 카메라 실행
                             MyPageToggleMenu(
-                                title: "앱 시작 시, 카메라 실행",
+                                title: "앱 시작 시 카메라 실행",
                                 toggleValue: $viewModel.shouldLaunchCameraOnStart
                             )
                         }
@@ -181,6 +181,7 @@ struct MyPageView: View {
         .mainBackgourndColor()
         .task {
             viewModel.getAutoSave()
+            viewModel.getLaunchCameraOnStart()
         }
         .navigationBarHidden(true)
         .toolbar(.hidden, for: .navigationBar)
@@ -191,6 +192,9 @@ struct MyPageView: View {
         }
         .onChange(of: viewModel.isAutoSave) { isAutoSave in
             viewModel.updateAutoSave(isAutoSave)
+        }
+        .onChange(of: viewModel.shouldLaunchCameraOnStart) { shouldLaunchCameraOnStart in
+            viewModel.updateLaunchCameraOnStart(shouldLaunchCameraOnStart)
         }
         // 유저정보화면 띄우기
         .navigationDestination(isPresented: $presentUserInfo) {

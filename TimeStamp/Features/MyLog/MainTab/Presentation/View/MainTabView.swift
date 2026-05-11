@@ -16,7 +16,7 @@ struct MainTabView: View {
     private let container: AppDIContainer
     
     
-    @State private var selectedTab: Int = 0
+    @State private var selectedTab: Int
     @State private var showCamera: Bool = false
     @State private var presentMypage: Bool = false
     @State private var selectedLog: TimeStampLogViewData? = nil
@@ -31,9 +31,10 @@ struct MainTabView: View {
     @State private var triggerCommunityRefresh: Bool = false
     
     
-    init(container: AppDIContainer, viewModel: MainTabViewModel) {
+    init(container: AppDIContainer, viewModel: MainTabViewModel, selectedTab: Int = 0) {
         self.container = container
         _viewModel = StateObject(wrappedValue: viewModel)
+        self.selectedTab = selectedTab
     }
     
     var body: some View {
@@ -93,6 +94,12 @@ struct MainTabView: View {
             .task {
                 // 추적 권한 요청
                 await viewModel.requestAuthorization()
+            }
+            .onAppear {
+                if selectedTab == 1 {
+                    selectedTab = 0
+                    showCamera = true
+                }
             }
             .popup(isPresented: $showLimitReachedPopup, content: {
                 Modal(title: AppMessage.maxPhotoLimitReached.text)
@@ -232,5 +239,5 @@ struct MainTabView: View {
 }
 
 #Preview {
-    AppDIContainer.shared.makeMainTabView()
+    AppDIContainer.shared.makeMainTabView(selectedTab: 0)
 }

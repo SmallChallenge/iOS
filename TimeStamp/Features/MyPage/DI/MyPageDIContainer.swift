@@ -82,6 +82,8 @@ struct MockMyPageDIContainer: MyPageDIContainerProtocol{
         func setIsLogLimitBannerDismissed(_ isDismissed: Bool) {}
         func isAutoSaveEnabled() -> Bool { true }
         func setAutoSaveEnabled(_ isEnabled: Bool) {}
+        func getLaunchCameraOnStart() -> Bool { false }
+        func updateLaunchCameraOnStart(_ shouldLaunchCameraOnStart: Bool) {}
     }
 
     struct MockWithdrawalUseCase: WithdrawalUseCaseProtocol {

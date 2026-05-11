@@ -12,10 +12,13 @@ final class AppConfig {
     static let shared = AppConfig()
     private init(){}
     
-    // MARK: - auth save
+    // MARK: - 갤러리에 자동 저장 여부
     @UserDefaultsValue(key: "isAutoSave", defaultValue: true)
     var isAutoSave: Bool
     
+    // MARK: - 앱 실행 시, 카메라 실행여부
+    @UserDefaultsValue(key: "shouldLaunchCameraOnStart", defaultValue: true)
+    var shouldLaunchCameraOnStart: Bool
     
     
     // MARK: - 로그 제한 배너를 닫았는지 여부 (닫았으면 true, 아니면 false)

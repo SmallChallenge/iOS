@@ -15,6 +15,7 @@ final class LaunchScreenViewModel: ObservableObject {
     private let useCase: LaunchScreenUseCaseProtocol
 
     @Published var shouldNavigate = false
+    var shouldLaunchCameraOnStart: Bool = false
 
     init(useCase: LaunchScreenUseCaseProtocol) {
         self.useCase = useCase
@@ -24,6 +25,13 @@ final class LaunchScreenViewModel: ObservableObject {
     func checkAuth() {
         Task {
             await useCase.refreshToken()
+        }
+    }
+    
+    /// 앱 실행시 카메라 실행여부 가져오기
+    func getLaunchCameraOnStart(){
+        Task {
+            shouldLaunchCameraOnStart = useCase.getLaunchCameraOnStart()
         }
     }
 }

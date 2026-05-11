@@ -24,4 +24,11 @@ protocol SettingsDataSourceProtocol {
     /// 자동저장 여부 설정
     /// - Parameter isAutoSave: 자동저장 활성화 여부
     func setIsAutoSave(_ isAutoSave: Bool)
+    
+    
+    /// 앱 실행시 카메라 실행여부 가져오기 (기본값: false)
+    func getLaunchCameraOnStart() -> Bool
+    
+    /// 앱 실행시 카메라 실행여부 값 업데이트
+    func updateLaunchCameraOnStart(_ shouldLaunchCameraOnStart: Bool)
 }

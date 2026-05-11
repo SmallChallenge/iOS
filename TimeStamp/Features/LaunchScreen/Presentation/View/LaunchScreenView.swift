@@ -19,7 +19,8 @@ struct LaunchScreenView: View {
     var body: some View {
         if viewModel.shouldNavigate {
             // 로딩 완료 후 메인 화면으로 전환
-            container.makeMainTabView()
+            let selectedTab = viewModel.shouldLaunchCameraOnStart ? 1 : 0 
+            container.makeMainTabView(selectedTab: selectedTab)
             
         } else {
             ZStack {
@@ -30,6 +31,7 @@ struct LaunchScreenView: View {
 
             }
             .task {
+                viewModel.getLaunchCameraOnStart()
                 // 토큰 갱신 + 유저 정보 가져오기
                 viewModel.checkAuth()
             }

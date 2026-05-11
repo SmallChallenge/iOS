@@ -10,6 +10,9 @@ import Foundation
 protocol LaunchScreenUseCaseProtocol {
     func refreshToken() async
     func getUserInfo() async
+    
+    /// 앱 실행시 카메라 실행여부 가져오기 (기본값: false)
+    func getLaunchCameraOnStart() -> Bool
 }
 
 // usecase -> viewModel
@@ -69,5 +72,9 @@ class LaunchScreenUseCase: LaunchScreenUseCaseProtocol {
         await MainActor.run {
             delegate?.didRefreshToken(user: user)
         }
+    }
+    
+    func getLaunchCameraOnStart() -> Bool{
+        return repository.getLaunchCameraOnStart()
     }
 }

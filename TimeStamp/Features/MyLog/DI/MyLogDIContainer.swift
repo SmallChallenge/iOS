@@ -10,7 +10,7 @@ import Alamofire
 import SwiftUI
 
 protocol MyLogDIContainerProtocol {
-    func makeMainTabView() -> MainTabView
+    func makeMainTabView(selectedTab: Int) -> MainTabView
     func makeMyLogView(selectedLog: Binding<TimeStampLogViewData?>) -> MyLogView
     func makeLogDetailView(log: TimeStampLogViewData, onGoBack: @escaping () -> Void) -> LogDetailView
     func makeLogEditorView(log: TimeStampLogViewData, onDismiss: @escaping (_ hasEdited: Bool) -> Void) -> LogEditorView
@@ -49,8 +49,8 @@ struct MyLogDIContainer: MyLogDIContainerProtocol {
         return MainTabViewModel(useCase: usecase)
     }
 
-    func makeMainTabView() -> MainTabView {
-        return MainTabView(container: AppDIContainer.shared, viewModel: makeMainTabViewModel())
+    func makeMainTabView(selectedTab: Int = 0) -> MainTabView {
+        return MainTabView(container: AppDIContainer.shared, viewModel: makeMainTabViewModel(), selectedTab: selectedTab)
     }
     
     
@@ -128,10 +128,10 @@ struct MyLogDIContainer: MyLogDIContainerProtocol {
 struct MockMyLogDIContainer: MyLogDIContainerProtocol {
     
     // MARK: MainTab
-    func makeMainTabView() -> MainTabView {
+    func makeMainTabView(selectedTab: Int) -> MainTabView {
         let useCase = MockMainTabUseCase()
         let viewModel = MainTabViewModel(useCase: useCase)
-        return MainTabView(container: AppDIContainer.shared, viewModel: viewModel)
+        return MainTabView(container: AppDIContainer.shared, viewModel: viewModel, selectedTab: 0)
     }
     struct MockMainTabUseCase: MainTabUseCaseProtocol {
         func setReviewDelayed(days: Int) { }
@@ -168,19 +168,6 @@ struct MockMyLogDIContainer: MyLogDIContainerProtocol {
             ([], nil)
         }
     }
-
-    struct MockSettingsRepository: SettingsDataSourceProtocol {
-        func getIsLogLimitBannerDismissed() -> Bool {
-            return false
-        }
-        func setIsLogLimitBannerDismissed(_ isDismissed: Bool) {}
-        func getIsAutoSave() -> Bool {
-            return true
-        }
-        func setIsAutoSave(_ isAutoSave: Bool) {}
-    }
-
-   
 
     // MARK: - LogDetailView
     func makeLogDetailView(log: TimeStampLogViewData, onGoBack: @escaping () -> Void) -> LogDetailView {
