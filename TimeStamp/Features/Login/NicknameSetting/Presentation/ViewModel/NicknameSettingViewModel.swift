@@ -80,7 +80,7 @@ class NicknameSettingViewModel: ObservableObject {
                     if AuthManager.shared.currentUser?.nickname == nil {
                         ToastManager.shared.show(AppMessage.welcomeMessage(nickname: nickname).text)
                     } else {
-                        ToastManager.shared.show(AppMessage.saveSuccess.text)
+                        ToastManager.shared.show("닉네임이 변경되었어요.")
                     }
 
                     //  로그인화면에서 넘어온 경우, 로그인 시키기
@@ -104,6 +104,7 @@ class NicknameSettingViewModel: ObservableObject {
                             validateMessage = "이미 누군가 사용하고 있어요."
                         }
                         Logger.error("닉네임 설정 실패 [\(code)]: \(message)")
+                        
                     default:
                         validateMessage = error.description
                         Logger.error("닉네임 설정 실패: \(error)")

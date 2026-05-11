@@ -45,6 +45,8 @@ final class TokenRefreshService {
         }
 
         isRefreshing = true
+        
+        // 토큰 갱신을 재시도 로직과 함께 수행
         performTokenRefresh(retryCount: 0, refreshToken: refreshToken, completion: completion)
     }
 

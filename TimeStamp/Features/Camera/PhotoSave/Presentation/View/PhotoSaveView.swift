@@ -65,6 +65,7 @@ struct PhotoSaveView: View {
         .safeAreaInset(edge: .top) {
             // 헤더
             HeaderView(
+                
                 leadingView: {
                     BackButton {
                         goBack()

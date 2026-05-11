@@ -22,6 +22,9 @@ struct MyPageView: View {
     @State var presentUserInfo: Bool = false
     @State var showLogoutPopup: Bool = false
     
+    /// 공지사항 띄우기 (웹뷰)
+    @State private var showNoticeBoard: Bool = false
+    
     /// 이용약관 띄우기(웹뷰)
     @State private var showTermsOfService: Bool = false
     
@@ -97,10 +100,27 @@ struct MyPageView: View {
                     // 메뉴버튼
                     VStack(spacing: .zero) {
                         
-                        // 갤러리에 자동 저장
-                        authSaveMenu
+                        // 카메라 설정 ( 자동저장, 촬영바로가기)
+                        VStack(alignment: .leading, spacing: .zero) {
+                            MyPageMenuHeader(title: "카메라 설정")
+                            
+                            // 갤러리 자동저장
+                            MyPageToggleMenu(
+                                title: "갤러리에 자동 저장",
+                                toggleValue: $viewModel.isAutoSave
+                            )
+                            
+                            // 앱 시작 시 카메라 실행
+                            MyPageToggleMenu(
+                                title: "앱 시작 시 카메라 실행",
+                                toggleValue: $viewModel.shouldLaunchCameraOnStart
+                            )
+                        }
                         
                         thickLine
+                        MyPageMenu("공지사항", type: .chevron){
+                            showNoticeBoard = true
+                        }
                         
                         MyPageMenu("이용약관", type: .chevron){
                             showTermsOfService = true
@@ -161,6 +181,7 @@ struct MyPageView: View {
         .mainBackgourndColor()
         .task {
             viewModel.getAutoSave()
+            viewModel.getLaunchCameraOnStart()
         }
         .navigationBarHidden(true)
         .toolbar(.hidden, for: .navigationBar)
@@ -171,6 +192,9 @@ struct MyPageView: View {
         }
         .onChange(of: viewModel.isAutoSave) { isAutoSave in
             viewModel.updateAutoSave(isAutoSave)
+        }
+        .onChange(of: viewModel.shouldLaunchCameraOnStart) { shouldLaunchCameraOnStart in
+            viewModel.updateLaunchCameraOnStart(shouldLaunchCameraOnStart)
         }
         // 유저정보화면 띄우기
         .navigationDestination(isPresented: $presentUserInfo) {
@@ -229,6 +253,11 @@ struct MyPageView: View {
         .sheet(isPresented: $isShowingMailView) {
             MailView(userId: "\(authManager.currentUser?.userId ?? -1)")
         }
+        .fullScreenCover(isPresented: $showNoticeBoard, content: {
+            appDiContainer.makeWebView(url: AppConstants.URLs.noticeBoard) {
+                showNoticeBoard = false
+            }
+        })
         .toast(message: $viewModel.toastMessage)
     }
     
@@ -335,32 +364,6 @@ struct MyPageView: View {
         .rounded(radius: 16)
     }
     
-    // 자동저장 메뉴
-    private var authSaveMenu: some View {
-        VStack(alignment: .leading, spacing: .zero) {
-            Text("카메라 설정")
-                .font(.Label)
-                .foregroundStyle(Color.gray500)
-                .padding([.top, .leading], 20)
-            
-            HStack {
-                Text("갤러리에 자동 저장")
-                    .font(.Btn2_b)
-                    .foregroundStyle(Color.gray300)
-                
-                Spacer()
-                
-                Toggle(isOn: $viewModel.isAutoSave) {}
-                .padding(.trailing, 20)
-                
-            }
-            .padding(.leading, 20)
-            .padding(.vertical, 19.5)
-
-        }
-        
-    }
-    
     private var thinLine: some View {
         Color.gray700
             .frame(height: 1)
@@ -413,9 +416,9 @@ struct MyPageView: View {
     }
     
     // 메일 클립보드 복사
-    func copyToClipboard(recipient: String) {
+    private func copyToClipboard(recipient: String) {
         UIPasteboard.general.string = recipient
-        viewModel.toastMessage = "클립보드에 복사되었습니다."
+        viewModel.toastMessage = "메일 주소가 복사되었습니다.\n문의 메일을 보내주세요."
         Logger.success("이메일 주소 클립보드 복사 완료")
     }
     

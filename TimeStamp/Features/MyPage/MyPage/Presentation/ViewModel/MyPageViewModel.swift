@@ -16,7 +16,11 @@ final class MyPageViewModel: ObservableObject, MessageDisplayable {
 
     // MARK: - Output Properties
 
+    // 갤러리 자동저장
     @Published var isAutoSave: Bool = true
+    
+    // 앱 시작시 카메라 실행
+    @Published var shouldLaunchCameraOnStart: Bool = false
 
     /// 로그아웃 성공 여부
     @Published var didLogout: Bool = false
@@ -45,15 +49,31 @@ final class MyPageViewModel: ObservableObject, MessageDisplayable {
         }
     }
 
+    /// 갤러리에 자동저장 값 변경
     func updateAutoSave(_ isEnabled: Bool) {
         Task {
             useCase.setAutoSaveEnabled(isEnabled)
         }
     }
     
+    /// 갤러리에 자동저장 값 가져오기
     func getAutoSave(){
         Task {
             isAutoSave = useCase.isAutoSaveEnabled()
+        }
+    }
+    
+    /// 앱 실행시 카메라 실행여부 가져오기
+    func getLaunchCameraOnStart(){
+        Task {
+            shouldLaunchCameraOnStart = useCase.getLaunchCameraOnStart()
+        }
+    }
+    
+    /// 앱 실행시 카메라 실행여부 값 업데이트
+    func updateLaunchCameraOnStart(_ launchCameraOnStart: Bool){
+        Task {
+            useCase.updateLaunchCameraOnStart(launchCameraOnStart)
         }
     }
 

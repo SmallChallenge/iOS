@@ -34,4 +34,6 @@ protocol PhotoSaveRepositoryProtocol {
     func savePhotoToGallery(image: UIImage)
     
     func getIsAutoSave() -> Bool
+    
+    func saveLogCount()
 }

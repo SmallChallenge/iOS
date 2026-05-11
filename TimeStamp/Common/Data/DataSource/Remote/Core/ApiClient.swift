@@ -42,29 +42,15 @@ public class ApiClient<R: Router> {
             .serializingData()
             .response
 
-        // 에러 처리
-        if let error = result.error {
-            if let afError = error.asAFError {
-                switch afError {
-                case .sessionTaskFailed(let underlying as URLError) where underlying.code == .notConnectedToInternet:
-                    return .failure(.noInternet)
-                case .explicitlyCancelled:
-                    return .failure(.cancelled)
-                default:
-                    return .failure(.requestFailed(afError.localizedDescription))
-                }
-            }
-            return .failure(.requestFailed(error.localizedDescription))
+        guard let response = result.response else {
+            return .failure(.invalidResponse)
         }
 
         guard let data = result.data else {
             return .failure(.dataNil)
         }
 
-        guard let response = result.response else {
-            return .failure(.invalidResponse)
-        }
-
+        // 상태 코드 체크 (4xx, 5xx 응답 처리)
         if 200..<300 ~= response.statusCode {
             // 1) ResponseBody<T> 시도
             if let wrapped = try? decoder.decode(ResponseBody<T>.self, from: data) {
@@ -86,16 +72,30 @@ public class ApiClient<R: Router> {
 
             return .failure(.failToDecode("Unable to decode as ResponseBody or direct T"))
 
-        } else { // 실패 (4xx, 5xx)
-            // 실패 ResponseBody 파싱 시도
+        } else { // 실패 (4xx, 5xx) 또는 네트워크 에러
+            // 4xx, 5xx 응답의 ErrorResponseBody 파싱 시도 (먼저 시도)
             if let errorBody = try? decoder.decode(ErrorResponseBody.self, from: data) {
                 return .failure(.serverFailed(code: errorBody.code, message: errorBody.message))
             }
-            // 파싱 실패하면 기존 에러
+
+            // ErrorResponseBody 파싱 실패하면 순수 네트워크 에러 확인
+            if let error = result.error {
+                if let afError = error.asAFError {
+                    switch afError {
+                    case .sessionTaskFailed(let underlying as URLError) where underlying.code == .notConnectedToInternet:
+                        return .failure(.noInternet)
+                    case .explicitlyCancelled:
+                        return .failure(.cancelled)
+                    default:
+                        return .failure(.requestFailed(afError.localizedDescription))
+                    }
+                }
+                return .failure(.requestFailed(error.localizedDescription))
+            }
+
+            // error도 없고 ErrorResponseBody도 없는 경우
             return .failure(.serverError(response.statusCode))
         }
     }
-    
-    
 }
 

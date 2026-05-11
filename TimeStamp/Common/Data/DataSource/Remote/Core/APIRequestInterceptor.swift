@@ -46,9 +46,9 @@ public final class APIRequestInterceptor: RequestInterceptor {
             }
         } else if (500...599).contains(response.statusCode) {
             // 서버 에러 시 최대 3번까지 재시도
-            
             let retryCount = request.retryCount
             completion(retryCount < 3 ? .retryWithDelay(2.0) : .doNotRetry)
+            
             Logger.debug("서버 에러 시 최대 3번까지 재시도: \(retryCount)/3...")
         } else {
             completion(.doNotRetry)

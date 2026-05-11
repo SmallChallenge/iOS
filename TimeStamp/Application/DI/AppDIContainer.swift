@@ -70,8 +70,8 @@ final class AppDIContainer {
         )
     }()
 
-    func makeMainTabView() -> MainTabView {
-        return myLogDIContainer.makeMainTabView()
+    func makeMainTabView(selectedTab: Int) -> MainTabView {
+        return myLogDIContainer.makeMainTabView(selectedTab: selectedTab)
     }
     func makeMyLogView(selectedLog: Binding<TimeStampLogViewData?>) -> MyLogView {
         return myLogDIContainer.makeMyLogView(selectedLog: selectedLog)

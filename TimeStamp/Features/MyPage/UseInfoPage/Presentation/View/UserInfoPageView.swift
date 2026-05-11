@@ -34,7 +34,7 @@ struct UserInfoPageView: View {
                 
                 profile
                 
-                MyPageMenu("닉네임설정", type: .chevronText(text: "\(authManager.currentUser?.nickname ?? "")")) {
+                MyPageMenu("닉네임 설정", type: .chevronText(text: "\(authManager.currentUser?.nickname ?? "")")) {
                     presentNicknameSetting = true
                 }
                 

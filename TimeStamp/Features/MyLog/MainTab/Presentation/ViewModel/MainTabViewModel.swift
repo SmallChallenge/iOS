@@ -14,20 +14,30 @@ final class MainTabViewModel: ObservableObject {
 
     // MARK: - Properties
     private var authManager = AuthManager.shared
-    private let myLogUseCase: MyLogUseCaseProtocol
+    private let useCase: MainTabUseCaseProtocol
+    
+    
 
     // MARK: - Init
 
-    init(myLogUseCase: MyLogUseCaseProtocol) {
-        self.myLogUseCase = myLogUseCase
+    init(useCase: MainTabUseCaseProtocol) {
+        self.useCase = useCase
     }
+    
+    // MARK: - Output Properties
+    
+    /// 리뷰팝업 띄울지 여부
+    @Published var showReviewPopup: Bool = false
+    
+    @Published var toastMessage: String?
+    
 
     // MARK: - Methods
 
     /// 로컬 기록 개수 확인
     /// - Returns: 로컬에 저장된 기록 개수
     func getLocalLogsCount() -> Int {
-        return myLogUseCase.getLocalLogsCount()
+        return useCase.getLocalLogsCount()
     }
 
     /// 카메라 촬영 가능 여부 확인 (로컬 기록이 20개 미만인지)
@@ -50,5 +60,28 @@ final class MainTabViewModel: ObservableObject {
         AmplitudeManager.shared.loadAmplitude()
         let userId = authManager.currentUser?.userId
         AmplitudeManager.shared.setUserId(userId)
+    }
+    
+    // MARK: - 리뷰 유도 팝업 관련
+    
+    
+    // 리뷰유도팝업 - 열수있나 확인하기
+    func checkShowReviewPopup(){
+        Task {
+            let canOpen = useCase.checkShowReviewPopup()
+            self.showReviewPopup = canOpen
+        }
+    }
+    
+    // 리뷰유도팝업 닫기
+    func dismissReviewPopup() {
+        showReviewPopup = false
+    }
+    
+    // 리뷰유도팝업 - 나중에 할게요
+    func delayReviewPopup(day: Int){
+        Task {
+            useCase.setReviewDelayed(days: day)
+        }
     }
 }

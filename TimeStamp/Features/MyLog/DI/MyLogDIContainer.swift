@@ -10,7 +10,7 @@ import Alamofire
 import SwiftUI
 
 protocol MyLogDIContainerProtocol {
-    func makeMainTabView() -> MainTabView
+    func makeMainTabView(selectedTab: Int) -> MainTabView
     func makeMyLogView(selectedLog: Binding<TimeStampLogViewData?>) -> MyLogView
     func makeLogDetailView(log: TimeStampLogViewData, onGoBack: @escaping () -> Void) -> LogDetailView
     func makeLogEditorView(log: TimeStampLogViewData, onDismiss: @escaping (_ hasEdited: Bool) -> Void) -> LogEditorView
@@ -37,14 +37,20 @@ struct MyLogDIContainer: MyLogDIContainerProtocol {
     }
     
     
-    
     // MARK: - MainTab
+    private func makeMainTabUseCase() -> MainTabUseCaseProtocol {
+        let repo = MainTabRepository()
+        let myLogRepo = makeMyLogRepository()
+        return MainTabUseCase(repository: repo, myLogRepository: myLogRepo)
+    }
+    
     private func makeMainTabViewModel() -> MainTabViewModel {
-        return MainTabViewModel(myLogUseCase: makeMyLogUseCase())
+        let usecase = makeMainTabUseCase()
+        return MainTabViewModel(useCase: usecase)
     }
 
-    func makeMainTabView() -> MainTabView {
-        return MainTabView(container: AppDIContainer.shared, viewModel: makeMainTabViewModel())
+    func makeMainTabView(selectedTab: Int = 0) -> MainTabView {
+        return MainTabView(container: AppDIContainer.shared, viewModel: makeMainTabViewModel(), selectedTab: selectedTab)
     }
     
     
@@ -122,17 +128,24 @@ struct MyLogDIContainer: MyLogDIContainerProtocol {
 struct MockMyLogDIContainer: MyLogDIContainerProtocol {
     
     // MARK: MainTab
-    func makeMainTabView() -> MainTabView {
-        let useCase = MockMyLogUseCase()
-        let viewModel = MainTabViewModel(myLogUseCase: useCase)
-        return MainTabView(container: AppDIContainer.shared, viewModel: viewModel)
+    func makeMainTabView(selectedTab: Int) -> MainTabView {
+        let useCase = MockMainTabUseCase()
+        let viewModel = MainTabViewModel(useCase: useCase)
+        return MainTabView(container: AppDIContainer.shared, viewModel: viewModel, selectedTab: 0)
+    }
+    struct MockMainTabUseCase: MainTabUseCaseProtocol {
+        func setReviewDelayed(days: Int) { }
+        
+        func getLocalLogsCount() -> Int { return 10}
+        
+        func checkShowReviewPopup() -> Bool { return true }
+        
+        
     }
    
-    
     // MARK: MyLogView
     func makeMyLogView(selectedLog: Binding<TimeStampLogViewData?>) -> MyLogView {
         let usecase = MockMyLogUseCase()
-        let settingsRepository = MockSettingsRepository()
         let viewModel = MyLogViewModel(useCase: usecase)
         return MyLogView(viewModel: viewModel, diContainer: self, selectedLog: selectedLog)
     }
@@ -155,19 +168,6 @@ struct MockMyLogDIContainer: MyLogDIContainerProtocol {
             ([], nil)
         }
     }
-
-    struct MockSettingsRepository: SettingsDataSourceProtocol {
-        func getIsLogLimitBannerDismissed() -> Bool {
-            return false
-        }
-        func setIsLogLimitBannerDismissed(_ isDismissed: Bool) {}
-        func getIsAutoSave() -> Bool {
-            return true
-        }
-        func setIsAutoSave(_ isAutoSave: Bool) {}
-    }
-
-   
 
     // MARK: - LogDetailView
     func makeLogDetailView(log: TimeStampLogViewData, onGoBack: @escaping () -> Void) -> LogDetailView {
