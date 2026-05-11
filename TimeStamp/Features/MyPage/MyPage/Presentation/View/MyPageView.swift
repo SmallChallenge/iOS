@@ -22,6 +22,9 @@ struct MyPageView: View {
     @State var presentUserInfo: Bool = false
     @State var showLogoutPopup: Bool = false
     
+    /// 공지사항 띄우기 (웹뷰)
+    @State private var showNoticeBoard: Bool = false
+    
     /// 이용약관 띄우기(웹뷰)
     @State private var showTermsOfService: Bool = false
     
@@ -101,6 +104,9 @@ struct MyPageView: View {
                         authSaveMenu
                         
                         thickLine
+                        MyPageMenu("공지사항", type: .chevron){
+                            showNoticeBoard = true
+                        }
                         
                         MyPageMenu("이용약관", type: .chevron){
                             showTermsOfService = true
@@ -229,6 +235,11 @@ struct MyPageView: View {
         .sheet(isPresented: $isShowingMailView) {
             MailView(userId: "\(authManager.currentUser?.userId ?? -1)")
         }
+        .fullScreenCover(isPresented: $showNoticeBoard, content: {
+            appDiContainer.makeWebView(url: AppConstants.URLs.noticeBoard) {
+                showNoticeBoard = false
+            }
+        })
         .toast(message: $viewModel.toastMessage)
     }
     
