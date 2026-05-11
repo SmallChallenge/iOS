@@ -20,7 +20,6 @@ final class AppConfig {
     @UserDefaultsValue(key: "shouldLaunchCameraOnStart", defaultValue: true)
     var shouldLaunchCameraOnStart: Bool
     
-    
     // MARK: - 로그 제한 배너를 닫았는지 여부 (닫았으면 true, 아니면 false)
     @UserDefaultsValue(key: "isLogLimitBannerDismissed", defaultValue: false)
     var isLogLimitBannerDismissed: Bool
