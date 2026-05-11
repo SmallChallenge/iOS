@@ -160,22 +160,22 @@ struct MainTabView: View {
                 StoreRatingsManager().requestRatings()
                 viewModel.dismissReviewPopup()
                 
-                // 122일 뒤에 띄우기 (1년에 3번 띄울 수 있으니까)
-                viewModel.delayReviewPopup(day: 122)
+                // 반년에 1번 (183일뒤에 띄우기)
+                viewModel.delayReviewPopup(day: 183)
             },
             didTapFeedbackButton: {
                 // 메일로 문의하기 보내기
                 sendEmail()
                 viewModel.dismissReviewPopup()
                 
-                // 90일 뒤에 띄우기
-                viewModel.delayReviewPopup(day: 90)
+                // 반년에 1번 (183일뒤에 띄우기)
+                viewModel.delayReviewPopup(day: 183)
             },
             didTapDismissButton: {
                 // 나중에 할게요
                 viewModel.dismissReviewPopup()
-                // 30일 뒤에 띄우기
-                viewModel.delayReviewPopup(day: 30)
+                // 분기에 1번 (90일 뒤에 띄우기)
+                viewModel.delayReviewPopup(day: 90)
             }
         )
     }
