@@ -59,7 +59,6 @@ final class AppDIContainer {
         return launchScreenDIContainer.makeLaunchScreenView()
     }
     
-    
     // MARK: - MyLog Feature
 
     private lazy var myLogDIContainer: MyLogDIContainer = {
