@@ -25,4 +25,10 @@ protocol PhotoSaveUseCaseProtocol {
     
     
     func getIsAutoSave() -> Bool
+    
+    /// 이전에 선택했던 카테고리 가져오기
+    func getLastSelectedCategory() -> Category?
+    
+    /// 이전에 선택했던 공개여부 가져오기
+    func getLastSelectedVisibilityType() -> VisibilityType?
 }

@@ -176,7 +176,7 @@ struct EditorView: View {
             if let editedImage = editedImage {
                 diContainer.makePhotoSaveView(
                     capturedImage: editedImage,
-                    selectedCategoryType: selectedTemplateStyle.enName,
+                    selectedTemplateStyle: selectedTemplateStyle.enName,
                     selectedTamplateId: selectedTemplate.templateId,
                     onGoBack: nil,
                     onComplete: onComplete

@@ -33,7 +33,7 @@ protocol CameraDIContainerProtocol {
     // 사진 저장
     func makePhotoSaveView(
         capturedImage: UIImage,
-        selectedCategoryType: String,
+        selectedTemplateStyle: String,
         selectedTamplateId: String,
         onGoBack: (() -> Void)?,
         onComplete: @escaping () -> Void
@@ -158,21 +158,21 @@ final class CameraDIContainer: CameraDIContainerProtocol {
         return PhotoSaveUseCase(repository: makePhotoSaveRepository())
     }
     
-    private func makePhotoSaveViewModel(selectedCategoryType: String, selectedTamplateId: String) -> PhotoSaveViewModel {
+    private func makePhotoSaveViewModel(selectedTemplateStyle: String, selectedTamplateId: String) -> PhotoSaveViewModel {
         return PhotoSaveViewModel(useCase: makePhotoSaveUseCase(),
-                                  selectedCategoryType: selectedCategoryType,
+                                  selectedTemplateStyle: selectedTemplateStyle,
                                   selectedTamplateId: selectedTamplateId
         )
     }
     
     func makePhotoSaveView(
         capturedImage: UIImage,
-        selectedCategoryType: String,
+        selectedTemplateStyle: String,
         selectedTamplateId: String,
         onGoBack: (() -> Void)? = nil,
         onComplete: @escaping () -> Void
     ) -> PhotoSaveView {
-        let viewModel = makePhotoSaveViewModel(selectedCategoryType: selectedCategoryType, selectedTamplateId: selectedTamplateId)
+        let viewModel = makePhotoSaveViewModel(selectedTemplateStyle: selectedTemplateStyle, selectedTamplateId: selectedTamplateId)
         return PhotoSaveView(
             viewModel: viewModel,
             capturedImage: capturedImage,
@@ -252,6 +252,14 @@ struct MockCameraDIContainer: CameraDIContainerProtocol {
     // MARK: - PhotoSave
 
     struct MockPhotoSaveUseCase: PhotoSaveUseCaseProtocol {
+        func getLastSelectedCategory() -> Category? { return .etc }
+        
+        func saveSelectedCategory(category: Category) { }
+        
+        func getLastSelectedVisibilityType() -> VisibilityType? { return .privateVisible }
+        
+        func saveSelectedVisibilityType(visibilityType: VisibilityType) { }
+        
         func getIsAutoSave() -> Bool {
             true
         }
@@ -263,14 +271,14 @@ struct MockCameraDIContainer: CameraDIContainerProtocol {
     
     private func makePhotoSaveViewModel() -> PhotoSaveViewModel {
         return PhotoSaveViewModel(useCase: MockPhotoSaveUseCase(),
-                                  selectedCategoryType: "",
+                                  selectedTemplateStyle: "",
                                   selectedTamplateId: ""
         )
     }
     
     func makePhotoSaveView(
         capturedImage: UIImage,
-        selectedCategoryType: String,
+        selectedTemplateStyle: String,
         selectedTamplateId: String,
         onGoBack: (() -> Void)? = nil,
         onComplete: @escaping () -> Void

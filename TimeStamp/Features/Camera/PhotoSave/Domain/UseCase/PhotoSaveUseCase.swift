@@ -47,9 +47,13 @@ struct PhotoSaveUseCase: PhotoSaveUseCaseProtocol {
             dto: dto
         )
         
+        // 카테고리, 공개여부 저장
+        saveCategoryAndVisibilityType(category: category, visibility: visibility)
+        
         // 사진 저장개수 +1 하기
         repository.saveLogCount()
     }
+    
     
     // 서버에 저장하기
     func savePhotoToServer(image: UIImage, category: Category, visibility: VisibilityType) async throws {
@@ -89,9 +93,17 @@ struct PhotoSaveUseCase: PhotoSaveUseCaseProtocol {
             timeStamp: dateString
         )
         
+        // 카테고리, 공개여부 저장
+        saveCategoryAndVisibilityType(category: category, visibility: visibility)
+        
         // 사진 저장개수 +1 하기
         repository.saveLogCount()
-        
+    }
+    
+    // 카테고리, 공개여부 저장
+    private func saveCategoryAndVisibilityType(category: Category, visibility: VisibilityType){
+        repository.saveSelectedCategory(category: category)
+        repository.saveSelectedVisibilityType(visibilityType: visibility)
     }
 
     // 갤러리에 사진 저장하기
@@ -99,9 +111,18 @@ struct PhotoSaveUseCase: PhotoSaveUseCaseProtocol {
         repository.savePhotoToGallery(image: image)
     }
     
-    
     // 자동저장 여부 가져오기
     func getIsAutoSave() -> Bool {
         repository.getIsAutoSave()
+    }
+    
+    /// 이전에 선택했던 카테고리 가져오기
+    func getLastSelectedCategory() -> Category? {
+        return repository.getLastSelectedCategory()
+    }
+    
+    /// 이전에 선택했던 공개여부 가져오기
+    func getLastSelectedVisibilityType() -> VisibilityType? {
+        return repository.getLastSelectedVisibilityType()
     }
 }
