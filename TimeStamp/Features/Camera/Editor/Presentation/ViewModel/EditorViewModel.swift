@@ -13,9 +13,11 @@ import Combine
 class EditorViewModel: ObservableObject, MessageDisplayable {
     private let useCase: EditorUseCaseProtocol
     
+    @Published var selectedTemplateStyle: TemplateStyleViewData = .minimal
+    @Published var selectedTemplate: Template = Template.all[0]
+    
     @Published var isAdReady = false
     @Published var isLoadingAd = false
-
     
     /// 광고시청여부
     //@Published var hasWatchedAd: Bool  = true // 광고보기
@@ -37,6 +39,35 @@ class EditorViewModel: ObservableObject, MessageDisplayable {
 
     init(useCase: EditorUseCaseProtocol) {
         self.useCase = useCase
+    }
+    
+    func getLastSelectedTemplate(){
+        print(">>>>> getLastSelectedTemplate ")
+        Task {
+            guard let templateId = useCase.getLastSelectedTemplateId() else { return }
+            let template = Template.all.first { template in
+                template.id == templateId
+            }
+            guard let template else { return }
+            selectedTemplate = template
+            
+            switch template.style {
+                
+            case .minimal:
+                selectedTemplateStyle = .minimal
+            case .accent:
+                selectedTemplateStyle = .accent
+            case .fun:
+                selectedTemplateStyle = .fun
+            case .fixel:
+                selectedTemplateStyle = .fixel
+            }
+        }
+    }
+    
+    func saveSelectedTemplate(){
+        let templateId = selectedTemplate.templateId
+        useCase.saveSelectedTemplateId(templateId: templateId)
     }
     
     /// 로고 토글 탭 이벤트 처리

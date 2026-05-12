@@ -32,4 +32,8 @@ final class AppConfig {
     // MARK: - 이전에 선택했던 공개여부
     @UserDefaultsValue(key: "lastSelectedVisibilityType", defaultValue: nil)
     var lastSelectedVisibilityType: String?
+    
+    // MARK: - 이전에 선택했던 템플릿
+    @UserDefaultsValue(key: "lastSelectedTemplateId", defaultValue: nil)
+    var lastSelectedTemplateId: String?
 }

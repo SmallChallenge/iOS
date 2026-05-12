@@ -81,7 +81,6 @@ final class PhotoSaveViewModel: ObservableObject, MessageDisplayable {
             return
         }
         
-        
         guard isLoading == false else { return }
 
         // 갤러리에 사진 저장

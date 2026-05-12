@@ -110,12 +110,17 @@ final class CameraDIContainer: CameraDIContainerProtocol {
     }
 
     // MARK: - EditorView
-    private func makeEditorRepository() -> AdRepositoryProtocol {
+    private func makeEditorRepository() -> EditorRepositoryProtocol {
+        return EditorRepository()
+    }
+    private func makeEditorAdRepository() -> AdRepositoryProtocol {
         return AdMobRepository()
     }
+    
     private func makeEditorUseCase() -> EditorUseCaseProtocol {
         let repo = makeEditorRepository()
-        return EditorUseCase(repository: repo)
+        let adRepo = makeEditorAdRepository()
+        return EditorUseCase(repository: repo, adRepository: adRepo)
     }
     
     private func makeEditorViewModel() -> EditorViewModel {
@@ -243,6 +248,10 @@ struct MockCameraDIContainer: CameraDIContainerProtocol {
         )
     }
     struct MockEditorUsecase: EditorUseCaseProtocol {
+        func getLastSelectedTemplateId() -> String? { return nil }
+        
+        func saveSelectedTemplateId(templateId: String) {}
+        
         func execute(from: UIViewController) async throws -> Int {
             return 1
         }

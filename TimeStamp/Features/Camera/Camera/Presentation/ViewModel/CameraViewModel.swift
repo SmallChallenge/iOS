@@ -17,6 +17,9 @@ final class CameraViewModel: ObservableObject {
 
     /// 카메라 하드웨어 제어 매니저
     let cameraManager = CameraManager()
+    
+    // 미리보기 템플릿
+    @Published var selectedTemplate: Template = Template.all[0]
 
     /// 촬영된 사진
     @Published var capturedImage: UIImage?
@@ -130,6 +133,20 @@ final class CameraViewModel: ObservableObject {
         return renderer.image { context in
             UIColor.gray.setFill()
             context.fill(CGRect(origin: .zero, size: size))
+        }
+    }
+    
+    // MARK: -
+    
+    @MainActor
+    func loadLastSelectedTemplate(){
+        Task {
+            guard let templateId = AppConfig.shared.lastSelectedTemplateId else { return }
+            let template = Template.all.first { template in
+                template.id == templateId
+            }
+            guard let template else { return }
+            selectedTemplate = template
         }
     }
 }
