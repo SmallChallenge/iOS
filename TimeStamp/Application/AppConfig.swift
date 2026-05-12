@@ -17,7 +17,7 @@ final class AppConfig {
     var isAutoSave: Bool
     
     // MARK: - 앱 실행 시, 카메라 실행여부
-    @UserDefaultsValue(key: "shouldLaunchCameraOnStart", defaultValue: true)
+    @UserDefaultsValue(key: "shouldLaunchCameraOnStart", defaultValue: false)
     var shouldLaunchCameraOnStart: Bool
     
     
