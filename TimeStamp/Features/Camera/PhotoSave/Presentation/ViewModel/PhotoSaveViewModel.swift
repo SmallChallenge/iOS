@@ -22,13 +22,24 @@ extension Notification.Name {
 /// 사진 저장 화면의 비즈니스 로직을 관리하는 ViewModel
 @MainActor
 final class PhotoSaveViewModel: ObservableObject, MessageDisplayable {
+    private var authManager = AuthManager.shared
 
     // MARK: - Properties
 
     /// 사진 저장 UseCase
     private let useCase: PhotoSaveUseCaseProtocol
-    private let selectedCategoryType: String
+    
+    /// 앰플리튜드용 템플릿id, style 값
+    private let selectedTemplateStyle: String
     private let selectedTamplateId: String
+    
+    // 선택된 카테고리
+    @Published var selectedCategory: CategoryViewData? = nil
+    @Published var selectedVisibility: VisibilityViewData? = nil
+    
+    
+    // 로컬 기록 한계 도달 팝업 띄우기
+    @Published var showLimitReachedPopup = false
 
     /// 저장 성공 여부
     @Published var isSaved = false
@@ -42,17 +53,34 @@ final class PhotoSaveViewModel: ObservableObject, MessageDisplayable {
 
     // MARK: - Init
 
-    init(useCase: PhotoSaveUseCaseProtocol, selectedCategoryType: String, selectedTamplateId: String) {
+    init(useCase: PhotoSaveUseCaseProtocol, selectedTemplateStyle: String, selectedTamplateId: String) {
         self.useCase = useCase
-        self.selectedCategoryType = selectedCategoryType
+        self.selectedTemplateStyle = selectedTemplateStyle
         self.selectedTamplateId = selectedTamplateId
     }
 
     // MARK: - Actions
     
+    
+    
     /// 사진 저장 (로컬 or 서버)
     /// - NOTE: 로그인 상태면 서버에 저장, 로그아웃상태면 로컬에 저장
-    func savePhoto(image: UIImage, category: CategoryViewData, visibility: VisibilityViewData) {
+    func savePhoto(image: UIImage) {
+        
+        // 카테고리, 공개 여부가 선택되었는지 확인
+        guard let category = selectedCategory,
+              let visibility = selectedVisibility
+        else {
+            show(.requiredSelection)
+            return
+        }
+        
+        // 앱 실행시, 카메라 바로가기 기능 때문에, 여기서 로컬저장 개수 제한 확인하고 팝업띄우기 (비공개로 저장할 경우)
+        guard canTakePhoto() || visibility == .publicVisible else {
+            showLimitReachedPopup = true
+            return
+        }
+        
         guard isLoading == false else { return }
 
         // 갤러리에 사진 저장
@@ -62,7 +90,7 @@ final class PhotoSaveViewModel: ObservableObject, MessageDisplayable {
         }
 
         // 로그인 여부 확인
-        if AuthManager.shared.isLoggedIn {
+        if authManager.isLoggedIn {
             // 로그인되어 있으면 서버에 저장
             Task {
                 await savePhotoToServer(image: image, category: category, visibility: visibility)
@@ -87,17 +115,12 @@ final class PhotoSaveViewModel: ObservableObject, MessageDisplayable {
             category: categoryEntity.rawValue.lowercased(),
             visibility: visibilityEntity.rawValue.lowercased(),
             templateId: selectedTamplateId,
-            templateCategory: selectedCategoryType
+            templateCategory: selectedTemplateStyle
         )
         if visibility == .publicVisible {
             // 전체공개로 사진 업로드 or 전체공개로 사진을 수정한 경우
             AmplitudeManager.shared.trackPublicPhotoUpload(category: categoryEntity)
         }
-    }
-    
-    // TODO: 사진 저장개수 카운트
-    private func saveCount(){
-        
     }
     
 
@@ -116,8 +139,6 @@ final class PhotoSaveViewModel: ObservableObject, MessageDisplayable {
             isSaved = true
             ToastManager.shared.show(AppMessage.saveSuccess.text)
             Logger.success("사진 저장 성공")
-            
-            // TODO: 사진 저장개수 카운트
 
             // MyLogView에 새로고침 알림
             NotificationCenter.default.post(name: .shouldRefreshMyLog, object: nil)
@@ -146,8 +167,6 @@ final class PhotoSaveViewModel: ObservableObject, MessageDisplayable {
             isLoading = false
             ToastManager.shared.show(AppMessage.saveSuccess.text)
             Logger.success("서버에 사진 저장 성공")
-            
-            // TODO: 사진 저장개수 카운트
 
             // MyLogView에 새로고침 알림
             NotificationCenter.default.post(name: .shouldRefreshMyLog, object: nil)
@@ -168,4 +187,42 @@ final class PhotoSaveViewModel: ObservableObject, MessageDisplayable {
             Logger.error("서버에 사진 저장 실패: \(error)")
         }
     }
+    
+    @MainActor
+    /// 이전에 선택했던 카테고리 가져오기
+    func getLastSelectedCategory() {
+        guard let category = useCase.getLastSelectedCategory() else { return }
+        Task {
+            let categoryViewData = CategoryViewDataMapper().toViewData(from: category)
+            self.selectedCategory = categoryViewData
+        }
+    }
+    
+    @MainActor
+    /// 이전에 선택했던 공개여부 가져오기
+    func getLastSelectedVisibilityType() {
+        guard let visibilityType = useCase.getLastSelectedVisibilityType() else { return }
+        Task {
+            let visibilityTypeViewData = VisibilityViewDataMapper().toViewData(from: visibilityType)
+            
+            // 공개인데 비로그인 상태면 선택 X
+            guard (authManager.isLoggedIn) || (visibilityTypeViewData == .privateVisible) else { return }
+            self.selectedVisibility = visibilityTypeViewData
+        }
+    }
+    
+    
+    /// 카메라 촬영 가능 여부 확인 (로컬 기록이 20개 미만인지)
+    ///  비로그인 상태로, 로컬기록이 20개 이상이면 -> false
+    /// - Returns: 촬영 가능하면 true, 제한에 도달하면 false
+    private func canTakePhoto() -> Bool {
+        return authManager.isLoggedIn || getLocalLogsCount() < AppConstants.Limits.maxLogCount
+    }
+    
+    /// 로컬 기록 개수 확인
+    /// - Returns: 로컬에 저장된 기록 개수
+    private func getLocalLogsCount() -> Int {
+        return useCase.getLocalLogsCount()
+    }
 }
+

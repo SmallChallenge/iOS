@@ -17,10 +17,22 @@ final class AppConfig {
     var isAutoSave: Bool
     
     // MARK: - 앱 실행 시, 카메라 실행여부
-    @UserDefaultsValue(key: "shouldLaunchCameraOnStart", defaultValue: true)
+    @UserDefaultsValue(key: "shouldLaunchCameraOnStart", defaultValue: false)
     var shouldLaunchCameraOnStart: Bool
     
     // MARK: - 로그 제한 배너를 닫았는지 여부 (닫았으면 true, 아니면 false)
     @UserDefaultsValue(key: "isLogLimitBannerDismissed", defaultValue: false)
     var isLogLimitBannerDismissed: Bool
+    
+    // MARK: - 이전에 선택했던 카테고리
+    @UserDefaultsValue(key: "lastSelectedCategory", defaultValue: nil)
+    var lastSelectedCategory: String?
+    
+    // MARK: - 이전에 선택했던 공개여부
+    @UserDefaultsValue(key: "lastSelectedVisibilityType", defaultValue: nil)
+    var lastSelectedVisibilityType: String?
+    
+    // MARK: - 이전에 선택했던 템플릿
+    @UserDefaultsValue(key: "lastSelectedTemplateId", defaultValue: nil)
+    var lastSelectedTemplateId: String?
 }

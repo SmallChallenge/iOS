@@ -36,7 +36,7 @@ final class MainTabViewModel: ObservableObject {
 
     /// 로컬 기록 개수 확인
     /// - Returns: 로컬에 저장된 기록 개수
-    func getLocalLogsCount() -> Int {
+    private func getLocalLogsCount() -> Int {
         return useCase.getLocalLogsCount()
     }
 

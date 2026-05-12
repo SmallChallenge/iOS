@@ -31,9 +31,6 @@ struct EditorView: View {
     }
     
     // MARK: prevate property
-
-    @State private var selectedTemplateStyle: TemplateStyleViewData = .minimal
-    @State private var selectedTemplate: Template = Template.all[0]
     
     @State private var showLoginView: Bool = false
     @State private var navigateToPhotoSave = false
@@ -43,7 +40,7 @@ struct EditorView: View {
 
     /// 선택된 스타일에 맞는 템플릿 필터링
     private var filteredTemplates: [Template] {
-        Template.all.filter { $0.style == selectedTemplateStyle }
+        Template.all.filter { $0.style == viewModel.selectedTemplateStyle }
     }
     
     @State private var didLog = false
@@ -133,9 +130,10 @@ struct EditorView: View {
             didLog = true
             AmplitudeManager.shared.trackEditorViewEnter()
         })
-//        .task {
-//            await viewModel.loadAd()
-//        }
+        .task {
+            //await viewModel.loadAd()
+            viewModel.getLastSelectedTemplate()
+        }
         .toast(message: $viewModel.toastMessage)
         // 로그인 팝업 띄우기
         .popup(isPresented: $viewModel.showLoginPopup, content: {
@@ -176,8 +174,8 @@ struct EditorView: View {
             if let editedImage = editedImage {
                 diContainer.makePhotoSaveView(
                     capturedImage: editedImage,
-                    selectedCategoryType: selectedTemplateStyle.enName,
-                    selectedTamplateId: selectedTemplate.templateId,
+                    selectedTemplateStyle: viewModel.selectedTemplateStyle.enName,
+                    selectedTamplateId: viewModel.selectedTemplate.templateId,
                     onGoBack: nil,
                     onComplete: onComplete
                 )
@@ -198,11 +196,11 @@ struct EditorView: View {
         HStack (spacing: 16){
             ForEach(TemplateStyleViewData.allCases, id: \.self) { type in
                 Button {
-                    selectedTemplateStyle = type
+                    viewModel.selectedTemplateStyle = type
                 } label: {
                     Text(type.name)
-                        .font(type == selectedTemplateStyle ? .Btn2_b : .Btn2)
-                        .foregroundColor(type == selectedTemplateStyle ? Color.gray50 : Color.gray500)
+                        .font(type == viewModel.selectedTemplateStyle ? .Btn2_b : .Btn2)
+                        .foregroundColor(type == viewModel.selectedTemplateStyle ? Color.gray50 : Color.gray500)
                 }
             }
         }
@@ -244,7 +242,7 @@ struct EditorView: View {
                 .contentShape(Rectangle())
 
             // 템플릿 (타임스탬프, 로고)
-            selectedTemplate.makeView(displayDate: capturedDate, hasLogo: viewModel.isOnLogo)
+            viewModel.selectedTemplate.makeView(displayDate: capturedDate, hasLogo: viewModel.isOnLogo)
         }
         .aspectRatio(1, contentMode: .fit)
     }
@@ -257,13 +255,14 @@ struct EditorView: View {
                     TemplateButton(
                         capturedImage: nil,
                         template: template,
-                        isSelected: selectedTemplate == template
+                        isSelected: viewModel.selectedTemplate == template
                     ) {
                         // 템플릿 선택
-                        selectedTemplate = template
+                        viewModel.selectedTemplate = template
+                        viewModel.saveSelectedTemplate() 
                         AmplitudeManager.shared.trackTemplateSelection(
                             templateId: template.templateId,
-                            templateCategory: selectedTemplateStyle.enName
+                            templateCategory: viewModel.selectedTemplateStyle.enName
                         )
                     }
                 }
@@ -283,7 +282,7 @@ struct EditorView: View {
 
         guard let composedImage = imageCompositor.composeImage(
             background: capturedImage,
-            template: selectedTemplate.makeView(displayDate: capturedDate, hasLogo: viewModel.isOnLogo),
+            template: viewModel.selectedTemplate.makeView(displayDate: capturedDate, hasLogo: viewModel.isOnLogo),
             templateSize: targetSize
         ) else {
             return

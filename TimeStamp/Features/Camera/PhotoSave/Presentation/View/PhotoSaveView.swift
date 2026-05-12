@@ -20,8 +20,6 @@ struct PhotoSaveView: View {
     let onComplete: () -> Void
     
     
-    @State private var selectedCategory: CategoryViewData? = nil
-    @State private var selectedVisibility: VisibilityViewData? = nil
     @State private var didAttemptConfirm: Bool = false
     @State private var showLoginPopup: Bool = false
     @State private var showLoginView: Bool = false
@@ -62,6 +60,10 @@ struct PhotoSaveView: View {
                     .padding(.horizontal, 20)
             } // ~VStack
         } // ~ ScrollView
+        .task {
+            viewModel.getLastSelectedCategory()
+            viewModel.getLastSelectedVisibilityType()
+        }
         .safeAreaInset(edge: .top) {
             // 헤더
             HeaderView(
@@ -95,6 +97,19 @@ struct PhotoSaveView: View {
                         // 로그인 화면 띄우기
                         showLoginPopup = false
                         showLoginView = true
+                    }
+                }
+        })
+        // 로컬 기록 한계 도달
+        .popup(isPresented: $viewModel.showLimitReachedPopup, content: {
+            Modal(title: AppMessage.maxPhotoLimitReached.text)
+                .buttons {
+                    MainButton(title: "취소", colorType: .secondary) {
+                        viewModel.showLimitReachedPopup = false
+                    }
+                    MainButton(title: "로그인") {
+                        showLoginView = true
+                        viewModel.showLimitReachedPopup = false
                     }
                 }
         })
@@ -134,7 +149,7 @@ struct PhotoSaveView: View {
                     .font(.SubTitle2)
                     .foregroundStyle(.gray50)
                 
-                if didAttemptConfirm && selectedCategory == nil {
+                if didAttemptConfirm && viewModel.selectedCategory == nil {
                     Text("* 필수 선택")
                         .foregroundStyle(Color.error)
                         .font(.caption)
@@ -146,16 +161,16 @@ struct PhotoSaveView: View {
                     CategoryButton(
                         type: category,
                         state: {
-                            if selectedCategory == nil {
+                            if viewModel.selectedCategory == nil {
                                 return .normal
-                            } else if selectedCategory == category {
+                            } else if viewModel.selectedCategory == category {
                                 return .selected
                             } else {
                                 return .unselected
                             }
                         }()
                     ) {
-                        selectedCategory = category
+                        viewModel.selectedCategory = category
                     }
                 }
                 
@@ -173,7 +188,7 @@ struct PhotoSaveView: View {
                     .font(.SubTitle2)
                     .foregroundStyle(.gray50)
                 
-                if didAttemptConfirm && selectedVisibility == nil {
+                if didAttemptConfirm && viewModel.selectedVisibility == nil {
                     Text("* 필수 선택")
                         .foregroundStyle(Color.error)
                         .font(.caption)
@@ -184,19 +199,19 @@ struct PhotoSaveView: View {
                 // 전체 공개
                 TagButton(
                     title: VisibilityViewData.publicVisible.title,
-                    isActive: selectedVisibility == .publicVisible) {
+                    isActive: viewModel.selectedVisibility == .publicVisible) {
                         guard authManager.isLoggedIn else {
                             showLoginPopup = true
                             return
                         }
-                        selectedVisibility = .publicVisible
+                        viewModel.selectedVisibility = .publicVisible
                     }
                 
                 // 비공개
                 TagButton(
                     title: VisibilityViewData.privateVisible.title,
-                    isActive: selectedVisibility == .privateVisible) {
-                        selectedVisibility = .privateVisible
+                    isActive: viewModel.selectedVisibility == .privateVisible) {
+                        viewModel.selectedVisibility = .privateVisible
                     }
             }
         }
@@ -205,22 +220,12 @@ struct PhotoSaveView: View {
     // MARK: - Actions
 
     private func savePhoto() {
+        // 완료버튼을 한번누름 여부
         didAttemptConfirm = true
-        
-        // 카테고리, 공개 여부가 선택되었는지 확인
-        guard let category = selectedCategory,
-        let visibility = selectedVisibility
-        else {
-            viewModel.show(.requiredSelection)
-            return
-        }
         
         // ViewModel을 통해 저장
         viewModel.savePhoto(
-            image: capturedImage,
-            category: category,
-            visibility: visibility
-        )
+            image: capturedImage)
     }
     
 }
@@ -230,7 +235,7 @@ struct PhotoSaveView: View {
 #Preview {
     MockCameraDIContainer().makePhotoSaveView(
         capturedImage: UIImage(named: "sampleImage")!,
-        selectedCategoryType: "",
+        selectedTemplateStyle: "",
         selectedTamplateId: ""
         , onGoBack: {}, onComplete: {})
 }

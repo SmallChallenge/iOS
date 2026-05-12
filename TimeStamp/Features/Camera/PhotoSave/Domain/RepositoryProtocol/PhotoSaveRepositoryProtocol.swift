@@ -33,7 +33,23 @@ protocol PhotoSaveRepositoryProtocol {
     /// - Parameter image: 저장할 이미지
     func savePhotoToGallery(image: UIImage)
     
+    // MARK: - app config
+    
     func getIsAutoSave() -> Bool
     
     func saveLogCount()
+    
+    /// 이전에 선택했던 카테고리 가져오기
+    func getLastSelectedCategory() -> Category?
+    
+    /// 선택한 카테고리 저장
+    func saveSelectedCategory(category: Category)
+    
+    /// 이전에 선택했던 공개여부 가져오기
+    func getLastSelectedVisibilityType() -> VisibilityType?
+    
+    /// 선택한 공개여부 저장
+    func saveSelectedVisibilityType(visibilityType: VisibilityType)
+    
+    func fetchLocalLogsCount() throws -> Int
 }
