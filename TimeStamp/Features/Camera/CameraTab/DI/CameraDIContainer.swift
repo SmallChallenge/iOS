@@ -252,6 +252,8 @@ struct MockCameraDIContainer: CameraDIContainerProtocol {
     // MARK: - PhotoSave
 
     struct MockPhotoSaveUseCase: PhotoSaveUseCaseProtocol {
+        func getLocalLogsCount() -> Int { return 0 }
+        
         func getLastSelectedCategory() -> Category? { return .etc }
         
         func saveSelectedCategory(category: Category) { }
@@ -260,9 +262,7 @@ struct MockCameraDIContainer: CameraDIContainerProtocol {
         
         func saveSelectedVisibilityType(visibilityType: VisibilityType) { }
         
-        func getIsAutoSave() -> Bool {
-            true
-        }
+        func getIsAutoSave() -> Bool { return true }
         
         func savePhotoToGallery(image: UIImage) {}
         func savePhotoToLacal(image: UIImage, category: Category, visibility: VisibilityType) throws {}

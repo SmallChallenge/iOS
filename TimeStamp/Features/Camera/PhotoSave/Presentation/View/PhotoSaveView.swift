@@ -100,6 +100,19 @@ struct PhotoSaveView: View {
                     }
                 }
         })
+        // 로컬 기록 한계 도달
+        .popup(isPresented: $viewModel.showLimitReachedPopup, content: {
+            Modal(title: AppMessage.maxPhotoLimitReached.text)
+                .buttons {
+                    MainButton(title: "취소", colorType: .secondary) {
+                        viewModel.showLimitReachedPopup = false
+                    }
+                    MainButton(title: "로그인") {
+                        showLoginView = true
+                        viewModel.showLimitReachedPopup = false
+                    }
+                }
+        })
         // 로그인 화면 띄우기
         .fullScreenCover(isPresented: $showLoginView, content: {
             AppDIContainer.shared.makeLoginView {

@@ -31,4 +31,9 @@ protocol PhotoSaveUseCaseProtocol {
     
     /// 이전에 선택했던 공개여부 가져오기
     func getLastSelectedVisibilityType() -> VisibilityType?
+    
+    
+    /// 로컬 타임스탬프 로그의 개수를 조회
+    /// - Returns: 로컬에 저장된 로그의 개수
+    func getLocalLogsCount() -> Int
 }

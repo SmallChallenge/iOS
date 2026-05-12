@@ -214,4 +214,10 @@ final class PhotoSaveRepository: PhotoSaveRepositoryProtocol {
     func saveSelectedVisibilityType(visibilityType: VisibilityType){
         AppConfig.shared.lastSelectedVisibilityType = visibilityType.rawValue
     }
+    
+    
+    /// 로컬 타임스탬프 로그의 개수를 조회
+    func fetchLocalLogsCount() throws -> Int {
+        return try localDataSource.count()
+    }
 }

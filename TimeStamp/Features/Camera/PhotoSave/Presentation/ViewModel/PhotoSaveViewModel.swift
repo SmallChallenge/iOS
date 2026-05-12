@@ -36,6 +36,10 @@ final class PhotoSaveViewModel: ObservableObject, MessageDisplayable {
     // 선택된 카테고리
     @Published var selectedCategory: CategoryViewData? = nil
     @Published var selectedVisibility: VisibilityViewData? = nil
+    
+    
+    // 로컬 기록 한계 도달 팝업 띄우기
+    @Published var showLimitReachedPopup = false
 
     /// 저장 성공 여부
     @Published var isSaved = false
@@ -57,6 +61,8 @@ final class PhotoSaveViewModel: ObservableObject, MessageDisplayable {
 
     // MARK: - Actions
     
+    
+    
     /// 사진 저장 (로컬 or 서버)
     /// - NOTE: 로그인 상태면 서버에 저장, 로그아웃상태면 로컬에 저장
     func savePhoto(image: UIImage) {
@@ -66,6 +72,12 @@ final class PhotoSaveViewModel: ObservableObject, MessageDisplayable {
               let visibility = selectedVisibility
         else {
             show(.requiredSelection)
+            return
+        }
+        
+        // 앱 실행시, 카메라 바로가기 기능 때문에, 여기서 로컬저장 개수 제한 확인하고 팝업띄우기 (비공개로 저장할 경우)
+        guard canTakePhoto() || visibility == .publicVisible else {
+            showLimitReachedPopup = true
             return
         }
         
@@ -128,8 +140,6 @@ final class PhotoSaveViewModel: ObservableObject, MessageDisplayable {
             isSaved = true
             ToastManager.shared.show(AppMessage.saveSuccess.text)
             Logger.success("사진 저장 성공")
-            
-            // TODO: 사진 저장개수 카운트
 
             // MyLogView에 새로고침 알림
             NotificationCenter.default.post(name: .shouldRefreshMyLog, object: nil)
@@ -158,8 +168,6 @@ final class PhotoSaveViewModel: ObservableObject, MessageDisplayable {
             isLoading = false
             ToastManager.shared.show(AppMessage.saveSuccess.text)
             Logger.success("서버에 사진 저장 성공")
-            
-            // TODO: 사진 저장개수 카운트
 
             // MyLogView에 새로고침 알림
             NotificationCenter.default.post(name: .shouldRefreshMyLog, object: nil)
@@ -203,4 +211,19 @@ final class PhotoSaveViewModel: ObservableObject, MessageDisplayable {
             self.selectedVisibility = visibilityTypeViewData
         }
     }
+    
+    
+    /// 카메라 촬영 가능 여부 확인 (로컬 기록이 20개 미만인지)
+    ///  비로그인 상태로, 로컬기록이 20개 이상이면 -> false
+    /// - Returns: 촬영 가능하면 true, 제한에 도달하면 false
+    private func canTakePhoto() -> Bool {
+        return authManager.isLoggedIn || getLocalLogsCount() < AppConstants.Limits.maxLogCount
+    }
+    
+    /// 로컬 기록 개수 확인
+    /// - Returns: 로컬에 저장된 기록 개수
+    private func getLocalLogsCount() -> Int {
+        return useCase.getLocalLogsCount()
+    }
 }
+

@@ -50,4 +50,6 @@ protocol PhotoSaveRepositoryProtocol {
     
     /// 선택한 공개여부 저장
     func saveSelectedVisibilityType(visibilityType: VisibilityType)
+    
+    func fetchLocalLogsCount() throws -> Int
 }
