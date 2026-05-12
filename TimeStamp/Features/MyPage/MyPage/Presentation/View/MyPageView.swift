@@ -151,17 +151,17 @@ struct MyPageView: View {
                         shareLog()
                     }
                     
-                    Spacer()
-                        .frame(height: 100)
                     #endif
                     
                     Spacer()
+                        .frame(height: 70)
                    
                 }
             } // ~ScrollView
             .safeAreaInset(edge: .top) {
                 HeaderView(leadingView: {
                     BackButton {
+                        
                         onGoBack()
                     }
                 }, title: "마이페이지", hasUnderLine: true)
