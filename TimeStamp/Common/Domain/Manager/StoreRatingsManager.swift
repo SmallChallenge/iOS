@@ -39,10 +39,10 @@ public class StoreRatingsManager {
         }
     }
 
-    /// Dev 버전이면 무조건 5분뒤로 설정
+    /// Dev 버전이면 무조건 하루 뒤로 설정
     private func setDelayedForDev() {
         let today = Date()
-        if let target = Calendar.current.date(byAdding: .minute, value: 5, to: today) {
+        if let target = Calendar.current.date(byAdding: .day, value: 1, to: today) {
             targetDate = target.toString(format: "yyyy-MM-dd HH:mm")
         }
     }
@@ -79,8 +79,6 @@ public class StoreRatingsManager {
         
         Logger.debug("isAfterTargetDate : \(isAfterTargetDate)")
         Logger.debug("logCount : \(logCount ?? "")")
-        print(">>>>> isAfterTargetDate : \(isAfterTargetDate)")
-        print(">>>>> logCount : \(logCount ?? "")")
         
         // 로그개수, 가져올 수 없으면 기본값 0
         let count = if let logCount {
@@ -105,7 +103,6 @@ public class StoreRatingsManager {
 
     /// 앱 평가 요청하기
     public func requestRatings() {
-        print(">>>>> requestRatings ")
         guard canOpen() else { return }
         if let windowScene = UIApplication.shared.connectedScenes.first as? UIWindowScene {
             SKStoreReviewController.requestReview(in: windowScene)
