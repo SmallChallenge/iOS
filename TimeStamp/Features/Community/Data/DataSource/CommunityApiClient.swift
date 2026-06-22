@@ -10,6 +10,9 @@ import Alamofire
 
 enum CommunityRouter {
     
+    // 카테고리 목록 가져오기
+    case categories
+    
     // 피드 목록 가져오기
     case feeds(category: String?, size: Int?, lastPublishedAt: String?, lastImageId: Int?, sort: String?)
     
@@ -30,7 +33,7 @@ extension CommunityRouter: Router {
     
     var method: Alamofire.HTTPMethod {
         switch self {
-        case .feeds: .get
+        case .feeds, .categories: .get
         case .report: .post
         case .cancelReport: .delete
         case .like: .post
@@ -40,6 +43,8 @@ extension CommunityRouter: Router {
     
     var path: String {
         switch self {
+        case .categories: 
+            return "api/v1/images/categories"
         case .feeds:
             return "api/v1/community/feeds"
         case let .report(imageId):
@@ -49,7 +54,7 @@ extension CommunityRouter: Router {
         case let .like(imageId):
             return "api/v1/community/\(imageId)/like"
         case let .block(nickname):
-            return "/api/v1/community/\(nickname)/block"
+            return "api/v1/community/\(nickname)/block"
 
         }
     }
@@ -79,6 +84,7 @@ extension CommunityRouter: Router {
             }
             return params
             
+        case .categories: return nil
         case .report: return nil
         case .cancelReport: return nil
         case .like: return nil
@@ -90,12 +96,14 @@ extension CommunityRouter: Router {
     var encoding: Encoding? {
         nil
     }
-    
-    
 }
 
 // MARK:  CommunityApiClient
 protocol CommunityApiClientProtocol {
+    
+    /// 카테고리 목록 조회
+    func getCategories() async -> Result<CategoriesDto, NetworkError>
+    
     /// 커뮤니티 피트 조회
     /// - Parameters:
     ///   - category: 조회할 카테고리 (EXERCISE, STUDY, FOOD 등) 없을 시 전체 조회.
@@ -116,10 +124,23 @@ protocol CommunityApiClientProtocol {
     
     /// 차단하기
     func block(nickname: String) async -> Result<BlockUserDto, NetworkError>
-    
-    
 }
+
+
 final class CommunityApiClient: ApiClient<CommunityRouter>,CommunityApiClientProtocol {
+    
+    /// 카테고리 목록 조회
+    func getCategories() async -> Result<CategoriesDto, NetworkError> {
+        await request(.categories)
+    }
+    
+    /// 커뮤니티 피드 조회
+    /// - Parameters:
+    ///   - category: 조회할 카테고리 (EXERCISE, STUDY, FOOD 등) 없을 시 전체 조회.
+    ///   - size:  한 번에 가져올 데이터 개수 (기본값 20).
+    ///   - lastPublishedAt: 직전 조회 결과의 publishedAt 값. (첫 페이지 조회 시 null)
+    ///   - lastImageId: 직전 조회 결과의 imageId 값. (첫 페이지 조회 시 null)
+    ///   - sort: 정렬 기준 (LATEST: 최신순, POPULAR: 좋아요순) (Default value : LATEST)
     func feeds(category: String?, size: Int?, lastPublishedAt: String?, lastImageId: Int?, sort: String?) async -> Result<feedsDto, NetworkError> {
         
         await request(.feeds(category: category, size: size, lastPublishedAt: lastPublishedAt, lastImageId: lastImageId, sort: sort))

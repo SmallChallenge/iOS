@@ -14,6 +14,19 @@ struct CommunityRepository: CommunityRepositoryProtocol {
     init(apiClient: CommunityApiClientProtocol) {
         self.apiClient = apiClient
     }
+    
+    func getCategory() async throws -> [CommunityCategory] {
+        let result = await apiClient.getCategories()
+        switch result {
+        case .success(let dto):
+            return dto.categories.map { category in
+                CommunityCategory(from: category)
+            }
+            
+        case .failure(let error):
+            throw error
+        }
+    }
 
     func feeds(category: String?, lastPublishedAt: String?, lastImageId: Int?, size: Int?, sort: String?) async throws -> CommunityListInfo {
         let result = await apiClient.feeds(category: category, size: size, lastPublishedAt: lastPublishedAt, lastImageId: lastImageId, sort: sort)
@@ -65,6 +78,11 @@ struct CommunityRepository: CommunityRepositoryProtocol {
         }
     }
 }
+
+
+
+
+
 
 
 

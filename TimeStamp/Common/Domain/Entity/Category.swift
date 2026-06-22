@@ -12,5 +12,3 @@ enum Category: String, Codable, Hashable {
     case health = "EXERCISE"
     case etc = "ETC"
 }
-
-

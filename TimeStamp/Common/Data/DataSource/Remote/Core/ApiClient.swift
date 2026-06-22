@@ -42,10 +42,12 @@ public class ApiClient<R: Router> {
             .serializingData()
             .response
 
+        // 응답이 없는 경우
         guard let response = result.response else {
             return .failure(.invalidResponse)
         }
 
+        // 응답안에 데이터가 없는 경우
         guard let data = result.data else {
             return .failure(.dataNil)
         }
@@ -98,4 +100,3 @@ public class ApiClient<R: Router> {
         }
     }
 }
-

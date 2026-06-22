@@ -8,6 +8,9 @@
 import Foundation
 
 protocol CommunityRepositoryProtocol {
+    
+    func getCategory() async throws -> [CommunityCategory]
+    
     /// 커뮤니티 피드 조회
     func feeds(category: String?,lastPublishedAt: String?, lastImageId: Int?, size: Int?,  sort: String?) async throws -> CommunityListInfo
 

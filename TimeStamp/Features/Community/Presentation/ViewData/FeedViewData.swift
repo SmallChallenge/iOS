@@ -15,6 +15,11 @@ struct FeedViewData {
     let isLiked: Bool
     let likeCount: Int
 }
+extension FeedViewData: Identifiable {
+    var id: Int {
+        imageId
+    }
+}
 
 // MARK: - Feed Entity to ViewData
 

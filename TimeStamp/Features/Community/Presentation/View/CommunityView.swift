@@ -34,7 +34,10 @@ struct CommunityView: View {
             if viewModel.feedList.isEmpty && !viewModel.isLoading {
                 emptyView
             } else {
-                feedListView
+                VStack {
+                    categoryPicker
+                    feedListView
+                }
             }
         } // ~ZStack
         .mainBackgourndColor()
@@ -42,6 +45,7 @@ struct CommunityView: View {
         .toast(message: $viewModel.toastMessage)
         .onAppear {
             if viewModel.feedList.isEmpty {
+                viewModel.getCategories()
                 viewModel.loadFeeds()
             }
             // 앰플리튜드
@@ -73,6 +77,23 @@ struct CommunityView: View {
                 }
             }
         }
+    }
+    
+    private var categoryPicker: some View {
+        HStack(alignment: .center, spacing: 8) {
+            ForEach(viewModel.categories) { category in
+                TagButton(
+                    title: category.name,
+                    isActive: (viewModel.currentCategory?.id == category.id)) {
+                        Task {
+                            await scrollToTop()
+                            viewModel.setCategories(category)
+                        }
+                    }
+            }
+            Spacer()
+        }
+        .padding(.horizontal, 20)
     }
     
     private var feedListView: some View {
@@ -248,6 +269,29 @@ struct CommunityView: View {
 
         // 5. refresh control 종료
         scrollView.refreshControl?.endRefreshing()
+    }
+    
+    /// 프로그래밍 방식으로 pull-to-refresh 트리거
+    @MainActor
+    private func scrollToTop() async {
+        // UIScrollView 찾기
+        guard let windowScene = UIApplication.shared.connectedScenes.first as? UIWindowScene,
+              let window = windowScene.windows.first,
+              let scrollView = findScrollView(in: window) else {
+            return
+        }
+
+        // 1. 먼저 맨 위로 스크롤 (네비게이션 바 고려)
+        let targetY = -scrollView.adjustedContentInset.top
+
+        // UIView.animate로 직접 애니메이션
+        await withCheckedContinuation { (continuation: CheckedContinuation<Void, Never>) in
+            UIView.animate(withDuration: 0.3, animations: {
+                scrollView.contentOffset = CGPoint(x: 0, y: targetY)
+            }, completion: { _ in
+                continuation.resume()
+            })
+        }
     }
 
     /// 뷰 계층에서 UIScrollView 찾기

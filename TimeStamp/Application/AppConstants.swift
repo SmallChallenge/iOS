@@ -54,7 +54,7 @@ enum AppConstants {
         static let warningLogCount: Int = (maxLogCount - 2)
     }
     
-    // MARK: SDK key
+    // MARK: - google admob  SDK key
     enum SDKKeys {
         //  TODO: 앰플리튜드 키 옮기기
         #if DEBUG
