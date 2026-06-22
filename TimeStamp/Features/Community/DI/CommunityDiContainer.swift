@@ -60,9 +60,27 @@ struct MockCommunityDiContainer: CommunityDiContainerProtocol {
 }
 
 struct MockCommunityUseCase: CommunityUseCaseProtocol {
+    func getCategory() async throws -> [CommunityCategory] {
+        return [
+            .init(code: "ALL", name: "전체", order: 0),
+            .init(code: "STUDY", name: "공부", order: 1),
+            .init(code: "FOOD", name: "음식", order: 2),
+            .init(code: "EXERCISE", name: "운동", order: 3),
+            .init(code: "ETC", name: "기타", order: 999),
+        ]
+    }
+    
     func feeds(category: String?, lastPublishedAt: String?, lastImageId: Int?) async throws -> CommunityListInfo {
         CommunityListInfo(
-            feeds: [],
+            feeds: [
+                .init(imageId: 105,
+                      accessURL: "https://placehold.co/400x400",
+                      nickname: "닉네임",
+                      profileImageURL: "https://placehold.co/400x400",
+                      isLiked: true,
+                      likeCount: 0,
+                      publishedAt: "2025-12-24T12:00:00")
+            ],
             sliceInfo: .init(nextCursorId: 0, nextCursorPublishedAt: "", hasNext: false, size: 0)
             )
     }

@@ -8,6 +8,9 @@
 import Foundation
 
 protocol CommunityUseCaseProtocol {
+    
+    func getCategory() async throws -> [CommunityCategory]
+    
     /// 커뮤니티 피드 조회
     func feeds(category: String?, lastPublishedAt: String?, lastImageId: Int?) async throws -> CommunityListInfo
 
@@ -30,6 +33,10 @@ struct CommunityUseCase: CommunityUseCaseProtocol {
 
     init(repository: CommunityRepositoryProtocol) {
         self.repository = repository
+    }
+    
+    func getCategory() async throws -> [CommunityCategory] {
+        try await repository.getCategory()
     }
 
     func feeds(

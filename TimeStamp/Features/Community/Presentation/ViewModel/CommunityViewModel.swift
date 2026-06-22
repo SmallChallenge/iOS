@@ -14,6 +14,11 @@ final class CommunityViewModel: ObservableObject, MessageDisplayable {
     private let useCase: CommunityUseCaseProtocol
 
     // MARK: - Output Properties
+    
+    /// 카테고리
+    @Published var categories: [CommunityCategoryViewData] = []
+    /// 현재 선택된 카테고리
+    @Published var currentCategory: CommunityCategoryViewData?
 
     /// 피드와 배너가 섞인 리스트 (5개마다 배너 삽입)
     @Published var communityListItems: [CommunityListItem] = []
@@ -44,8 +49,7 @@ final class CommunityViewModel: ObservableObject, MessageDisplayable {
     private var nextCursorPublishedAt: String?
     private var hasNext: Bool = true
 
-    /// 현재 선택된 카테고리
-    private var currentCategory: String?
+    
 
     // MARK: - Init
 
@@ -54,18 +58,36 @@ final class CommunityViewModel: ObservableObject, MessageDisplayable {
     }
 
     // MARK: - Input Methods
+    
+    func getCategories(){
+        Task {
+            do {
+                let categoryEnities = try await useCase.getCategory()
+                let viewDatas = categoryEnities.map { entity in
+                    CommunityCategoryViewData(from: entity)
+                }
+                categories = viewDatas
+                currentCategory = viewDatas.first
+                
+            } catch {
+                
+            }
+        }
+    }
+    
+    /// 카테고리 선택
+    func setCategories(_ category: CommunityCategoryViewData){
+        // 카테고리가 변경되면 새로고침
+        resetPagination()
+        currentCategory = category
+        loadFeeds(isRefresh: true)
+    }
 
     /// 피드 목록 조회 (첫 로드 또는 새로고침)
-    func loadFeeds(category: String? = nil, isRefresh: Bool = false
-    ) {
+    /// - Parameter isRefresh: 새로고침여부
+    func loadFeeds(isRefresh: Bool = false) {
         guard hasNext || isRefresh else { return }
         guard !isLoading else { return }
-
-        // 카테고리가 변경되면 새로고침
-        if category != currentCategory {
-            resetPagination()
-            currentCategory = category
-        }
 
         if isRefresh {
             resetPagination()
@@ -76,7 +98,7 @@ final class CommunityViewModel: ObservableObject, MessageDisplayable {
         Task {
             do {
                 let (newFeeds, newHasNext) = try await fetchFeeds(
-                    category: currentCategory,
+                    category: currentCategory?.code,
                     lastPublishedAt: nextCursorPublishedAt,
                     lastImageId: nextCursorId
                 )
@@ -107,7 +129,7 @@ final class CommunityViewModel: ObservableObject, MessageDisplayable {
 
     /// 다음 페이지 로드
     func loadMore() {
-        loadFeeds(category: currentCategory, isRefresh: false)
+        loadFeeds(isRefresh: false)
     }
 
     /// 새로고침
@@ -124,7 +146,7 @@ final class CommunityViewModel: ObservableObject, MessageDisplayable {
 
         do {
             let (newFeeds, newHasNext) = try await fetchFeeds(
-                category: currentCategory,
+                category: currentCategory?.code,
                 lastPublishedAt: nil,
                 lastImageId: nil
             )
