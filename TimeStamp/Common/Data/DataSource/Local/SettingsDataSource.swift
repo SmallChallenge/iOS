@@ -44,5 +44,4 @@ final class SettingsDataSource: SettingsDataSourceProtocol {
     func updateLaunchCameraOnStart(_ shouldLaunchCameraOnStart: Bool){
         AppConfig.shared.shouldLaunchCameraOnStart = shouldLaunchCameraOnStart
     }
-    
 }
