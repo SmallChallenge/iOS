@@ -41,6 +41,7 @@ struct Fun006Template: View , TemplateViewProtocol {
             }
             .padding(.top, 7)
             .padding([.horizontal, .bottom], 16)
+            .foregroundStyle(Color.gray900)
             .background(Color.gray50)
         }
     }
