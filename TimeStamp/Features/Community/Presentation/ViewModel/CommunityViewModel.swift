@@ -70,7 +70,13 @@ final class CommunityViewModel: ObservableObject, MessageDisplayable {
                 currentCategory = viewDatas.first
                 
             } catch {
-                
+                Logger.error("카테고리 목록 가져오기 실패: \(error.localizedDescription)")
+                if let networkError = error as? NetworkError,
+                   networkError.isUserFacing {
+                    toastMessage = networkError.description
+                } else {
+                    show(.unknownRequestFailed)
+                }
             }
         }
     }
