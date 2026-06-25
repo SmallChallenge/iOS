@@ -41,7 +41,7 @@ struct Digital6Template: View, TemplateViewProtocol {
     
     private var dateTimeText: some View {
         Group {
-            Text(displayDate.toString(.koreanDate_yyMM월dd일E))
+            Text(displayDate.toString(.koreanDate_yyMM월dd일E, locale: .kr))
             + Text(", ")
             + Text(displayDate.toString(.time_a_h_mm))
         }

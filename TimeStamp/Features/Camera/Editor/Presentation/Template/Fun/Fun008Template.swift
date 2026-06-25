@@ -34,7 +34,7 @@ struct Fun008Template: View, TemplateViewProtocol {
         }
         .overlay(alignment: .bottomLeading, content: {
             if hasLogo {
-                RoundedLogotype()
+                LogotypeImage()
                     .padding(16)
                 
             }

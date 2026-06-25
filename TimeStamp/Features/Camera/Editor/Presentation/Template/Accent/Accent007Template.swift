@@ -17,7 +17,7 @@ struct Accent007Template: View, TemplateViewProtocol {
                 .font(.partialSans, size: 14, trackingPercent: 0.1)
             Spacer()
             
-            Text(displayDate.toString(.yyyyMMdd_E, locale: .kr))
+            Text(displayDate.toString(.yyyyMMddE))
                 .font(.partialSans, size: 14)
             
             Text(displayDate.toString(.time_a_h_mm, locale: .kr))
