@@ -12,12 +12,12 @@ import Combine
 @MainActor
 final class LaunchScreenViewModel: ObservableObject {
 
-    private let useCase: LaunchScreenUseCaseProtocol
+    private let useCase: LaunchUseCaseProtocol
 
     @Published var shouldNavigate = false
     var shouldLaunchCameraOnStart: Bool = false
 
-    init(useCase: LaunchScreenUseCaseProtocol) {
+    init(useCase: LaunchUseCaseProtocol) {
         self.useCase = useCase
     }
 

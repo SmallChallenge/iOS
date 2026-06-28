@@ -14,6 +14,6 @@ protocol TermsRepositoryProtocol {
         agreedToPrivacyPolicy: Bool,
         agreedToTermsOfService: Bool,
         agreedToMarketing: Bool
-    ) async throws -> ActiveAccount
+    ) async throws -> ActiveAccountEntity
     
 }
