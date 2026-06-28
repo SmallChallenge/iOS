@@ -219,7 +219,7 @@ final class MockLoginDIContainer: LoginDIContainerProtocol {
         }
     }
     struct MockTermsUseCase: TermsUseCaseProtocol {
-        func activeAccount(accessToken token: String, agreedToPrivacyPolicy: Bool, agreedToTermsOfService: Bool, agreedToMarketing: Bool) async throws -> ActiveAccount {
+        func activeAccount(accessToken token: String, agreedToPrivacyPolicy: Bool, agreedToTermsOfService: Bool, agreedToMarketing: Bool) async throws -> ActiveAccountEntity {
             throw NetworkError.dataNil
         }
     }

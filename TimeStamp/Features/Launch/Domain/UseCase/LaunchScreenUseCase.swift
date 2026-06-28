@@ -7,7 +7,7 @@
 
 import Foundation
 
-protocol LaunchScreenUseCaseProtocol {
+protocol LaunchUseCaseProtocol {
     func refreshToken() async
     func getUserInfo() async
     
@@ -20,11 +20,11 @@ protocol LaunchScreenUseCaseDelegate: AnyObject {
     func didRefreshToken(user: User?)
 }
 
-class LaunchScreenUseCase: LaunchScreenUseCaseProtocol {
-    private let repository: LaunchScreenRepositoryProtocol
+class LaunchScreenUseCase: LaunchUseCaseProtocol {
+    private let repository: LaunchRepositoryProtocol
     weak var delegate: LaunchScreenUseCaseDelegate?
 
-    init(repository: LaunchScreenRepositoryProtocol) {
+    init(repository: LaunchRepositoryProtocol) {
         self.repository = repository
     }
 

@@ -23,8 +23,8 @@ final class LaunchScreenDIContainer {
 
     // MARK: - Repository
 
-    private func makeLaunchScreenRepository() -> LaunchScreenRepositoryProtocol {
-        return LaunchScreenRepository(authApiClient: authApiClient)
+    private func makeLaunchScreenRepository() -> LaunchRepositoryProtocol {
+        return LaunchRepository(authApiClient: authApiClient)
     }
 
     // MARK: - View
