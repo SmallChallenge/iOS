@@ -29,6 +29,13 @@ public enum AuthRouter {
     
     // 로그아웃
     case logout
+    // 가입 취소
+    case cancelRegisteration(accessToken: String)
+    
+    // 회원탈퇴
+    case withdrawal
+    
+    
     
     
     
@@ -37,12 +44,6 @@ public enum AuthRouter {
     
     // 유저정보 조회
     case userInfo
-    
-    // 가입 취소
-    case cancelRegisteration(accessToken: String)
-    
-    // 회원탈퇴
-    case withdrawal
     
 }
 extension AuthRouter: Router {
