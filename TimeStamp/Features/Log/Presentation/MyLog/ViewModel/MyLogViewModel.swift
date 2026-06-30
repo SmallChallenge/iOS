@@ -52,7 +52,7 @@ final class MyLogViewModel: ObservableObject, MessageDisplayable {
 
     /// 로그 제한 배너 표시 여부
     var shouldShowLogLimitBanner: Bool {
-        localLogsCount >= AppConstants.Limits.warningLogCount // 18개 이상이면 뜬다
+        localLogsCount >= LogPolicy.warningLogCount // 18개 이상이면 뜬다
             && !isLogLimitBannerDismissed // 한번 닫으면 안뜬다.
             && !AuthManager.shared.isLoggedIn // 로그아웃 상태일때만
     }

@@ -227,7 +227,7 @@ struct MyPageView: View {
         }
         // 이용약관(웹뷰)
         .sheet(isPresented: $showTermsOfService) {
-            appDiContainer.makeWebView(url: AppConstants.URLs.termsOfService) {
+            appDiContainer.makeWebView(url: AppURLs.termsOfService) {
                 showTermsOfService = false
             }
             .presentationDetents([.medium, .large])
@@ -235,7 +235,7 @@ struct MyPageView: View {
         }
         // 개인정보처리방침(웹뷰)
         .sheet(isPresented: $showPrivacyPolicy) {
-            appDiContainer.makeWebView(url: AppConstants.URLs.privacyPolicy) {
+            appDiContainer.makeWebView(url: AppURLs.privacyPolicy) {
                 showPrivacyPolicy = false
             }
             .presentationDetents([.medium, .large])
@@ -243,7 +243,7 @@ struct MyPageView: View {
         }
         // 오픈소스라이선스(웹뷰)
         .sheet(isPresented: $showOpenSourceLicense) {
-            appDiContainer.makeWebView(url: AppConstants.URLs.openSourceLicense) {
+            appDiContainer.makeWebView(url: AppURLs.openSourceLicense) {
                 showOpenSourceLicense = false
             }
             .presentationDetents([.medium, .large])
@@ -254,7 +254,7 @@ struct MyPageView: View {
             MailView(userId: "\(authManager.currentUser?.userId ?? -1)")
         }
         .fullScreenCover(isPresented: $showNoticeBoard, content: {
-            appDiContainer.makeWebView(url: AppConstants.URLs.noticeBoard) {
+            appDiContainer.makeWebView(url: AppURLs.noticeBoard) {
                 showNoticeBoard = false
             }
         })
@@ -376,7 +376,7 @@ struct MyPageView: View {
     // MARK: -
     
     private func sendEmail() {
-        let recipient = AppConstants.URLs.supportEmail
+        let recipient = AppURLs.supportEmail
         let userId = "\(authManager.currentUser?.userId ?? -1)"
         let emailBody = EmailHelper.getSupportEmailBody(userId: userId)
         let subject = "[스탬픽] 서비스 문의"

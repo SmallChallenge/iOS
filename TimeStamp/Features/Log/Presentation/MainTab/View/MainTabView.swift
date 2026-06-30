@@ -190,7 +190,7 @@ struct MainTabView: View {
     // MARK: -
     
     private func sendEmail() {
-        let recipient = AppConstants.URLs.supportEmail
+        let recipient = AppURLs.supportEmail
         let userId = "\(authManager.currentUser?.userId ?? -1)"
         let emailBody = EmailHelper.getSupportEmailBody(userId: userId)
         let subject = "[스탬픽] 서비스 문의"

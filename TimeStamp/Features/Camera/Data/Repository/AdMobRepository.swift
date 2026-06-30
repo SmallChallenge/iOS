@@ -23,7 +23,7 @@ final class AdMobRepository: NSObject, AdRepositoryProtocol {
     
     func loadRewardedAd() async throws {
         let ad = try await withCheckedThrowingContinuation { (continuation: CheckedContinuation<RewardedAd, Error>) in
-            RewardedAd.load(with: AppConstants.SDKKeys.ad_reward,
+            RewardedAd.load(with: AdMobConfig.ad_reward,
                             request: Request()) { ad, error in
                 if let error = error {
                     continuation.resume(throwing: error)

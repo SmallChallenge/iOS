@@ -44,7 +44,7 @@ final class MainTabViewModel: ObservableObject {
     ///  비로그인 상태로, 로컬기록이 20개 이상이면 -> false
     /// - Returns: 촬영 가능하면 true, 제한에 도달하면 false
     func canTakePhoto() -> Bool {
-        return authManager.isLoggedIn || getLocalLogsCount() < AppConstants.Limits.maxLogCount
+        return authManager.isLoggedIn || getLocalLogsCount() < LogPolicy.maxLogCount
     }
     
     /// 추적허용 권한 받기

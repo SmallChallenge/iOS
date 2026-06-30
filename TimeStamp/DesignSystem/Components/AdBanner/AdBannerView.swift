@@ -24,7 +24,7 @@ struct AdBannerView: UIViewRepresentable {
     
     func makeUIView(context: Context) -> BannerView {
            let bannerView = BannerView()
-           bannerView.adUnitID = AppConstants.SDKKeys.ad_banner
+           bannerView.adUnitID = AdMobConfig.ad_banner
            
            // Root ViewController 설정
            if let windowScene = UIApplication.shared.connectedScenes.first as? UIWindowScene,

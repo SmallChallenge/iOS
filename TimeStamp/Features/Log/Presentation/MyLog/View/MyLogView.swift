@@ -141,12 +141,12 @@ struct MyLogView: View {
             // 20개 제한 안내 배너
             HStack(spacing: 8){
                 //progress bar
-                ProgressView(value: Double(viewModel.localLogsCount) / Double(AppConstants.Limits.maxLogCount) )
+                ProgressView(value: Double(viewModel.localLogsCount) / Double(LogPolicy.maxLogCount) )
                     .progressViewStyle(.linear)
                     .tint(Color.neon300)
 
                 // 로컬 기록 개수
-                Text("\(viewModel.localLogsCount)/\(AppConstants.Limits.maxLogCount)")
+                Text("\(viewModel.localLogsCount)/\(LogPolicy.maxLogCount)")
                     .font(.Caption)
                     .foregroundStyle(Color.gray500)
             }
@@ -162,7 +162,7 @@ struct MyLogView: View {
         result.font = FontStyle.Caption.font
             
 
-        var bold = AttributedString("최대\(AppConstants.Limits.maxLogCount)개")
+        var bold = AttributedString("최대\(LogPolicy.maxLogCount)개")
         bold.font = FontStyle.Caption_b.font
         result.append(bold)
 

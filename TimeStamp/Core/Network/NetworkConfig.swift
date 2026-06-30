@@ -28,23 +28,48 @@ public enum NetworkConfig {
 }
 
 /*
- 이렇게 init으로 받는게 맞을지? 고민
- 
-public struct NetworkConfig {
-    public let environment: NetworkEnvironment
-    public init(environment: NetworkEnvironment) {
-        self.environment = environment
-    }
-    
-    public var baseURL: URL {
-        switch environment {
+
+public enum NetworkEnvironment {
+    case dev
+    case prod
+
+    public var baseURL: String {
+        switch self {
         case .dev:
-            // TODO: Replace with your actual dev server URL
-            return URL(string: "https://dev-api.stampy.kr")!
+            return "https://dev-api.stampy.kr"
         case .prod:
-            // TODO: Replace with your actual prod server URL
-            return URL(string: "https://api.stampy.kr")!
+            return "https://api.stampy.kr"
         }
     }
 }
+public struct NetworkConfig {
+    public let environment: NetworkEnvironment
+
+    public init(environment: NetworkEnvironment) {
+        self.environment = environment
+    }
+}
+ */
+
+/*
+container에서 이걸 쓰기
+let config = NetworkConfig(
+    environment: .prod
+)
+
+let networkClient = NetworkClient(
+    config: config
+)
+ 
+ 아니면 아래처럼
+ 
+ #if DEBUG
+ let config = NetworkConfig(environment: .dev)
+ #else
+ let config = NetworkConfig(environment: .prod)
+ #endif
+
+ let networkClient = NetworkClient(config: config)
+
 */
+

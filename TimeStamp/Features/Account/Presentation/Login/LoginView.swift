@@ -122,7 +122,7 @@ struct LoginView: View {
             }
             // 약관보기(웹뷰)
             .sheet(isPresented: $showTermsWebView) {
-                diContainer.makeWebView(url: AppConstants.URLs.termsOfService) {
+                diContainer.makeWebView(url: AppURLs.termsOfService) {
                         showTermsWebView = false
                     }
             }

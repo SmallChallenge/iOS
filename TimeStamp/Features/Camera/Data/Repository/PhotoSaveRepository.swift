@@ -93,7 +93,7 @@ final class PhotoSaveRepository: PhotoSaveRepositoryProtocol {
     /// 갤러리에 사진 저장
     func savePhotoToGallery(image: UIImage) {
         // Stampic 앨범 찾기 또는 생성
-        let albumName = AppConstants.AppInfo.appNameKr
+        let albumName = AppInfo.appNameKr
         
         // 앨범이 존재하는지 확인
         let fetchOptions = PHFetchOptions()

@@ -120,14 +120,14 @@ struct TermsView: View {
         .mainBackgourndColor(.gray50)
         .loading(viewModel.isLoading)
         .sheet(isPresented: $showTermsOfService) {
-            diContainer.makeWebView(url: AppConstants.URLs.termsOfService) {
+            diContainer.makeWebView(url: AppURLs.termsOfService) {
                 showTermsOfService = false
             }
             .presentationDetents([.medium, .large])
             .presentationDragIndicator(.visible)
         }
         .sheet(isPresented: $showPrivacyPolicy) {
-            diContainer.makeWebView(url: AppConstants.URLs.privacyPolicy) {
+            diContainer.makeWebView(url: AppURLs.privacyPolicy) {
                 showPrivacyPolicy = false
             }
             .presentationDetents([.medium, .large])
