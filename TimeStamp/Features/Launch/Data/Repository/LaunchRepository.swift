@@ -41,7 +41,7 @@ struct LaunchRepository: LaunchRepositoryProtocol {
     
     /// 앱 실행시 카메라 실행여부 가져오기 (기본값: false)
     func getLaunchCameraOnStart() -> Bool {
-        AppConfig.shared.shouldLaunchCameraOnStart
+        UserSettings.shared.shouldLaunchCameraOnStart
     }
     
     

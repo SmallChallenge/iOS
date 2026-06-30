@@ -185,7 +185,7 @@ final class PhotoSaveRepository: PhotoSaveRepositoryProtocol {
     
     /// 자동저장 여부 조회 (기본값: true)
     func getIsAutoSave() -> Bool {
-        return AppConfig.shared.isAutoSave
+        return UserSettings.shared.isAutoSave
     }
     
     /// 사진 저장개수  +1 하기
@@ -195,24 +195,24 @@ final class PhotoSaveRepository: PhotoSaveRepositoryProtocol {
     
     /// 이전에 선택했던 카테고리 가져오기
     func getLastSelectedCategory() -> Category? {
-        guard let categoryRawValue = AppConfig.shared.lastSelectedCategory else { return nil }
+        guard let categoryRawValue = UserSettings.shared.lastSelectedCategory else { return nil }
         return Category(rawValue: categoryRawValue)
     }
     
     /// 선택한 카테고리 저장
     func saveSelectedCategory(category: Category){
-        AppConfig.shared.lastSelectedCategory = category.rawValue
+        UserSettings.shared.lastSelectedCategory = category.rawValue
     }
     
     /// 이전에 선택했던 공개여부 가져오기
     func getLastSelectedVisibilityType() -> VisibilityType? {
-        guard let visibilityTypeRawValue = AppConfig.shared.lastSelectedVisibilityType else { return nil }
+        guard let visibilityTypeRawValue = UserSettings.shared.lastSelectedVisibilityType else { return nil }
         return VisibilityType(rawValue: visibilityTypeRawValue)
     }
     
     /// 선택한 공개여부 저장
     func saveSelectedVisibilityType(visibilityType: VisibilityType){
-        AppConfig.shared.lastSelectedVisibilityType = visibilityType.rawValue
+        UserSettings.shared.lastSelectedVisibilityType = visibilityType.rawValue
     }
     
     

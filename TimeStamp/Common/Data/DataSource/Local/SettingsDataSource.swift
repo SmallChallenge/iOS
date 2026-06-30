@@ -15,33 +15,33 @@ final class SettingsDataSource: SettingsDataSourceProtocol {
     /// 로그 제한 배너를 닫았는지 여부를 조회
     /// - Returns: 닫았으면 true, 아니면 false
     func getIsLogLimitBannerDismissed() -> Bool {
-        return AppConfig.shared.isLogLimitBannerDismissed
+        return UserSettings.shared.isLogLimitBannerDismissed
     }
 
     /// 로그 제한 배너를 닫았는지 여부를 저장
     /// - Parameter isDismissed: 닫았으면 true, 아니면 false
     func setIsLogLimitBannerDismissed(_ isDismissed: Bool) {
-        AppConfig.shared.isLogLimitBannerDismissed = isDismissed
+        UserSettings.shared.isLogLimitBannerDismissed = isDismissed
     }
 
     /// 자동저장 여부 조회 (기본값: true)
     func getIsAutoSave() -> Bool {
-        return AppConfig.shared.isAutoSave
+        return UserSettings.shared.isAutoSave
     }
 
     /// 자동저장 여부 설정
     func setIsAutoSave(_ isAutoSave: Bool) {
-        AppConfig.shared.isAutoSave = isAutoSave
+        UserSettings.shared.isAutoSave = isAutoSave
     }
     
     
     /// 앱 실행시 카메라 실행여부 가져오기 (기본값: false)
     func getLaunchCameraOnStart() -> Bool {
-        AppConfig.shared.shouldLaunchCameraOnStart
+        UserSettings.shared.shouldLaunchCameraOnStart
     }
     
     /// 앱 실행시 카메라 실행여부 값 업데이트
     func updateLaunchCameraOnStart(_ shouldLaunchCameraOnStart: Bool){
-        AppConfig.shared.shouldLaunchCameraOnStart = shouldLaunchCameraOnStart
+        UserSettings.shared.shouldLaunchCameraOnStart = shouldLaunchCameraOnStart
     }
 }

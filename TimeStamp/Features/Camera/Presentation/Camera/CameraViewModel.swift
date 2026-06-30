@@ -141,7 +141,7 @@ final class CameraViewModel: ObservableObject {
     @MainActor
     func loadLastSelectedTemplate(){
         Task {
-            guard let templateId = AppConfig.shared.lastSelectedTemplateId else { return }
+            guard let templateId = UserSettings.shared.lastSelectedTemplateId else { return }
             let template = Template.all.first { template in
                 template.id == templateId
             }

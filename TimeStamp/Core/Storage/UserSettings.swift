@@ -1,5 +1,5 @@
 //
-//  AppConfig.swift
+//  UserSettings.swift
 //  TimeStamp
 //
 //  Created by 임주희 on 4/6/26.
@@ -7,9 +7,11 @@
 
 import Foundation
 
-/// 앱 관련 설정을 관리하는 싱글톤 클래스
-final class AppConfig {
-    static let shared = AppConfig()
+// TODO: 싱글톤 제거하고 필요한곳에 주입해서 사용하기
+
+/// 유저 설정을 관리하는 싱글톤 클래스
+final class UserSettings {
+    static let shared = UserSettings()
     private init(){}
     
     // MARK: - 갤러리에 자동 저장 여부
