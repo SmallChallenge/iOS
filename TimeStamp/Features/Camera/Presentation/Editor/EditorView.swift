@@ -107,20 +107,20 @@ struct EditorView: View {
             } // ~VStack
 
             // 광고 로딩 중 오버레이
-//            if viewModel.isLoadingAd {
-//                Color.black.opacity(0.4)
-//                    .ignoresSafeArea()
-//
-//                VStack(spacing: 16) {
-//                    ProgressView()
-//                        .scaleEffect(1.5)
-//                        .tint(.white)
-//
-//                    Text("광고를 불러오는 중...")
-//                        .font(.Body1)
-//                        .foregroundColor(.white)
-//                }
-//            }
+            if viewModel.isLoadingAd {
+                Color.black.opacity(0.4)
+                    .ignoresSafeArea()
+
+                VStack(spacing: 16) {
+                    ProgressView()
+                        .scaleEffect(1.5)
+                        .tint(.white)
+
+                    Text("광고를 불러오는 중...")
+                        .font(.Body1)
+                        .foregroundColor(.white)
+                }
+            }
         } // ~ZStack
         .mainBackgourndColor()
         .navigationBarHidden(true)
@@ -150,7 +150,6 @@ struct EditorView: View {
                 }
         })
        
-        /*
         // 광고 시청 팝업 띄우기
         .popup(isPresented: $viewModel.showAdPopup, content: {
             Modal(title: "광고 시청 후\n워터마크를 제거하세요.")
@@ -168,7 +167,7 @@ struct EditorView: View {
                         }
                     }
                 }
-        })*/
+        })
         .navigationDestination(isPresented: $navigateToPhotoSave) {
             // 수정 화면으로 넘기기
             if let editedImage = editedImage {

@@ -20,7 +20,7 @@ class EditorViewModel: ObservableObject, MessageDisplayable {
     @Published var isLoadingAd = false
     
     /// 광고시청여부
-    //@Published var hasWatchedAd: Bool  = true // 광고보기
+    @Published var hasWatchedAd: Bool  = false
   
     /// 로고 있없 여부
     @Published var isOnLogo: Bool  = true
@@ -72,36 +72,36 @@ class EditorViewModel: ObservableObject, MessageDisplayable {
     
     /// 로고 토글 탭 이벤트 처리
     func handleLogoToggleTap() {
-        /*
-        // 광고 시청 완료: 자유롭게 설정가능
+        
+        // 광고 시청 완료: 자유롭게 로그 온오프가능
         guard !hasWatchedAd else {
             isOnLogo = !isOnLogo
             return
         }
         // 광고 미시청: 로고 없애려면 광고보기 팝업띄우기
+        
         if isOnLogo {
             showAdPopup = true
         }
-         */
         
         // 로그인 여부에 따라 광고보기
-        guard AuthManager.shared.isLoggedIn == false else {
+        /* guard AuthManager.shared.isLoggedIn == false else {
             isOnLogo = !isOnLogo
             return
-        }
+        }*/
         
         if isOnLogo {
             showLoginPopup = true
         }
     }
     
-    /*
+    
     // 광고볼래? 팝업 닫기
     func closeAdPopup() {
         showAdPopup = false
-    }*/
+    }
 
-    /*
+    
     func loadAd() async {
         #if DEBUG
         guard !isAdReady else { return }
@@ -112,9 +112,9 @@ class EditorViewModel: ObservableObject, MessageDisplayable {
             print("광고 로드 실패: \(error)")
         }
         #endif
-    }*/
+    }
     
-    /*
+    
     @MainActor
     func playAd() async {
         guard let topVC = UIApplication.shared.getTopMostViewController() else {
@@ -158,5 +158,4 @@ class EditorViewModel: ObservableObject, MessageDisplayable {
             show(.unknownRequestFailed)
         }
     }
-     */
 }

@@ -22,7 +22,7 @@ struct TimeStampApp: App {
         KakaoSDK.initSDK(appKey: kakaoAppKey)
 
         // 애드몹 초기화 (Initialize the Google Mobile Ads SDK.)
-        MobileAds.shared.start()    
+        MobileAds.shared.start()
 
         // Refresh Control 색상 설정
         UIRefreshControl.appearance().tintColor = UIColor(Color.neon300)
