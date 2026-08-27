@@ -49,8 +49,8 @@ struct MyPageView: View {
 
         // 앱 버전 정보 가져오기
         let version = Bundle.main.infoDictionary?["CFBundleShortVersionString"] as? String ?? "1.0.0"
-        let build = Bundle.main.infoDictionary?["CFBundleVersion"] as? String ?? "1"
-        self.appVersion = "\(version)(\(build))"
+        //let build = Bundle.main.infoDictionary?["CFBundleVersion"] as? String ?? "1"
+        self.appVersion = "\(version)"
 
         let appearance = UINavigationBarAppearance()
         appearance.backgroundColor = UIColor.gray900
