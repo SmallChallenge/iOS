@@ -42,7 +42,6 @@ class EditorViewModel: ObservableObject, MessageDisplayable {
     }
     
     func getLastSelectedTemplate(){
-        print(">>>>> getLastSelectedTemplate ")
         Task {
             guard let templateId = useCase.getLastSelectedTemplateId() else { return }
             let template = Template.all.first { template in
@@ -84,15 +83,17 @@ class EditorViewModel: ObservableObject, MessageDisplayable {
             showAdPopup = true
         }
         
+        /*
         // 로그인 여부에 따라 광고보기
-        /* guard AuthManager.shared.isLoggedIn == false else {
+        guard AuthManager.shared.isLoggedIn == false else {
             isOnLogo = !isOnLogo
             return
-        }*/
+        }
         
         if isOnLogo {
             showLoginPopup = true
         }
+        */
     }
     
     
@@ -100,10 +101,8 @@ class EditorViewModel: ObservableObject, MessageDisplayable {
     func closeAdPopup() {
         showAdPopup = false
     }
-
     
     func loadAd() async {
-        #if DEBUG
         guard !isAdReady else { return }
         do {
             try await useCase.load()
@@ -111,7 +110,6 @@ class EditorViewModel: ObservableObject, MessageDisplayable {
         } catch {
             print("광고 로드 실패: \(error)")
         }
-        #endif
     }
     
     
