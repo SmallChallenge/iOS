@@ -80,6 +80,7 @@ class EditorViewModel: ObservableObject, MessageDisplayable {
         // 광고 미시청: 로고 없애려면 광고보기 팝업띄우기
         
         if isOnLogo {
+            // 광고보기
             showAdPopup = true
         }
         
