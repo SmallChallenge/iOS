@@ -8,79 +8,55 @@
 import Foundation
 
 protocol LaunchUseCaseProtocol {
-    func refreshToken() async
-    func getUserInfo() async
-    
-    /// 앱 실행시 카메라 실행여부 가져오기 (기본값: false)
+    func checkAuthAndGetUser() async -> User?
+    func checkCurrentVersion() async throws -> VersionEntity
     func getLaunchCameraOnStart() -> Bool
-}
-
-// usecase -> viewModel
-protocol LaunchScreenUseCaseDelegate: AnyObject {
-    func didRefreshToken(user: User?)
 }
 
 class LaunchScreenUseCase: LaunchUseCaseProtocol {
     private let repository: LaunchRepositoryProtocol
-    weak var delegate: LaunchScreenUseCaseDelegate?
 
     init(repository: LaunchRepositoryProtocol) {
         self.repository = repository
     }
 
-    /// 토큰 갱신 (비동기 비즈니스 로직)
-    func refreshToken() async {
-        // 1. 저장된 Refresh Token 확인
+    /// 토큰 갱신 및 유저 정보 가져오기
+    func checkAuthAndGetUser() async -> User? {
         guard let refreshToken = AuthManager.shared.getRefreshToken() else {
-            // 토큰 없음 → 로그인 필요
-            await notifyDelegate(user: nil)
-            return
+            Logger.warning("저장된 Refresh Token 없음 → 로그인 필요")
+            return nil
         }
 
-        // 2. 토큰 갱신 요청 (백그라운드에서 실행)
         let result = await repository.refreshToken(token: refreshToken)
 
         switch result {
         case .success(let entity):
-            // 3. 새 토큰으로 업데이트 (AuthManager가 메인 스레드 처리)
             AuthManager.shared.refreshToken(
                 accessToken: entity.accessToken,
                 refreshToken: entity.refreshToken
             )
 
-            // 유저정보 갱신
-            await getUserInfo()
+            do {
+                let user = try await repository.getUserInfo()
+                return user
+            } catch {
+                Logger.error("유저 정보 갱신 실패: \(error)")
+                return nil
+            }
 
-        case .failure:
-            await notifyDelegate(user: nil)
+        case .failure(let error):
+            Logger.error("토큰 갱신 실패: \(error)")
+            return nil
         }
     }
 
-    /// 사용자 정보 가져오기 (비동기 비즈니스 로직)
-    func getUserInfo() async {
-        do {
-            let user = try await repository.getUserInfo()
-            await notifyDelegate(user: user)
-        } catch {
-            Logger.error("유저 정보 갱신 실패: \(error)")
-            await notifyDelegate(user: nil)
-        }
+    /// 버전 확인
+    func checkCurrentVersion() async throws -> VersionEntity {
+        let currentVersion = Bundle.main.infoDictionary?["CFBundleShortVersionString"] as? String ?? "1.0.0"
+        return try await repository.checkCurrentVersion(version: currentVersion)
     }
 
-    /// Delegate 호출 (메인 스레드로 전환)
-    private func notifyDelegate(user: User?) async {
-        await MainActor.run {
-            delegate?.didRefreshToken(user: user)
-        }
-    }
-    
-    func getLaunchCameraOnStart() -> Bool{
+    func getLaunchCameraOnStart() -> Bool {
         return repository.getLaunchCameraOnStart()
-    }
-    
-    // 버전 확인
-    func getCerrentVersion() async throws  {
-        let version = Bundle.main.infoDictionary?["CFBundleShortVersionString"] as? String ?? "1.0.0"
-        let result = try await  repository.checkCurrentVersion(version: version)
     }
 }

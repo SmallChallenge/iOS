@@ -7,11 +7,8 @@
 
 import SwiftUI
 
-// 유저 확인
-// 화면 확인
-// 버전 확인 -> 버전업 팝업 띄우기
-
 struct LaunchScreenView: View {
+    @Environment(\.openURL) var openURL
     @StateObject private var viewModel: LaunchScreenViewModel
     private let container: AppDIContainer
 
@@ -22,23 +19,46 @@ struct LaunchScreenView: View {
 
     var body: some View {
         if viewModel.shouldNavigate {
-            // 로딩 완료 후 메인 화면으로 전환
-            let selectedTab = viewModel.shouldLaunchCameraOnStart ? 1 : 0 
+            let selectedTab = viewModel.shouldLaunchCameraOnStart ? 1 : 0
             container.makeMainTabView(selectedTab: selectedTab)
-            
         } else {
             ZStack {
-                Color.launch
+                Color.yellow
                     .ignoresSafeArea()
-
                 Image("LaunchImage")
-
             }
+            .popup(isPresented: $viewModel.showVersionUpdatePopup, content: {
+                Modal(title: "업데이트가 필요합니다")
+                    .buttons {
+                        MainButton(title: "업데이트 하기") {
+                            openAppStore()
+                        }
+                    }
+            })
             .task {
-                viewModel.getLaunchCameraOnStart()
-                // 토큰 갱신 + 유저 정보 가져오기
-                viewModel.checkAuth()
+                // 1단계: 유저 확인
+                let _ = await viewModel.checkAuth()
+
+                // 2단계: 버전 확인
+                await viewModel.checkVersion()
+
+                // 버전 업데이트가 필요하지 않으면 진행
+                if !viewModel.showVersionUpdatePopup {
+                    // 3단계: 카메라 여부 확인
+                    viewModel.getLaunchCameraOnStart()
+
+                    // 모든 단계 완료 → 메인 화면으로 이동
+                    viewModel.shouldNavigate = true
+                }
             }
+        }
+    }
+    
+    // MARK: - functions
+    
+    private func openAppStore() {
+        if let appStoreURL = URL(string: "https://apps.apple.com/app/id6756785730") {
+            openURL(appStoreURL)
         }
     }
 }

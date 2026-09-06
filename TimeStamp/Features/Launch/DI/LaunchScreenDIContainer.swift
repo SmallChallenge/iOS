@@ -33,10 +33,6 @@ final class LaunchScreenDIContainer {
         let repository = makeLaunchScreenRepository()
         let useCase = LaunchScreenUseCase(repository: repository)
         let viewModel = LaunchScreenViewModel(useCase: useCase)
-
-        // Delegate 설정 (UseCase → ViewModel)
-        useCase.delegate = viewModel
-
         return LaunchScreenView(viewModel: viewModel, container: appContainer)
     }
 }

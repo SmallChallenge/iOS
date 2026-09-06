@@ -88,7 +88,7 @@ extension AuthRouter: Router {
     
     public var method: HTTPMethod {
         switch self {
-        case .userInfo:
+        case .userInfo, .checkCurrentVersion:
             return .get
         default:
             return .post
@@ -194,7 +194,12 @@ extension AuthRouter: Router {
     }
     
     public var encoding: Encoding? {
-        nil
+        switch self {
+        case .userInfo, .checkCurrentVersion:
+            return .url
+        default:
+            return nil
+        }
     }
 }
 
