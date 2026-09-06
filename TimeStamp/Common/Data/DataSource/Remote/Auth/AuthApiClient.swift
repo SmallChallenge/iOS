@@ -45,6 +45,9 @@ public enum AuthRouter {
     // 유저정보 조회
     case userInfo
     
+    // 버전확인
+    case checkCurrentVersion(version: String)
+    
 }
 extension AuthRouter: Router {
    
@@ -77,6 +80,9 @@ extension AuthRouter: Router {
 
         case .logout:
             "api/v1/auth/logout"
+            
+        case .checkCurrentVersion:
+            "api/v1/app/version"
         }
     }
     
@@ -148,10 +154,18 @@ extension AuthRouter: Router {
             
         case .logout:
             var params: Parameters = [
-                "allDevices" : false]
+                "allDevices" : false
+            ]
             if let token = AuthManager.shared.getRefreshToken() {
                 params["refreshToken"] = token
             }
+            return params
+            
+        case let .checkCurrentVersion(version):
+            let params: Parameters = [
+                "platform" : "iOS",
+                "currentVersion": version
+            ]
             return params
         }
     }
@@ -182,7 +196,6 @@ extension AuthRouter: Router {
     public var encoding: Encoding? {
         nil
     }
-    
 }
 
 // MARK: - API Client Protocol
@@ -203,11 +216,6 @@ public protocol AuthApiClientProtocol {
     /// 토큰 재발급
     func refreshToken(refreshToken token: String) async -> Result<RefreshDto, NetworkError>
     
-    // 로그아웃
-    
-    
-
-    // 닉네임 중복확인
     // 닉네임 설정
     func setNickname(nickname: String, accessToken token: String?) async -> Result<SetNicknameDto, NetworkError>
     
@@ -215,13 +223,16 @@ public protocol AuthApiClientProtocol {
     func cancelRegisteration(accessToken: String) async -> Result<CancelRegisterationDto, NetworkError>
     
     /// 회원탈퇴
-    func withdrawal()  async -> Result<WithdrawalDto, NetworkError>
+    func withdrawal() async -> Result<WithdrawalDto, NetworkError>
     
     /// 유저정보
-    func userInfo()  async -> Result<UserInfoDto, NetworkError>
+    func userInfo() async -> Result<UserInfoDto, NetworkError>
     
     /// 로그아웃
-    func logout()  async -> Result<LogoutDto, NetworkError>
+    func logout() async -> Result<LogoutDto, NetworkError>
+    
+    // 버전확인
+    func checkCurrentVersion(version: String) async -> Result<VersionDto, NetworkError>
 }
 
 
@@ -274,6 +285,8 @@ public class AuthApiClient: ApiClient<AuthRouter>, AuthApiClientProtocol {
         await request(.logout)
     }
     
+    // 버전확인
+    public func checkCurrentVersion(version: String) async -> Result<VersionDto, NetworkError> {
+        await request(.checkCurrentVersion(version: version))
+    }
 }
-
-

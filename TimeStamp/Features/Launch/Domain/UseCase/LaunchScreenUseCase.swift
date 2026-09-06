@@ -77,4 +77,10 @@ class LaunchScreenUseCase: LaunchUseCaseProtocol {
     func getLaunchCameraOnStart() -> Bool{
         return repository.getLaunchCameraOnStart()
     }
+    
+    // 버전 확인
+    func getCerrentVersion() async throws  {
+        let version = Bundle.main.infoDictionary?["CFBundleShortVersionString"] as? String ?? "1.0.0"
+        let result = try await  repository.checkCurrentVersion(version: version)
+    }
 }

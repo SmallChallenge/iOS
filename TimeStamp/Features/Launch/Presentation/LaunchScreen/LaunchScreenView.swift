@@ -7,6 +7,10 @@
 
 import SwiftUI
 
+// 유저 확인
+// 화면 확인
+// 버전 확인 -> 버전업 팝업 띄우기
+
 struct LaunchScreenView: View {
     @StateObject private var viewModel: LaunchScreenViewModel
     private let container: AppDIContainer

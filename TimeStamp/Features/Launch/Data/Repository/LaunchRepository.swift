@@ -45,5 +45,14 @@ struct LaunchRepository: LaunchRepositoryProtocol {
     }
     
     
-
+    /// 버전 확인
+    func checkCurrentVersion(version: String) async throws -> VersionEntity {
+        let result = await authApiClient.checkCurrentVersion(version: version)
+        switch result {
+        case let .success(dto):
+            return dto.toEntity()
+        case let .failure(error):
+            throw error
+        }
+    }
 }
