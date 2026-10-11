@@ -9,12 +9,21 @@ import Foundation
 import SwiftUI
 import Combine
 
+
 @MainActor
 final class LaunchScreenViewModel: ObservableObject {
     private let useCase: LaunchUseCaseProtocol
 
     @Published var shouldNavigate = false
-    @Published var showVersionUpdatePopup = false
+    
+    
+    // 권장 업데이트 안내
+    @Published var showVersionOptionalUpdatePopupMessage = false
+    // 필수 없데이트 안내
+    @Published var showVersionRequiredUpdatePopupMessage = false
+
+    
+    
     var shouldLaunchCameraOnStart: Bool = false
 
     init(useCase: LaunchUseCaseProtocol) {
@@ -48,17 +57,28 @@ final class LaunchScreenViewModel: ObservableObject {
         Logger.info("checkVersion 버전 확인하기")
         do {
             let entity = try await useCase.checkCurrentVersion()
-            // 업데이트 해야함
-            if entity.updateType == .none {
-                Logger.info("버전 업데이트 필요: \(entity.latestVersion)")
-                showVersionUpdatePopup = true
+            // 버전 체크
+            switch entity {
+            case .required: // 필수 업데이트 안내
+                Logger.info("필수 업데이트 안내")
+                showVersionRequiredUpdatePopupMessage = true
                 
-            } else { // 업데이트 안해도 됨
+            case .optional: //권장 업데이트 안내
+                Logger.info("권장 업데이트 안내")
+                showVersionOptionalUpdatePopupMessage = true
+                
+            case .none: //업데이트 안해도 됨.
                 Logger.success("최신 버전 확인")
+                
             }
         } catch {
             Logger.error("버전 확인 실패: \(error)")
         }
+    }
+    
+    // 권장업데이트 '나중에' 누름, 해당 시점과 버전을 기록하기
+    func saveRecommendedUpdateDismissal() {
+        useCase.saveRecommendedUpdateDismissal()
     }
 
     /// 3단계: 카메라 실행 여부 확인

@@ -55,4 +55,15 @@ struct LaunchRepository: LaunchRepositoryProtocol {
             throw error
         }
     }
+    
+    func getRecommendedUpdate() -> RecommendedUpdateDismissalEntity? {
+        let dto = UserSettings.shared.LaterUpdate
+        return RecommendedUpdateDismissalEntityMapper().toEntity(from: dto)
+    }
+    
+    func saveRecommendedUpdateDismissal() {
+        let currentVersion = Bundle.main.infoDictionary?["CFBundleShortVersionString"] as? String ?? "1.0.0"
+        let dto = RecommendedUpdateDismissal (appVersion: currentVersion, dismissedAt: Date())
+        UserSettings.shared.LaterUpdate = dto
+    }
 }

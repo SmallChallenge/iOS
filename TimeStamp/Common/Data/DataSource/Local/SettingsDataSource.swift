@@ -34,7 +34,6 @@ final class SettingsDataSource: SettingsDataSourceProtocol {
         UserSettings.shared.isAutoSave = isAutoSave
     }
     
-    
     /// 앱 실행시 카메라 실행여부 가져오기 (기본값: false)
     func getLaunchCameraOnStart() -> Bool {
         UserSettings.shared.shouldLaunchCameraOnStart

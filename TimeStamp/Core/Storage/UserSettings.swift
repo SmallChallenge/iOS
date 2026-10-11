@@ -37,4 +37,15 @@ final class UserSettings {
     // MARK: - 이전에 선택했던 템플릿
     @UserDefaultsValue(key: "lastSelectedTemplateId", defaultValue: nil)
     var lastSelectedTemplateId: String?
+    
+    
+    // -----------------------------------------------
+    
+    
+    // MARK: - 권장 업데이트 '나중에'를 누른 시점과 앱 버전 저장
+    @UserDefaultsWrapper(key: "RecommendedUpdateDismissal", defaultValue: nil)
+    var LaterUpdate: RecommendedUpdateDismissal?
+    
+    
+    
 }

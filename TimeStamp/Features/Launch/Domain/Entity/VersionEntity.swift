@@ -13,12 +13,9 @@ struct VersionEntity {
     let message: String?
 
     enum UpdateType: String, Codable {
-        case optional = "OPTIONAL"
+        case required = "REQUIRED" // 필수 업데이트
+        case optional = "OPTIONAL" // 권장 업데이트
         case none = "NONE"
-    }
-
-    var updateRequired: Bool {
-        updateType == .optional
     }
 }
 
