@@ -61,9 +61,9 @@ struct LaunchRepository: LaunchRepositoryProtocol {
         return RecommendedUpdateDismissalEntityMapper().toEntity(from: dto)
     }
     
-    func saveRecommendedUpdateDismissal() {
-        let currentVersion = Bundle.main.infoDictionary?["CFBundleShortVersionString"] as? String ?? "1.0.0"
-        let dto = RecommendedUpdateDismissal (appVersion: currentVersion, dismissedAt: Date())
+    // 나중에를 누른 시점, 최신앱버전 저장
+    func saveRecommendedUpdateDismissal(latestVersion: String) {
+        let dto = RecommendedUpdateDismissal (appVersion: latestVersion, dismissedAt: Date())
         UserSettings.shared.LaterUpdate = dto
     }
 }

@@ -62,7 +62,7 @@ struct LaunchScreenView: View {
                 // 2단계: 버전 확인
                 await viewModel.checkVersion()
 
-                // 버전 업데이트 확인
+                //  버전 확인 - 업데이트 안내 여부 확인
                 if (viewModel.showVersionRequiredUpdatePopupMessage || viewModel.showVersionOptionalUpdatePopupMessage ) {
                     // 팝업띄우러 나가
                     return

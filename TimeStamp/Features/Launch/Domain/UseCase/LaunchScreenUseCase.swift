@@ -18,6 +18,7 @@ protocol LaunchUseCaseProtocol {
 
 class LaunchScreenUseCase: LaunchUseCaseProtocol {
     private let repository: LaunchRepositoryProtocol
+    private var versionInfoentity: VersionEntity?
 
     init(repository: LaunchRepositoryProtocol) {
         self.repository = repository
@@ -56,7 +57,6 @@ class LaunchScreenUseCase: LaunchUseCaseProtocol {
     /// 버전 확인
     func checkCurrentVersion() async throws -> VersionEntity.UpdateType {
         let currentVersion = Bundle.main.infoDictionary?["CFBundleShortVersionString"] as? String ?? "1.0.0"
-        print(">>>>> currentVersion \(currentVersion)")
         let entity = try await repository.checkCurrentVersion(version: currentVersion)
         
         Logger.debug("서버 업데이트 응답: \(entity.updateType)")
@@ -64,10 +64,11 @@ class LaunchScreenUseCase: LaunchUseCaseProtocol {
         switch entity.updateType {
         case .required:
             return .required
-        
+            
         case .optional:
             // 지난번에 나중에 버튼을 눌렀는지 확인하고, 일주일이 지난 경우 노출
-            if isShowOptionalUpdatePopup(currentVersion: currentVersion) {
+            if isShowOptionalUpdatePopup(latestVersion: entity.latestVersion) {
+                self.versionInfoentity = entity
                 return .optional
             }
             return .none
@@ -81,8 +82,11 @@ class LaunchScreenUseCase: LaunchUseCaseProtocol {
         return repository.getLaunchCameraOnStart()
     }
     
-    // 권장 업데이트를 띄울지 말지 여부 확인
-    private func isShowOptionalUpdatePopup(currentVersion: String) -> Bool {
+    
+    /// 업데이트 권장 팝업을 띄울지 말지 여부 확인
+    /// - Parameter latestVersion: 현재 최신버전 in 앱스토어
+    /// - Returns: 업데이트 권장 팝업을 띄울지 말지
+    private func isShowOptionalUpdatePopup(latestVersion: String) -> Bool {
         Logger.debug("권장 업데이트를 띄울지 말지 여부 확인")
         
         // 이전 권장업데이트를 연기한 시점, 앱 버전 가져오기
@@ -93,7 +97,7 @@ class LaunchScreenUseCase: LaunchUseCaseProtocol {
         }
         
         // 1. 현재 버전과 동일한지 먼저 확인
-        guard currentVersion == entity.appVersion else {
+        guard latestVersion == entity.appVersion else {
             // 동일하지 않은 경우, 권장 업데이트 팝업을 노출하기
             Logger.debug("현재 버전과 동일한지 먼저 확인 - 동일하지 않은 경우, 권장 업데이트 팝업을 노출하기")
             return true
@@ -112,7 +116,13 @@ class LaunchScreenUseCase: LaunchUseCaseProtocol {
     
     // 권장업데이트 '나중에' 누른 시점, 앱버전 저장
     func saveRecommendedUpdateDismissal() {
-        repository.saveRecommendedUpdateDismissal()
+        let latestVersion: String
+        if let version = versionInfoentity?.latestVersion {
+            latestVersion = version
+        } else {
+            latestVersion = Bundle.main.infoDictionary?["CFBundleShortVersionString"] as? String ?? "1.0.0"
+        }
+        repository.saveRecommendedUpdateDismissal(latestVersion: latestVersion)
     }
     
 }
