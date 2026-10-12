@@ -38,6 +38,7 @@ struct MyPageView: View {
     @State private var isShowingMailView = false
     
     private let appVersion: String
+    private let appVerseion_build: String
     
     init(viewModel: MyPageViewModel,
          diContainer: MyPageDIContainerProtocol,
@@ -49,8 +50,10 @@ struct MyPageView: View {
 
         // 앱 버전 정보 가져오기
         let version = Bundle.main.infoDictionary?["CFBundleShortVersionString"] as? String ?? "1.0.0"
-        //let build = Bundle.main.infoDictionary?["CFBundleVersion"] as? String ?? "1"
+        let build = Bundle.main.infoDictionary?["CFBundleVersion"] as? String ?? "1"
+        
         self.appVersion = "\(version)"
+        self.appVerseion_build = "\(version)+(\(build))"
 
         let appearance = UINavigationBarAppearance()
         appearance.backgroundColor = UIColor.gray900
@@ -131,7 +134,11 @@ struct MyPageView: View {
                         MyPageMenu("오픈소스 라이센스", type: .chevron){
                             showOpenSourceLicense = true
                         }
+                        #if DEBUG
+                        MyPageMenu("앱 버전", type: .text(text: appVerseion_build)){}
+                        #else
                         MyPageMenu("앱 버전", type: .text(text: appVersion)){}
+                        #endif
                         MyPageMenu("문의하기", type: .none){
                            sendEmail()
                         }
