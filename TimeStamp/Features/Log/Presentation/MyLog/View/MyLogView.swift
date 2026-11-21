@@ -100,6 +100,7 @@ struct MyLogView: View {
                              
                         }
                     }
+                    
                 }
                 .scrollDismissesKeyboard(.interactively)
         }

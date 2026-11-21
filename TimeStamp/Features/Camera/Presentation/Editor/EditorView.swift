@@ -43,7 +43,8 @@ struct EditorView: View {
         Template.all.filter { $0.style == viewModel.selectedTemplateStyle }
     }
     
-    @State private var didLog = false
+    /// 첫 진입인지 확인
+    @State private var isFirstAppear: Bool = true
     
     var body: some View {
         ZStack {
@@ -126,8 +127,8 @@ struct EditorView: View {
         .navigationBarHidden(true)
         .toolbar(.hidden, for: .navigationBar)
         .onAppear(perform: {
-            guard !didLog else { return }
-            didLog = true
+            guard isFirstAppear else { return }
+            isFirstAppear = false
             AmplitudeManager.shared.trackEditorViewEnter()
         })
         .task {

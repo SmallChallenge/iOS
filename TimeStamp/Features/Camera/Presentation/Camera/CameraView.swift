@@ -14,7 +14,8 @@ struct CameraView: View {
 
     // MARK: - Private property
 
-    @State private var didLog = false
+    /// 첫 진입인지 확인
+    @State private var isFirstAppear: Bool = true
 
     // MARK: - Initialization
 
@@ -81,8 +82,8 @@ struct CameraView: View {
             }
         } // ~Zstack
         .onAppear {
-            guard !didLog else { return }
-            didLog = true
+            guard isFirstAppear else { return }
+            isFirstAppear = false
             AmplitudeManager.shared.trackCameraViewEnter()
         }
     }
