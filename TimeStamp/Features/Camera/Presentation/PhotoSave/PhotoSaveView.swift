@@ -24,6 +24,9 @@ struct PhotoSaveView: View {
     @State private var showLoginPopup: Bool = false
     @State private var showLoginView: Bool = false
     
+    /// 첫 진입
+    @State private var isFirstAppear: Bool = true
+    
     var body: some View {
         ScrollView {
             VStack (alignment: .leading, spacing: 0){
@@ -60,6 +63,11 @@ struct PhotoSaveView: View {
                     .padding(.horizontal, 20)
             } // ~VStack
         } // ~ ScrollView
+        .onAppear(perform: {
+            guard isFirstAppear else { return }
+            isFirstAppear = false
+            AmplitudeManager.shared.trackSaveViewEnter()
+        })
         .task {
             viewModel.getLastSelectedCategory()
             viewModel.getLastSelectedVisibilityType()

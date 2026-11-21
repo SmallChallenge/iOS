@@ -61,6 +61,9 @@ extension AmplitudeManager {
         /// 에디터 화면 진입
         case enterEditorView = "photo_edit_enter"
         
+        /// 사진 저장화면 진입
+        case enterPhotoSaveView = "photo_save_enter"
+        
         /// 사진 저장완료 (서버에 저장한 경우에만)
         case photoSaveCompleted = "photo_save_complete"
         
@@ -185,6 +188,11 @@ extension AmplitudeManager {
     /// 에디터 화면 진입
     func trackEditorViewEnter(){
         eventTrack(.enterEditorView)
+    }
+    
+    /// 사진 저장 화면 진입
+    func trackSaveViewEnter(){
+        eventTrack(.enterPhotoSaveView)
     }
     
     /// 사진 저장 완료 (서버에만)
