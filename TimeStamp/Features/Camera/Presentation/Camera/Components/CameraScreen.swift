@@ -23,14 +23,12 @@ struct CameraScreen: View {
             .aspectRatio(3/4, contentMode: .fit)
             .overlay {
                 GeometryReader { geo in
-                    let maskHeight = aspectRatio == .square
-                        ? (geo.size.height - geo.size.width) / 2
-                        : 0
+                    let maskHeight = aspectRatio == .square ? (geo.size.height - geo.size.width) / 2 : 0
 
                     VStack(spacing: 0) {
-                        Color.black.opacity(0.6).frame(height: maskHeight)
+                        Color.gray900.opacity(0.6).frame(height: maskHeight)
                         Spacer()
-                        Color.black.opacity(0.6).frame(height: maskHeight)
+                        Color.gray900.opacity(0.6).frame(height: maskHeight)
                     }
                     .animation(.easeInOut(duration: 0.2), value: aspectRatio)
                 }
