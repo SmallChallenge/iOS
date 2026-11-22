@@ -69,6 +69,7 @@ final class CameraViewModel: ObservableObject {
         // 권한 상태 확인 (설정에서 돌아왔을 때 반영)
         // isAuthorized 변경은 init()의 sink에서 자동 처리됨
         cameraManager.checkAuthorization()
+        cameraManager.startSession()
     }
 
     /// 뷰가 사라질 때 카메라 중지

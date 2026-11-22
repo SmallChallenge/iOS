@@ -10,36 +10,6 @@ import UIKit
 import Combine
 import AVFAudio
 
-/// 플래시 모드 3단계
-enum FlashMode: CaseIterable {
-    case off        // 플래시 끔
-    case auto       // 자동 플래시 (어두울 때만)
-    case on         // 항상 켜짐
-
-    /// 다음 모드로 순환
-    mutating func next() {
-        switch self {
-        case .off:
-            self = .auto
-        case .auto:
-            self = .on
-        case .on:
-            self = .off
-        }
-    }
-
-    /// AVCaptureDevice.FlashMode로 변환
-    var avFlashMode: AVCaptureDevice.FlashMode {
-        switch self {
-        case .off:
-            return .off
-        case .auto:
-            return .auto
-        case .on:
-            return .on
-        }
-    }
-}
 
 /// 카메라 하드웨어를 제어하는 매니저
 /// - AVCaptureSession을 관리하고 촬영, 카메라 전환, 플래시 제어 기능 제공
@@ -64,6 +34,7 @@ final class CameraManager: NSObject, ObservableObject {
 
     /// 촬영 완료 시 호출될 클로저
     private var photoCaptureCompletion: ((UIImage?) -> Void)?
+    
 
     // MARK: - Camera State
 
@@ -76,6 +47,9 @@ final class CameraManager: NSObject, ObservableObject {
     /// 카메라 권한 승인 여부
     @Published var isAuthorized = false
     
+    /// 촬영 시 적용할 비율 (화면의 선택값과 동기화)
+    var captureAspectRatio: CameraAspectRatio = .threeFour
+    
     // MARK: - Zoom State
 
     /// 표시용 줌 배율 (0.5x, 1x, 2x ...)
@@ -86,6 +60,7 @@ final class CameraManager: NSObject, ObservableObject {
     /// raw zoom → 표시 배율 변환 기준 (초광각 있으면 보통 2.0)
     private var baseFactor: CGFloat = 1.0
     private let maxDisplayZoom: CGFloat = 10.0
+    
 
     // MARK: - Setup
 
@@ -337,9 +312,13 @@ extension CameraManager: AVCaptureVideoDataOutputSampleBufferDelegate {
             photoCaptureCompletion = nil
             return
         }
+        
+        // 선택한 비율로 중앙 크롭
+        let croppedCGImage = crop(cgImage, toRatio: captureAspectRatio.value)
+
 
         // 이미지 방향 조정
-        let image = UIImage(cgImage: cgImage, scale: 1.0, orientation: getImageOrientation())
+        let image = UIImage(cgImage: croppedCGImage, scale: 1.0, orientation: getImageOrientation())
 
         // 플래시 끄기
         if let device = currentDevice, device.hasTorch {
@@ -366,5 +345,80 @@ extension CameraManager: AVCaptureVideoDataOutputSampleBufferDelegate {
         } else {
             return .up
         }
+    }
+    
+    /// 이미지를 가로/세로 비율에 맞게 중앙 크롭
+    private func crop(_ image: CGImage, toRatio ratio: CGFloat) -> CGImage {
+        let w = CGFloat(image.width)
+        let h = CGFloat(image.height)
+        var rect = CGRect(x: 0, y: 0, width: w, height: h)
+
+        if w / h > ratio {
+            // 가로가 넓음 → 좌우를 자름
+            let newW = h * ratio
+            rect = CGRect(x: (w - newW) / 2, y: 0, width: newW, height: h)
+        } else {
+            // 세로가 김 → 위아래를 자름
+            let newH = w / ratio
+            rect = CGRect(x: 0, y: (h - newH) / 2, width: w, height: newH)
+        }
+        return image.cropping(to: rect.integral) ?? image
+    }
+}
+
+
+/// 플래시 모드 3단계
+enum FlashMode: CaseIterable {
+    case off        // 플래시 끔
+    case auto       // 자동 플래시 (어두울 때만)
+    case on         // 항상 켜짐
+
+    /// 다음 모드로 순환
+    mutating func next() {
+        switch self {
+        case .off:
+            self = .auto
+        case .auto:
+            self = .on
+        case .on:
+            self = .off
+        }
+    }
+
+    /// AVCaptureDevice.FlashMode로 변환
+    var avFlashMode: AVCaptureDevice.FlashMode {
+        switch self {
+        case .off:
+            return .off
+        case .auto:
+            return .auto
+        case .on:
+            return .on
+        }
+    }
+}
+
+/// 카메라 비율
+enum CameraAspectRatio {
+    case threeFour   // 3:4
+    case square      // 1:1
+
+    /// 가로 / 세로
+    var value: CGFloat {
+        switch self {
+        case .threeFour: return 3.0 / 4.0
+        case .square:    return 1.0
+        }
+    }
+
+    var title: String {
+        switch self {
+        case .threeFour: return "3:4"
+        case .square:    return "1:1"
+        }
+    }
+
+    mutating func toggle() {
+        self = (self == .threeFour) ? .square : .threeFour
     }
 }

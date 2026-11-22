@@ -8,7 +8,7 @@
 import SwiftUI
 import AVFoundation
 
-// deprecate//
+// MARK: deprecate//
 
 /// 카메라 프리뷰를 표시하는 뷰
 /// - AVCaptureVideoPreviewLayer를 UIView로 감싸서 SwiftUI에서 사용
