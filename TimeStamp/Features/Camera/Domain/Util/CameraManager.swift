@@ -76,6 +76,17 @@ final class CameraManager: NSObject, ObservableObject {
 
     /// 카메라 권한 승인 여부
     @Published var isAuthorized = false
+    
+    // MARK: - Zoom State
+
+    /// 표시용 줌 배율 (0.5x, 1x, 2x ...)
+    @Published var displayZoom: CGFloat = 1.0
+    /// 렌즈 버튼용 배율 목록 ([0.5, 1, 2] 등)
+    @Published var lensOptions: [CGFloat] = [1.0]
+
+    /// raw zoom → 표시 배율 변환 기준 (초광각 있으면 보통 2.0)
+    private var baseFactor: CGFloat = 1.0
+    private let maxDisplayZoom: CGFloat = 10.0
 
     // MARK: - Setup
 
@@ -149,16 +160,26 @@ final class CameraManager: NSObject, ObservableObject {
         // 카메라 타입 선택
         let position: AVCaptureDevice.Position = isFront ? .front : .back
 
-        guard let device = AVCaptureDevice.default(.builtInWideAngleCamera, for: .video, position: position),
-              let input = try? AVCaptureDeviceInput(device: device) else {
-            return
+        let device: AVCaptureDevice?
+        if isFront {
+            device = AVCaptureDevice.default(.builtInWideAngleCamera, for: .video, position: .front)
+        } else {
+            // 렌즈 많은 가상 디바이스 우선, 없으면 기본 광각
+            device = AVCaptureDevice.default(.builtInTripleCamera, for: .video, position: .back)
+            ?? AVCaptureDevice.default(.builtInDualWideCamera, for: .video, position: .back)
+            ?? AVCaptureDevice.default(.builtInDualCamera, for: .video, position: .back)
+            ?? AVCaptureDevice.default(.builtInWideAngleCamera, for: .video, position: .back)
         }
+        guard let device,
+              let input = try? AVCaptureDeviceInput(device: device) else { return }
+
 
         // 새 입력 추가
         if session.canAddInput(input) {
             session.addInput(input)
             currentInput = input
             currentDevice = device
+            setupZoomInfo(for: device)   // 줌 정보 갱신
         }
     }
 
@@ -243,6 +264,58 @@ final class CameraManager: NSObject, ObservableObject {
             } catch {
                 Logger.error("플래시 설정 실패: \(error)")
             }
+        }
+    }
+    
+    // MARK: - Zoom
+
+    private func setupZoomInfo(for device: AVCaptureDevice) {
+        let switchOvers = device.virtualDeviceSwitchOverVideoZoomFactors.map { CGFloat(truncating: $0) }
+        let hasUltraWide = device.constituentDevices.contains { $0.deviceType == .builtInUltraWideCamera }
+
+        baseFactor = (hasUltraWide ? switchOvers.first : nil) ?? 1.0
+
+        var options: [CGFloat] = []
+        if hasUltraWide { options.append(0.5) }
+        options.append(1.0)
+        let teleStart = hasUltraWide ? 1 : 0
+        if switchOvers.count > teleStart {
+            options += switchOvers[teleStart...].map { ($0 / baseFactor * 10).rounded() / 10 }
+        }
+
+        DispatchQueue.main.async {
+            self.lensOptions = options
+            self.displayZoom = 1.0
+        }
+        applyZoom(display: 1.0)
+    }
+
+    /// 표시 배율(0.5x, 1x, 3x...)로 줌 설정
+    func setDisplayZoom(_ display: CGFloat, animated: Bool = false) {
+        applyZoom(display: display, animated: animated)
+    }
+
+    private func applyZoom(display: CGFloat, animated: Bool = false) {
+        guard let device = currentDevice else { return }
+
+        let raw = display * baseFactor
+        let maxRaw = min(device.maxAvailableVideoZoomFactor, maxDisplayZoom * baseFactor)
+        let clamped = min(max(raw, device.minAvailableVideoZoomFactor), maxRaw)
+
+        do {
+            try device.lockForConfiguration()
+            if animated {
+                device.ramp(toVideoZoomFactor: clamped, withRate: 8.0)
+            } else {
+                device.videoZoomFactor = clamped
+            }
+            device.unlockForConfiguration()
+
+            DispatchQueue.main.async {
+                self.displayZoom = clamped / self.baseFactor
+            }
+        } catch {
+            Logger.error("줌 설정 실패: \(error)")
         }
     }
 }
