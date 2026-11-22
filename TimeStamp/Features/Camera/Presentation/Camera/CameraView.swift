@@ -74,13 +74,12 @@ struct CameraView: View {
                         Text(aspectRatio == .threeFour ? "1:1" : "3:4")
                             .font(.Caption)
                             .foregroundStyle(.white)
-                            .frame(width: 30, height: aspectRatio == .threeFour ? 30 : 40)
+                            //.frame(width: 30, height: aspectRatio == .threeFour ? 30 : 40)
+                            .frame(width: 30, height: 30)
                             .border(.white)
                             .padding(6)
                     }
                 }
-                //.aspectRatio(CameraAspectRatio.threeFour.value , contentMode: .fit)
-
                 .animation(.easeInOut(duration: 0.2), value: aspectRatio)
                 
                 // 컨트롤러: 카메라전환, 촬영버튼, 플래시
