@@ -21,7 +21,7 @@ struct CameraView: View {
     
     
     @State private var zoomAtGestureStart: CGFloat = 1.0
-    @State private var aspectRatio: CameraAspectRatio = .square
+    @AppStorage("cameraAspectRatio") private var aspectRatio: CameraAspectRatio = .threeFour
 
     // MARK: - Initialization
 
