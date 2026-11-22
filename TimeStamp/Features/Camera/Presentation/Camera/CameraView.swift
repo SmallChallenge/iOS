@@ -58,35 +58,36 @@ struct CameraView: View {
                 Spacer()
                 
             } // ~VStack
-            .onAppear {
-                viewModel.onAppear()
-            }
             .task {
                 viewModel.loadLastSelectedTemplate()
+            }
+            .onAppear {
+                viewModel.onAppear()
             }
             .onDisappear {
                 viewModel.onDisappear()
             }
-            .alert("카메라 권한 필요", isPresented: $viewModel.showPermissionAlert) {
-                Button("확인", role: .cancel) { }
-                Button("설정으로 이동") {
-                    if let url = URL(string: UIApplication.openSettingsURLString) {
-                        UIApplication.shared.open(url)
-                    }
-                }
-            } message: {
-                Text("카메라를 사용하려면 설정에서 권한을 허용해주세요.")
-            }
-            .onChange(of: viewModel.capturedImage) { newImage in
-                if let image = newImage {
-                    onCaptured(image)
-                }
-            }
         } // ~Zstack
+        .background(VolumeButtonCapture { viewModel.capturePhoto() })
         .onAppear {
             guard isFirstAppear else { return }
             isFirstAppear = false
             AmplitudeManager.shared.trackCameraViewEnter()
+        }
+        .onChange(of: viewModel.capturedImage) { newImage in
+            if let image = newImage {
+                onCaptured(image)
+            }
+        }
+        .alert("카메라 권한 필요", isPresented: $viewModel.showPermissionAlert) {
+            Button("확인", role: .cancel) { }
+            Button("설정으로 이동") {
+                if let url = URL(string: UIApplication.openSettingsURLString) {
+                    UIApplication.shared.open(url)
+                }
+            }
+        } message: {
+            Text("카메라를 사용하려면 설정에서 권한을 허용해주세요.")
         }
     }
     
