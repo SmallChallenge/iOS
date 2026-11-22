@@ -101,6 +101,23 @@ struct MainTabView: View {
                     showCamera = true
                 }
             }
+            .overlay(alignment: .bottom) { // 스낵바[자동저장끄기]
+                if viewModel.showAutoSaveOffSnackbar {
+                    CustomSnackbar(
+                        message: "사진이 갤러리에 저장되었습니다.",
+                        buttonTitle: "자동저장 끄기",
+                        action: {
+                            viewModel.setAutoSaveOff()
+                            viewModel.showAutoSaveOffSnackbar = false
+                        },
+                        onDismiss: {
+                            viewModel.showAutoSaveOffSnackbar = false
+                        }
+                    )
+                    .offset(y: -80)
+                    .transition(.move(edge: .bottom).combined(with: .opacity))
+                }
+            }
             .popup(isPresented: $showLimitReachedPopup, content: {
                 Modal(title: AppMessage.maxPhotoLimitReached.text)
                     .buttons {
@@ -116,12 +133,15 @@ struct MainTabView: View {
             .popup(isPresented: $viewModel.showReviewPopup, content: {
                 reviewPopup
             })
-            .onReceive(NotificationCenter.default.publisher(for: .didSaveLog), perform: { _ in
+            .onReceive(NotificationCenter.default.publisher(for: .didSaveLog), perform: { _ in // 사진저장되었음
                 // 사진 저장 후 탭바 '내기록'으로 이동
                 selectedTab = 0
                 
                 // 리뷰 띄울지 확인하기
                 viewModel.checkShowReviewPopup()
+                
+                // 저장되었습니다 토스트 or 자동저장끄기 스낵바 띄우기
+                viewModel.showSaveFeedback()
             })
             // 마이페이지 화면으로
             .navigationDestination(isPresented: $presentMypage) {

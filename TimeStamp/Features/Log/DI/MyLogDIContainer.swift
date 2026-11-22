@@ -134,12 +134,17 @@ struct MockMyLogDIContainer: MyLogDIContainerProtocol {
         return MainTabView(container: AppDIContainer.shared, viewModel: viewModel, selectedTab: 0)
     }
     struct MockMainTabUseCase: MainTabUseCaseProtocol {
+        func checkAutoSaveSnackBar() -> Bool {
+            return false
+        }
+        
+        func setAutoSaveOff() {}
+        
         func setReviewDelayed(days: Int) { }
         
         func getLocalLogsCount() -> Int { return 10}
         
         func checkShowReviewPopup() -> Bool { return true }
-        
         
     }
    
