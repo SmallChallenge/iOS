@@ -41,37 +41,33 @@ struct CameraView: View {
             
                 Spacer()
 
-                // 카메라 프리뷰 + 오버레이
-                ZStack {
+                // 카메라 프리뷰 + 줌버튼 + 오버레이
+                ZStack(alignment: .center) {
                     // 카메라 프리뷰
                     #if targetEnvironment(simulator)
                     Color.gray
                         
                     #else
-                    ZStack(alignment: .bottom) {
-                        
-                        //Color.black.ignoresSafeArea()
-                        
-                        // 프리뷰: 선택한 비율로 영역을 제한
-                        CameraPreviewView(session: viewModel.cameraManager.session)
-//                            .aspectRatio(aspectRatio.value, contentMode: .fit)
-                            .clipped()
-                            .frame(maxHeight: .infinity, alignment: .center)
-                            .pinchZoom(currentZoom: viewModel.cameraManager.displayZoom) { zoom in
-                                viewModel.cameraManager.setDisplayZoom(zoom)
-                            }
-                        
-                        // 렌즈 전환 버튼 (줌 버튼)
-                        zoomButtons
+                    // 카메라 프리뷰: 선택한 비율로 영역을 제한
+                    CameraScreen(aspectRatio: $aspectRatio,
+                                 session: viewModel.cameraManager.session)
+                    .pinchZoom(currentZoom: viewModel.cameraManager.displayZoom) { zoom in
+                        viewModel.cameraManager.setDisplayZoom(zoom)
                     }
+                    
                     #endif
 
                     // 오버레이 뷰 (타임스탬프, 로고) - 매분 정각에 자동 업데이트
                     TimelineView(.everyMinute) { context in
                         viewModel.selectedTemplate.makeView(displayDate: context.date, hasLogo: true)
                     }
+                    .aspectRatio(aspectRatio.value, contentMode: .fit)
                 }
-                .overlay(alignment: .leading) {
+                .overlay(alignment: .bottom, content: {
+                    // 렌즈 전환 버튼 (줌 버튼)
+                    zoomButtons
+                })
+                .overlay(alignment: .leading) { // 비율 버튼
                     Button {
                         aspectRatio.toggle()
                     } label: {
@@ -84,7 +80,7 @@ struct CameraView: View {
                     }
                 }
                 //.aspectRatio(CameraAspectRatio.threeFour.value , contentMode: .fit)
-                .aspectRatio(aspectRatio.value, contentMode: .fit)
+
                 .animation(.easeInOut(duration: 0.2), value: aspectRatio)
                 
                 // 컨트롤러: 카메라전환, 촬영버튼, 플래시
