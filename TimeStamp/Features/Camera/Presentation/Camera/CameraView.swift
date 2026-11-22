@@ -43,7 +43,7 @@ struct CameraView: View {
                     #if targetEnvironment(simulator)
                     Color.gray
                     #else
-                    CameraPreviewView(session: viewModel.cameraManager.session)
+                    CameraScreen(camera: viewModel.cameraManager)
                     #endif
 
                     // 오버레이 뷰 (타임스탬프, 로고) - 매분 정각에 자동 업데이트
