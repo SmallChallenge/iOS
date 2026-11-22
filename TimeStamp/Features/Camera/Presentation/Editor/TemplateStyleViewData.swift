@@ -9,6 +9,7 @@ import Foundation
 
 /// 템플릿 스타일 ViewData (Presentation Layer)
 enum TemplateStyleViewData: CaseIterable {
+    case favorite
     case minimal
     case accent
     case fun
@@ -16,6 +17,7 @@ enum TemplateStyleViewData: CaseIterable {
 
     var name: String {
         switch self {
+        case .favorite: return "★ "
         case .minimal: return "깔끔"
         case .accent:  return "강조"
         case .fun: return "재미"
@@ -25,6 +27,7 @@ enum TemplateStyleViewData: CaseIterable {
     
     var enName: String {
         switch self {
+        case .favorite: return "favorite"
         case .minimal: return "minimal"
         case .accent:  return "accent"
         case .fun: return "fun"
@@ -36,6 +39,7 @@ enum TemplateStyleViewData: CaseIterable {
     /// ViewData와 Domain 직접 비교
     static func == (lhs: TemplateStyleViewData, rhs: TemplateStyle) -> Bool {
         switch (lhs, rhs) {
+        case (.favorite, .favorite): return true
         case (.minimal, .minimal): return true
         case (.accent, .accent): return true
         case (.fun, .fun): return true

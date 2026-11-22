@@ -12,6 +12,7 @@ struct TemplateButton: View {
     let capturedImage: UIImage?
     let template: Template
     let isSelected: Bool
+    let isFavorite: Bool
     let action: () -> Void
 
     var body: some View {
@@ -28,7 +29,15 @@ struct TemplateButton: View {
             .onTapGesture {
                 action()
             }
-        
+            .overlay(alignment: .bottomTrailing) {
+                if isFavorite {
+                    Image(systemName: "star.fill")
+                        .resizable()
+                        .frame(width: 15, height: 15)
+                        .foregroundStyle(.yellow)
+                        .padding(6)
+                }
+            }
     }
 }
 
@@ -42,7 +51,8 @@ struct TemplateButton: View {
                 name: "Minimal003Template",
                 viewBuilder: { _,_ in AnyView(EmptyView())}
             ),
-            isSelected: true
+            isSelected: true,
+            isFavorite: true
         ) {}
 
         

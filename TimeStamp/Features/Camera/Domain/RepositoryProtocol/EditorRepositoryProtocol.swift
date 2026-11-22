@@ -12,4 +12,12 @@ protocol EditorRepositoryProtocol {
     
     /// 이전에 선택한 템플릿id 가져오기
     func getLastSelectedTemplateId() -> String?
+    
+    
+    /// 템플릿 즐겨찾기 ids 저장
+    func saveFavoriteTemplateIds(_ templateIds: [String])
+    
+    /// 템플릿 즐겨찾기 ids 불러오기
+    func getFavoriteTemplateIds() -> [String]
 }
+

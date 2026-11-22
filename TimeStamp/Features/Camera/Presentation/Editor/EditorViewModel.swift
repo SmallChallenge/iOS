@@ -16,6 +16,9 @@ class EditorViewModel: ObservableObject, MessageDisplayable {
     @Published var selectedTemplateStyle: TemplateStyleViewData = .minimal
     @Published var selectedTemplate: Template = Template.all[0]
     
+    // 즐겨찾기 목록
+    @Published var favoriteTemplateIds: [String] = []
+    
     @Published var isAdReady = false
     @Published var isLoadingAd = false
     
@@ -41,6 +44,7 @@ class EditorViewModel: ObservableObject, MessageDisplayable {
         self.useCase = useCase
     }
     
+    // 최근사용한 템플릿 가져오기 & 선택시켜놓기
     func getLastSelectedTemplate(){
         Task {
             guard let templateId = useCase.getLastSelectedTemplateId() else { return }
@@ -50,8 +54,10 @@ class EditorViewModel: ObservableObject, MessageDisplayable {
             guard let template else { return }
             selectedTemplate = template
             
+            // 카테고리 선택시켜놓기
             switch template.style {
-                
+            case .favorite: // 여기로는 안옴
+                selectedTemplateStyle = .favorite 
             case .minimal:
                 selectedTemplateStyle = .minimal
             case .accent:
@@ -61,12 +67,31 @@ class EditorViewModel: ObservableObject, MessageDisplayable {
             case .fixel:
                 selectedTemplateStyle = .fixel
             }
+            
+            // 즐겨찾기 목록에 있는 경우엔, 카테고리를 '즐겨찾기' 선택시켜두기
+            if favoriteTemplateIds.contains(templateId) {
+                selectedTemplateStyle = .favorite
+            }
         }
     }
     
+    // 최근 사용한 템플릿 저장
     func saveSelectedTemplate(){
         let templateId = selectedTemplate.templateId
         useCase.saveSelectedTemplateId(templateId: templateId)
+    }
+    
+    // 템플릿 즐겨찾기 목록 불러오기
+    func getFavoriteTemplateIds(){
+        favoriteTemplateIds = useCase.getFavoriteTemplateIds()
+    }
+    // 템플릿 즐겨찾기 추가
+    func addFavoriteTemplate(id: String) {
+        favoriteTemplateIds = useCase.addFavoriteTemplate(id: id)
+    }
+    // 템플릿 즐겨찾기 삭제
+    func removeFavoriteTemplate(id: String) {
+        favoriteTemplateIds = useCase.removeFavoriteTemplate(id: id)
     }
     
     /// 로고 토글 탭 이벤트 처리
