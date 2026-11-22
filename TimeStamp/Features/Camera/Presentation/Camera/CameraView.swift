@@ -6,10 +6,12 @@
 //
 
 import SwiftUI
+import AVFoundation
+
 
 /// 사진 촬영 화면(탭뷰)에서 카메라 화면
 struct CameraView: View {
-    @StateObject var viewModel: CameraViewModel
+    @StateObject private var viewModel: CameraViewModel
     let onCaptured: (UIImage) -> Void
 
     // MARK: - Private property
@@ -20,10 +22,10 @@ struct CameraView: View {
     // MARK: - Initialization
 
     init(
-        viewModel: CameraViewModel,
+        makeViewModel: @autoclosure @escaping () -> CameraViewModel,
         onCaptured: @escaping (UIImage) -> Void
     ) {
-        _viewModel = StateObject(wrappedValue: viewModel)
+        _viewModel = StateObject(wrappedValue: makeViewModel())
         self.onCaptured = onCaptured
     }
     
@@ -149,7 +151,7 @@ struct CameraView: View {
 
 #Preview {
     CameraView(
-       viewModel: CameraViewModel(), onCaptured: { _ in}
+        makeViewModel: CameraViewModel(cameraManager: CameraManager()), onCaptured: { _ in}
     )
     .background(Color.black)
 }

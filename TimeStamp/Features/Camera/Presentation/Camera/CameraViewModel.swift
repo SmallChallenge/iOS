@@ -16,7 +16,7 @@ final class CameraViewModel: ObservableObject {
     // MARK: - Properties
 
     /// 카메라 하드웨어 제어 매니저
-    let cameraManager = CameraManager()
+    let cameraManager: CameraManager
     
     // 미리보기 템플릿
     @Published var selectedTemplate: Template = Template.all[0]
@@ -38,7 +38,8 @@ final class CameraViewModel: ObservableObject {
 
     // MARK: - Init
 
-    init() {
+    init(cameraManager: CameraManager) {
+        self.cameraManager = cameraManager
         // CameraManager의 플래시 모드를 ViewModel과 동기화
         cameraManager.$flashMode
             .assign(to: &$flashMode)

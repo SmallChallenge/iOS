@@ -54,7 +54,7 @@ final class CameraManager: NSObject, ObservableObject {
     private let videoOutput = AVCaptureVideoDataOutput()
 
     /// 사진 출력용 큐
-    private let videoQueue = DispatchQueue(label: "com.timestamp.videoQueue")
+    private let sessionQueue = DispatchQueue(label: "com.timestamp.videoQueue")
 
     /// 현재 사용 중인 카메라 디바이스 (전면/후면)
     private var currentDevice: AVCaptureDevice?
@@ -80,7 +80,12 @@ final class CameraManager: NSObject, ObservableObject {
 
     override init() {
         super.init()
+        
         checkAuthorization()
+    }
+    
+    deinit {
+        session.stopRunning()
     }
 
     /// 카메라 권한 확인 및 요청
@@ -114,7 +119,7 @@ final class CameraManager: NSObject, ObservableObject {
         // 비디오 데이터 출력 설정 (무음 촬영용)
         if session.canAddOutput(videoOutput) {
             session.addOutput(videoOutput)
-            videoOutput.setSampleBufferDelegate(self, queue: videoQueue)
+            videoOutput.setSampleBufferDelegate(self, queue: sessionQueue)
             // 비디오 방향 설정
             if let connection = videoOutput.connection(with: .video) {
                 connection.videoOrientation = .portrait

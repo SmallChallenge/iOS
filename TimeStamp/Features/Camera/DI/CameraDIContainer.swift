@@ -72,15 +72,14 @@ final class CameraDIContainer: CameraDIContainerProtocol {
 
     
     private func makeCameraViewModel() -> CameraViewModel {
-        return CameraViewModel()
+        return CameraViewModel(cameraManager: CameraManager())
     }
     
     func makeCameraView(
         onCaptured: @escaping (UIImage) -> Void
     ) -> CameraView {
-        let viewModel = makeCameraViewModel()
         return CameraView(
-            viewModel: viewModel,
+            makeViewModel: self.makeCameraViewModel(),
             onCaptured: onCaptured
         )
     }
@@ -199,9 +198,8 @@ struct MockCameraDIContainer: CameraDIContainerProtocol {
     func makeCameraView(
         onCaptured: @escaping (UIImage) -> Void
     ) -> CameraView {
-        let viewModel = CameraViewModel()
         return CameraView(
-            viewModel: viewModel,
+            makeViewModel: CameraViewModel(cameraManager: CameraManager()),
             onCaptured: onCaptured
         )
     }
