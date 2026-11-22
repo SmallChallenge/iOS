@@ -95,17 +95,16 @@ final class PhotoSaveViewModel: ObservableObject, MessageDisplayable {
             Task {
                 await savePhotoToServer(image: image, category: category, visibility: visibility)
                 
-                /// 앰플리튜드
+                /// 사진 저장 이벤트 추적
                 trackPhotoSave(category: category, visibility: visibility)
             }
         } else {
             // 로그아웃 상태면 로컬에 저장
             savePhotoToLocal(image: image, category: category, visibility: visibility)
         }
-        // 앰플리튜드 - 사진 저장 완료 (로컬, 서버 구분 없이)
-        AmplitudeManager.shared.trackComplatePhotoSaveCount()
     }
     
+    // 사진 저장 이벤트 추적
     private func trackPhotoSave(category: CategoryViewData, visibility: VisibilityViewData) {
         let categoryEntity = CategoryMapper().toEntity(from: category)
         let visibilityEntity = VisibilityTypeMapper().toEntity(from: visibility)
@@ -117,6 +116,7 @@ final class PhotoSaveViewModel: ObservableObject, MessageDisplayable {
             templateId: selectedTamplateId,
             templateCategory: selectedTemplateStyle
         )
+        
         if visibility == .publicVisible {
             // 전체공개로 사진 업로드 or 전체공개로 사진을 수정한 경우
             AmplitudeManager.shared.trackPublicPhotoUpload(category: categoryEntity)
@@ -131,20 +131,17 @@ final class PhotoSaveViewModel: ObservableObject, MessageDisplayable {
     ///   - visibility: 공개 여부
     private func savePhotoToLocal(image: UIImage, category: CategoryViewData, visibility: VisibilityViewData) {
         do {
+            
+            isLoading = true
+            
+            // 로컬에 사진 저장
             let categoryEntity = CategoryMapper().toEntity(from: category)
             let visibilityEntity = VisibilityTypeMapper().toEntity(from: visibility)
             try useCase.savePhotoToLacal(image: image, category: categoryEntity, visibility: visibilityEntity)
 
             // 저장 성공
-            isSaved = true
-            ToastManager.shared.show(AppMessage.saveSuccess.text)
-            Logger.success("사진 저장 성공")
-
-            // MyLogView에 새로고침 알림
-            NotificationCenter.default.post(name: .shouldRefreshMyLog, object: nil)
-            
-            // MainTabView에 저장됨을 알림.
-            NotificationCenter.default.post(name: .didSaveLog, object: nil)
+            handleSaveCompletion()
+        
 
         } catch {
             // 저장 실패
@@ -159,20 +156,12 @@ final class PhotoSaveViewModel: ObservableObject, MessageDisplayable {
             let categoryEntity = CategoryMapper().toEntity(from: category)
             let visibilityEntity = VisibilityTypeMapper().toEntity(from: visibility)
 
+            // 사진 저장
             isLoading = true
             try await useCase.savePhotoToServer(image: image, category: categoryEntity, visibility: visibilityEntity)
 
             // 저장 성공
-            isSaved = true
-            isLoading = false
-            ToastManager.shared.show(AppMessage.saveSuccess.text)
-            Logger.success("서버에 사진 저장 성공")
-
-            // MyLogView에 새로고침 알림
-            NotificationCenter.default.post(name: .shouldRefreshMyLog, object: nil)
-            
-            // MainTabView에 저장됨을 알림.
-            NotificationCenter.default.post(name: .didSaveLog, object: nil)
+            handleSaveCompletion()
 
         } catch {
             // 저장 실패
@@ -186,6 +175,22 @@ final class PhotoSaveViewModel: ObservableObject, MessageDisplayable {
             }
             Logger.error("서버에 사진 저장 실패: \(error)")
         }
+    }
+    
+    // 사진 저장 후 작업
+    func handleSaveCompletion() {
+        isSaved = true
+        isLoading = false
+        Logger.success("사진 저장 성공")
+        
+        // MyLogView에 새로고침 알림
+        NotificationCenter.default.post(name: .shouldRefreshMyLog, object: nil)
+        
+        // MainTabView에 저장됨을 알림. ( -> 사진 저장 후 탭바 '내기록'으로 이동)
+        NotificationCenter.default.post(name: .didSaveLog, object: nil)
+        
+        // 앰플리튜드 - 사진 저장 완료 (로컬, 서버 구분 없이)
+        AmplitudeManager.shared.trackComplatePhotoSaveCount()
     }
     
     @MainActor

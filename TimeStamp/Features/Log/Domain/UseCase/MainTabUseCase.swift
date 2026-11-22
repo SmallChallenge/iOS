@@ -26,14 +26,36 @@ struct MainTabUseCase: MainTabUseCaseProtocol {
         }
     }
     
-    
     // 리뷰유도 팝업 열수있나 확인
     func checkShowReviewPopup() -> Bool {
         return repository.getCanReviewOpen()
     }
     
-    // 리뷰팝업뜨기에 딜레이주기
+    // 리뷰 팝업 뜨기에 딜레이주기 (n일뒤에 뜨기)
     func setReviewDelayed(days: Int){
         repository.setReviewDelayed(days: days)
+    }
+    
+    // 자동저장끄기 스낵바 띄우기 여부 확인
+    func checkAutoSaveSnackBar() -> Bool {
+        // 자동 저장 여부 확인: 자동 저장 on 으로 되어있음 && 처음으로 사진 저장함.
+        
+        // 자동저장여부
+        let isAutoSave = repository.getIsAutoSave()
+        
+        // 첫 저장인지 확인
+        let isFirstSave = repository.getIsFirstSave()
+        
+        // 이제 첫 저장 아님..
+        if isFirstSave {
+            repository.setIfFirstSave(false)
+        }
+
+        return isAutoSave && isFirstSave
+    }
+    
+    // 자동저장 끄기
+    func setAutoSaveOff() {
+        repository.setIsAutoSave(false)
     }
 }

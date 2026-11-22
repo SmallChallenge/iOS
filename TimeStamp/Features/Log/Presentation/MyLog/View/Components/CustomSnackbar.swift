@@ -12,6 +12,9 @@ struct CustomSnackbar: View {
     let message: String
     let buttonTitle: String
     let action: () -> Void
+    let onDismiss: () -> Void
+
+    @State private var dismissTask: Task<Void, Never>?
 
     var body: some View {
         HStack(spacing: 16) {
@@ -34,6 +37,23 @@ struct CustomSnackbar: View {
         .clipShape(RoundedRectangle(cornerRadius: 8))
         .roundedBorder(color: .gray700, radius: 8)
         .padding(.horizontal, 20)
+        .onAppear {
+            dismissTask?.cancel()
+            dismissTask = Task {
+                try? await Task.sleep(for: .seconds(8))
+
+                guard !Task.isCancelled else { return }
+
+                await MainActor.run {
+                    withAnimation(.easeOut(duration: 0.3)) {
+                        onDismiss()
+                    }
+                }
+            }
+        }
+        .onDisappear {
+            dismissTask?.cancel()
+        }
     }
 }
 
@@ -48,14 +68,6 @@ struct PreviewContentView: View {
                     withAnimation {
                         isSnackbarPresented = true
                     }
-                    
-                    Task {
-                        try? await Task.sleep(for: .seconds(8))
-                        
-                        withAnimation(.easeOut(duration: 0.3)) {
-                            isSnackbarPresented = false
-                        }
-                    }
                 }
             }
         }
@@ -65,9 +77,11 @@ struct PreviewContentView: View {
                     message: "변경사항이 저장되었습니다.",
                     buttonTitle: "실행취소",
                     action: {
-                        withAnimation {
-                            isSnackbarPresented = false
-                        }
+//                        viewModel.undo()
+                        isSnackbarPresented = false
+                    },
+                    onDismiss: {
+                        isSnackbarPresented = false
                     }
                 )
                 .padding(.bottom, 16)

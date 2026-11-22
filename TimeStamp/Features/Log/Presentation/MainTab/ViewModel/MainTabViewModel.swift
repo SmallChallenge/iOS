@@ -16,7 +16,6 @@ final class MainTabViewModel: ObservableObject {
     private var authManager = AuthManager.shared
     private let useCase: MainTabUseCaseProtocol
     
-    
 
     // MARK: - Init
 
@@ -30,6 +29,9 @@ final class MainTabViewModel: ObservableObject {
     @Published var showReviewPopup: Bool = false
     
     @Published var toastMessage: String?
+    
+    // 자동저장끄기 스낵바 띄우기
+    @Published var showAutoSaveOffSnackbar: Bool = false
     
 
     // MARK: - Methods
@@ -83,5 +85,22 @@ final class MainTabViewModel: ObservableObject {
         Task {
             useCase.setReviewDelayed(days: day)
         }
+    }
+    
+    /// 저장완료 메세지 띄우기
+    /// 스낵바 '자동저장끄기' OR 토스트 '저장되었습니다' 띄우기
+    func showSaveFeedback() {
+        // 스낵바 '자동저장끄기' 띄우기
+        if useCase.checkAutoSaveSnackBar(){
+            showAutoSaveOffSnackbar = true
+        } else {
+            //토스트 '저장되었습니다' 띄우기
+            toastMessage = AppMessage.saveSuccess.text
+        }
+    }
+    
+    // 자동저장 끄기
+    func setAutoSaveOff() {
+        useCase.setAutoSaveOff()
     }
 }

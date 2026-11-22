@@ -17,4 +17,10 @@ protocol MainTabUseCaseProtocol {
     
     /// 다음에 하기 눌렀을때 딜레이주기
     func setReviewDelayed(days: Int)
+    
+    /// 자동저장끄기 스낵바 띄울지 확인
+    func checkAutoSaveSnackBar() -> Bool
+    
+    /// 저동저장 끄기
+    func setAutoSaveOff()
 }

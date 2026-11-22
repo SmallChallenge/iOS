@@ -18,11 +18,15 @@ final class UserSettings {
     @UserDefaultsValue(key: "isAutoSave", defaultValue: true)
     var isAutoSave: Bool
     
+    // MARK: - 앱 설치하고 처음 저장인지
+    @UserDefaultsValue(key: "isFirstSave", defaultValue: true)
+    var isFirstSave: Bool
+    
     // MARK: - 앱 실행 시, 카메라 실행여부
     @UserDefaultsValue(key: "shouldLaunchCameraOnStart", defaultValue: false)
     var shouldLaunchCameraOnStart: Bool
     
-    // MARK: - 로그 제한 배너를 닫았는지 여부 (닫았으면 true, 아니면 false)
+    // MARK: - 로컬로그20개제한 배너를 닫았는지 여부 (닫았으면 true, 아니면 false)
     @UserDefaultsValue(key: "isLogLimitBannerDismissed", defaultValue: false)
     var isLogLimitBannerDismissed: Bool
     
