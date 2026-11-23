@@ -19,8 +19,6 @@ struct CameraView: View {
     /// 첫 진입인지 확인
     @State private var isFirstAppear: Bool = true
     
-    
-    @State private var zoomAtGestureStart: CGFloat = 1.0
     @AppStorage("cameraAspectRatio") private var aspectRatio: CameraAspectRatio = .threeFour
 
     // MARK: - Initialization
@@ -41,20 +39,15 @@ struct CameraView: View {
             
                 Spacer()
 
-                // 카메라 프리뷰 + 줌버튼 + 오버레이
+                // 카메라 프리뷰 + 타임스탬프
                 ZStack(alignment: .center) {
-                    // 카메라 프리뷰
+                    // 카메라 프리뷰 ejal
                     #if targetEnvironment(simulator)
                     Color.gray
-                        .aspectRatio(3.0 / 4.0, contentMode: .fit)
                         
                     #else
-                    // 카메라 프리뷰: 선택한 비율로 영역을 제한
-                    CameraScreen(aspectRatio: $aspectRatio,
-                                 session: viewModel.cameraManager.session)
-                    .pinchZoom(currentZoom: viewModel.cameraManager.displayZoom) { zoom in
-                        viewModel.cameraManager.setDisplayZoom(zoom)
-                    }
+                    // 카메라 프리뷰
+                    CameraScreen(camera: viewModel.cameraManager, aspectRatio:  $aspectRatio)
                     
                     #endif
 
@@ -63,36 +56,8 @@ struct CameraView: View {
                         viewModel.selectedTemplate.makeView(displayDate: context.date, hasLogo: true)
                     }
                     .aspectRatio(aspectRatio.value, contentMode: .fit)
+                    .animation(.easeInOut(duration: 0.2), value: aspectRatio)
                 }
-                .overlay(alignment: .bottom, content: {
-                    // 렌즈 전환 버튼 (줌 버튼)
-                    zoomButtons
-                })
-                .overlay(alignment: .trailing) { // 비율 버튼
-                    Button {
-                        aspectRatio.toggle()
-                    } label: {
-                        ZStack(alignment: .center) {
-                            Capsule()
-                                .frame(width: 72, height: 36, alignment: .center)
-                                .foregroundStyle(Color.black.opacity(0.5))
-                            
-                            HStack (alignment: .center, spacing: 6){
-                                Image("square_focus")
-                                    .frame(width: 20, height: 20)
-                                
-                                Text(aspectRatio.toggled.title)
-                                    .font(.pretendard(.medium), size: 14)
-                                    .foregroundStyle(.gray50)
-                                    .frame(width: 22, alignment: .center) // 폭 고정
-                            }
-                        }
-                        .animation(nil, value: aspectRatio)
-                        .padding(.trailing, 18)
-                        
-                    }
-                }
-                .animation(.easeInOut(duration: 0.2), value: aspectRatio)
                 
                 // 컨트롤러: 카메라전환, 촬영버튼, 플래시
                 Spacer()
@@ -106,7 +71,6 @@ struct CameraView: View {
             .onAppear {
                 viewModel.onAppear()
                 viewModel.cameraManager.captureAspectRatio = aspectRatio
-                zoomAtGestureStart = 1.0
             }
             .onDisappear {
                 viewModel.onDisappear()
@@ -181,26 +145,6 @@ struct CameraView: View {
 
         }
     }
-    
-    private var zoomButtons: some View {
-        HStack(spacing: 12) {
-            ForEach(viewModel.cameraManager.lensOptions, id: \.self) { option in
-                Button {
-                    viewModel.cameraManager.setDisplayZoom(option, animated: true)
-                    zoomAtGestureStart = option
-                } label: {
-                    Text(Zoomlabel(for: option))
-                        .font(.system(size: 14, weight: .semibold))
-                        .foregroundStyle(isSelected(zoom: option) ? .yellow : .white)
-                        .frame(width: 40, height: 40)
-                        .background(.black.opacity(0.5), in: Circle())
-                }
-            }
-        }
-        .padding(.bottom, 10)
-    }
-
-    // MARK: - Flash UI
 
     /// 플래시 모드에 따른 아이콘
     private var flashIcon: Image {
@@ -212,15 +156,6 @@ struct CameraView: View {
         case .on:
             return Image("IconFlash_Fill")      // 항상 켜짐
         }
-    }
-    
-    // MARK: - methods..
-    private func Zoomlabel(for value: CGFloat) -> String {
-        value == value.rounded() ? "\(Int(value))x" : String(format: "%.1fx", value)
-    }
-
-    private func isSelected(zoom option: CGFloat) -> Bool {
-        abs(viewModel.cameraManager.displayZoom - option) < 0.05
     }
 }
 
