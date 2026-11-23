@@ -30,19 +30,10 @@ struct TemplateButton: View {
                 action()
             }
             .overlay(alignment: .center) {
-                if isSelected { // 선택되었을때만 즐겨찾기여부 노출
-                    Group {
-                        if isFavorite {
-                            Image("star_fill")
-                                .resizable()
-                                .frame(width: 16, height: 16)
-                        }else {
-                            Image("star")
-                                .resizable()
-                                .frame(width: 16, height: 16)
-                        }
-                    }
-                        .padding(4)
+                if isFavorite {
+                    Image("star_fill")
+                    //.resizable()
+                    //.frame(width: 16, height: 16)
                 }
             }
     }

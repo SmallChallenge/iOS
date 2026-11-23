@@ -266,14 +266,20 @@ struct EditorView: View {
     
     /// 즐겨찾기 비어있음 empty뷰
     private var emptyFavorite: some View {
-        HStack (alignment: .center){
-            Spacer()
-            Text("자주 사용하는 템플릿은\n꾹 눌러 즐겨찾기에 추가해 보세요.")
-                .font(.Body2)
-                .foregroundStyle(.gray500)
-                .padding(.vertical, 12)
-                .multilineTextAlignment(.center)
-            Spacer()
+        ZStack {
+            TemplateButton(capturedImage: nil, template: Template.all[0], isSelected: false, isFavorite: false, action: {})
+                .padding(.vertical, 3)
+                .hidden()
+            
+            HStack (alignment: .center){
+                Spacer()
+                Text("자주 사용하는 템플릿은\n꾹 눌러 즐겨찾기에 추가해 보세요.")
+                    .font(.Body2)
+                    .foregroundStyle(.gray500)
+                    .padding(.vertical, 12)
+                    .multilineTextAlignment(.center)
+                Spacer()
+            }
         }
     }
     
@@ -297,7 +303,6 @@ struct EditorView: View {
                         )
                     }
                     .onLongPressGesture {
-                        guard (viewModel.selectedTemplate == template) else { return }
                         // 햅틱
                         let generator = UIImpactFeedbackGenerator(style: .light)
                         generator.impactOccurred()
