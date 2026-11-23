@@ -14,7 +14,7 @@ struct CameraScreen: View {
     @Binding private var aspectRatio: CameraAspectRatio
     
     @State private var zoomAtGestureStart: CGFloat = 1.0
-
+    
     init(camera: CameraManager, aspectRatio: Binding<CameraAspectRatio>) {
         self.cameraManager = camera
         self._aspectRatio = aspectRatio
@@ -36,9 +36,12 @@ struct CameraScreen: View {
                 }
                 .allowsHitTesting(false)
             }
-            .pinchZoom(currentZoom: cameraManager.displayZoom) { zoom in
-                cameraManager.setDisplayZoom(zoom)
-            }
+            .pinchZoom(
+                    currentZoom: cameraManager.displayZoom,
+                    message: String(format: "%.1fx", cameraManager.displayZoom)
+                ) { zoom in
+                    cameraManager.setDisplayZoom(zoom)
+                }
             .overlay(alignment: .bottom, content: {
                 // 렌즈 전환 버튼 (줌 버튼)
                 zoomButtons
@@ -67,7 +70,6 @@ struct CameraScreen: View {
                     
                 }
             }
-            .animation(.easeInOut(duration: 0.2), value: aspectRatio)
     }
     
     private var zoomButtons: some View {
@@ -78,7 +80,7 @@ struct CameraScreen: View {
                     zoomAtGestureStart = option
                 } label: {
                     Text(Zoomlabel(for: option))
-                        .font(.system(size: 14, weight: .semibold))
+                        .font(.Caption)
                         .foregroundStyle(isSelected(zoom: option) ? .yellow : .white)
                         .frame(width: 40, height: 40)
                         .background(.black.opacity(0.5), in: Circle())
@@ -92,7 +94,7 @@ struct CameraScreen: View {
     private func Zoomlabel(for value: CGFloat) -> String {
         value == value.rounded() ? "\(Int(value))x" : String(format: "%.1fx", value)
     }
-
+    
     private func isSelected(zoom option: CGFloat) -> Bool {
         abs(cameraManager.displayZoom - option) < 0.05
     }
