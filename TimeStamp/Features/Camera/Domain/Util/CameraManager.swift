@@ -114,8 +114,8 @@ final class CameraManager: NSObject, ObservableObject {
         // 세션 품질 설정 (고화질)
         session.sessionPreset = .photo
 
-        // 후면 카메라로 시작
-        setupCameraInput(isFront: false)
+        // 전면, 후면 설정
+        setupCameraInput(isFront: isFrontCamera)
 
         // 비디오 데이터 출력 설정 (무음 촬영용)
         if session.canAddOutput(videoOutput) {
@@ -165,7 +165,9 @@ final class CameraManager: NSObject, ObservableObject {
     // MARK: - Camera Control
 
     /// 카메라 세션 시작
-    func startSession() {
+    func startSession(isFront: Bool) {
+        isFrontCamera = isFront
+        
         sessionQueue.async { [weak self] in
             guard let self, !self.session.isRunning else { return }
 

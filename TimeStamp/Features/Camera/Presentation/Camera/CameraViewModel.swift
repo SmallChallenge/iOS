@@ -51,7 +51,8 @@ final class CameraViewModel: ObservableObject {
                 guard let self = self else { return }
 
                 if isAuthorized {
-                    self.cameraManager.startSession()
+                    let isFront = UserDefaults.standard.bool(forKey: "isFrontCamera")
+                    self.cameraManager.startSession(isFront: isFront)
                 } else {
                     let status = AVCaptureDevice.authorizationStatus(for: .video)
                     if status == .denied || status == .restricted {
@@ -85,6 +86,7 @@ final class CameraViewModel: ObservableObject {
             return
         }
         cameraManager.switchCamera()
+        UserDefaults.standard.set(cameraManager.isFrontCamera, forKey: "isFrontCamera")
     }
 
     /// 플래시 토글
