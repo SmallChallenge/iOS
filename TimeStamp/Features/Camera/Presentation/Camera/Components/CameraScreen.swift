@@ -78,7 +78,7 @@ struct CameraScreen: View {
                     zoomAtGestureStart = option
                 } label: {
                     Text(Zoomlabel(for: option))
-                        .font(.system(size: 14, weight: .semibold))
+                        .font(.Caption)
                         .foregroundStyle(isSelected(zoom: option) ? .yellow : .white)
                         .frame(width: 40, height: 40)
                         .background(.black.opacity(0.5), in: Circle())
