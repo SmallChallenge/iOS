@@ -18,6 +18,8 @@ struct CameraView: View {
 
     /// 첫 진입인지 확인
     @State private var isFirstAppear: Bool = true
+    
+    @AppStorage("cameraAspectRatio") private var aspectRatio: CameraAspectRatio = .threeFour
 
     // MARK: - Initialization
 
@@ -37,22 +39,26 @@ struct CameraView: View {
             
                 Spacer()
 
-                // 카메라 프리뷰 + 오버레이
-                ZStack {
-                    // 카메라 프리뷰
+                // 카메라 프리뷰 + 타임스탬프
+                ZStack(alignment: .center) {
                     #if targetEnvironment(simulator)
+                    // 카메라 프리뷰 더미
                     Color.gray
+                        
                     #else
-                    CameraScreen(camera: viewModel.cameraManager)
+                    // 카메라 프리뷰
+                    CameraScreen(camera: viewModel.cameraManager, aspectRatio:  $aspectRatio)
                     #endif
 
                     // 오버레이 뷰 (타임스탬프, 로고) - 매분 정각에 자동 업데이트
                     TimelineView(.everyMinute) { context in
                         viewModel.selectedTemplate.makeView(displayDate: context.date, hasLogo: true)
                     }
+                    .aspectRatio(aspectRatio.value, contentMode: .fit)
+                    .animation(.easeInOut(duration: 0.2), value: aspectRatio)
                 }
-                .aspectRatio(1, contentMode: .fit)
                 
+                // 컨트롤러: 카메라전환, 촬영버튼, 플래시
                 Spacer()
                 controller
                 Spacer()
@@ -63,9 +69,13 @@ struct CameraView: View {
             }
             .onAppear {
                 viewModel.onAppear()
+                viewModel.cameraManager.captureAspectRatio = aspectRatio
             }
             .onDisappear {
                 viewModel.onDisappear()
+            }
+            .onChange(of: aspectRatio) { newValue in
+                viewModel.cameraManager.captureAspectRatio = newValue
             }
         } // ~Zstack
         .background(VolumeButtonCapture { viewModel.capturePhoto() })
@@ -134,8 +144,6 @@ struct CameraView: View {
 
         }
     }
-
-    // MARK: - Flash UI
 
     /// 플래시 모드에 따른 아이콘
     private var flashIcon: Image {

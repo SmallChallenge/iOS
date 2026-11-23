@@ -44,12 +44,11 @@ final class CameraViewModel: ObservableObject {
         cameraManager.$flashMode
             .assign(to: &$flashMode)
 
-        // 카메라 권한 변경 감지
+        // 카메라 권한 변경 감지 (onAppear에서 권한확인한것도 여기로 옴)
         cameraManager.$isAuthorized
             .receive(on: DispatchQueue.main)
             .sink { [weak self] isAuthorized in
                 guard let self = self else { return }
-
                 if isAuthorized {
                     let isFront = UserDefaults.standard.bool(forKey: "isFrontCamera")
                     self.cameraManager.startSession(isFront: isFront)
