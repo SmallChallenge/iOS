@@ -26,7 +26,7 @@ struct CameraScreen: View {
                     camera.setDisplayZoom(zoom)
                 }
             
-            // 렌즈 전환 버튼
+            // 렌즈 전환 버튼 (줌)
             HStack(spacing: 12) {
                 ForEach(camera.lensOptions, id: \.self) { option in
                     Button {
@@ -34,7 +34,7 @@ struct CameraScreen: View {
                         zoomAtGestureStart = option
                     } label: {
                         Text(label(for: option))
-                            .font(.system(size: 14, weight: .semibold))
+                            .font(.Caption)
                             .foregroundStyle(isSelected(option) ? .yellow : .white)
                             .frame(width: 40, height: 40)
                             .background(.black.opacity(0.5), in: Circle())
