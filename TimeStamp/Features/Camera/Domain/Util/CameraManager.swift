@@ -157,13 +157,11 @@ final class CameraManager: NSObject, ObservableObject {
             session.removeInput(currentInput)
         }
 
-        // 카메라 타입 선택
-        let position: AVCaptureDevice.Position = isFront ? .front : .back
 
         let device: AVCaptureDevice?
-        if isFront {
+        if isFront { // 전면카메라
             device = AVCaptureDevice.default(.builtInWideAngleCamera, for: .video, position: .front)
-        } else {
+        } else { // 후면 카메라
             // 렌즈 많은 가상 디바이스 우선, 없으면 기본 광각
             device = AVCaptureDevice.default(.builtInTripleCamera, for: .video, position: .back)
             ?? AVCaptureDevice.default(.builtInDualWideCamera, for: .video, position: .back)
@@ -172,7 +170,6 @@ final class CameraManager: NSObject, ObservableObject {
         }
         guard let device,
               let input = try? AVCaptureDeviceInput(device: device) else { return }
-
 
         // 새 입력 추가
         if session.canAddInput(input) {
@@ -311,8 +308,9 @@ final class CameraManager: NSObject, ObservableObject {
             }
             device.unlockForConfiguration()
 
-            DispatchQueue.main.async {
-                self.displayZoom = clamped / self.baseFactor
+            let factor = baseFactor
+            DispatchQueue.main.async { [weak self] in
+                self?.displayZoom = clamped / factor
             }
         } catch {
             Logger.error("줌 설정 실패: \(error)")
