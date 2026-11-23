@@ -10,36 +10,6 @@ import UIKit
 import Combine
 import AVFAudio
 
-/// 플래시 모드 3단계
-enum FlashMode: CaseIterable {
-    case off        // 플래시 끔
-    case auto       // 자동 플래시 (어두울 때만)
-    case on         // 항상 켜짐
-
-    /// 다음 모드로 순환
-    mutating func next() {
-        switch self {
-        case .off:
-            self = .auto
-        case .auto:
-            self = .on
-        case .on:
-            self = .off
-        }
-    }
-
-    /// AVCaptureDevice.FlashMode로 변환
-    var avFlashMode: AVCaptureDevice.FlashMode {
-        switch self {
-        case .off:
-            return .off
-        case .auto:
-            return .auto
-        case .on:
-            return .on
-        }
-    }
-}
 
 /// 카메라 하드웨어를 제어하는 매니저
 /// - AVCaptureSession을 관리하고 촬영, 카메라 전환, 플래시 제어 기능 제공
@@ -54,7 +24,8 @@ final class CameraManager: NSObject, ObservableObject {
     private let videoOutput = AVCaptureVideoDataOutput()
 
     /// 사진 출력용 큐
-    private let sessionQueue = DispatchQueue(label: "com.timestamp.videoQueue")
+    private let sessionQueue = DispatchQueue(label: "camera.session.queue")
+    private let videoOutputQueue = DispatchQueue(label: "camera.videoOutput.queue")
 
     /// 현재 사용 중인 카메라 디바이스 (전면/후면)
     private var currentDevice: AVCaptureDevice?
@@ -64,6 +35,7 @@ final class CameraManager: NSObject, ObservableObject {
 
     /// 촬영 완료 시 호출될 클로저
     private var photoCaptureCompletion: ((UIImage?) -> Void)?
+    
 
     // MARK: - Camera State
 
@@ -75,13 +47,28 @@ final class CameraManager: NSObject, ObservableObject {
 
     /// 카메라 권한 승인 여부
     @Published var isAuthorized = false
+    
+    /// 촬영 시 적용할 비율 (화면의 선택값과 동기화)
+    var captureAspectRatio: CameraAspectRatio = .threeFour
+
+    
+    // MARK: - Zoom State
+
+    /// 표시용 줌 배율 (0.5x, 1x, 2x ...)
+    @Published var displayZoom: CGFloat = 1.0
+    /// 렌즈 버튼용 배율 목록 ([0.5, 1, 2] 등)
+    @Published var lensOptions: [CGFloat] = [1.0]
+
+    /// raw zoom → 표시 배율 변환 기준 (초광각 있으면 보통 2.0)
+    private var baseFactor: CGFloat = 1.0
+    private let maxDisplayZoom: CGFloat = 10.0
+
 
     // MARK: - Setup
 
     override init() {
         super.init()
-        
-        checkAuthorization()
+        //checkAuthorization()
     }
     
     deinit {
@@ -113,16 +100,24 @@ final class CameraManager: NSObject, ObservableObject {
         // 세션 품질 설정 (고화질)
         session.sessionPreset = .photo
 
-        // 후면 카메라로 시작
-        setupCameraInput(isFront: false)
+        // 전면, 후면 설정
+        setupCameraInput(isFront: isFrontCamera)
 
         // 비디오 데이터 출력 설정 (무음 촬영용)
         if session.canAddOutput(videoOutput) {
             session.addOutput(videoOutput)
-            videoOutput.setSampleBufferDelegate(self, queue: sessionQueue)
+            videoOutput.alwaysDiscardsLateVideoFrames = true
+            videoOutput.setSampleBufferDelegate(self, queue: videoOutputQueue)
+            
             // 비디오 방향 설정
             if let connection = videoOutput.connection(with: .video) {
-                connection.videoOrientation = .portrait
+                if #available(iOS 17.0, *) {
+                    if connection.isVideoRotationAngleSupported(90) {
+                        connection.videoRotationAngle = 90  // portrait
+                    }
+                } else {
+                    connection.videoOrientation = .portrait
+                }
             }
         }
 
@@ -137,46 +132,55 @@ final class CameraManager: NSObject, ObservableObject {
             session.removeInput(currentInput)
         }
 
-        // 카메라 타입 선택
-        let position: AVCaptureDevice.Position = isFront ? .front : .back
 
-        guard let device = AVCaptureDevice.default(.builtInWideAngleCamera, for: .video, position: position),
-              let input = try? AVCaptureDeviceInput(device: device) else {
-            return
+        let device: AVCaptureDevice?
+        if isFront { // 전면카메라
+            device = AVCaptureDevice.default(.builtInWideAngleCamera, for: .video, position: .front)
+        } else { // 후면 카메라
+            // 렌즈 많은 가상 디바이스 우선, 없으면 기본 광각
+            device = AVCaptureDevice.default(.builtInTripleCamera, for: .video, position: .back)
+            ?? AVCaptureDevice.default(.builtInDualWideCamera, for: .video, position: .back)
+            ?? AVCaptureDevice.default(.builtInDualCamera, for: .video, position: .back)
+            ?? AVCaptureDevice.default(.builtInWideAngleCamera, for: .video, position: .back)
         }
+        guard let device,
+              let input = try? AVCaptureDeviceInput(device: device) else { return }
 
         // 새 입력 추가
         if session.canAddInput(input) {
             session.addInput(input)
             currentInput = input
             currentDevice = device
+            setupZoomInfo(for: device)   // 줌 정보 갱신
         }
     }
 
     // MARK: - Camera Control
 
     /// 카메라 세션 시작
-    func startSession() {
-        guard !session.isRunning else { return }
+    func startSession(isFront: Bool) {
+        isFrontCamera = isFront
+        
+        sessionQueue.async { [weak self] in
+            guard let self, !self.session.isRunning else { return }
 
-        // 세션이 비어있으면 먼저 설정
-        if session.inputs.isEmpty {
-            setupCamera()
-        }
+            // 세션이 비어있으면 먼저 설정
+            if self.session.inputs.isEmpty {
+                self.setupCamera()
+            }
 
-        DispatchQueue.global(qos: .userInitiated).async { [weak self] in
-            self?.session.startRunning()
+            self.session.startRunning()
         }
     }
-
+    
     /// 카메라 세션 중지
     func stopSession() {
-        guard session.isRunning else { return }
-        DispatchQueue.global(qos: .userInitiated).async { [weak self] in
-            self?.session.stopRunning()
+        sessionQueue.async { [weak self] in
+            guard let self, self.session.isRunning else { return }
+            self.session.stopRunning()
         }
     }
-
+    
     /// 카메라 전환 (전면 ↔ 후면)
     func switchCamera() {
         session.beginConfiguration()
@@ -234,6 +238,59 @@ final class CameraManager: NSObject, ObservableObject {
             }
         }
     }
+    
+    // MARK: - Zoom
+
+    private func setupZoomInfo(for device: AVCaptureDevice) {
+        let switchOvers = device.virtualDeviceSwitchOverVideoZoomFactors.map { CGFloat(truncating: $0) }
+        let hasUltraWide = device.constituentDevices.contains { $0.deviceType == .builtInUltraWideCamera }
+
+        baseFactor = (hasUltraWide ? switchOvers.first : nil) ?? 1.0
+
+        var options: [CGFloat] = []
+        if hasUltraWide { options.append(0.5) }
+        options.append(1.0)
+        let teleStart = hasUltraWide ? 1 : 0
+        if switchOvers.count > teleStart {
+            options += switchOvers[teleStart...].map { ($0 / baseFactor * 10).rounded() / 10 }
+        }
+
+        DispatchQueue.main.async {
+            self.lensOptions = options
+            self.displayZoom = 1.0
+        }
+        applyZoom(display: 1.0)
+    }
+
+    /// 표시 배율(0.5x, 1x, 3x...)로 줌 설정
+    func setDisplayZoom(_ display: CGFloat, animated: Bool = false) {
+        applyZoom(display: display, animated: animated)
+    }
+
+    private func applyZoom(display: CGFloat, animated: Bool = false) {
+        guard let device = currentDevice else { return }
+
+        let raw = display * baseFactor
+        let maxRaw = min(device.maxAvailableVideoZoomFactor, maxDisplayZoom * baseFactor)
+        let clamped = min(max(raw, device.minAvailableVideoZoomFactor), maxRaw)
+
+        do {
+            try device.lockForConfiguration()
+            if animated {
+                device.ramp(toVideoZoomFactor: clamped, withRate: 8.0)
+            } else {
+                device.videoZoomFactor = clamped
+            }
+            device.unlockForConfiguration()
+
+            let factor = baseFactor
+            DispatchQueue.main.async { [weak self] in
+                self?.displayZoom = clamped / factor
+            }
+        } catch {
+            Logger.error("줌 설정 실패: \(error)")
+        }
+    }
 }
 
 // MARK: - AVCaptureVideoDataOutputSampleBufferDelegate
@@ -264,9 +321,13 @@ extension CameraManager: AVCaptureVideoDataOutputSampleBufferDelegate {
             photoCaptureCompletion = nil
             return
         }
+        
+        // 선택한 비율로 중앙 크롭
+        let croppedCGImage = crop(cgImage, toRatio: captureAspectRatio.value)
+
 
         // 이미지 방향 조정
-        let image = UIImage(cgImage: cgImage, scale: 1.0, orientation: getImageOrientation())
+        let image = UIImage(cgImage: croppedCGImage, scale: 1.0, orientation: getImageOrientation())
 
         // 플래시 끄기
         if let device = currentDevice, device.hasTorch {
@@ -294,4 +355,55 @@ extension CameraManager: AVCaptureVideoDataOutputSampleBufferDelegate {
             return .up
         }
     }
+    
+    /// 이미지를 가로/세로 비율에 맞게 중앙 크롭
+    private func crop(_ image: CGImage, toRatio ratio: CGFloat) -> CGImage {
+        let w = CGFloat(image.width)
+        let h = CGFloat(image.height)
+        var rect = CGRect(x: 0, y: 0, width: w, height: h)
+
+        if w / h > ratio {
+            // 가로가 넓음 → 좌우를 자름
+            let newW = h * ratio
+            rect = CGRect(x: (w - newW) / 2, y: 0, width: newW, height: h)
+        } else {
+            // 세로가 김 → 위아래를 자름
+            let newH = w / ratio
+            rect = CGRect(x: 0, y: (h - newH) / 2, width: w, height: newH)
+        }
+        return image.cropping(to: rect.integral) ?? image
+    }
 }
+
+
+/// 플래시 모드 3단계
+enum FlashMode: CaseIterable {
+    case off        // 플래시 끔
+    case auto       // 자동 플래시 (어두울 때만)
+    case on         // 항상 켜짐
+
+    /// 다음 모드로 순환
+    mutating func next() {
+        switch self {
+        case .off:
+            self = .auto
+        case .auto:
+            self = .on
+        case .on:
+            self = .off
+        }
+    }
+
+    /// AVCaptureDevice.FlashMode로 변환
+    var avFlashMode: AVCaptureDevice.FlashMode {
+        switch self {
+        case .off:
+            return .off
+        case .auto:
+            return .auto
+        case .on:
+            return .on
+        }
+    }
+}
+
