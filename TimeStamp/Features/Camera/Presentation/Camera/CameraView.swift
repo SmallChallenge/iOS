@@ -46,6 +46,7 @@ struct CameraView: View {
                     // 카메라 프리뷰
                     #if targetEnvironment(simulator)
                     Color.gray
+                        .aspectRatio(3.0 / 4.0, contentMode: .fit)
                         
                     #else
                     // 카메라 프리뷰: 선택한 비율로 영역을 제한
@@ -67,17 +68,28 @@ struct CameraView: View {
                     // 렌즈 전환 버튼 (줌 버튼)
                     zoomButtons
                 })
-                .overlay(alignment: .leading) { // 비율 버튼
+                .overlay(alignment: .trailing) { // 비율 버튼
                     Button {
                         aspectRatio.toggle()
                     } label: {
-                        Text(aspectRatio == .threeFour ? "1:1" : "3:4")
-                            .font(.Caption)
-                            .foregroundStyle(.white)
-                            //.frame(width: 30, height: aspectRatio == .threeFour ? 30 : 40)
-                            .frame(width: 30, height: 30)
-                            .border(.white)
-                            .padding(6)
+                        ZStack(alignment: .center) {
+                            Capsule()
+                                .frame(width: 72, height: 36, alignment: .center)
+                                .foregroundStyle(Color.black.opacity(0.5))
+                            
+                            HStack (alignment: .center, spacing: 6){
+                                Image("square_focus")
+                                    .frame(width: 20, height: 20)
+                                
+                                Text(aspectRatio.toggled.title)
+                                    .font(.pretendard(.medium), size: 14)
+                                    .foregroundStyle(.gray50)
+                                    .frame(width: 22, alignment: .center) // 폭 고정
+                            }
+                        }
+                        .animation(nil, value: aspectRatio)
+                        .padding(.trailing, 18)
+                        
                     }
                 }
                 .animation(.easeInOut(duration: 0.2), value: aspectRatio)

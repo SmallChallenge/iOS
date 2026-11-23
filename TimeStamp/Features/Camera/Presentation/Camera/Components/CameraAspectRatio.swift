@@ -27,6 +27,14 @@ enum CameraAspectRatio: String {
         case .square:    return "1:1"
         }
     }
+    
+    /// 토글하면 바뀔 반대 비율
+       var toggled: CameraAspectRatio {
+           switch self {
+           case .threeFour: return .square
+           case .square:    return .threeFour
+           }
+       }
 
     mutating func toggle() {
         self = (self == .threeFour) ? .square : .threeFour
