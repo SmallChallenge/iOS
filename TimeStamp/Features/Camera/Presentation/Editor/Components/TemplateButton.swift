@@ -12,6 +12,7 @@ struct TemplateButton: View {
     let capturedImage: UIImage?
     let template: Template
     let isSelected: Bool
+    let isFavorite: Bool
     let action: () -> Void
 
     var body: some View {
@@ -28,7 +29,22 @@ struct TemplateButton: View {
             .onTapGesture {
                 action()
             }
-        
+            .overlay(alignment: .center) {
+                if isSelected { // 선택되었을때만 즐겨찾기여부 노출
+                    Group {
+                        if isFavorite {
+                            Image("star_fill")
+                                .resizable()
+                                .frame(width: 16, height: 16)
+                        }else {
+                            Image("star")
+                                .resizable()
+                                .frame(width: 16, height: 16)
+                        }
+                    }
+                        .padding(4)
+                }
+            }
     }
 }
 
@@ -42,7 +58,8 @@ struct TemplateButton: View {
                 name: "Minimal003Template",
                 viewBuilder: { _,_ in AnyView(EmptyView())}
             ),
-            isSelected: true
+            isSelected: true,
+            isFavorite: true
         ) {}
 
         

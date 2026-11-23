@@ -42,6 +42,9 @@ final class UserSettings {
     @UserDefaultsValue(key: "lastSelectedTemplateId", defaultValue: nil)
     var lastSelectedTemplateId: String?
     
+    // MARK: - 템플릿ids 즐겨찾기
+    @UserDefaultsValue(key: "favoriteTemplateIds", defaultValue: [])
+    var favoriteTemplateIds: [String]
     
     // -----------------------------------------------
     

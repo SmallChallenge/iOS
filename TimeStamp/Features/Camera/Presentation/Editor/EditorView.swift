@@ -40,7 +40,12 @@ struct EditorView: View {
 
     /// 선택된 스타일에 맞는 템플릿 필터링
     private var filteredTemplates: [Template] {
-        Template.all.filter { $0.style == viewModel.selectedTemplateStyle }
+        switch viewModel.selectedTemplateStyle {
+        case .favorite:
+            return Template.all.filter { viewModel.favoriteTemplateIds.contains($0.templateId)}
+        default:
+            return Template.all.filter { $0.style == viewModel.selectedTemplateStyle }
+        }
     }
     
     /// 첫 진입인지 확인
@@ -97,7 +102,13 @@ struct EditorView: View {
                     .padding(.horizontal, 20)
 
                     // 템플릿 목록
-                    templateList
+                    if  viewModel.selectedTemplateStyle == .favorite && filteredTemplates.isEmpty {
+                        //즐겨찾기 목록이 없을 경우
+                        emptyFavorite
+                    } else {
+                        // 템플릿 목록
+                        templateList
+                    }
 
                 }
                 .frame(maxWidth: .infinity)
@@ -109,17 +120,19 @@ struct EditorView: View {
 
             // 광고 로딩 중 오버레이
             if viewModel.isLoadingAd {
-                Color.black.opacity(0.4)
-                    .ignoresSafeArea()
-
-                VStack(spacing: 16) {
-                    ProgressView()
-                        .scaleEffect(1.5)
-                        .tint(.white)
-
-                    Text("광고를 불러오는 중...")
-                        .font(.Body1)
-                        .foregroundColor(.white)
+                ZStack {
+                    Color.black.opacity(0.4)
+                        .ignoresSafeArea()
+                    
+                    VStack(spacing: 16) {
+                        ProgressView()
+                            .scaleEffect(1.5)
+                            .tint(.white)
+                        
+                        Text("광고를 불러오는 중...")
+                            .font(.Body1)
+                            .foregroundColor(.white)
+                    }
                 }
             }
         } // ~ZStack
@@ -132,8 +145,11 @@ struct EditorView: View {
             AmplitudeManager.shared.trackEditorViewEnter()
         })
         .task {
-            //await viewModel.loadAd()
+            viewModel.getFavoriteTemplateIds()
             viewModel.getLastSelectedTemplate()
+            
+            // 광고 미리 준비
+            await viewModel.loadAd()
         }
         .toast(message: $viewModel.toastMessage)
         // 로그인 팝업 띄우기
@@ -247,6 +263,19 @@ struct EditorView: View {
         .aspectRatio(1, contentMode: .fit)
     }
     
+    /// 즐겨찾기 비어있음 empty뷰
+    private var emptyFavorite: some View {
+        HStack (alignment: .center){
+            Spacer()
+            Text("자주 사용하는 템플릿은\n꾹 눌러 즐겨찾기에 추가해 보세요.")
+                .font(.Body2)
+                .foregroundStyle(.gray500)
+                .padding(.vertical, 12)
+                .multilineTextAlignment(.center)
+            Spacer()
+        }
+    }
+    
     /// 필터링된 템플릿 목록
     private var templateList: some View {
         ScrollView(.horizontal, showsIndicators: false) {
@@ -255,15 +284,29 @@ struct EditorView: View {
                     TemplateButton(
                         capturedImage: nil,
                         template: template,
-                        isSelected: viewModel.selectedTemplate == template
+                        isSelected: viewModel.selectedTemplate == template,
+                        isFavorite: viewModel.favoriteTemplateIds.contains(template.templateId)
                     ) {
                         // 템플릿 선택
                         viewModel.selectedTemplate = template
-                        viewModel.saveSelectedTemplate() 
+                        viewModel.saveSelectedTemplate()
                         AmplitudeManager.shared.trackTemplateSelection(
                             templateId: template.templateId,
                             templateCategory: viewModel.selectedTemplateStyle.enName
                         )
+                    }
+                    .onLongPressGesture {
+                        guard (viewModel.selectedTemplate == template) else { return }
+                        // 햅틱
+                        let generator = UIImpactFeedbackGenerator(style: .light)
+                        generator.impactOccurred()
+                        
+                        // 즐겨찾기 넣기 Or 빼기
+                        if viewModel.favoriteTemplateIds.contains(template.templateId) {
+                            viewModel.removeFavoriteTemplate(id: template.templateId)
+                        } else {
+                            viewModel.addFavoriteTemplate(id: template.templateId)
+                        }
                     }
                 }
             }

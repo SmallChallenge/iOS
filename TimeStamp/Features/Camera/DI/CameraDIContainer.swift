@@ -246,6 +246,18 @@ struct MockCameraDIContainer: CameraDIContainerProtocol {
         )
     }
     struct MockEditorUsecase: EditorUseCaseProtocol {
+        func getFavoriteTemplateIds() -> [String] {
+            return []
+        }
+        
+        func addFavoriteTemplate(id: String) -> [String] {
+            return []
+        }
+        
+        func removeFavoriteTemplate(id: String) -> [String] {
+            return []
+        }
+        
         func getLastSelectedTemplateId() -> String? { return nil }
         
         func saveSelectedTemplateId(templateId: String) {}

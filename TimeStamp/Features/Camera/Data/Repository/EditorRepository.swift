@@ -18,4 +18,14 @@ struct EditorRepository: EditorRepositoryProtocol {
     func getLastSelectedTemplateId() -> String? {
         UserSettings.shared.lastSelectedTemplateId
     }
+    
+    // 템플릿 즐겨찾기 id 저장
+    func saveFavoriteTemplateIds(_ templateIds: [String]){
+        UserSettings.shared.favoriteTemplateIds = templateIds
+    }
+    
+    // 템플릿 즐겨찾기 ids 불러오기
+    func getFavoriteTemplateIds() -> [String] {
+        UserSettings.shared.favoriteTemplateIds
+    }
 }
