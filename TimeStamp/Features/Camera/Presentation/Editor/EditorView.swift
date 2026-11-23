@@ -231,6 +231,7 @@ struct EditorView: View {
         HStack(spacing: 6){
             Text("Logo")
                 .font(.Body2)
+                .dynamicTypeSize(.large)
                 .foregroundStyle(Color.gray300)
             
             
