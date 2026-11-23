@@ -168,7 +168,6 @@ struct MyPageView: View {
             .safeAreaInset(edge: .top) {
                 HeaderView(leadingView: {
                     BackButton {
-                        
                         onGoBack()
                     }
                 }, title: "마이페이지", hasUnderLine: true)
