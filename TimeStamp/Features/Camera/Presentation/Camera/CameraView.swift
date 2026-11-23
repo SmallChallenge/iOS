@@ -19,7 +19,7 @@ struct CameraView: View {
     /// 첫 진입인지 확인
     @State private var isFirstAppear: Bool = true
     
-    @AppStorage("cameraAspectRatio") private var aspectRatio: CameraAspectRatio = .threeFour
+    @AppStorage("cameraAspectRatio") private var aspectRatio: CameraAspectRatio = .square
 
     // MARK: - Initialization
 
@@ -46,7 +46,19 @@ struct CameraView: View {
                         
                     #else
                     // 카메라 프리뷰
-                    CameraScreen(camera: viewModel.cameraManager, aspectRatio:  $aspectRatio)
+                    //CameraScreen(camera: viewModel.cameraManager, aspectRatio:  $aspectRatio)
+                    VStack(alignment: .center, spacing: .zero) { // 임시
+                        Spacer()
+                        CameraPreviewView(session: viewModel.cameraManager.session)
+                            .aspectRatio(aspectRatio.value, contentMode: .fit)
+                            .pinchZoom(
+                                currentZoom: viewModel.cameraManager.displayZoom,
+                                message: String(format: "%.1fx", viewModel.cameraManager.displayZoom)
+                                ) { zoom in
+                                    viewModel.cameraManager.setDisplayZoom(zoom)
+                                }
+                        Spacer()
+                    }
                     #endif
 
                     // 오버레이 뷰 (타임스탬프, 로고) - 매분 정각에 자동 업데이트

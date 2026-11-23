@@ -28,6 +28,10 @@ struct EditorView: View {
         self.diContainer = diContainer
         self.onGoBack = onGoBack
         self.onComplete = onComplete
+        
+        // 임시
+        //self.imageRatio = (capturedImage.size.width / capturedImage.size.height >= 1) ? CameraAspectRatio.square : CameraAspectRatio.threeFour
+        self.imageRatio = CameraAspectRatio.square
     }
     
     // MARK: prevate property
@@ -35,6 +39,7 @@ struct EditorView: View {
     @State private var showLoginView: Bool = false
     @State private var navigateToPhotoSave = false
     @State private var editedImage: UIImage?
+    private let imageRatio: CameraAspectRatio
 
     private let imageCompositor = ImageCompositor()
 
@@ -55,7 +60,7 @@ struct EditorView: View {
         ZStack {
             VStack (alignment: .center, spacing: .zero){
                 
-                // 헤더
+                // MARK: 헤더
                 HeaderView(leadingView: {
                     // 뒤로가기 버튼
                     BackButton {
@@ -69,37 +74,40 @@ struct EditorView: View {
                     .padding(.trailing, 20)
                 })
                 
-                
-                // 사진 화면 (사진+템플릿)
-                VStack (alignment: .center, spacing: .zero){
-                    
-                    Spacer()
-                        .frame(maxHeight: 40)
-                        .layoutPriority(-2)
-                    
-                    // 이미지뷰
-                    editedImageView()
-                        .layoutPriority(1)
-                    
-                    Spacer()
-                        .frame(maxHeight: 56)
-                        .layoutPriority(-2)
+                if imageRatio == .square {
+                    Spacer(minLength: 0)
+                        .frame(minHeight: 0, maxHeight: 40)
                 }
 
-                // 템플릿 선택 뷰
-                VStack(alignment: .leading, spacing: 24) {
+                // MARK: 사진 화면 (사진+템플릿)
+                    editedImageView()
+                
+                Spacer()
+                    .frame(minHeight: 0, maxHeight: 30)
+                    .layoutPriority(-1)
 
-                    // 템플릿스타일 | 로고 스위치
-                    HStack {
-                        // 스타일 버튼 목록
-                        templateStyleSelectorView
-
+                // MARK: 템플릿 선택 뷰
+                VStack(alignment: .leading, spacing: .zero) {
+                
+                    // 템플릿 카테고리(스타일) + 로고 온오프
+                    VStack(alignment: .leading, spacing: .zero) {
                         Spacer()
+                            .frame(minHeight: 12, maxHeight: 24)
+                        
+                        // 템플릿 스타일 | 로고 스위치
+                        HStack {
+                            // 스타일 버튼 목록
+                            templateStyleSelectorView
+                            Spacer()
+                            // 로고 스위치
+                            logoToggle
+                        }
+                        .padding(.horizontal, 20)
+                        
+                        Spacer()
+                            .frame(minHeight: 10, maxHeight: 22)
 
-                        // 로고 스위치
-                        logoToggle
                     }
-                    .padding(.horizontal, 20)
 
                     // 템플릿 목록
                     if  viewModel.selectedTemplateStyle == .favorite && filteredTemplates.isEmpty {
@@ -109,12 +117,11 @@ struct EditorView: View {
                         // 템플릿 목록
                         templateList
                     }
-
                 }
                 .frame(maxWidth: .infinity)
                 
                 Spacer()
-                    .layoutPriority(-1)
+                    
                 
             } // ~VStack
 
@@ -226,6 +233,7 @@ struct EditorView: View {
         HStack(spacing: 6){
             Text("Logo")
                 .font(.Body2)
+                .dynamicTypeSize(.large)
                 .foregroundStyle(Color.gray300)
             
             
@@ -243,37 +251,50 @@ struct EditorView: View {
         }
     }
     
+    // 사진 화면 (사진+템플릿)
     @ViewBuilder
     private func editedImageView() -> some View {
-        let aspectRatio = capturedImage.size.width / capturedImage.size.height
         ZStack {
             // 원본사진
             Color.gray500
+                .aspectRatio(imageRatio.value, contentMode: .fit)
                 .overlay {
                     Image(uiImage: capturedImage)
                         .resizable()
-                        .scaledToFill()
+                        .aspectRatio(contentMode: .fill)
+                        .frame(maxWidth: .infinity)
+                        //.aspectRatio(imageRatio.value, contentMode: .fit) // 임시
+                        .aspectRatio(1, contentMode: .fit)
                         .clipped()
                 }
                 .clipShape(Rectangle())
                 .contentShape(Rectangle())
-
+            
             // 템플릿 (타임스탬프, 로고)
             viewModel.selectedTemplate.makeView(displayDate: capturedDate, hasLogo: viewModel.isOnLogo)
-        }
-        .aspectRatio(aspectRatio, contentMode: .fit)
+                .aspectRatio(imageRatio.value, contentMode: .fit)
+        } //ZStack
+        .frame(maxWidth: .infinity)
+        .layoutPriority(1)
+            
     }
     
     /// 즐겨찾기 비어있음 empty뷰
     private var emptyFavorite: some View {
-        HStack (alignment: .center){
-            Spacer()
-            Text("자주 사용하는 템플릿은\n꾹 눌러 즐겨찾기에 추가해 보세요.")
-                .font(.Body2)
-                .foregroundStyle(.gray500)
-                .padding(.vertical, 12)
-                .multilineTextAlignment(.center)
-            Spacer()
+        ZStack {
+            TemplateButton(capturedImage: nil, template: Template.all[0], isSelected: false, isFavorite: false, action: {})
+                .padding(.vertical, 3)
+                .hidden()
+            
+            HStack (alignment: .center){
+                Spacer()
+                Text("자주 사용하는 템플릿은\n꾹 눌러 즐겨찾기에 추가해 보세요.")
+                    .font(.Body2)
+                    .foregroundStyle(.gray500)
+                    .padding(.vertical, 12)
+                    .multilineTextAlignment(.center)
+                Spacer()
+            }
         }
     }
     
@@ -297,7 +318,6 @@ struct EditorView: View {
                         )
                     }
                     .onLongPressGesture {
-                        guard (viewModel.selectedTemplate == template) else { return }
                         // 햅틱
                         let generator = UIImpactFeedbackGenerator(style: .light)
                         generator.impactOccurred()
@@ -321,18 +341,14 @@ struct EditorView: View {
     /// 이미지 렌더해서 뽑아내기
     @MainActor
     private func captureEditedImage() {
-        let imageWidth: CGFloat = UIScreen.main.bounds.width
-        let imageRatio = capturedImage.size.height / capturedImage.size.width
-        let templateSize = CGSize(
-            width: imageWidth,
-            height: imageWidth * imageRatio
-        )
-
         guard let composedImage = imageCompositor.composeImage(
-            background: capturedImage,
-            template: viewModel.selectedTemplate.makeView(displayDate: capturedDate, hasLogo: viewModel.isOnLogo),
-            templateSize: templateSize
+            backgroundImage: capturedImage,
+            template: viewModel.selectedTemplate.makeView(
+                displayDate: capturedDate,
+                hasLogo: viewModel.isOnLogo
+            )
         ) else {
+            viewModel.toastMessage = AppMessage.saveFailed.text
             return
         }
 
@@ -343,5 +359,5 @@ struct EditorView: View {
 }
 
 #Preview {
-    MockCameraDIContainer().makeEditorView(capturedImage: UIImage(named: "sampleImage")!, capturedDate: Date(), onGoBack: {}, onComplete: {})
+    MockCameraDIContainer().makeEditorView(capturedImage: UIImage(named: "sampleImage2")!, capturedDate: Date(), onGoBack: {}, onComplete: {})
 }

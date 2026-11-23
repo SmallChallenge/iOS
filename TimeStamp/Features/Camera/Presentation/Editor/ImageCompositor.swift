@@ -15,22 +15,62 @@ struct ImageCompositor {
 
     /// 배경 이미지와 템플릿 오버레이를 합성하여 최종 이미지 생성
     func composeImage<TemplateView: View>(
-        background: UIImage,
-        template: TemplateView,
-        templateSize: CGSize
+        backgroundImage: UIImage,
+        template: TemplateView
     ) -> UIImage? {
+        
+        let imageRatio: CameraAspectRatio = (backgroundImage.size.width / backgroundImage.size.height >= 1) ? CameraAspectRatio.square : CameraAspectRatio.threeFour
+        let imageWidth: CGFloat = UIScreen.main.bounds.width
+        let templateSize = CGSize(
+            width: imageWidth,
+            height: imageWidth / imageRatio.value
+        )
+         
+        // 1. 비율에 맞춰 중앙 크롭 (원본 해상도 유지)
+        guard let croppedImage = cropToAspect(backgroundImage, aspectRatio: imageRatio.value) else {
+            return nil
+        }
 
-        // 1. 템플릿 오버레이 렌더링
+        // 2. 템플릿 오버레이 렌더링
         guard let templateOverlay = renderTemplateView(template: template, size: templateSize) else {
             return nil
         }
 
-        // 2. 두 이미지 합성
-        return compose(background: background, overlay: templateOverlay)
+        // 3. 두 이미지 합성
+        return compose(background: croppedImage, overlay: templateOverlay)
     }
 
     // MARK: - Private Methods
-    /*
+    
+    /// 지정한 비율(가로/세로)로 중앙 크롭
+        private func cropToAspect(_ image: UIImage, aspectRatio: CGFloat) -> UIImage? {
+            let size = image.size
+            let imageRatio = size.width / size.height
+
+            let cropSize: CGSize
+            if imageRatio > aspectRatio {
+                // 이미지가 더 가로로 넓음 → 좌우를 자름
+                cropSize = CGSize(width: size.height * aspectRatio, height: size.height)
+            } else {
+                // 이미지가 더 세로로 김 → 위아래를 자름
+                cropSize = CGSize(width: size.width, height: size.width / aspectRatio)
+            }
+
+            let origin = CGPoint(
+                x: -(size.width - cropSize.width) / 2,
+                y: -(size.height - cropSize.height) / 2
+            )
+
+            let format = UIGraphicsImageRendererFormat()
+            format.scale = image.scale   // 원본 스케일 유지
+            format.opaque = true
+
+            let renderer = UIGraphicsImageRenderer(size: cropSize, format: format)
+            return renderer.image { _ in
+                image.draw(at: origin)   // draw는 imageOrientation도 알아서 처리
+            }
+        }
+    
     /// 이미지를 정사각형으로 크롭 (scaledToFill 효과)
     private func cropToSquare(_ image: UIImage, targetSize: CGSize) -> UIImage? {
         let scale = max(targetSize.width / image.size.width, targetSize.height / image.size.height)
@@ -48,7 +88,7 @@ struct ImageCompositor {
             let drawRect = CGRect(x: -xOffset, y: -yOffset, width: scaledSize.width, height: scaledSize.height)
             image.draw(in: drawRect)
         }
-    }*/
+    }
 
     /// 템플릿 뷰를 UIImage로 렌더링 (iOS 16+ ImageRenderer 사용)
     @MainActor

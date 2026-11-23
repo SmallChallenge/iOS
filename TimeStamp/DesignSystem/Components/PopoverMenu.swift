@@ -27,7 +27,7 @@ struct PopoverMenu: View {
     }
 
     var body: some View {
-        VStack(spacing: 0) {
+        VStack(alignment: .trailing, spacing: 0) {
             ForEach(Array(items.enumerated()), id: \.element.id) { index, item in
                 Button {
                     item.action()
@@ -38,8 +38,6 @@ struct PopoverMenu: View {
                         Text(item.title)
                             .font(.Btn1_b)
                             .foregroundStyle(item.isDestructive ? Color.red : Color.gray300)
-
-                        Spacer()
 
                         Image(item.icon)
                             .renderingMode(.template)
@@ -58,7 +56,7 @@ struct PopoverMenu: View {
                 }
             }
         }
-        .frame(maxWidth: 180)
+        .fixedSize(horizontal: true, vertical: false)
         .background(Color.gray600)
         .cornerRadius(12)
         .shadow(color: Color.black.opacity(0.3), radius: 8, x: 0, y: 2)

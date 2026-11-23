@@ -85,6 +85,7 @@ struct GalleryView: View {
                             await viewModel.loadFullImage(from: asset)
                         }
                     }
+                    .contentShape(Rectangle())
                     .id(asset.localIdentifier)
                     .onAppear {
                         // 끝에서 10개 전에 추가 로드

@@ -16,7 +16,8 @@ struct BackButton: View {
             Image(systemName: "chevron.left")
                 .frame(width: 24, height: 24)
                 .foregroundStyle(.gray50)
-                .padding(10)
+                .padding([.vertical, .leading],10)
+                .padding(.trailing, 20)
                 
                 
         }

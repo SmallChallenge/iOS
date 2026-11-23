@@ -61,6 +61,7 @@ struct CameraScreen: View {
                             
                             Text(aspectRatio.toggled.title)
                                 .font(.pretendard(.medium), size: 14)
+                                .dynamicTypeSize(.large)
                                 .foregroundStyle(.gray50)
                                 .frame(width: 22, alignment: .center) // 폭 고정
                         }

@@ -22,7 +22,6 @@ struct MyLogView: View {
         GridItem(.flexible(), spacing: 1)
     ]
 
-
     init(viewModel: MyLogViewModel, diContainer: MyLogDIContainerProtocol, selectedLog: Binding<TimeStampLogViewData?>){
         self.diContainer = diContainer
         _viewModel = StateObject(wrappedValue: viewModel)
@@ -88,11 +87,9 @@ struct MyLogView: View {
                                 }
                             }
                         }
-                        
                        
                         // 추가 로딩 인디케이터
                         if viewModel.isLoadingMore {
-                            
                              ProgressView()
                                  .tint(.neon300)
                                  .frame(maxWidth: .infinity)
@@ -100,7 +97,6 @@ struct MyLogView: View {
                              
                         }
                     }
-                    
                 }
                 .scrollDismissesKeyboard(.interactively)
         }
