@@ -28,7 +28,10 @@ struct EditorView: View {
         self.diContainer = diContainer
         self.onGoBack = onGoBack
         self.onComplete = onComplete
-        self.imageRatio = (capturedImage.size.width / capturedImage.size.height >= 1) ? CameraAspectRatio.square : CameraAspectRatio.threeFour
+        
+        // 임시
+        //self.imageRatio = (capturedImage.size.width / capturedImage.size.height >= 1) ? CameraAspectRatio.square : CameraAspectRatio.threeFour
+        self.imageRatio = CameraAspectRatio.square
     }
     
     // MARK: prevate property
@@ -76,7 +79,6 @@ struct EditorView: View {
                         .frame(minHeight: 0, maxHeight: 40)
                 }
 
-                
                 // MARK: 사진 화면 (사진+템플릿)
                     editedImageView()
                 
@@ -261,7 +263,8 @@ struct EditorView: View {
                         .resizable()
                         .aspectRatio(contentMode: .fill)
                         .frame(maxWidth: .infinity)
-                        .aspectRatio(imageRatio.value, contentMode: .fit)
+                        //.aspectRatio(imageRatio.value, contentMode: .fit) // 임시
+                        .aspectRatio(1, contentMode: .fit)
                         .clipped()
                 }
                 .clipShape(Rectangle())
