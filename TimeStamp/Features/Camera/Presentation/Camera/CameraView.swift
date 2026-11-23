@@ -37,13 +37,12 @@ struct CameraView: View {
         ZStack {
             VStack(alignment: .center, spacing: .zero) {
             
-                Spacer()
-
                 // 카메라 프리뷰 + 타임스탬프
                 ZStack(alignment: .center) {
                     #if targetEnvironment(simulator)
                     // 카메라 프리뷰 더미
                     Color.gray
+                        .aspectRatio(1, contentMode: .fit)
                         
                     #else
                     // 카메라 프리뷰

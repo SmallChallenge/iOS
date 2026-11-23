@@ -36,9 +36,6 @@ struct CameraScreen: View {
                 }
                 .allowsHitTesting(false)
             }
-//            .pinchZoom(currentZoom: cameraManager.displayZoom) { zoom in
-//                cameraManager.setDisplayZoom(zoom)
-//            }
             .pinchZoom(
                     currentZoom: cameraManager.displayZoom,
                     message: String(format: "%.1fx", cameraManager.displayZoom)
