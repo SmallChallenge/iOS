@@ -54,7 +54,8 @@ final class CameraManager: NSObject, ObservableObject {
     private let videoOutput = AVCaptureVideoDataOutput()
 
     /// 사진 출력용 큐
-    private let sessionQueue = DispatchQueue(label: "com.timestamp.videoQueue")
+    private let sessionQueue = DispatchQueue(label: "camera.session.queue")
+    private let videoOutputQueue = DispatchQueue(label: "camera.videoOutput.queue")
 
     /// 현재 사용 중인 카메라 디바이스 (전면/후면)
     private var currentDevice: AVCaptureDevice?
@@ -119,10 +120,18 @@ final class CameraManager: NSObject, ObservableObject {
         // 비디오 데이터 출력 설정 (무음 촬영용)
         if session.canAddOutput(videoOutput) {
             session.addOutput(videoOutput)
-            videoOutput.setSampleBufferDelegate(self, queue: sessionQueue)
+            videoOutput.alwaysDiscardsLateVideoFrames = true
+            videoOutput.setSampleBufferDelegate(self, queue: videoOutputQueue)
+            
             // 비디오 방향 설정
             if let connection = videoOutput.connection(with: .video) {
-                connection.videoOrientation = .portrait
+                if #available(iOS 17.0, *) {
+                    if connection.isVideoRotationAngleSupported(90) {
+                        connection.videoRotationAngle = 90  // portrait
+                    }
+                } else {
+                    connection.videoOrientation = .portrait
+                }
             }
         }
 
@@ -157,26 +166,26 @@ final class CameraManager: NSObject, ObservableObject {
 
     /// 카메라 세션 시작
     func startSession() {
-        guard !session.isRunning else { return }
+        sessionQueue.async { [weak self] in
+            guard let self, !self.session.isRunning else { return }
 
-        // 세션이 비어있으면 먼저 설정
-        if session.inputs.isEmpty {
-            setupCamera()
-        }
+            // 세션이 비어있으면 먼저 설정
+            if self.session.inputs.isEmpty {
+                self.setupCamera()
+            }
 
-        DispatchQueue.global(qos: .userInitiated).async { [weak self] in
-            self?.session.startRunning()
+            self.session.startRunning()
         }
     }
-
+    
     /// 카메라 세션 중지
     func stopSession() {
-        guard session.isRunning else { return }
-        DispatchQueue.global(qos: .userInitiated).async { [weak self] in
-            self?.session.stopRunning()
+        sessionQueue.async { [weak self] in
+            guard let self, self.session.isRunning else { return }
+            self.session.stopRunning()
         }
     }
-
+    
     /// 카메라 전환 (전면 ↔ 후면)
     func switchCamera() {
         session.beginConfiguration()
