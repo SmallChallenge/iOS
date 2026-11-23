@@ -29,13 +29,20 @@ struct TemplateButton: View {
             .onTapGesture {
                 action()
             }
-            .overlay(alignment: .bottomTrailing) {
-                if isFavorite {
-                    Image(systemName: "star.fill")
-                        .resizable()
-                        .frame(width: 15, height: 15)
-                        .foregroundStyle(.yellow)
-                        .padding(6)
+            .overlay(alignment: .center) {
+                if isSelected { // 선택되었을때만 즐겨찾기여부 노출
+                    Group {
+                        if isFavorite {
+                            Image("star_fill")
+                                .resizable()
+                                .frame(width: 16, height: 16)
+                        }else {
+                            Image("star")
+                                .resizable()
+                                .frame(width: 16, height: 16)
+                        }
+                    }
+                        .padding(4)
                 }
             }
     }

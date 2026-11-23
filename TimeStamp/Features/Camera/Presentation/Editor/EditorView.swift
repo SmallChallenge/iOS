@@ -102,7 +102,13 @@ struct EditorView: View {
                     .padding(.horizontal, 20)
 
                     // 템플릿 목록
-                    templateList
+                    if  viewModel.selectedTemplateStyle == .favorite && filteredTemplates.isEmpty {
+                        //즐겨찾기 목록이 없을 경우
+                        emptyFavorite
+                    } else {
+                        // 템플릿 목록
+                        templateList
+                    }
 
                 }
                 .frame(maxWidth: .infinity)
@@ -257,6 +263,19 @@ struct EditorView: View {
         .aspectRatio(1, contentMode: .fit)
     }
     
+    /// 즐겨찾기 비어있음 empty뷰
+    private var emptyFavorite: some View {
+        HStack (alignment: .center){
+            Spacer()
+            Text("자주 사용하는 템플릿은\n꾹 눌러 즐겨찾기에 추가해 보세요.")
+                .font(.Body2)
+                .foregroundStyle(.gray500)
+                .padding(.vertical, 12)
+                .multilineTextAlignment(.center)
+            Spacer()
+        }
+    }
+    
     /// 필터링된 템플릿 목록
     private var templateList: some View {
         ScrollView(.horizontal, showsIndicators: false) {
@@ -270,13 +289,14 @@ struct EditorView: View {
                     ) {
                         // 템플릿 선택
                         viewModel.selectedTemplate = template
-                        viewModel.saveSelectedTemplate() 
+                        viewModel.saveSelectedTemplate()
                         AmplitudeManager.shared.trackTemplateSelection(
                             templateId: template.templateId,
                             templateCategory: viewModel.selectedTemplateStyle.enName
                         )
                     }
                     .onLongPressGesture {
+                        guard (viewModel.selectedTemplate == template) else { return }
                         // 햅틱
                         let generator = UIImpactFeedbackGenerator(style: .light)
                         generator.impactOccurred()

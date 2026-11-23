@@ -17,7 +17,7 @@ enum TemplateStyleViewData: CaseIterable {
 
     var name: String {
         switch self {
-        case .favorite: return "★ "
+        case .favorite: return "즐겨찾기"
         case .minimal: return "깔끔"
         case .accent:  return "강조"
         case .fun: return "재미"
