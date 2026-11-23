@@ -245,6 +245,7 @@ struct EditorView: View {
     
     @ViewBuilder
     private func editedImageView() -> some View {
+        let aspectRatio = capturedImage.size.width / capturedImage.size.height
         ZStack {
             // 원본사진
             Color.gray500
@@ -260,7 +261,7 @@ struct EditorView: View {
             // 템플릿 (타임스탬프, 로고)
             viewModel.selectedTemplate.makeView(displayDate: capturedDate, hasLogo: viewModel.isOnLogo)
         }
-        .aspectRatio(1, contentMode: .fit)
+        .aspectRatio(aspectRatio, contentMode: .fit)
     }
     
     /// 즐겨찾기 비어있음 empty뷰
@@ -320,13 +321,17 @@ struct EditorView: View {
     /// 이미지 렌더해서 뽑아내기
     @MainActor
     private func captureEditedImage() {
-        let imageSize: CGFloat = UIScreen.main.bounds.width
-        let targetSize = CGSize(width: imageSize, height: imageSize)
+        let imageWidth: CGFloat = UIScreen.main.bounds.width
+        let imageRatio = capturedImage.size.height / capturedImage.size.width
+        let templateSize = CGSize(
+            width: imageWidth,
+            height: imageWidth * imageRatio
+        )
 
         guard let composedImage = imageCompositor.composeImage(
             background: capturedImage,
             template: viewModel.selectedTemplate.makeView(displayDate: capturedDate, hasLogo: viewModel.isOnLogo),
-            templateSize: targetSize
+            templateSize: templateSize
         ) else {
             return
         }

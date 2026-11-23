@@ -19,22 +19,18 @@ struct ImageCompositor {
         template: TemplateView,
         templateSize: CGSize
     ) -> UIImage? {
-        // 1. 배경 이미지를 정사각형으로 크롭
-        guard let croppedBackground = cropToSquare(background, targetSize: templateSize) else {
-            return nil
-        }
 
-        // 2. 템플릿 오버레이 렌더링
+        // 1. 템플릿 오버레이 렌더링
         guard let templateOverlay = renderTemplateView(template: template, size: templateSize) else {
             return nil
         }
 
-        // 3. 두 이미지 합성
-        return compose(background: croppedBackground, overlay: templateOverlay)
+        // 2. 두 이미지 합성
+        return compose(background: background, overlay: templateOverlay)
     }
 
     // MARK: - Private Methods
-
+    /*
     /// 이미지를 정사각형으로 크롭 (scaledToFill 효과)
     private func cropToSquare(_ image: UIImage, targetSize: CGSize) -> UIImage? {
         let scale = max(targetSize.width / image.size.width, targetSize.height / image.size.height)
@@ -52,7 +48,7 @@ struct ImageCompositor {
             let drawRect = CGRect(x: -xOffset, y: -yOffset, width: scaledSize.width, height: scaledSize.height)
             image.draw(in: drawRect)
         }
-    }
+    }*/
 
     /// 템플릿 뷰를 UIImage로 렌더링 (iOS 16+ ImageRenderer 사용)
     @MainActor
@@ -61,7 +57,7 @@ struct ImageCompositor {
         size: CGSize
     ) -> UIImage? {
         let templateView = template
-            .frame(width: size.width, height: size.height, alignment: .center)
+            .frame(width: size.width, height: size.height)
             .ignoresSafeArea()
 
         let renderer = ImageRenderer(content: templateView)
@@ -71,12 +67,17 @@ struct ImageCompositor {
         return renderer.uiImage
     }
 
-    /// 배경과 오버레이 합성
+    /// 배경과 오버레이 합성    
     private func compose(background: UIImage, overlay: UIImage) -> UIImage? {
-        let renderer = UIGraphicsImageRenderer(size: background.size)
-        return renderer.image { context in
-            background.draw(at: .zero)
-            overlay.draw(at: .zero)
+            let format = UIGraphicsImageRendererFormat()
+            format.scale = background.scale   // 원본 해상도 유지
+            format.opaque = true
+
+            let rect = CGRect(origin: .zero, size: background.size)
+            let renderer = UIGraphicsImageRenderer(size: background.size, format: format)
+            return renderer.image { _ in
+                background.draw(in: rect)
+                overlay.draw(in: rect)   // 오버레이를 배경 크기에 맞춰 스케일
+            }
         }
-    }
 }
