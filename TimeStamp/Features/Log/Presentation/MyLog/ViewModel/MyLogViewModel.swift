@@ -41,11 +41,12 @@ final class MyLogViewModel: ObservableObject, MessageDisplayable {
     
     private let screenHeight = UIScreen.main.bounds.height
     
+    // 보이는 영역에서 최대한 중앙에 맞추기 위한 노력
     var emptyViewHeight: CGFloat {
         // 헤더: 60
         // 카테고리 113
         // 하단 탭바 대충 100
-        let logLimitBannerHeight: CGFloat = (shouldShowLogLimitBanner ? 76.0 : 0.0)
+        let logLimitBannerHeight: CGFloat = (shouldShowLogLimitBanner ? 152.0 : 0.0)
         let otherHeight = 60.0 + 113.0 + logLimitBannerHeight + 150
         return screenHeight - otherHeight
     }
