@@ -148,12 +148,21 @@ struct LoginView: View {
             }
             // 닉네임 화면으로 넘기기
             .navigationDestination(isPresented: $navigateToNicknameSetting) {
-                diContainer.makeNicknameSettingView(
-                    loginEntity: viewModel.pendingLoginEntity,
-                    onGoBack: { navigateToNicknameSetting = false },
-                    onDismiss: { onDismiss() },
-                    onSuccess: { onDismiss() }
-                )
+                if let pendingLoginEntity = viewModel.pendingLoginEntity {
+                    diContainer.makeGuestNicknameSettingView(
+                        loginEntity: pendingLoginEntity,
+                        onGoBack: { navigateToNicknameSetting = false },
+                        onDismiss: { onDismiss() },
+                        onSuccess: { onDismiss() }
+                    )
+                } else {
+                    diContainer.makeNicknameSettingView(
+                        onGoBack: { navigateToNicknameSetting = false },
+                        onDismiss: { onDismiss() },
+                        onSuccess: { onDismiss() }
+                    )
+                }
+                
             }
         } // ~NavigationStack
     }

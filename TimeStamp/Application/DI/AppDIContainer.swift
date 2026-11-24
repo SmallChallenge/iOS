@@ -151,8 +151,9 @@ final class AppDIContainer {
     ///   - onDismiss: 로그인 로직에서, 로그인 뷰 닫기
     ///   - onSuccess: 닉네임 설정 성공 시 호출
     /// - Returns:
-    func makeNicknameSettingView(loginEntity: LoginEntity?, onGoBack: @escaping () -> Void, onDismiss: (()-> Void)?, onSuccess: (() -> Void)? = nil) -> NicknameSettingView {
-        return loginDIContainer.makeNicknameSettingView(loginEntity: loginEntity, onGoBack: onGoBack, onDismiss: onDismiss, onSuccess: onSuccess)
+    func makeNicknameSettingView(onGoBack: @escaping () -> Void, onSuccess: (() -> Void)? = nil) -> NicknameSettingView<NicknameSettingViewModel> {
+        return loginDIContainer
+            .makeNicknameSettingView(onGoBack: onGoBack, onDismiss: nil, onSuccess: onSuccess)
     }
     // MARK: - Terms WebView
 

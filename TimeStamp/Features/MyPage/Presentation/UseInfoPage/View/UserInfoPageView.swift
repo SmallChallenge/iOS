@@ -69,9 +69,7 @@ struct UserInfoPageView: View {
         // 닉네임 설정 화면으로
         .navigationDestination(isPresented: $presentNicknameSetting) {
             appDiContainer.makeNicknameSettingView(
-                loginEntity: nil,
                 onGoBack: { presentNicknameSetting = false },
-                onDismiss: nil,
                 onSuccess: { presentNicknameSetting = false }
             )
         }

@@ -6,11 +6,11 @@
 //
 
 import SwiftUI
-
-struct NicknameSettingView: View {
+// 가입 전,후 공통으로 사용하는 닉네임 설정 화면
+struct NicknameSettingView<ViewModel: NicknameSettingViewModelProtocol>: View {
     
     init(
-        viewModel: NicknameSettingViewModel,
+        viewModel: ViewModel,
         onGoBack: @escaping () -> Void,
         onDismiss: (() -> Void)?,
         onSuccess: (() -> Void)? = nil
@@ -18,7 +18,7 @@ struct NicknameSettingView: View {
         self.onGoBack = onGoBack
         self.onDismiss = onDismiss
         self.onSuccess = onSuccess
-        self._viewModel = StateObject(wrappedValue: viewModel)
+        self.viewModel =  viewModel
         self.oldNickname = AuthManager.shared.currentUser?.nickname ?? ""
     }
     
@@ -28,7 +28,7 @@ struct NicknameSettingView: View {
     let onSuccess: (() -> Void)?
 
     @ObservedObject private var authManager = AuthManager.shared
-    @StateObject private var viewModel: NicknameSettingViewModel
+    @ObservedObject private var viewModel: ViewModel
     @FocusState private var isTextFieldFocused: Bool
     @State private var isReadyKeyboard = false
     @State private var newNickname: String = ""
@@ -130,5 +130,5 @@ struct NicknameSettingView: View {
 }
 
 #Preview {
-    MockLoginDIContainer().makeNicknameSettingView(loginEntity: nil, onGoBack: { }, onDismiss: {}, onSuccess: {})
+    MockLoginDIContainer().makeNicknameSettingView(onGoBack: { }, onDismiss: {}, onSuccess: {})
 }
