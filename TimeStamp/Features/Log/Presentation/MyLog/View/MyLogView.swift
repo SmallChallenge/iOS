@@ -11,7 +11,6 @@ struct MyLogView: View {
 
     private let diContainer: MyLogDIContainerProtocol
     @StateObject private var viewModel: MyLogViewModel
-    @ObservedObject private var authManager = AuthManager.shared
     @Binding var selectedLog: TimeStampLogViewData?
 
     // 사진 간격

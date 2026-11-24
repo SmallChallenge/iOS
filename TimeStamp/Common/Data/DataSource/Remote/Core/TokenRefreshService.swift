@@ -70,7 +70,7 @@ final class TokenRefreshService {
             case .success(let dto):
                 Logger.success("토큰 갱신 성공")
                 // 성공 - 토큰 저장
-                AuthManager.shared.refreshToken(
+                AuthManager.shared.updateTokens(
                     accessToken: dto.accessToken,
                     refreshToken: dto.refreshToken
                 )

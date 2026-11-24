@@ -20,16 +20,26 @@ struct MyLogDIContainer: MyLogDIContainerProtocol {
 
     // MARK: - Dependencies
 
-    private let localDataSource: LocalTimeStampLogDataSourceProtocol
     private let session: Session
+    private let authRepository: AuthRepositoryProtocol
+    private let localDataSource: LocalTimeStampLogDataSourceProtocol
     private let settingsRepository: SettingsDataSourceProtocol
+    
+    // Auth
+    private let authStateProviding: AuthStateProviding
 
     // MARK: - Initializer
 
-    init(session: Session, localDataSource: LocalTimeStampLogDataSourceProtocol, settingsRepository: SettingsDataSourceProtocol) {
+    init(session: Session,
+         localDataSource: LocalTimeStampLogDataSourceProtocol,
+         settingsRepository: SettingsDataSourceProtocol,
+         authRepository: AuthRepositoryProtocol,
+         authStateProviding: AuthStateProviding) {
         self.session = session
         self.localDataSource = localDataSource
         self.settingsRepository = settingsRepository
+        self.authRepository = authRepository
+        self.authStateProviding = authStateProviding
     }
     
     private func makeMyLogApiClient() -> MyLogApiClientProtocol {
@@ -62,11 +72,14 @@ struct MyLogDIContainer: MyLogDIContainerProtocol {
     }
 
     private func makeMyLogViewModel() -> MyLogViewModel {
-        return MyLogViewModel(useCase: makeMyLogUseCase())
+        return MyLogViewModel(useCase: makeMyLogUseCase(), authStateProvider: authStateProviding)
     }
     
     private func makeMyLogUseCase() -> MyLogUseCaseProtocol {
-        return MyLogUseCase(repository: makeMyLogRepository(), settingsRepository: settingsRepository)
+        return MyLogUseCase(
+            repository: makeMyLogRepository(),
+            settingsRepository: settingsRepository,
+            authRepository: authRepository)
     }
 
     func makeMyLogView(selectedLog: Binding<TimeStampLogViewData?>) -> MyLogView {
@@ -126,6 +139,8 @@ struct MyLogDIContainer: MyLogDIContainerProtocol {
 
 // MARK: --------------------------------- Mock --------------------------------
 struct MockMyLogDIContainer: MyLogDIContainerProtocol {
+    private let authStateProviding: AuthStateProviding = MockAuthStateProvider()
+    
     
     // MARK: MainTab
     func makeMainTabView(selectedTab: Int) -> MainTabView {
@@ -151,11 +166,18 @@ struct MockMyLogDIContainer: MyLogDIContainerProtocol {
     // MARK: MyLogView
     func makeMyLogView(selectedLog: Binding<TimeStampLogViewData?>) -> MyLogView {
         let usecase = MockMyLogUseCase()
-        let viewModel = MyLogViewModel(useCase: usecase)
+        let viewModel = MyLogViewModel(
+            useCase: usecase,
+            authStateProvider: authStateProviding
+        )
         return MyLogView(viewModel: viewModel, diContainer: self, selectedLog: selectedLog)
     }
 
     struct MockMyLogUseCase: MyLogUseCaseProtocol {
+        func fetchAllLogs() async -> (logs: [TimeStampLog], pageInfo: PageInfo?) {
+            ([], nil)
+        }
+        
         func getIsLogLimitBannerDismissed() -> Bool {
             false
         }
@@ -166,9 +188,6 @@ struct MockMyLogDIContainer: MyLogDIContainerProtocol {
             return 0
         }
 
-        func fetchAllLogs(isLoggedIn: Bool) async -> (logs: [TimeStampLog], pageInfo: PageInfo?) {
-            ([], nil)
-        }
         func fetchServerLogs(page: Int) async -> (logs: [TimeStampLog], pageInfo: PageInfo?) {
             ([], nil)
         }

@@ -20,7 +20,7 @@ final class AppDIContainer {
     // MARK: - Network Dependencies
 
     private lazy var session: Session = {
-        let factory = SessionFactory()
+        let factory = SessionFactory(tokenStorage: tokenStorage)
         #if DEBUG
         return factory.makeSession(for: .dev)
         #else
@@ -45,6 +45,21 @@ final class AppDIContainer {
     private lazy var settingsDataSource: SettingsDataSourceProtocol = {
         SettingsDataSource()
     }()
+    
+    private lazy var authRepository: AuthRepositoryProtocol = {
+        AuthRepository(authManager: authManager)
+    }()
+    
+    // MARK: - Auth
+    private let authManager = AuthManager.shared
+    
+    lazy var authStateProvider: AuthStateProviding = {
+        authManager
+    }()
+    
+    lazy var tokenStorage: TokenStoring = {
+        authManager
+    }()
 
     // MARK: - LaunchScreen Feature
 
@@ -65,7 +80,9 @@ final class AppDIContainer {
         return MyLogDIContainer(
             session: session,
             localDataSource: localTimeStampLogDataSource,
-            settingsRepository: settingsDataSource
+            settingsRepository: settingsDataSource,
+            authRepository: authRepository,
+            authStateProviding: authStateProvider
         )
     }()
 

@@ -19,6 +19,11 @@ final class MyLogViewModel: ObservableObject, MessageDisplayable {
 
     // MARK: - Output Properties
     
+    // 로그인 여부
+    @Published private(set) var isLoggedIn = false
+    private let authStateProvider: AuthStateProviding
+    private var cancellables = Set<AnyCancellable>()
+    
     // 선택된 카테고리
     @Published var selectedCategory: CategoryFilterViewData = .all
 
@@ -58,18 +63,32 @@ final class MyLogViewModel: ObservableObject, MessageDisplayable {
     var shouldShowLogLimitBanner: Bool {
         localLogsCount >= LogPolicy.warningLogCount // 18개 이상이면 뜬다
             && !isLogLimitBannerDismissed // 한번 닫으면 안뜬다.
-            && !AuthManager.shared.isLoggedIn // 로그아웃 상태일때만
+            && !isLoggedIn // 로그아웃 상태일때만
     }
 
     // MARK: - Init
 
-    init(useCase: MyLogUseCaseProtocol) {
+    init(useCase: MyLogUseCaseProtocol, authStateProvider: AuthStateProviding) {
         self.useCase = useCase
+        self.authStateProvider = authStateProvider
+        
+        bindAuthState()
 
         // 배너 닫힘 상태 불러오기
         self.isLogLimitBannerDismissed = useCase.getIsLogLimitBannerDismissed()
 
         loadLogs()
+    }
+    
+    /// 로그인 여부 옵저빙
+    private func bindAuthState() {
+        authStateProvider.isLoggedInPublisher
+            .receive(on: DispatchQueue.main)
+            .assign(to: &$isLoggedIn)
+        
+        /*authStateProvider.currentUserPublisher
+            .receive(on: DispatchQueue.main)
+            .assign(to: &$currentUser)*/
     }
 
     // MARK: - Input Methods
@@ -86,8 +105,7 @@ final class MyLogViewModel: ObservableObject, MessageDisplayable {
             currentPage = 0
             hasMorePages = false
 
-            let isLoggedIn = AuthManager.shared.isLoggedIn
-            let result = await useCase.fetchAllLogs(isLoggedIn: isLoggedIn)
+            let result = await useCase.fetchAllLogs()
 
             myLogs = result.logs.map { $0.toViewData() }
 
@@ -116,7 +134,7 @@ final class MyLogViewModel: ObservableObject, MessageDisplayable {
         }
 
         // 로그인 상태가 아니면 리턴 (서버 로그만 페이지네이션)
-        guard AuthManager.shared.isLoggedIn else {
+        guard isLoggedIn else {
             return
         }
 

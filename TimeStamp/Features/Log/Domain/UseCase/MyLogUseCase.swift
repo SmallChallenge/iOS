@@ -15,18 +15,24 @@ struct MyLogUseCase: MyLogUseCaseProtocol {
     
     /// Settings Repository
     private let settingsRepository: SettingsDataSourceProtocol
+    
+    private let authRepository: AuthRepositoryProtocol
 
     // MARK: - Init
 
-    init(repository: MyLogRepositoryProtocol, settingsRepository: SettingsDataSourceProtocol) {
+    init(repository: MyLogRepositoryProtocol, settingsRepository: SettingsDataSourceProtocol, authRepository: AuthRepositoryProtocol) {
         self.repository = repository
         self.settingsRepository = settingsRepository
+        self.authRepository = authRepository
     }
 
     // MARK: - Methods
-
+    
+    
     /// 타임스탬프 로그를 조회 (서버 + 로컬)
-    func fetchAllLogs(isLoggedIn: Bool) async -> (logs: [TimeStampLog], pageInfo: PageInfo?) {
+    func fetchAllLogs() async -> (logs: [TimeStampLog], pageInfo: PageInfo?) {
+        
+        let isLoggedIn = authRepository.isLoggedIn()
 
         // 로컬 로그 가져오기
         let localLogs: [TimeStampLog]

@@ -8,6 +8,9 @@
 import Foundation
 import Combine
 
+// AuthSessionManager
+// Core - AuthManager
+// 로그인 상태와 토큰을 관리
 /// 로그인 상태와 사용자 정보를 관리
 final class AuthManager: ObservableObject {
 
@@ -38,8 +41,10 @@ final class AuthManager: ObservableObject {
     /// 로그인 성공 시 호출 (토큰만 Keychain에 저장, 유저 정보는 메모리에만)
     func login(user: User, accessToken: String, refreshToken: String) {
         // 1. 토큰 저장 (Keychain)
-        self.accessToken = accessToken
-        self.refreshToken = refreshToken
+        updateTokens(
+            accessToken: accessToken,
+            refreshToken: refreshToken
+        )
 
         // 2. 상태 업데이트 (메모리에만)
         currentUser = user
@@ -51,12 +56,6 @@ final class AuthManager: ObservableObject {
         NotificationCenter.default.post(name: .shouldRefresh, object: nil)
     }
     
-    
-    /// 토큰갱신
-    func refreshToken(accessToken: String, refreshToken: String){
-        self.accessToken = accessToken
-        self.refreshToken = refreshToken
-    }
 
     /// 로그아웃
     func logout() {
@@ -73,15 +72,6 @@ final class AuthManager: ObservableObject {
         Logger.success("로그아웃 완료")
     }
 
-    /// Access Token 가져오기 (API 호출 시 사용)
-    func getAccessToken() -> String? {
-        return accessToken
-    }
-
-    /// Refresh Token 가져오기
-    func getRefreshToken() -> String? {
-        return refreshToken
-    }
 
     /// 닉네임 업데이트
     func updateNickname(_ nickname: String) {
@@ -113,5 +103,36 @@ final class AuthManager: ObservableObject {
         } else {
             Logger.info("저장된 토큰 없음 → 로그인 필요")
         }
+    }
+}
+
+// MARK: - AuthStateProviding
+extension AuthManager: AuthStateProviding {
+    var isLoggedInPublisher: AnyPublisher<Bool, Never> {
+        $isLoggedIn.eraseToAnyPublisher()
+    }
+
+    var currentUserPublisher: AnyPublisher<User?, Never> {
+        $currentUser.eraseToAnyPublisher()
+    }
+}
+
+// MARK: - TokenStoring
+extension AuthManager: TokenStoring {
+    func getAccessToken() -> String? {
+        accessToken
+    }
+
+    func getRefreshToken() -> String? {
+        refreshToken
+    }
+
+    /// 토큰 갱신
+    func updateTokens(
+        accessToken: String,
+        refreshToken: String
+    ) {
+        self.accessToken = accessToken
+        self.refreshToken = refreshToken
     }
 }
