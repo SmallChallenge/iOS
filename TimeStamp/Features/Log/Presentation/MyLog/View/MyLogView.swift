@@ -12,7 +12,6 @@ struct MyLogView: View {
     private let diContainer: MyLogDIContainerProtocol
     @StateObject private var viewModel: MyLogViewModel
     @ObservedObject private var authManager = AuthManager.shared
-    @State private var selectedCategory: CategoryFilterViewData = .all
     @Binding var selectedLog: TimeStampLogViewData?
 
     // 사진 간격
@@ -29,6 +28,7 @@ struct MyLogView: View {
     }
 
     /// 선택된 카테고리로 필터링된 로그
+    /*
     private var filteredLogs: [TimeStampLogViewData] {
         if selectedCategory == .all {
             return viewModel.myLogs
@@ -44,34 +44,36 @@ struct MyLogView: View {
             }
         }
     }
+    */
 
     var body: some View {
         VStack(spacing: .zero) {
                 ScrollView {
                     VStack (spacing: .zero){
                         
-                        // 카테고리
+                        // - 카테고리 탭 - //
                         CategoryView(
-                            selectedCategory: $selectedCategory,
+                            selectedCategory: viewModel.selectedCategory,
                             availableCategories: CategoryFilterViewData.allCases
-                        )
+                        ){ category in
+                            viewModel.selectCategory(category)
+                        }
                         
-                        // 로컬 20개 제한 안내 팝업
+                        // - 로컬 20개 제한 안내 팝업 - //
                         if viewModel.shouldShowLogLimitBanner {
                             LogLimitBannerView
                         }
 
-                        // 사진 목록
-                        if filteredLogs.isEmpty {
+                        // - 사진 목록 - //
+                        if viewModel.myLogs.isEmpty {
                             // 해당 카테고리 해당되는 사진 없음
                             MyLogEmptyView()
                                 .frame(minHeight: viewModel.emptyViewHeight)
-                            
-                            
+                                                        
                         } else {
                             // 해당 카테고리 해당되는 사진 있음
                             LazyVGrid(columns: columns, spacing: 1) {
-                                ForEach(Array(filteredLogs.enumerated()), id: \.element.id) { index, log in
+                                ForEach(Array(viewModel.myLogs.enumerated()), id: \.element.id) { index, log in
                                     Button(action: {
                                         selectedLog = log
                                     }, label: {
@@ -79,8 +81,8 @@ struct MyLogView: View {
                                             .aspectRatio(1, contentMode: .fill)
                                     })
                                     .id(log.id)
-                                    .onAppear {
-                                        if index == filteredLogs.count - 1 {
+                                    .onAppear { // 페이징
+                                        if index == viewModel.myLogs.count - 1 {
                                             viewModel.loadMore()
                                         }
                                     }
@@ -107,7 +109,7 @@ struct MyLogView: View {
         }
         .onReceive(NotificationCenter.default.publisher(for: .shouldRefreshMyLog)) { _ in
             // 사진 저장 후 목록 새로고침
-            selectedCategory = .all
+            viewModel.selectedCategory = .all
             viewModel.loadLogs()
         }
         .onReceive(NotificationCenter.default.publisher(for: .shouldRefresh)) { _ in
@@ -169,7 +171,6 @@ struct MyLogView: View {
 
         return result
     }
-
 }
 
 #Preview {

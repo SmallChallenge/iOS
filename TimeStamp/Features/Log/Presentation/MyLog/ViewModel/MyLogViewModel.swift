@@ -18,6 +18,9 @@ final class MyLogViewModel: ObservableObject, MessageDisplayable {
     private let useCase: MyLogUseCaseProtocol
 
     // MARK: - Output Properties
+    
+    // 선택된 카테고리
+    @Published var selectedCategory: CategoryFilterViewData = .all
 
     @Published var isLoading = false
     @Published var isLoadingMore = false
@@ -25,7 +28,7 @@ final class MyLogViewModel: ObservableObject, MessageDisplayable {
     @Published var toastMessage: String?
     @Published var alertMessage: String?
 
-    /// 전체 로그 (필터링은 View에서 수행)
+    /// 전체 로그
     @Published var myLogs: [TimeStampLogViewData] = []
 
     /// 로컬 기록 개수
@@ -71,7 +74,7 @@ final class MyLogViewModel: ObservableObject, MessageDisplayable {
 
     // MARK: - Input Methods
 
-    /// 모든 로그를 불러오기
+    /// 로그를 불러오기
     func loadLogs() {
         // 중복 호출 방지
         guard isLoading == false && isLoadingMore == false
@@ -143,5 +146,11 @@ final class MyLogViewModel: ObservableObject, MessageDisplayable {
     func dismissLogLimitBanner() {
         isLogLimitBannerDismissed = true
         useCase.dismissLogLimitBanner()
+    }
+    
+    /// 카테고리 다른거 선택함
+    func selectCategory(_ category: CategoryFilterViewData) {
+        selectedCategory = category
+        loadLogs()
     }
 }

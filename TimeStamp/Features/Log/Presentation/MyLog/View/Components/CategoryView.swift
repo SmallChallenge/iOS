@@ -8,8 +8,17 @@
 import SwiftUI
 
 struct CategoryView: View {
-    @Binding var selectedCategory: CategoryFilterViewData
-    let availableCategories: [CategoryFilterViewData]
+    private let selectedCategory: CategoryFilterViewData
+    private let availableCategories: [CategoryFilterViewData]
+    private let onTapCategory: (CategoryFilterViewData) -> Void
+    
+    init(selectedCategory: CategoryFilterViewData,
+         availableCategories: [CategoryFilterViewData],
+         onTapCategory: @escaping (CategoryFilterViewData) -> Void) {
+        self.selectedCategory = selectedCategory
+        self.availableCategories = availableCategories
+        self.onTapCategory = onTapCategory
+    }
 
     var body: some View {
         ScrollView(.horizontal, showsIndicators: false) {
@@ -19,7 +28,8 @@ struct CategoryView: View {
                         type: category,
                         isSelected: selectedCategory == category
                     ) {
-                        selectedCategory = category
+                        //selectedCategory = category
+                        onTapCategory(category)
                     }
                 }
             }
@@ -31,8 +41,9 @@ struct CategoryView: View {
 
 #Preview {
     CategoryView(
-        selectedCategory: .constant(.all),
-        availableCategories: [.all, .study, .food]
+        selectedCategory: .all,
+        availableCategories: [.all, .study, .food],
+        onTapCategory: { _ in }
     )
     .background(Color.gray900)
 }
