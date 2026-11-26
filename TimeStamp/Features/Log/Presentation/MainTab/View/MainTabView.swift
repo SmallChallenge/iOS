@@ -67,6 +67,9 @@ struct MainTabView: View {
                 } //~TabView
                 .hideTabBar()
                 
+                
+            } // ~ VStack
+            .safeAreaInset(edge: .bottom, spacing: 0) {
                 // 커스텀 탭바 [내 기록 | 촬영버튼 | 커뮤니티]
                 MainTabBar(
                     selectedTab: $selectedTab,
@@ -85,8 +88,7 @@ struct MainTabView: View {
                         triggerCommunityRefresh = true
                     }
                 )
-                
-            } // ~ VStack
+            }
             .navigationBarHidden(true)
             .toolbar(.hidden, for: .navigationBar)
             .mainBackgourndColor()

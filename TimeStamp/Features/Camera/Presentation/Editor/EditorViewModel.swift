@@ -56,8 +56,6 @@ class EditorViewModel: ObservableObject, MessageDisplayable {
             
             // 카테고리 선택시켜놓기
             switch template.style {
-            case .favorite: // 여기로는 안옴
-                selectedTemplateStyle = .favorite 
             case .minimal:
                 selectedTemplateStyle = .minimal
             case .accent:
@@ -86,12 +84,24 @@ class EditorViewModel: ObservableObject, MessageDisplayable {
         favoriteTemplateIds = useCase.getFavoriteTemplateIds()
     }
     // 템플릿 즐겨찾기 추가
-    func addFavoriteTemplate(id: String) {
+    func addFavoriteTemplate(id: String, category: String) {
         favoriteTemplateIds = useCase.addFavoriteTemplate(id: id)
+        
+        AmplitudeManager.shared.trackAddFavoriteTemplate(
+            templateId: id,
+            templateCategory: category,
+            favoriteCount: favoriteTemplateIds.count
+        )
     }
     // 템플릿 즐겨찾기 삭제
-    func removeFavoriteTemplate(id: String) {
+    func removeFavoriteTemplate(id: String, category: String) {
         favoriteTemplateIds = useCase.removeFavoriteTemplate(id: id)
+        
+        AmplitudeManager.shared.trackRemoveFavoriteTemplate(
+            templateId: id,
+            templateCategory: category,
+            favoriteCount: favoriteTemplateIds.count
+        )
     }
     
     /// 로고 토글 탭 이벤트 처리

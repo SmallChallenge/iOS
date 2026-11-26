@@ -37,6 +37,8 @@ final class PhotoSaveViewModel: ObservableObject, MessageDisplayable {
     @Published var selectedCategory: CategoryViewData? = nil
     @Published var selectedVisibility: VisibilityViewData? = nil
     
+    // 템플릿 즐겨찾기 목록
+    @Published var favoriteTemplateIds: [String] = []
     
     // 로컬 기록 한계 도달 팝업 띄우기
     @Published var showLimitReachedPopup = false
@@ -61,6 +63,10 @@ final class PhotoSaveViewModel: ObservableObject, MessageDisplayable {
 
     // MARK: - Actions
     
+    // 템플릿 즐겨찾기 목록 불러오기
+    func getFavoriteTemplateIds(){
+        favoriteTemplateIds = useCase.getFavoriteTemplateIds()
+    }
     
     
     /// 사진 저장 (로컬 or 서버)
@@ -108,13 +114,15 @@ final class PhotoSaveViewModel: ObservableObject, MessageDisplayable {
     private func trackPhotoSave(category: CategoryViewData, visibility: VisibilityViewData) {
         let categoryEntity = CategoryMapper().toEntity(from: category)
         let visibilityEntity = VisibilityTypeMapper().toEntity(from: visibility)
+        let isFavorite = favoriteTemplateIds.contains(selectedTamplateId)
         
         // 사진 저장 완료 (서버에만)
         AmplitudeManager.shared.trackCompletePhotoSave(
             category: categoryEntity.rawValue.lowercased(),
             visibility: visibilityEntity.rawValue.lowercased(),
             templateId: selectedTamplateId,
-            templateCategory: selectedTemplateStyle
+            templateCategory: selectedTemplateStyle,
+            isTemplateFavorite: isFavorite
         )
         
         if visibility == .publicVisible {

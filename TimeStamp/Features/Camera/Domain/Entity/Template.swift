@@ -9,8 +9,7 @@ import SwiftUI
 
 
 /// 템플릿 스타일 (Domain Layer)
-enum TemplateStyle: CaseIterable {
-    case favorite
+enum TemplateStyle: String, CaseIterable {
     case minimal
     case accent
     case fun

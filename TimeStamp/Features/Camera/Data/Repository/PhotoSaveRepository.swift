@@ -220,4 +220,9 @@ final class PhotoSaveRepository: PhotoSaveRepositoryProtocol {
     func fetchLocalLogsCount() throws -> Int {
         return try localDataSource.count()
     }
+    
+    // 템플릿 즐겨찾기 ids 불러오기
+    func getFavoriteTemplateIds() -> [String] {
+        UserSettings.shared.favoriteTemplateIds
+    }
 }
