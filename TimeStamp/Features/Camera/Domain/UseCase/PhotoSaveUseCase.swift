@@ -21,7 +21,11 @@ struct PhotoSaveUseCase: PhotoSaveUseCaseProtocol {
     }
 
     // MARK: - Methods
-
+    
+    // 템플릿 즐겨찾기 ids 불러오기
+    func getFavoriteTemplateIds() -> [String] {
+        repository.getFavoriteTemplateIds()
+    }
     
     // 로컬에 저장하기 ( Core Data에 사진 저장 )
     func savePhotoToLacal(image: UIImage, category: Category, visibility: VisibilityType) throws {

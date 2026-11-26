@@ -36,4 +36,7 @@ protocol PhotoSaveUseCaseProtocol {
     /// 로컬 타임스탬프 로그의 개수를 조회
     /// - Returns: 로컬에 저장된 로그의 개수
     func getLocalLogsCount() -> Int
+    
+    /// 템플릿 즐겨찾기 ids 불러오기
+    func getFavoriteTemplateIds() -> [String]
 }

@@ -52,4 +52,7 @@ protocol PhotoSaveRepositoryProtocol {
     func saveSelectedVisibilityType(visibilityType: VisibilityType)
     
     func fetchLocalLogsCount() throws -> Int
+    
+    /// 템플릿 즐겨찾기 ids 불러오기
+    func getFavoriteTemplateIds() -> [String]
 }

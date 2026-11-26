@@ -71,6 +71,7 @@ struct PhotoSaveView: View {
         .task {
             viewModel.getLastSelectedCategory()
             viewModel.getLastSelectedVisibilityType()
+            viewModel.getFavoriteTemplateIds()
         }
         .safeAreaInset(edge: .top) {
             // 헤더

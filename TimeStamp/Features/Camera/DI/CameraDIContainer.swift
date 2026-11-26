@@ -271,6 +271,8 @@ struct MockCameraDIContainer: CameraDIContainerProtocol {
     // MARK: - PhotoSave
 
     struct MockPhotoSaveUseCase: PhotoSaveUseCaseProtocol {
+        func getFavoriteTemplateIds() -> [String] { return  [] }
+        
         func getLocalLogsCount() -> Int { return 0 }
         
         func getLastSelectedCategory() -> Category? { return .etc }

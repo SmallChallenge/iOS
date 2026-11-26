@@ -71,6 +71,12 @@ extension AmplitudeManager {
         /// 편집화면에서 특정 템플릿 클릭 시
         case selectTemplate = "template_select"
         
+        /// 템플릿 즐겨찾기 등록
+        case addTemplateToFavorite = "template_favorite_add"
+        
+        /// 템플릿 즐겨찾기 해제
+        case removeTemplateFromFavorite = "template_favorite_remove"
+        
         /// 비로그인 20개 한계 도달
         /// 비로그인 상태에서 21번째 촬영 시도 시 (로그인 모달이 뜨는 순간)
         case reachedPhotoLimit = "photo_limit_reached"
@@ -200,15 +206,17 @@ extension AmplitudeManager {
     ///   - category: study | exercise | food | etc
     ///   - visibility:  private | public
     ///   - templateId: minimal_001
-    ///   - templateCategory: minimal | accent | fun | pixel
-    func trackCompletePhotoSave(category: String, visibility: String, templateId: String, templateCategory: String){
+    ///   - templateCategory: 템플릿 스타일 (minimal | accent | fun | pixel)
+    ///   - isTemplateFavorite: 템플릿 즐겨찾기 여부
+    func trackCompletePhotoSave(category: String, visibility: String, templateId: String, templateCategory: String, isTemplateFavorite: Bool){
         eventTrack(.photoSaveCompleted, eventProperties: [
             "category" : category,
             "save_scope": visibility,
             "template_id" : templateId,
             "template_category": templateCategory,
             "template_type" : "default",
-            "template_is_paid" : false
+            "template_is_paid" : false,
+            "template_is_favorate" : isTemplateFavorite,
         ])
     }
     
@@ -223,15 +231,50 @@ extension AmplitudeManager {
     /// 편집화면에서 특정 템플릿 클릭 시
     /// - Parameters:
     ///   - templateId: minimal_001
-    ///   - templateCategory: minimal | accent | fun | pixel
-    func trackTemplateSelection(templateId: String, templateCategory: String){
+    ///   - templateCategory: 템플릿 스타일 (minimal | accent | fun | pixel)
+    ///   - isTemplateFavorite: 템플릿 즐겨찾기 여부
+    func trackTemplateSelection(templateId: String, templateCategory: String, isTemplateFavorite: Bool){
         eventTrack(.selectTemplate, eventProperties: [
             "template_id" : templateId,
             "template_category" : templateCategory,
             "template_type" : "default",
             "template_is_paid" : false,
+            "template_is_favorate" : isTemplateFavorite,
         ])
     }
+    
+    /// 템플릿 즐겨찾기 등록
+    /// - Parameters:
+    ///   - templateId: 템플릿 아이디
+    ///   - templateCategory: 템플릿 스타일 (minimal | accent | fun | pixel)
+    ///   - count: 즐겨찾기 등록 or 해제 후, 즐겨찾기 개수
+    func trackAddFavoriteTemplate(templateId: String, templateCategory: String, favoriteCount count: Int){
+        eventTrack(.addTemplateToFavorite, eventProperties: [
+            "template_id" : templateId,
+            "template_category" : templateCategory,
+            "template_type" : "default", //아직 보낼게 정해지지 않음
+            "template_is_paid" : false, //아직 보낼게 정해지지 않음
+            "favorite_count": count
+        ])
+    }
+    
+    /// 템플릿 즐겨찾기 등록
+    /// - Parameters:
+    ///   - templateId: 템플릿 아이디
+    ///   - templateCategory: 템플릿 스타일 (minimal | accent | fun | pixel)
+    ///   - count: 즐겨찾기 등록 or 해제 후, 즐겨찾기 개수
+    func trackRemoveFavoriteTemplate(templateId: String, templateCategory: String, favoriteCount count: Int){
+        eventTrack(.removeTemplateFromFavorite, eventProperties: [
+            "template_id" : templateId,
+            "template_category" : templateCategory,
+            "template_type" : "default",
+            "template_is_paid" : false,
+            "favorite_count": count
+        ])
+    }
+        
+    
+    
     
     /// 비로그인 20개 한계 도달
     /// 비로그인 상태에서 21번째 촬영 시도 시 (로그인 모달이 뜨는 순간)

@@ -197,7 +197,7 @@ struct EditorView: View {
             if let editedImage = editedImage {
                 diContainer.makePhotoSaveView(
                     capturedImage: editedImage,
-                    selectedTemplateStyle: viewModel.selectedTemplateStyle.enName,
+                    selectedTemplateStyle: viewModel.selectedTemplate.style.rawValue,
                     selectedTamplateId: viewModel.selectedTemplate.templateId,
                     onGoBack: nil,
                     onComplete: onComplete
@@ -303,18 +303,20 @@ struct EditorView: View {
         ScrollView(.horizontal, showsIndicators: false) {
             HStack(spacing: 8) {
                 ForEach(filteredTemplates) { template in
+                    let isFavorite = viewModel.favoriteTemplateIds.contains(template.templateId)
                     TemplateButton(
                         capturedImage: nil,
                         template: template,
                         isSelected: viewModel.selectedTemplate == template,
-                        isFavorite: viewModel.favoriteTemplateIds.contains(template.templateId)
+                        isFavorite: isFavorite
                     ) {
                         // 템플릿 선택
                         viewModel.selectedTemplate = template
                         viewModel.saveSelectedTemplate()
                         AmplitudeManager.shared.trackTemplateSelection(
                             templateId: template.templateId,
-                            templateCategory: viewModel.selectedTemplateStyle.enName
+                            templateCategory: template.style.rawValue,
+                            isTemplateFavorite: isFavorite
                         )
                     }
                     .onLongPressGesture {
@@ -324,9 +326,9 @@ struct EditorView: View {
                         
                         // 즐겨찾기 넣기 Or 빼기
                         if viewModel.favoriteTemplateIds.contains(template.templateId) {
-                            viewModel.removeFavoriteTemplate(id: template.templateId)
+                            viewModel.removeFavoriteTemplate(id: template.templateId, category: template.style.rawValue)
                         } else {
-                            viewModel.addFavoriteTemplate(id: template.templateId)
+                            viewModel.addFavoriteTemplate(id: template.templateId, category: template.style.rawValue)
                         }
                     }
                 }
