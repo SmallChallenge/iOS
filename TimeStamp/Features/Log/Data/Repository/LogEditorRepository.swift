@@ -31,7 +31,7 @@ struct LogEditorRepository: LogEditorRepositoryProtocol {
     }
 
     func editForLocal(logId id: UUID, newCategory category: String, newVisibility visibility: String) throws {
-        guard var dto = try localDataSource.read(id: id) else {
+        guard let dto = try localDataSource.read(id: id) else {
             throw RepositoryError.entityNotFound
         }
 
