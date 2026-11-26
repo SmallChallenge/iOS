@@ -34,7 +34,7 @@ struct LoginRepository: LoginRepositoryProtocol {
     func cancel(accessToken token: String) async throws -> Void {
         let result = await authApiClient.cancelRegisteration(accessToken: token)
         switch result {
-        case let .success(dto):
+        case .success(_):
             return
         case let .failure(error):
             throw error
