@@ -20,7 +20,7 @@ final class AppDIContainer {
     // MARK: - Network Dependencies
 
     private lazy var session: Session = {
-        let factory = SessionFactory()
+        let factory = SessionFactory(tokenStorage: tokenStorage)
         #if DEBUG
         return factory.makeSession(for: .dev)
         #else
@@ -45,6 +45,21 @@ final class AppDIContainer {
     private lazy var settingsDataSource: SettingsDataSourceProtocol = {
         SettingsDataSource()
     }()
+    
+    private lazy var authRepository: AuthRepositoryProtocol = {
+        AuthRepository(authManager: authManager)
+    }()
+    
+    // MARK: - Auth
+    private let authManager = AuthManager.shared
+    
+    lazy var authStateProvider: AuthStateProviding = {
+        authManager
+    }()
+    
+    lazy var tokenStorage: TokenStoring = {
+        authManager
+    }()
 
     // MARK: - LaunchScreen Feature
 
@@ -65,7 +80,9 @@ final class AppDIContainer {
         return MyLogDIContainer(
             session: session,
             localDataSource: localTimeStampLogDataSource,
-            settingsRepository: settingsDataSource
+            settingsRepository: settingsDataSource,
+            authRepository: authRepository,
+            authStateProviding: authStateProvider
         )
     }()
 
@@ -102,7 +119,7 @@ final class AppDIContainer {
     // MARK: - Community Feature
 
     private lazy var communityDIContainer: CommunityDiContainer = {
-        return CommunityDiContainer(communityApiClient: communityApiClient)
+        return CommunityDiContainer(communityApiClient: communityApiClient, authManager: authManager)
     }()
 
     func makeCommunityView(triggerRefresh: Binding<Bool> = .constant(false), onOpenCamera: (() -> Void)? = nil) -> CommunityView {
@@ -112,7 +129,7 @@ final class AppDIContainer {
     // MARK: - MyPage Feature
     
     private lazy var myPageDIContainer: MyPageDIContainer = {
-        return MyPageDIContainer(authApiClient: authApiClient, settingsDataSource: settingsDataSource)
+        return MyPageDIContainer(authApiClient: authApiClient, settingsDataSource: settingsDataSource, authManager: authManager)
     }()
     
     func makeMyPageView(onGoBack: @escaping () -> Void) -> MyPageView {
@@ -134,8 +151,9 @@ final class AppDIContainer {
     ///   - onDismiss: 로그인 로직에서, 로그인 뷰 닫기
     ///   - onSuccess: 닉네임 설정 성공 시 호출
     /// - Returns:
-    func makeNicknameSettingView(loginEntity: LoginEntity?, onGoBack: @escaping () -> Void, onDismiss: (()-> Void)?, onSuccess: (() -> Void)? = nil) -> NicknameSettingView {
-        return loginDIContainer.makeNicknameSettingView(loginEntity: loginEntity, onGoBack: onGoBack, onDismiss: onDismiss, onSuccess: onSuccess)
+    func makeNicknameSettingView(onGoBack: @escaping () -> Void, onSuccess: (() -> Void)? = nil) -> NicknameSettingView<NicknameSettingViewModel> {
+        return loginDIContainer
+            .makeNicknameSettingView(onGoBack: onGoBack, onDismiss: nil, onSuccess: onSuccess)
     }
     // MARK: - Terms WebView
 

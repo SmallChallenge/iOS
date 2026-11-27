@@ -8,5 +8,8 @@
 import Foundation
 
 protocol NicknameSettingRepositoryProtocol {
-    func setNickname(nickName: String, accessToken: String?) async -> Result<NicknameEntity, NetworkError>
+    
+    func setGuestNickname(nickName: String, accessToken: String) async -> Result<NicknameEntity, NetworkError>
+    
+    func setNickname(nickName: String) async -> Result<NicknameEntity, NetworkError>
 }

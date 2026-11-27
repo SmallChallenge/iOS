@@ -8,13 +8,21 @@
 import Foundation
 import Combine
 
-class NicknameSettingViewModel: ObservableObject {
+// 마이페이지에서 온 경우
+protocol NicknameSettingViewModelProtocol: ObservableObject {
+    var isLoading: Bool { get }
+    var validateMessage: String? { get }
+    var isSaved: Bool { get }
     
-    private let loginEntity: LoginEntity?
+    func resetValidateMessage()
+    func checkValidateNickname(_ nickname: String) -> Bool
+    func saveNickname(_ originNickname: String)
+}
+class NicknameSettingViewModel: NicknameSettingViewModelProtocol {
+    
     private let useCase: NicknameSettingUseCaseProtocol
-    init(useCase: NicknameSettingUseCaseProtocol, pendingLoginEntity: LoginEntity?) {
+    init(useCase: NicknameSettingUseCaseProtocol) {
         self.useCase = useCase
-        self.loginEntity = pendingLoginEntity
     }
     
     // Output Property
@@ -71,7 +79,7 @@ class NicknameSettingViewModel: ObservableObject {
             Logger.debug("닉네임 저장하기: \(nickname)")
 
             do {
-                let result = try await useCase.setNickname(nickname: nickname, accessToken: loginEntity?.accessToken)
+                let result = try await useCase.setNickname(nickname: nickname)
                 await MainActor.run {
                     isLoading = false
                     isSaved = true
@@ -81,11 +89,6 @@ class NicknameSettingViewModel: ObservableObject {
                         ToastManager.shared.show(AppMessage.welcomeMessage(nickname: nickname).text)
                     } else {
                         ToastManager.shared.show("닉네임이 변경되었어요.")
-                    }
-
-                    //  로그인화면에서 넘어온 경우, 로그인 시키기
-                    if let loginEntity {
-                        useCase.login(entity: loginEntity)
                     }
                     
                     // 유저정보 업데이트

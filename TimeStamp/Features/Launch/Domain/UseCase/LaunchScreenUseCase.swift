@@ -35,7 +35,7 @@ class LaunchScreenUseCase: LaunchUseCaseProtocol {
 
         switch result {
         case .success(let entity):
-            AuthManager.shared.refreshToken(
+            AuthManager.shared.updateTokens(
                 accessToken: entity.accessToken,
                 refreshToken: entity.refreshToken
             )

@@ -15,6 +15,11 @@ final class CommunityViewModel: ObservableObject, MessageDisplayable {
 
     // MARK: - Output Properties
     
+    // 로그인 여부
+    @Published private(set) var isLoggedIn = false
+    private let authStateProvider: AuthStateProviding
+    private var cancellables = Set<AnyCancellable>()
+    
     /// 카테고리
     @Published var categories: [CommunityCategoryViewData] = []
     /// 현재 선택된 카테고리
@@ -53,9 +58,30 @@ final class CommunityViewModel: ObservableObject, MessageDisplayable {
 
     // MARK: - Init
 
-    init(useCase: CommunityUseCaseProtocol) {
+    init(useCase: CommunityUseCaseProtocol, authStateProvider: AuthStateProviding) {
         self.useCase = useCase
+        self.authStateProvider = authStateProvider
+        bindAuthState()
     }
+    
+    /// 로그인 여부 옵저빙
+    private func bindAuthState() {
+        authStateProvider.isLoggedInPublisher
+            .receive(on: DispatchQueue.main)
+            .assign(to: &$isLoggedIn)
+        
+        // 변화에 반응 (기존 .shouldRefresh 대체)
+        authStateProvider.isLoggedInPublisher
+            .dropFirst()                       // 구독 시점 초기값 제외
+            .removeDuplicates()
+            .receive(on: DispatchQueue.main)
+            .sink { [weak self] loggedIn in
+                print(">>>>> 로그인 여부 변경 \(loggedIn)")
+                self?.loadFeeds(isRefresh: true)
+            }
+            .store(in: &cancellables)
+    }
+
 
     // MARK: - Input Methods
     
@@ -369,7 +395,6 @@ final class CommunityViewModel: ObservableObject, MessageDisplayable {
     /// feedList로부터 배너가 삽입된 communityListItems 생성
     private func buildCommunityListItems() {
         var items: [CommunityListItem] = []
-        let isLoggedIn = AuthManager.shared.isLoggedIn
 
         for (index, feed) in feedList.enumerated() {
             items.append(.feed(feed))

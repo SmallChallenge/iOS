@@ -16,8 +16,18 @@ final class MyLogViewModel: ObservableObject, MessageDisplayable {
 
     /// MyLog UseCase
     private let useCase: MyLogUseCaseProtocol
+    
+    private var loadTask: Task<Void, Never>?
 
     // MARK: - Output Properties
+    
+    // 로그인 여부
+    @Published private(set) var isLoggedIn = false
+    private let authStateProvider: AuthStateProviding
+    private var cancellables = Set<AnyCancellable>()
+    
+    // 선택된 카테고리
+    @Published var selectedCategory: CategoryFilterViewData = .all
 
     @Published var isLoading = false
     @Published var isLoadingMore = false
@@ -25,7 +35,7 @@ final class MyLogViewModel: ObservableObject, MessageDisplayable {
     @Published var toastMessage: String?
     @Published var alertMessage: String?
 
-    /// 전체 로그 (필터링은 View에서 수행)
+    /// 전체 로그
     @Published var myLogs: [TimeStampLogViewData] = []
 
     /// 로컬 기록 개수
@@ -35,17 +45,16 @@ final class MyLogViewModel: ObservableObject, MessageDisplayable {
     @Published var isLogLimitBannerDismissed: Bool = false
 
     /// 페이지네이션 상태
-    private var currentPage = 0
-    private var hasMorePages = false
-    
+    private var pageInfo = PageInfo()
     
     private let screenHeight = UIScreen.main.bounds.height
     
+    // 보이는 영역에서 최대한 중앙에 맞추기 위한 노력
     var emptyViewHeight: CGFloat {
         // 헤더: 60
         // 카테고리 113
         // 하단 탭바 대충 100
-        let logLimitBannerHeight: CGFloat = (shouldShowLogLimitBanner ? 76.0 : 0.0)
+        let logLimitBannerHeight: CGFloat = (shouldShowLogLimitBanner ? 152.0 : 0.0)
         let otherHeight = 60.0 + 113.0 + logLimitBannerHeight + 150
         return screenHeight - otherHeight
     }
@@ -54,93 +63,113 @@ final class MyLogViewModel: ObservableObject, MessageDisplayable {
     var shouldShowLogLimitBanner: Bool {
         localLogsCount >= LogPolicy.warningLogCount // 18개 이상이면 뜬다
             && !isLogLimitBannerDismissed // 한번 닫으면 안뜬다.
-            && !AuthManager.shared.isLoggedIn // 로그아웃 상태일때만
+            && !isLoggedIn // 로그아웃 상태일때만
     }
 
     // MARK: - Init
 
-    init(useCase: MyLogUseCaseProtocol) {
+    init(useCase: MyLogUseCaseProtocol, authStateProvider: AuthStateProviding) {
         self.useCase = useCase
+        self.authStateProvider = authStateProvider
+        bindAuthState()
 
         // 배너 닫힘 상태 불러오기
         self.isLogLimitBannerDismissed = useCase.getIsLogLimitBannerDismissed()
 
-        loadLogs()
+    }
+    
+    /// 로그인 여부 옵저빙
+    private func bindAuthState() {
+        authStateProvider.isLoggedInPublisher
+            .receive(on: DispatchQueue.main)
+            .assign(to: &$isLoggedIn)
+        
+        
+        // 변화에 반응 (기존 .shouldRefresh 대체)
+        authStateProvider.isLoggedInPublisher
+            .dropFirst()                       // 구독 시점 초기값 제외
+            .removeDuplicates()
+            .receive(on: DispatchQueue.main)
+            .sink { [weak self] loggedIn in
+                print(">>>>> 로그인 여부 변경 \(loggedIn)")
+                self?.refreshLogs()
+            }
+            .store(in: &cancellables)
     }
 
     // MARK: - Input Methods
-
-    /// 모든 로그를 불러오기
-    func loadLogs() {
-        // 중복 호출 방지
-        guard isLoading == false && isLoadingMore == false
-        else { return }
-
-        isLoading = true
-        Task {
-            // 페이지 초기화
-            currentPage = 0
-            hasMorePages = false
-
-            let isLoggedIn = AuthManager.shared.isLoggedIn
-            let result = await useCase.fetchAllLogs(isLoggedIn: isLoggedIn)
-
-            myLogs = result.logs.map { $0.toViewData() }
-
-            // 로컬 로그 개수 업데이트
-            localLogsCount = useCase.getLocalLogsCount()
-
-            // 페이지네이션 정보 업데이트
-            if let pageInfo = result.pageInfo {
-                currentPage = pageInfo.currentPage
-                hasMorePages = pageInfo.hasNext
-            }
-
-            isLoading = false
-            Logger.success("로그 불러오기 성공: \(myLogs.count)개, 로컬: \(localLogsCount)개, hasMore: \(hasMorePages)")
-        }
+    
+    // 로컬 로그 개수 업데이트
+    func updateLocalLogsCount(){
+        localLogsCount = useCase.getLocalLogsCount()
     }
-
+    
+    /// 카테고리  선택함
+    func selectCategory(_ category: CategoryFilterViewData) {
+        selectedCategory = category
+        refreshLogs()
+    }
+    
+    func refreshLogs(){
+        pageInfo.reset() // 페이지 초기화
+        loadLogs()
+    }
+    
     /// 다음 페이지 로그 불러오기 (서버 로그만)
     func loadMore() {
-        // 중복 호출 방지
-        guard !isLoading && !isLoadingMore else { return }
-
+        guard isLoggedIn else { return }
         // 다음 페이지가 없으면 리턴
-        guard hasMorePages else {
-            return
-        }
-
-        // 로그인 상태가 아니면 리턴 (서버 로그만 페이지네이션)
-        guard AuthManager.shared.isLoggedIn else {
-            return
-        }
-
-        isLoadingMore = true
-        Task {
-            let nextPage = currentPage + 1
-            let result = await useCase.fetchServerLogs(page: nextPage)
-
-            // 새로운 로그를 기존 로그와 합치고 정렬(최신순)
-            let newLogs = result.logs.map { $0.toViewData() }
-            myLogs = (myLogs + newLogs).sorted { $0.timeStamp > $1.timeStamp }
-            
-            // 페이지네이션 정보 업데이트
-            if let pageInfo = result.pageInfo {
-                currentPage = pageInfo.currentPage
-                hasMorePages = pageInfo.hasNext
-            } else {
-                hasMorePages = false
+        guard pageInfo.hasNext else { return }
+        pageInfo.nextPage()
+        loadLogs()
+    }
+    
+    /// 로그 불러오기
+    private func loadLogs(){
+        
+        // 이전 요청 취소
+        loadTask?.cancel()
+        
+        isLoading = true
+        loadTask = Task {
+            do {
+                let result = try await useCase.fetchLogos(
+                    by: selectedCategory.category,
+                    pageInfo: pageInfo
+                )
+                // 취소된 요청의 결과 반영 방지
+                guard !Task.isCancelled else { return }
+                
+                let logs = result.logs.map { $0.toViewData()}
+                if pageInfo.currentPage == 0 { // 첫페이지면 데이터 교체
+                    myLogs = logs
+                } else { // 그 다음 페이지면 이어붙이기
+                    myLogs.append(contentsOf: logs)
+                }
+                
+                // 페이지네이션 정보 업데이트
+                pageInfo.updateHasNext(result.hasNext)
+                Logger.success("로그 불러오기 성공: \(myLogs.count)개, hasNextPage: \(pageInfo.hasNext)")
+                
+            } catch is CancellationError {
+                Logger.warning("취소된 요청")
+            } catch {
+                guard !Task.isCancelled else { return }
+                Logger.error("서버 로그 가져오기 실패 \(error)")
+                toastMessage = AppMessage.loadFailed.text
             }
-
-            isLoadingMore = false
-            Logger.success("추가 로그 불러오기 성공: \(newLogs.count)개, 현재 페이지: \(currentPage), hasMore: \(hasMorePages)")
+            isLoading = false
         }
     }
+
 
     /// 로그 제한 배너 닫기
     func dismissLogLimitBanner() {
         isLogLimitBannerDismissed = true
         useCase.dismissLogLimitBanner()
+    }
+    
+    func hideLog(uuid: UUID){
+        myLogs.removeAll { $0.id == uuid }
     }
 }

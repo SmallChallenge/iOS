@@ -12,8 +12,8 @@ import Combine
 // MARK: - Notification Names
 
 extension Notification.Name {
-    static let shouldRefresh = Notification.Name("shouldRefres")
-    static let shouldRefreshMyLog = Notification.Name("shouldRefreshMyLog")
+    
+    static let hideLog = Notification.Name("hideLog")
     
     /// 방금 저장됨
     static let didSaveLog = Notification.Name("savedLog")
@@ -191,10 +191,8 @@ final class PhotoSaveViewModel: ObservableObject, MessageDisplayable {
         isLoading = false
         Logger.success("사진 저장 성공")
         
-        // MyLogView에 새로고침 알림
-        NotificationCenter.default.post(name: .shouldRefreshMyLog, object: nil)
-        
         // MainTabView에 저장됨을 알림. ( -> 사진 저장 후 탭바 '내기록'으로 이동)
+        // + MyLogView에 새로고침 알림
         NotificationCenter.default.post(name: .didSaveLog, object: nil)
         
         // 앰플리튜드 - 사진 저장 완료 (로컬, 서버 구분 없이)

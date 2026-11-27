@@ -24,26 +24,26 @@ public enum AuthRouter {
         agreedToMarketing: Bool
     )
     
-    // 토큰 재발급
-    case refresh(token: String)
+    // 가입 확정 전, 닉네입 설정
+    case setGuestNickname(nickname: String, accessToken: String)
     
-    // 로그아웃
-    case logout
     // 가입 취소
     case cancelRegisteration(accessToken: String)
     
     // 회원탈퇴
     case withdrawal
     
+    // 로그아웃
+    case logout
     
-    
-    
-    
-    // 닉네임 설정
-    case setNickname(nickname: String, accessToken: String?)
+    // 토큰 재발급
+    case refresh(token: String)
     
     // 유저정보 조회
     case userInfo
+    
+    // 닉네임 설정
+    case setNickname(nickname: String)
     
     // 버전확인
     case checkCurrentVersion(version: String)
@@ -66,7 +66,7 @@ extension AuthRouter: Router {
         case .refresh:
             "api/v1/auth/refresh"
 
-        case .setNickname:
+        case .setNickname, .setGuestNickname:
             "api/v1/auth/nickname"
 
         case .activeAccount:
@@ -127,7 +127,13 @@ extension AuthRouter: Router {
         case .userInfo:
             return nil
             
-        case let .setNickname(nickname, _):
+        case let .setNickname(nickname):
+            let params: Parameters = [
+                "nickname" : nickname,
+            ]
+            return params
+            
+        case let .setGuestNickname(nickname, _):
             let params: Parameters = [
                 "nickname" : nickname,
             ]
@@ -178,14 +184,7 @@ extension AuthRouter: Router {
         case let .cancelRegisteration(token):
             return ["Authorization": "Bearer \(token)"]
 
-        case let .setNickname(_, token):
-            guard let token else { return nil }
-            return ["Authorization": "Bearer \(token)"]
-
-        case .withdrawal, .userInfo:
-            guard let token = AuthManager.shared.getAccessToken() else {
-                return nil
-            }
+        case let .setGuestNickname(_, token):
             return ["Authorization": "Bearer \(token)"]
 
         default:
@@ -221,8 +220,9 @@ public protocol AuthApiClientProtocol {
     /// 토큰 재발급
     func refreshToken(refreshToken token: String) async -> Result<RefreshDto, NetworkError>
     
-    // 닉네임 설정
-    func setNickname(nickname: String, accessToken token: String?) async -> Result<SetNicknameDto, NetworkError>
+    // 닉네임 설정 (가입 확정 전, 후)
+    func setGuestNickname(nickname: String, accessToken token: String) async -> Result<SetNicknameDto, NetworkError>
+    func setNickname(nickname: String) async -> Result<SetNicknameDto, NetworkError>
     
     /// 가입 취소
     func cancelRegisteration(accessToken: String) async -> Result<CancelRegisterationDto, NetworkError>
@@ -261,9 +261,13 @@ public class AuthApiClient: ApiClient<AuthRouter>, AuthApiClientProtocol {
     }
 
     /// 닉네임 설정
-    public func setNickname(nickname: String, accessToken token: String?) async -> Result<SetNicknameDto, NetworkError> {
-        await request(AuthRouter.setNickname(nickname: nickname, accessToken: token))
+    public func setGuestNickname(nickname: String, accessToken token: String) async -> Result<SetNicknameDto, NetworkError>{
+        await request(AuthRouter.setGuestNickname(nickname: nickname, accessToken: token))
     }
+    public func setNickname(nickname: String) async -> Result<SetNicknameDto, NetworkError>{
+        await request(AuthRouter.setNickname(nickname: nickname))
+    }
+    
     
     /// 약관 동의 받기 (계정 활성화)
     public func activeAccount(accessToken token: String, agreedToPrivacyPolicy: Bool, agreedToTermsOfService: Bool, agreedToMarketing: Bool) async -> Result<ActiveAccountDto, NetworkError> {

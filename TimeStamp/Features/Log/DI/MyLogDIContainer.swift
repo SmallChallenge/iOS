@@ -20,16 +20,26 @@ struct MyLogDIContainer: MyLogDIContainerProtocol {
 
     // MARK: - Dependencies
 
-    private let localDataSource: LocalTimeStampLogDataSourceProtocol
     private let session: Session
+    private let authRepository: AuthRepositoryProtocol
+    private let localDataSource: LocalTimeStampLogDataSourceProtocol
     private let settingsRepository: SettingsDataSourceProtocol
+    
+    // Auth
+    private let authStateProviding: AuthStateProviding
 
     // MARK: - Initializer
 
-    init(session: Session, localDataSource: LocalTimeStampLogDataSourceProtocol, settingsRepository: SettingsDataSourceProtocol) {
+    init(session: Session,
+         localDataSource: LocalTimeStampLogDataSourceProtocol,
+         settingsRepository: SettingsDataSourceProtocol,
+         authRepository: AuthRepositoryProtocol,
+         authStateProviding: AuthStateProviding) {
         self.session = session
         self.localDataSource = localDataSource
         self.settingsRepository = settingsRepository
+        self.authRepository = authRepository
+        self.authStateProviding = authStateProviding
     }
     
     private func makeMyLogApiClient() -> MyLogApiClientProtocol {
@@ -62,16 +72,19 @@ struct MyLogDIContainer: MyLogDIContainerProtocol {
     }
 
     private func makeMyLogViewModel() -> MyLogViewModel {
-        return MyLogViewModel(useCase: makeMyLogUseCase())
+        return MyLogViewModel(useCase: makeMyLogUseCase(), authStateProvider: authStateProviding)
     }
     
     private func makeMyLogUseCase() -> MyLogUseCaseProtocol {
-        return MyLogUseCase(repository: makeMyLogRepository(), settingsRepository: settingsRepository)
+        return MyLogUseCase(
+            repository: makeMyLogRepository(),
+            settingsRepository: settingsRepository,
+            authRepository: authRepository)
     }
 
     func makeMyLogView(selectedLog: Binding<TimeStampLogViewData?>) -> MyLogView {
         let viewModel = makeMyLogViewModel()
-        return MyLogView(viewModel: viewModel, diContainer: self, selectedLog: selectedLog)
+        return MyLogView(viewModel: viewModel, selectedLog: selectedLog)
     }
 
     // MARK: - LogDetailView
@@ -87,10 +100,23 @@ struct MyLogDIContainer: MyLogDIContainerProtocol {
 
     private func makeLogDetailViewModel(log: TimeStampLogViewData, onGoBack: @escaping () -> Void) -> LogDetailViewModel {
         let viewModel = LogDetailViewModel(log: log, useCase: makeLogDetailUseCase())
-        viewModel.onDeleteSuccess = {
+        viewModel.onDeleteSuccess = { logUuid in
             // 삭제 성공 시 MyLog 새로고침 및 뒤로가기
-            NotificationCenter.default.post(name: .shouldRefreshMyLog, object: nil)
+            NotificationCenter.default.post(
+                name: .hideLog,
+                object: nil,
+                userInfo: ["logId": logUuid]
+            )
             onGoBack()
+        }
+        viewModel.onChangedCategory = {
+            logUuid in
+               // 카테고리 변경 시 MyLog 새로고침 및 뒤로가기
+               NotificationCenter.default.post(
+                   name: .hideLog,
+                   object: nil,
+                   userInfo: ["logId": logUuid]
+               )
         }
         return viewModel
     }
@@ -126,6 +152,8 @@ struct MyLogDIContainer: MyLogDIContainerProtocol {
 
 // MARK: --------------------------------- Mock --------------------------------
 struct MockMyLogDIContainer: MyLogDIContainerProtocol {
+    private let authStateProviding: AuthStateProviding = MockAuthStateProvider()
+    
     
     // MARK: MainTab
     func makeMainTabView(selectedTab: Int) -> MainTabView {
@@ -151,11 +179,18 @@ struct MockMyLogDIContainer: MyLogDIContainerProtocol {
     // MARK: MyLogView
     func makeMyLogView(selectedLog: Binding<TimeStampLogViewData?>) -> MyLogView {
         let usecase = MockMyLogUseCase()
-        let viewModel = MyLogViewModel(useCase: usecase)
-        return MyLogView(viewModel: viewModel, diContainer: self, selectedLog: selectedLog)
+        let viewModel = MyLogViewModel(
+            useCase: usecase,
+            authStateProvider: authStateProviding
+        )
+        return MyLogView(viewModel: viewModel, selectedLog: selectedLog)
     }
 
     struct MockMyLogUseCase: MyLogUseCaseProtocol {
+        func fetchLogos(by category: Category?, pageInfo: PageInfo) async -> (logs: [TimeStampLog], hasNext: Bool) {
+            return ([], false)
+        }
+        
         func getIsLogLimitBannerDismissed() -> Bool {
             false
         }
@@ -164,13 +199,6 @@ struct MockMyLogDIContainer: MyLogDIContainerProtocol {
         
         func getLocalLogsCount() -> Int {
             return 0
-        }
-
-        func fetchAllLogs(isLoggedIn: Bool) async -> (logs: [TimeStampLog], pageInfo: PageInfo?) {
-            ([], nil)
-        }
-        func fetchServerLogs(page: Int) async -> (logs: [TimeStampLog], pageInfo: PageInfo?) {
-            ([], nil)
         }
     }
 
