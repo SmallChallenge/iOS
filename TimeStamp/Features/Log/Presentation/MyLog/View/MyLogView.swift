@@ -9,10 +9,7 @@ import SwiftUI
 
 struct MyLogView: View {
 
-    private let diContainer: MyLogDIContainerProtocol
     @StateObject private var viewModel: MyLogViewModel
-    @ObservedObject private var authManager = AuthManager.shared
-    @State private var selectedCategory: CategoryFilterViewData = .all
     @Binding var selectedLog: TimeStampLogViewData?
 
     // 사진 간격
@@ -21,28 +18,13 @@ struct MyLogView: View {
         GridItem(.flexible(), spacing: 1),
         GridItem(.flexible(), spacing: 1)
     ]
+    
+    // 최초 데이터 로드 여부
+    @State private var hasLoadedInitialData: Bool = false
 
-    init(viewModel: MyLogViewModel, diContainer: MyLogDIContainerProtocol, selectedLog: Binding<TimeStampLogViewData?>){
-        self.diContainer = diContainer
+    init(viewModel: MyLogViewModel, selectedLog: Binding<TimeStampLogViewData?>){
         _viewModel = StateObject(wrappedValue: viewModel)
         _selectedLog = selectedLog
-    }
-
-    /// 선택된 카테고리로 필터링된 로그
-    private var filteredLogs: [TimeStampLogViewData] {
-        if selectedCategory == .all {
-            return viewModel.myLogs
-        } else {
-            return viewModel.myLogs.filter { log in
-                switch selectedCategory {
-                case .all: return true
-                case .study: return log.category == .study
-                case .health: return log.category == .health
-                case .food: return log.category == .food
-                case .etc: return log.category == .etc
-                }
-            }
-        }
     }
 
     var body: some View {
@@ -50,28 +32,29 @@ struct MyLogView: View {
                 ScrollView {
                     VStack (spacing: .zero){
                         
-                        // 카테고리
+                        // - 카테고리 탭 - //
                         CategoryView(
-                            selectedCategory: $selectedCategory,
+                            selectedCategory: viewModel.selectedCategory,
                             availableCategories: CategoryFilterViewData.allCases
-                        )
+                        ){ category in
+                            viewModel.selectCategory(category)
+                        }
                         
-                        // 로컬 20개 제한 안내 팝업
+                        // - 로컬 20개 제한 안내 팝업 - //
                         if viewModel.shouldShowLogLimitBanner {
                             LogLimitBannerView
                         }
 
-                        // 사진 목록
-                        if filteredLogs.isEmpty {
+                        // - 사진 목록 - //
+                        if viewModel.myLogs.isEmpty {
                             // 해당 카테고리 해당되는 사진 없음
                             MyLogEmptyView()
                                 .frame(minHeight: viewModel.emptyViewHeight)
-                            
-                            
+                                                        
                         } else {
                             // 해당 카테고리 해당되는 사진 있음
                             LazyVGrid(columns: columns, spacing: 1) {
-                                ForEach(Array(filteredLogs.enumerated()), id: \.element.id) { index, log in
+                                ForEach(Array(viewModel.myLogs.enumerated()), id: \.element.id) { index, log in
                                     Button(action: {
                                         selectedLog = log
                                     }, label: {
@@ -79,14 +62,17 @@ struct MyLogView: View {
                                             .aspectRatio(1, contentMode: .fill)
                                     })
                                     .id(log.id)
-                                    .onAppear {
-                                        if index == filteredLogs.count - 1 {
+                                    .onAppear { // 페이징
+                                        if index == viewModel.myLogs.count - 1 {
                                             viewModel.loadMore()
                                         }
                                     }
                                 }
                             }
                         }
+                        
+                        Color.clear
+                            .frame(height: 58)
                        
                         // 추가 로딩 인디케이터
                         if viewModel.isLoadingMore {
@@ -98,22 +84,32 @@ struct MyLogView: View {
                         }
                     }
                 }
+                .refreshable {
+                    viewModel.refreshLogs()
+                }
                 .scrollDismissesKeyboard(.interactively)
         }
         .mainBackgourndColor()
         .loading(viewModel.isLoading)
-        .onAppear {
-            viewModel.loadLogs()
+        .task {
+            if !hasLoadedInitialData {
+                // 최초 한번만 목록 불러오기
+                viewModel.refreshLogs()
+                hasLoadedInitialData = true
+            }
+            viewModel.updateLocalLogsCount()
         }
-        .onReceive(NotificationCenter.default.publisher(for: .shouldRefreshMyLog)) { _ in
+        .onReceive(NotificationCenter.default.publisher(for: .didSaveLog)) { _ in
             // 사진 저장 후 목록 새로고침
-            selectedCategory = .all
-            viewModel.loadLogs()
+            viewModel.selectCategory(.all)
         }
-        .onReceive(NotificationCenter.default.publisher(for: .shouldRefresh)) { _ in
-            // 로그인 후 목록 새로고침
-            viewModel.loadLogs()
+        .onReceive(NotificationCenter.default.publisher(for: .hideLog)) { notification in
+            guard let logUUId = notification.userInfo?["logId"] as? UUID else {
+                return
+            }
+            viewModel.hideLog(uuid: logUUId)
         }
+        
         .toast(message: $viewModel.toastMessage)
     }
     
@@ -169,7 +165,6 @@ struct MyLogView: View {
 
         return result
     }
-
 }
 
 #Preview {

@@ -15,7 +15,6 @@ struct CommunityView: View {
         case block(nickname: String)
     }
 
-    @ObservedObject private var authManager = AuthManager.shared
     @StateObject private var viewModel: CommunityViewModel
     @State private var activePopup: PopupType?
     @State private var showLoginView: Bool = false
@@ -64,10 +63,6 @@ struct CommunityView: View {
                 showLoginView = false
             }
         })
-        .onReceive(NotificationCenter.default.publisher(for: .shouldRefresh)) { _ in
-            // 로그인 후 목록 새로고침
-            viewModel.loadFeeds(isRefresh: true)
-        }
         .onChange(of: triggerRefresh) { shouldRefresh in
             if shouldRefresh {
                 // 프로그래밍 방식으로 refresh 트리거
@@ -114,19 +109,19 @@ struct CommunityView: View {
                             }
                         ),
                         onReport: {
-                            guard authManager.isLoggedIn else {
+                            guard viewModel.isLoggedIn else {
                                 activePopup = .login
                                 return
                             }
                             activePopup = .report(imageId: feedViewData.imageId)
                         }, onBlock: {
-                            guard authManager.isLoggedIn else {
+                            guard viewModel.isLoggedIn else {
                                 activePopup = .login
                                 return
                             }
                             activePopup = .block(nickname: feedViewData.nickname)
                         }, onLike: {
-                            guard authManager.isLoggedIn else {
+                            guard viewModel.isLoggedIn else {
                                 activePopup = .login
                                 return
                             }

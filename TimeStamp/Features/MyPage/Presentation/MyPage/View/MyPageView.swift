@@ -11,7 +11,6 @@ import MessageUI
 
 /// 마이페이지 화면
 struct MyPageView: View {
-    @ObservedObject private var authManager = AuthManager.shared
     @StateObject private var viewModel: MyPageViewModel
     let onGoBack: () -> Void
     
@@ -53,7 +52,7 @@ struct MyPageView: View {
         let build = Bundle.main.infoDictionary?["CFBundleVersion"] as? String ?? "1"
         
         self.appVersion = "\(version)"
-        self.appVerseion_build = "\(version)+(\(build))"
+        self.appVerseion_build = "\(version)(\(build))"
 
         let appearance = UINavigationBarAppearance()
         appearance.backgroundColor = UIColor.gray900
@@ -71,7 +70,8 @@ struct MyPageView: View {
                     Spacer()
                         .frame(height: 24)
                     
-                    if authManager.isLoggedIn {
+                    // 유저 프로필 화면 (닉네임)
+                    if viewModel.isLoggedIn {
                         Button {
                             presentUserInfo = true
                         } label: {
@@ -143,7 +143,7 @@ struct MyPageView: View {
                            sendEmail()
                         }
                         
-                        if authManager.isLoggedIn {
+                        if viewModel.isLoggedIn {
                             MyPageMenu("로그아웃", type: .none){
                                 showLogoutPopup = true
                             }
@@ -257,7 +257,7 @@ struct MyPageView: View {
         }
         // 문의 메일 보내기
         .sheet(isPresented: $isShowingMailView) {
-            MailView(userId: "\(authManager.currentUser?.userId ?? -1)")
+            MailView(userId: "\(viewModel.currentUser?.userId ?? -1)")
         }
         .fullScreenCover(isPresented: $showNoticeBoard, content: {
             appDiContainer.makeWebView(url: AppURLs.noticeBoard) {
@@ -276,7 +276,7 @@ struct MyPageView: View {
                 .frame(width: 60, height: 60)
             
             VStack (alignment: .leading, spacing: 4){
-                Text(authManager.currentUser?.nickname ?? "")
+                Text(viewModel.currentUser?.nickname ?? "")
                     .font(.H3)
                     .foregroundStyle(Color.gray50)
                 
@@ -383,7 +383,7 @@ struct MyPageView: View {
     
     private func sendEmail() {
         let recipient = AppURLs.supportEmail
-        let userId = "\(authManager.currentUser?.userId ?? -1)"
+        let userId = "\(viewModel.currentUser?.userId ?? -1)"
         let emailBody = EmailHelper.getSupportEmailBody(userId: userId)
         let subject = "[스탬픽] 서비스 문의"
         
@@ -429,7 +429,7 @@ struct MyPageView: View {
     }
     
     private func copyTokenForTest(){
-        guard let token = authManager.getAccessToken() else {
+        guard let token = AuthManager.shared.getAccessToken() else {
             ToastManager.shared.show("토큰이 없습니다")
             return
         }

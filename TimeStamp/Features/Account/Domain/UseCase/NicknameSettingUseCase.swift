@@ -8,7 +8,8 @@
 import Foundation
 
 protocol NicknameSettingUseCaseProtocol {
-    func setNickname(nickname: String, accessToken: String?) async throws -> NicknameEntity
+    func setNickname(nickname: String) async throws -> NicknameEntity
+    func setGuestNickname(nickname: String, accessToken: String) async throws -> NicknameEntity
     func login(entity: LoginEntity)
     func updateUserInfo(nickname: String)
 }
@@ -24,8 +25,19 @@ final class NicknameSettingUseCase: NicknameSettingUseCaseProtocol {
     
     // MARK: - Methods
     
-    func setNickname(nickname: String, accessToken: String?) async throws -> NicknameEntity {
-        let result = await repository.setNickname(nickName: nickname, accessToken: accessToken)
+    
+    func setNickname(nickname: String) async throws -> NicknameEntity {
+        let result = await repository.setNickname(nickName: nickname)
+        switch result {
+        case let .success(entity):
+            return entity
+        case let .failure(error):
+            throw error
+        }
+    }
+    
+    func setGuestNickname(nickname: String, accessToken: String) async throws -> NicknameEntity {
+        let result = await repository.setGuestNickname(nickName: nickname, accessToken: accessToken)
         switch result {
         case let .success(entity):
             return entity

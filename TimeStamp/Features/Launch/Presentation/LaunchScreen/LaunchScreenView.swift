@@ -93,7 +93,8 @@ struct LaunchScreenView: View {
 }
 
 #Preview {
-    let repository = LaunchRepository(authApiClient: AuthApiClient(session: SessionFactory().makeSession(for: .dev)))
+    let repository = LaunchRepository(
+        authApiClient: AuthApiClient(session: SessionFactory(tokenStorage: MockTokenStoring()).makeSession(for: .dev)))
     let useCase = LaunchScreenUseCase(repository: repository)
     let viewModel = LaunchScreenViewModel(useCase: useCase)
     LaunchScreenView(

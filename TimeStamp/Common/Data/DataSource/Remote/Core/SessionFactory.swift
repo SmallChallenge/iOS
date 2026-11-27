@@ -10,11 +10,14 @@ import Alamofire
 
 /// SessionFactoryProtocol의 기본 구현체
 /// Alamofire Session을 환경에 맞게 생성
-public final class SessionFactory {
+final class SessionFactory {
 
-    public init() {}
+    let tokenStorage: TokenStoring
+    init(tokenStorage: TokenStoring) {
+        self.tokenStorage = tokenStorage
+    }
 
-    public func makeSession(for env: NetworkEnvironment) -> Session {
+    func makeSession(for env: NetworkEnvironment) -> Session {
         let configuration = URLSessionConfiguration.af.default
         configuration.timeoutIntervalForRequest = 20
         configuration.timeoutIntervalForResource = 30
@@ -31,7 +34,7 @@ public final class SessionFactory {
         let monitors: [EventMonitor] = []
         #endif
 
-        let interceptor = APIRequestInterceptor()
+        let interceptor = APIRequestInterceptor(tokenStorage: tokenStorage)
 
         return Session(configuration: configuration,
                        interceptor: interceptor,

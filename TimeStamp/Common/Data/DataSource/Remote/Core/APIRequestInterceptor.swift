@@ -13,7 +13,10 @@ import Alamofire
 public final class APIRequestInterceptor: RequestInterceptor {
 
     // TokenRefreshService는 싱글톤 사용
-    public init() {}
+    private let tokenStorage: TokenStoring
+    init(tokenStorage: TokenStoring) {
+        self.tokenStorage = tokenStorage
+    }
 
     // Adapt request if needed (e.g., attach auth headers)
     public func adapt(_ urlRequest: URLRequest, for session: Session, completion: @escaping (Result<URLRequest, Error>) -> Void) {
@@ -24,7 +27,7 @@ public final class APIRequestInterceptor: RequestInterceptor {
         request.setValue("application/json", forHTTPHeaderField: "Accept")
 
         // 인증 토큰 있으면 추가
-         if let token = AuthManager.shared.getAccessToken() {
+         if let token = tokenStorage.getAccessToken() {
              request.setValue("Bearer \(token)", forHTTPHeaderField: "Authorization")
          }
 

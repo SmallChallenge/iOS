@@ -11,13 +11,14 @@ import UIKit
 
 final class LogDetailViewModel: ObservableObject, MessageDisplayable {
 
-    /// origin data
+    /// origin data (이전화면에서 넘어옴)
     private let originLog: TimeStampLogViewData
     private let categoryMapper = CategoryMapper()
 
     // MARK: - Dependencies
     private let useCase: LogDetailUseCaseProtocol
-    var onDeleteSuccess: (() -> Void)?
+    var onDeleteSuccess: ((UUID) -> Void)?
+    var onChangedCategory: ((UUID) -> Void)?
 
     init(log: TimeStampLogViewData, useCase: LogDetailUseCaseProtocol) {
         self.originLog = log
@@ -117,7 +118,13 @@ final class LogDetailViewModel: ObservableObject, MessageDisplayable {
                 Logger.error("로그 수정 실패: \(error)")
                 show(.editFailed)
             }
+            
             isLoading = false
+            
+            // 카테고리를 수정한 경우, 홈화면으로 알려서 목록 업데이트 해야함..
+            if category != originLog.category {
+                onChangedCategory?(originLog.id)
+            }
         }
     }
 
@@ -175,7 +182,7 @@ final class LogDetailViewModel: ObservableObject, MessageDisplayable {
             do {
                 try await useCase.deleteLogFromServer(logId: remoteImage.id)
                 isLoading = false
-                onDeleteSuccess?()
+                onDeleteSuccess?(originLog.id)
                 ToastManager.shared.show(AppMessage.deleteSuccess.text)
             } catch {
                 isLoading = false
@@ -195,7 +202,7 @@ final class LogDetailViewModel: ObservableObject, MessageDisplayable {
             do {
                 try await useCase.deleteLogFromLocal(logId: originLog.id)
                 isLoading = false
-                onDeleteSuccess?()
+                onDeleteSuccess?(originLog.id)
                 ToastManager.shared.show(AppMessage.deleteSuccess.text)
             } catch {
                 isLoading = false
