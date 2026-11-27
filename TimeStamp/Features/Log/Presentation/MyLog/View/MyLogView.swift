@@ -84,6 +84,9 @@ struct MyLogView: View {
                         }
                     }
                 }
+                .refreshable {
+                    viewModel.refreshLogs()
+                }
                 .scrollDismissesKeyboard(.interactively)
         }
         .mainBackgourndColor()
