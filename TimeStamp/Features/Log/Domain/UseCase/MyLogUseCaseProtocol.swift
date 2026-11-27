@@ -8,15 +8,8 @@
 import Foundation
 
 protocol MyLogUseCaseProtocol {
-    
-    /// 모든 타임스탬프 로그를 조회
-    /// - Returns: (TimeStampLog Entity 배열, PageInfo Entity) (실패 시 빈 배열과 nil)
-    func fetchAllLogs() async -> (logs: [TimeStampLog], pageInfo: PageInfo?)
 
-    /// 서버 로그 가져오기 (페이지네이션)
-    /// - Parameter page: 가져올 페이지 번호 (0부터 시작)
-    /// - Returns: (TimeStampLog Entity 배열, PageInfo Entity) (실패 시 빈 배열과 nil)
-    func fetchServerLogs(page: Int) async -> (logs: [TimeStampLog], pageInfo: PageInfo?)
+    func fetchLogos(by category: Category?, pageInfo: PageInfo) async -> (logs: [TimeStampLog], hasNext: Bool) 
 
     /// 로컬 타임스탬프 로그의 개수를 조회
     /// - Returns: 로컬에 저장된 로그의 개수

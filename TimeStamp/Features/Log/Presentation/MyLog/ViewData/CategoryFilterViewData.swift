@@ -34,3 +34,15 @@ enum CategoryFilterViewData: CaseIterable {
         }
     }
 }
+
+extension CategoryFilterViewData {
+    var category: Category? {
+        switch self {
+        case .all: return nil
+        case .study: return .study
+        case .health: return .health
+        case .food: return .food
+        case .etc: return .etc
+        }
+    }
+}

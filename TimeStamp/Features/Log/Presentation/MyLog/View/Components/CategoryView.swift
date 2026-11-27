@@ -28,9 +28,9 @@ struct CategoryView: View {
                         type: category,
                         isSelected: selectedCategory == category
                     ) {
-                        //selectedCategory = category
                         onTapCategory(category)
                     }
+                    .disabled(selectedCategory == category)
                 }
             }
             .padding(.vertical, 16)

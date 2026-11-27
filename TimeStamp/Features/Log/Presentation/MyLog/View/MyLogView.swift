@@ -9,7 +9,6 @@ import SwiftUI
 
 struct MyLogView: View {
 
-    private let diContainer: MyLogDIContainerProtocol
     @StateObject private var viewModel: MyLogViewModel
     @Binding var selectedLog: TimeStampLogViewData?
 
@@ -19,31 +18,14 @@ struct MyLogView: View {
         GridItem(.flexible(), spacing: 1),
         GridItem(.flexible(), spacing: 1)
     ]
+    
+    // 최초 데이터 로드 여부
+    @State private var hasLoadedInitialData: Bool = false
 
-    init(viewModel: MyLogViewModel, diContainer: MyLogDIContainerProtocol, selectedLog: Binding<TimeStampLogViewData?>){
-        self.diContainer = diContainer
+    init(viewModel: MyLogViewModel, selectedLog: Binding<TimeStampLogViewData?>){
         _viewModel = StateObject(wrappedValue: viewModel)
         _selectedLog = selectedLog
     }
-
-    /// 선택된 카테고리로 필터링된 로그
-    /*
-    private var filteredLogs: [TimeStampLogViewData] {
-        if selectedCategory == .all {
-            return viewModel.myLogs
-        } else {
-            return viewModel.myLogs.filter { log in
-                switch selectedCategory {
-                case .all: return true
-                case .study: return log.category == .study
-                case .health: return log.category == .health
-                case .food: return log.category == .food
-                case .etc: return log.category == .etc
-                }
-            }
-        }
-    }
-    */
 
     var body: some View {
         VStack(spacing: .zero) {
@@ -88,6 +70,9 @@ struct MyLogView: View {
                                 }
                             }
                         }
+                        
+                        Color.clear
+                            .frame(height: 58)
                        
                         // 추가 로딩 인디케이터
                         if viewModel.isLoadingMore {
@@ -103,18 +88,25 @@ struct MyLogView: View {
         }
         .mainBackgourndColor()
         .loading(viewModel.isLoading)
-        .onAppear {
-            viewModel.loadLogs()
+        .task {
+            if !hasLoadedInitialData {
+                // 최초 한번만 목록 불러오기
+                viewModel.refreshLogs()
+                hasLoadedInitialData = true
+            }
+            viewModel.updateLocalLogsCount()
         }
         .onReceive(NotificationCenter.default.publisher(for: .shouldRefreshMyLog)) { _ in
-            // 사진 저장 후 목록 새로고침
-            viewModel.selectedCategory = .all
-            viewModel.loadLogs()
+            // 로그인 , 사진 저장 후 목록 새로고침
+            viewModel.selectCategory(.all)
         }
-        .onReceive(NotificationCenter.default.publisher(for: .shouldRefresh)) { _ in
-            // 로그인 후 목록 새로고침
-            viewModel.loadLogs()
+        .onReceive(NotificationCenter.default.publisher(for: .hideLog)) { notification in
+            guard let logUUId = notification.userInfo?["logId"] as? UUID else {
+                return
+            }
+            viewModel.hideLog(uuid: logUUId)
         }
+        
         .toast(message: $viewModel.toastMessage)
     }
     

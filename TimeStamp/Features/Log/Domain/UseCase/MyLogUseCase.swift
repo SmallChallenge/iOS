@@ -28,46 +28,52 @@ struct MyLogUseCase: MyLogUseCaseProtocol {
 
     // MARK: - Methods
     
-    
-    /// 타임스탬프 로그를 조회 (서버 + 로컬)
-    func fetchAllLogs() async -> (logs: [TimeStampLog], pageInfo: PageInfo?) {
+    func fetchLogos(by category: Category?, pageInfo: PageInfo) async -> (logs: [TimeStampLog], hasNext: Bool) {
+        var logs: [TimeStampLog] = []
+        // 첫페이지면 로컬로그도 가져오기
+        if pageInfo.currentPage == 0 {
+            // 로컬 로그 가져오기
+            do {
+                if let category {
+                    logs = try repository.fetchLogsFromLocal(by: category.rawValue)
+                } else {
+                    logs = try repository.fetchAllLogsFromLocal()
+                }
+                
+            } catch {
+                Logger.error("로컬 로그 가져오기 실패: \(error)")
+            }
+        }
+        // 서버에서도 가져오기 (로그인 상태만)
+        guard authRepository.isLoggedIn() else {
+            return (logs, false)
+        }
         
-        let isLoggedIn = authRepository.isLoggedIn()
-
-        // 로컬 로그 가져오기
-        let localLogs: [TimeStampLog]
+        guard pageInfo.hasNext else { return (logs, false) }
+        var hasNextPage = false
+        
         do {
-            localLogs = try repository.fetchAllLogsFromLocal()
+            let result = try await repository.fetchAllLogFromServer(category: category?.rawValue, page: pageInfo.currentPage)
+            logs.append(contentsOf: result.logs)
+            hasNextPage = result.hasNext
         } catch {
-            Logger.error("로컬 로그 가져오기 실패: \(error)")
-            localLogs = []
+            Logger.error("서버 로그 가져오기 실패 \(error)")
         }
-
-        // 서버 로그 가져오기 (로그인 상태일 때만)
-        var serverLogs: [TimeStampLog] = []
-        var pageInfo: PageInfo? = nil
-
-        if isLoggedIn {
-            let result = await fetchServerLogs(page: 0)
-            serverLogs = result.logs
-            pageInfo = result.pageInfo
-        }
-
-        // 로컬 로그와 서버 로그를 합치고, timeStamp 기준으로 최신순 정렬
-        let allLogs = localLogs + serverLogs
-        let sortedLogs = allLogs.sorted { $0.timeStamp > $1.timeStamp }
-
-        return (logs: sortedLogs, pageInfo: pageInfo)
+        
+        // timeStamp 기준으로 최신순 정렬
+        let sortedLogs = logs.sorted { $0.timeStamp > $1.timeStamp }
+        return (logs: sortedLogs, hasNext: hasNextPage)
     }
+    
 
     /// 서버 로그 가져오기 (+ 페이지네이션)
-    func fetchServerLogs(page: Int) async -> (logs: [TimeStampLog], pageInfo: PageInfo?) {
+    func fetchServerLogs(by category: Category?, pageInfo: PageInfo) async -> (logs: [TimeStampLog], hasNext: Bool) {
         do {
-            let result = try await repository.fetchAllLogFromServer(page: page)
-            return (logs: result.logs, pageInfo: result.pageInfo)
+            let result = try await repository.fetchAllLogFromServer(category: category?.rawValue, page: pageInfo.currentPage)
+            return (logs: result.logs, hasNext: result.hasNext)
         } catch {
-            Logger.error("서버 로그 가져오기 실패 (page: \(page)): \(error)")
-            return (logs: [], pageInfo: nil)
+            Logger.error("서버 로그 가져오기 실패 (page: \(pageInfo.currentPage)): \(error)")
+            return (logs: [], hasNext: true)
         }
     }
 
@@ -87,11 +93,5 @@ struct MyLogUseCase: MyLogUseCaseProtocol {
     
     func dismissLogLimitBanner() {
         settingsRepository.setIsLogLimitBannerDismissed(true)
-    }
-    
-    // MARK: - 리뷰 유도 팝업
-    
-    func checkShowReviewPopup(){
-        
     }
 }

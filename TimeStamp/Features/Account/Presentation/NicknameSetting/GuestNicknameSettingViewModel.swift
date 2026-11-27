@@ -119,3 +119,8 @@ class GuestNicknameSettingViewModel: NicknameSettingViewModelProtocol{
         }
     }
 }
+
+private enum NicknameErrorCode: String {
+    case nicknameAlreadyExists = "NICKNAME_ALREADY_EXISTS"
+    case duplicateNickname = "DUPLICATE_NICKNAME"
+}

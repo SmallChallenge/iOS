@@ -64,7 +64,7 @@ struct CommunityView: View {
                 showLoginView = false
             }
         })
-        .onReceive(NotificationCenter.default.publisher(for: .shouldRefresh)) { _ in
+        .onReceive(NotificationCenter.default.publisher(for: .shouldRefreshMyLog)) { _ in
             // 로그인 후 목록 새로고침
             viewModel.loadFeeds(isRefresh: true)
         }

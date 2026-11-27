@@ -28,10 +28,16 @@ final class MyLogRepository: MyLogRepositoryProtocol {
     }
 
     // MARK: - 로컬 로그 가져오기
-
+    
     /// 모든 타임스탬프 로그를 조회
     func fetchAllLogsFromLocal() throws -> [TimeStampLog] {
         let dtos = try localDataSource.readAll()
+        return dtos.map { $0.toEntity() }
+    }
+    
+    /// 카테고리별 로컬 타임스탬프 로그 조회
+    func fetchLogsFromLocal(by category: String) throws -> [TimeStampLog] {
+        let dtos = try localDataSource.readByCategory(category)
         return dtos.map { $0.toEntity() }
     }
 
@@ -42,14 +48,14 @@ final class MyLogRepository: MyLogRepositoryProtocol {
     
     // MARK: - 서버 로그 가져오기
     
-    func fetchAllLogFromServer(page: Int) async throws -> (logs: [TimeStampLog], pageInfo: PageInfo) {
-        let result = await apiClient.fetchMyLogList(category: nil, page: page, size: pageSize)
+    func fetchAllLogFromServer(category: String?, page: Int) async throws -> (logs: [TimeStampLog], hasNext: Bool) {
+        let result = await apiClient.fetchMyLogList(category: category, page: page, size: pageSize)
 
         switch result {
         case .success(let myLogsDto):
             let logs = myLogsDto.logs.map { $0.toEntity() }
             let pageInfo = myLogsDto.pageInfo.toEntity()
-            return (logs: logs, pageInfo: pageInfo)
+            return (logs: logs, hasNext: pageInfo.hasNext)
 
         case .failure(let error):
             Logger.error("사진 목록 가져오기 요청 실패: \(error)")

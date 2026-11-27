@@ -84,7 +84,7 @@ struct MyLogDIContainer: MyLogDIContainerProtocol {
 
     func makeMyLogView(selectedLog: Binding<TimeStampLogViewData?>) -> MyLogView {
         let viewModel = makeMyLogViewModel()
-        return MyLogView(viewModel: viewModel, diContainer: self, selectedLog: selectedLog)
+        return MyLogView(viewModel: viewModel, selectedLog: selectedLog)
     }
 
     // MARK: - LogDetailView
@@ -100,10 +100,23 @@ struct MyLogDIContainer: MyLogDIContainerProtocol {
 
     private func makeLogDetailViewModel(log: TimeStampLogViewData, onGoBack: @escaping () -> Void) -> LogDetailViewModel {
         let viewModel = LogDetailViewModel(log: log, useCase: makeLogDetailUseCase())
-        viewModel.onDeleteSuccess = {
+        viewModel.onDeleteSuccess = { logUuid in
             // 삭제 성공 시 MyLog 새로고침 및 뒤로가기
-            NotificationCenter.default.post(name: .shouldRefreshMyLog, object: nil)
+            NotificationCenter.default.post(
+                name: .hideLog,
+                object: nil,
+                userInfo: ["logId": logUuid]
+            )
             onGoBack()
+        }
+        viewModel.onChangedCategory = {
+            logUuid in
+               // 카테고리 변경 시 MyLog 새로고침 및 뒤로가기
+               NotificationCenter.default.post(
+                   name: .hideLog,
+                   object: nil,
+                   userInfo: ["logId": logUuid]
+               )
         }
         return viewModel
     }
@@ -170,12 +183,12 @@ struct MockMyLogDIContainer: MyLogDIContainerProtocol {
             useCase: usecase,
             authStateProvider: authStateProviding
         )
-        return MyLogView(viewModel: viewModel, diContainer: self, selectedLog: selectedLog)
+        return MyLogView(viewModel: viewModel, selectedLog: selectedLog)
     }
 
     struct MockMyLogUseCase: MyLogUseCaseProtocol {
-        func fetchAllLogs() async -> (logs: [TimeStampLog], pageInfo: PageInfo?) {
-            ([], nil)
+        func fetchLogos(by category: Category?, pageInfo: PageInfo) async -> (logs: [TimeStampLog], hasNext: Bool) {
+            return ([], false)
         }
         
         func getIsLogLimitBannerDismissed() -> Bool {
@@ -186,10 +199,6 @@ struct MockMyLogDIContainer: MyLogDIContainerProtocol {
         
         func getLocalLogsCount() -> Int {
             return 0
-        }
-
-        func fetchServerLogs(page: Int) async -> (logs: [TimeStampLog], pageInfo: PageInfo?) {
-            ([], nil)
         }
     }
 

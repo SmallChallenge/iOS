@@ -43,9 +43,7 @@ final class MyLogViewModel: ObservableObject, MessageDisplayable {
     @Published var isLogLimitBannerDismissed: Bool = false
 
     /// 페이지네이션 상태
-    private var currentPage = 0
-    private var hasMorePages = false
-    
+    private var pageInfo = PageInfo()
     
     private let screenHeight = UIScreen.main.bounds.height
     
@@ -77,7 +75,6 @@ final class MyLogViewModel: ObservableObject, MessageDisplayable {
         // 배너 닫힘 상태 불러오기
         self.isLogLimitBannerDismissed = useCase.getIsLogLimitBannerDismissed()
 
-        loadLogs()
     }
     
     /// 로그인 여부 옵저빙
@@ -92,73 +89,59 @@ final class MyLogViewModel: ObservableObject, MessageDisplayable {
     }
 
     // MARK: - Input Methods
-
-    /// 로그를 불러오기
-    func loadLogs() {
-        // 중복 호출 방지
-        guard isLoading == false && isLoadingMore == false
-        else { return }
-
-        isLoading = true
-        Task {
-            // 페이지 초기화
-            currentPage = 0
-            hasMorePages = false
-
-            let result = await useCase.fetchAllLogs()
-
-            myLogs = result.logs.map { $0.toViewData() }
-
-            // 로컬 로그 개수 업데이트
-            localLogsCount = useCase.getLocalLogsCount()
-
-            // 페이지네이션 정보 업데이트
-            if let pageInfo = result.pageInfo {
-                currentPage = pageInfo.currentPage
-                hasMorePages = pageInfo.hasNext
-            }
-
-            isLoading = false
-            Logger.success("로그 불러오기 성공: \(myLogs.count)개, 로컬: \(localLogsCount)개, hasMore: \(hasMorePages)")
-        }
+    
+    // 로컬 로그 개수 업데이트
+    func updateLocalLogsCount(){
+        localLogsCount = useCase.getLocalLogsCount()
     }
-
+    
+    /// 카테고리  선택함
+    func selectCategory(_ category: CategoryFilterViewData) {
+        selectedCategory = category
+        refreshLogs()
+    }
+    
+    func refreshLogs(){
+        pageInfo.reset() // 페이지 초기화
+        loadLogs()
+    }
+    
     /// 다음 페이지 로그 불러오기 (서버 로그만)
     func loadMore() {
-        // 중복 호출 방지
-        guard !isLoading && !isLoadingMore else { return }
-
+        guard isLoggedIn else { return }
         // 다음 페이지가 없으면 리턴
-        guard hasMorePages else {
-            return
-        }
-
-        // 로그인 상태가 아니면 리턴 (서버 로그만 페이지네이션)
-        guard isLoggedIn else {
-            return
-        }
-
-        isLoadingMore = true
+        guard pageInfo.hasNext else { return }
+        pageInfo.nextPage()
+        loadLogs()
+    }
+    
+    /// 로그 불러오기
+    private func loadLogs(){
+        // 중복 호출 방지
+//        guard isLoading == false && isLoadingMore == false
+//        else { return }
+        isLoading = true
+        
         Task {
-            let nextPage = currentPage + 1
-            let result = await useCase.fetchServerLogs(page: nextPage)
-
-            // 새로운 로그를 기존 로그와 합치고 정렬(최신순)
-            let newLogs = result.logs.map { $0.toViewData() }
-            myLogs = (myLogs + newLogs).sorted { $0.timeStamp > $1.timeStamp }
+            let result = await useCase.fetchLogos(
+                by: selectedCategory.category,
+                pageInfo: pageInfo
+            )
+            let logs = result.logs.map { $0.toViewData()}
+            if pageInfo.currentPage == 0 {
+                myLogs = logs
+            } else {
+                myLogs.append(contentsOf: logs)
+            }
             
             // 페이지네이션 정보 업데이트
-            if let pageInfo = result.pageInfo {
-                currentPage = pageInfo.currentPage
-                hasMorePages = pageInfo.hasNext
-            } else {
-                hasMorePages = false
-            }
-
-            isLoadingMore = false
-            Logger.success("추가 로그 불러오기 성공: \(newLogs.count)개, 현재 페이지: \(currentPage), hasMore: \(hasMorePages)")
+            pageInfo.updateHasNext(result.hasNext)
+            
+            isLoading = false
+            Logger.success("로그 불러오기 성공: \(myLogs.count)개, hasNextPage: \(pageInfo.hasNext)")
         }
     }
+
 
     /// 로그 제한 배너 닫기
     func dismissLogLimitBanner() {
@@ -166,9 +149,7 @@ final class MyLogViewModel: ObservableObject, MessageDisplayable {
         useCase.dismissLogLimitBanner()
     }
     
-    /// 카테고리 다른거 선택함
-    func selectCategory(_ category: CategoryFilterViewData) {
-        selectedCategory = category
-        loadLogs()
+    func hideLog(uuid: UUID){
+        myLogs.removeAll { $0.id == uuid }
     }
 }
