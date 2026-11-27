@@ -9,7 +9,7 @@ import Foundation
 
 protocol MyLogUseCaseProtocol {
 
-    func fetchLogos(by category: Category?, pageInfo: PageInfo) async -> (logs: [TimeStampLog], hasNext: Bool) 
+    func fetchLogos(by category: Category?, pageInfo: PageInfo) async throws -> (logs: [TimeStampLog], hasNext: Bool)
 
     /// 로컬 타임스탬프 로그의 개수를 조회
     /// - Returns: 로컬에 저장된 로그의 개수

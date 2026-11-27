@@ -28,7 +28,7 @@ struct MyLogUseCase: MyLogUseCaseProtocol {
 
     // MARK: - Methods
     
-    func fetchLogos(by category: Category?, pageInfo: PageInfo) async -> (logs: [TimeStampLog], hasNext: Bool) {
+    func fetchLogos(by category: Category?, pageInfo: PageInfo) async throws -> (logs: [TimeStampLog], hasNext: Bool) {
         var logs: [TimeStampLog] = []
         // 첫페이지면 로컬로그도 가져오기
         if pageInfo.currentPage == 0 {
@@ -52,13 +52,9 @@ struct MyLogUseCase: MyLogUseCaseProtocol {
         guard pageInfo.hasNext else { return (logs, false) }
         var hasNextPage = false
         
-        do {
-            let result = try await repository.fetchAllLogFromServer(category: category?.rawValue, page: pageInfo.currentPage)
-            logs.append(contentsOf: result.logs)
-            hasNextPage = result.hasNext
-        } catch {
-            Logger.error("서버 로그 가져오기 실패 \(error)")
-        }
+        let result = try await repository.fetchAllLogFromServer(category: category?.rawValue, page: pageInfo.currentPage)
+        logs.append(contentsOf: result.logs)
+        hasNextPage = result.hasNext
         
         // timeStamp 기준으로 최신순 정렬
         let sortedLogs = logs.sorted { $0.timeStamp > $1.timeStamp }

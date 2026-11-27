@@ -42,6 +42,7 @@ enum AppMessage {
     case saveFailed
     case editFailed
     case deleteFailed
+    case loadFailed
     
     /// 한계 도달 메세지
     case maxPhotoLimitReached
@@ -83,7 +84,7 @@ enum AppMessage {
     var text: String {
         switch self {
         // MARK: 에러
-        case .unknownRequestFailed, .likeFailed, .reportFailed, .blockFailed:
+        case .unknownRequestFailed, .likeFailed, .reportFailed, .blockFailed, .loadFailed:
             return "요청을 처리하지 못했어요.\n잠시 후 다시 시도해 주세요."
         case .loginFailed:
             return "로그인에 실패했어요. 다시 시도해 주세요."

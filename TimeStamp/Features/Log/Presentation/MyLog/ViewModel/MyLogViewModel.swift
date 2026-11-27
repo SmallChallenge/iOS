@@ -16,6 +16,8 @@ final class MyLogViewModel: ObservableObject, MessageDisplayable {
 
     /// MyLog UseCase
     private let useCase: MyLogUseCaseProtocol
+    
+    private var loadTask: Task<Void, Never>?
 
     // MARK: - Output Properties
     
@@ -117,28 +119,39 @@ final class MyLogViewModel: ObservableObject, MessageDisplayable {
     
     /// 로그 불러오기
     private func loadLogs(){
-        // 중복 호출 방지
-//        guard isLoading == false && isLoadingMore == false
-//        else { return }
-        isLoading = true
         
-        Task {
-            let result = await useCase.fetchLogos(
-                by: selectedCategory.category,
-                pageInfo: pageInfo
-            )
-            let logs = result.logs.map { $0.toViewData()}
-            if pageInfo.currentPage == 0 {
-                myLogs = logs
-            } else {
-                myLogs.append(contentsOf: logs)
+        // 이전 요청 취소
+        loadTask?.cancel()
+        
+        isLoading = true
+        loadTask = Task {
+            do {
+                let result = try await useCase.fetchLogos(
+                    by: selectedCategory.category,
+                    pageInfo: pageInfo
+                )
+                // 취소된 요청의 결과 반영 방지
+                guard !Task.isCancelled else { return }
+                
+                let logs = result.logs.map { $0.toViewData()}
+                if pageInfo.currentPage == 0 { // 첫페이지면 데이터 교체
+                    myLogs = logs
+                } else { // 그 다음 페이지면 이어붙이기
+                    myLogs.append(contentsOf: logs)
+                }
+                
+                // 페이지네이션 정보 업데이트
+                pageInfo.updateHasNext(result.hasNext)
+                Logger.success("로그 불러오기 성공: \(myLogs.count)개, hasNextPage: \(pageInfo.hasNext)")
+                
+            } catch is CancellationError {
+                Logger.warning("취소된 요청")
+            } catch {
+                guard !Task.isCancelled else { return }
+                Logger.error("서버 로그 가져오기 실패 \(error)")
+                toastMessage = AppMessage.loadFailed.text
             }
-            
-            // 페이지네이션 정보 업데이트
-            pageInfo.updateHasNext(result.hasNext)
-            
             isLoading = false
-            Logger.success("로그 불러오기 성공: \(myLogs.count)개, hasNextPage: \(pageInfo.hasNext)")
         }
     }
 
