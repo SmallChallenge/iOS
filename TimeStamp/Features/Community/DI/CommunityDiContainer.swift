@@ -20,10 +20,22 @@ final class CommunityDiContainer: CommunityDiContainerProtocol {
 
     // MARK: - Initializer
 
-    init(communityApiClient: CommunityApiClientProtocol) {
+    init(communityApiClient: CommunityApiClientProtocol, authManager: AuthManager) {
         self.communityApiClient = communityApiClient
+        self.authManager = authManager
     }
 
+    // MARK: - Auth
+    private let authManager: AuthManager
+    
+    lazy var authStateProvider: AuthStateProviding = {
+        authManager
+    }()
+    
+    lazy var tokenStorage: TokenStoring = {
+        authManager
+    }()
+    
     // MARK: - Repository
 
     private func makeCommunityRepository() -> CommunityRepositoryProtocol {
@@ -39,7 +51,7 @@ final class CommunityDiContainer: CommunityDiContainerProtocol {
     // MARK: - ViewModel
 
     private func makeCommunityViewModel() -> CommunityViewModel {
-        return CommunityViewModel(useCase: makeCommunityUseCase())
+        return CommunityViewModel(useCase: makeCommunityUseCase(), authStateProvider: authStateProvider)
     }
 
     // MARK: - View
@@ -54,7 +66,7 @@ final class CommunityDiContainer: CommunityDiContainerProtocol {
 struct MockCommunityDiContainer: CommunityDiContainerProtocol {
     func makeCommunityView(triggerRefresh: Binding<Bool> = .constant(false), onOpenCamera: (() -> Void)? = nil) -> CommunityView {
         let usecase = MockCommunityUseCase()
-        let vm = CommunityViewModel(useCase: usecase)
+        let vm = CommunityViewModel(useCase: usecase, authStateProvider: MockAuthStateProvider())
         return CommunityView(viewModel: vm, triggerRefresh: triggerRefresh, onOpenCamera: onOpenCamera)
     }
 }

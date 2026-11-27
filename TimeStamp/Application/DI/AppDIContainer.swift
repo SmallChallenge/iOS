@@ -119,7 +119,7 @@ final class AppDIContainer {
     // MARK: - Community Feature
 
     private lazy var communityDIContainer: CommunityDiContainer = {
-        return CommunityDiContainer(communityApiClient: communityApiClient)
+        return CommunityDiContainer(communityApiClient: communityApiClient, authManager: authManager)
     }()
 
     func makeCommunityView(triggerRefresh: Binding<Bool> = .constant(false), onOpenCamera: (() -> Void)? = nil) -> CommunityView {

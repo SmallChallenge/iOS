@@ -53,7 +53,7 @@ struct MyPageView: View {
         let build = Bundle.main.infoDictionary?["CFBundleVersion"] as? String ?? "1"
         
         self.appVersion = "\(version)"
-        self.appVerseion_build = "\(version)+(\(build))"
+        self.appVerseion_build = "\(version)(\(build))"
 
         let appearance = UINavigationBarAppearance()
         appearance.backgroundColor = UIColor.gray900

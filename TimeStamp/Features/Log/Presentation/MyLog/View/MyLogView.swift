@@ -99,8 +99,8 @@ struct MyLogView: View {
             }
             viewModel.updateLocalLogsCount()
         }
-        .onReceive(NotificationCenter.default.publisher(for: .shouldRefreshMyLog)) { _ in
-            // 로그인 , 사진 저장 후 목록 새로고침
+        .onReceive(NotificationCenter.default.publisher(for: .didSaveLog)) { _ in
+            // 사진 저장 후 목록 새로고침
             viewModel.selectCategory(.all)
         }
         .onReceive(NotificationCenter.default.publisher(for: .hideLog)) { notification in

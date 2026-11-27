@@ -85,9 +85,17 @@ final class MyLogViewModel: ObservableObject, MessageDisplayable {
             .receive(on: DispatchQueue.main)
             .assign(to: &$isLoggedIn)
         
-        /*authStateProvider.currentUserPublisher
+        
+        // 변화에 반응 (기존 .shouldRefresh 대체)
+        authStateProvider.isLoggedInPublisher
+            .dropFirst()                       // 구독 시점 초기값 제외
+            .removeDuplicates()
             .receive(on: DispatchQueue.main)
-            .assign(to: &$currentUser)*/
+            .sink { [weak self] loggedIn in
+                print(">>>>> 로그인 여부 변경 \(loggedIn)")
+                self?.refreshLogs()
+            }
+            .store(in: &cancellables)
     }
 
     // MARK: - Input Methods
