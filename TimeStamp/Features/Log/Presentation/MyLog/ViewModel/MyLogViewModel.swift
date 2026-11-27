@@ -71,7 +71,6 @@ final class MyLogViewModel: ObservableObject, MessageDisplayable {
     init(useCase: MyLogUseCaseProtocol, authStateProvider: AuthStateProviding) {
         self.useCase = useCase
         self.authStateProvider = authStateProvider
-        
         bindAuthState()
 
         // 배너 닫힘 상태 불러오기

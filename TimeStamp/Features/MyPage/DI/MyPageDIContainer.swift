@@ -19,10 +19,22 @@ final class MyPageDIContainer: MyPageDIContainerProtocol {
 
     // MARK: - Initializer
 
-    init(authApiClient: AuthApiClientProtocol, settingsDataSource: SettingsDataSourceProtocol) {
+    init(authApiClient: AuthApiClientProtocol, settingsDataSource: SettingsDataSourceProtocol, authManager: AuthManager) {
         self.authApiClient = authApiClient
         self.settingsDataSource = settingsDataSource
+        self.authManager = authManager
     }
+    
+    // MARK: - Auth
+    private let authManager: AuthManager
+    
+    lazy var authStateProvider: AuthStateProviding = {
+        authManager
+    }()
+    
+    lazy var tokenStorage: TokenStoring = {
+        authManager
+    }()
 
     // MARK: - MyPageView
     private func makeLogoutRepository() -> LogoutRepositoryProtocol {
@@ -36,7 +48,7 @@ final class MyPageDIContainer: MyPageDIContainerProtocol {
 
     private func makeMyPageViewModel() -> MyPageViewModel {
         let useCase = makeMyPageUseCase()
-        return MyPageViewModel(useCase: useCase)
+        return MyPageViewModel(useCase: useCase, authStateProvider: authStateProvider)
     }
 
     func makeMyPageView(onGoBack: @escaping () -> Void) -> MyPageView {
@@ -66,7 +78,7 @@ final class MyPageDIContainer: MyPageDIContainerProtocol {
 struct MockMyPageDIContainer: MyPageDIContainerProtocol{
     func makeMyPageView(onGoBack: @escaping () -> Void) -> MyPageView {
         let useCase = MockMyPageUseCase()
-        let vm = MyPageViewModel(useCase: useCase)
+        let vm = MyPageViewModel(useCase: useCase, authStateProvider: MockAuthStateProvider())
         return MyPageView(viewModel: vm, diContainer: self, onGoBack: onGoBack)
     }
 

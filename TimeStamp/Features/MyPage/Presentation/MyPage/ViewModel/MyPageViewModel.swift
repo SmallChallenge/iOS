@@ -15,6 +15,13 @@ final class MyPageViewModel: ObservableObject, MessageDisplayable {
     private let useCase: MyPageUseCaseProtocol
 
     // MARK: - Output Properties
+    
+    // 로그인 여부
+    @Published private(set) var isLoggedIn = false
+    @Published private(set)  var currentUser: User?
+    private let authStateProvider: AuthStateProviding
+    private var cancellables = Set<AnyCancellable>()
+    
 
     // 갤러리 자동저장
     @Published var isAutoSave: Bool = true
@@ -34,8 +41,22 @@ final class MyPageViewModel: ObservableObject, MessageDisplayable {
 
     // MARK: - Init
 
-    init(useCase: MyPageUseCaseProtocol) {
+    init(useCase: MyPageUseCaseProtocol, authStateProvider: AuthStateProviding) {
         self.useCase = useCase
+        self.authStateProvider = authStateProvider
+        bindAuthState()
+    }
+    
+    /// 로그인 여부 옵저빙
+    private func bindAuthState() {
+        authStateProvider.isLoggedInPublisher
+            .receive(on: DispatchQueue.main)
+            .assign(to: &$isLoggedIn)
+        
+        authStateProvider.currentUserPublisher
+            .receive(on: DispatchQueue.main)
+            .assign(to: &$currentUser)
+        
     }
 
     // MARK: - Input Methods
